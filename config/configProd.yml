@@ -1,0 +1,65 @@
+# PARAMETROS DE CONFIGURACION GLOBAL DE LA APLICACION
+---
+config:
+  debug_mode: false
+  # Para mostrar o no los botones de auditoria de los formularios
+  audit_mode: true
+  # FORMATOS DE EXPORTACION DE INFORMACION
+  export_types:
+    - xls
+    - xml
+    - cvs
+    - Yaml
+  # ENTORNO DE LA APLICACION
+  app:
+    name: ERP Albatronic
+    url: http://www.albatronic.com/
+    path: /Erp
+    framework: bin/albatronic/
+    urlParent: http://localhost/Pcae    
+  # CONEXIONES A LAS BASES DE DATOS
+  conections:
+    empresas:
+      dbEngine: mysql
+      host: localhost
+      user: albatro_albatro
+      password: p17s26a26
+      database: albatro_erpemp
+    datos001:
+      dbEngine: mysql
+      host: localhost
+      user: albatro_albatro
+      password: p17s26a26
+      database: albatro_erp001
+  # MOTOR DE ENVIO DE CORREOS
+  mailer:
+    plugin_dir: ../bin/PHPMailer_v2.0.0/
+    plugin_file: PhpMailer.class.php
+    motor: PhpMailer
+    socket: smtp
+    host: mail.albatronic.com
+    smtp_auth: true
+    user_name: info@albatronic.com
+    password: i1234o
+    from: info@albatronic.com
+    from_name: DIBATSUR
+    timeout: 30
+  # MOTOR PARA DOCUMENTOS EXCEL
+  excel: ../bin/PHPExcel/PHPExcel.php
+  # MOTOR PARA GENERAR DOCUMENTOS PDF
+  pdf: ../bin/pdf/fpdf.class.php
+  # MOTOR PARA GRAFICOS DE BARRAS
+  graph:
+    -
+      ../bin/jpgraph/src/jpgraph.php
+    -
+      ../bin/jpgraph/src/jpgraph_line.php
+    -
+      ../bin/jpgraph/src/jpgraph_bar.php
+  # MOTOR DE TEMPLATES
+  twig:
+    motor: ../bin/Twig-1.7.0/lib/Twig/Autoloader.php
+    templates_folder: modules
+    debug_mode: false
+    cache_folder: tmp
+    charset: null

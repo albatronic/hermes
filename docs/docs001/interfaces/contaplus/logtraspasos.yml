@@ -1,0 +1,31 @@
+traspasos:
+  20120703_124109:
+    Dia: 03-07-2012
+    Hora: '12:41:09'
+    IDUsuario: '1'
+    IDSucursal: '1'
+    DesdeFecha: 01/01/2012
+    HastaFecha: 31/12/2012
+    Emitidas: 0
+    Recibidas: 0
+    Cobros: 3
+    Pagos: 0
+    Asientos: 3
+    Subcuentas: 2
+    ArchivoDiario: docs/docs001/interfaces/contaplus/20120703_124109_diario.txt
+    ArchivoSubcuentas: docs/docs001/interfaces/contaplus/20120703_124109_subcuentas.txt
+  20120703_124625:
+    Dia: 03-07-2012
+    Hora: '12:46:26'
+    IDUsuario: '1'
+    IDSucursal: '1'
+    DesdeFecha: 01/01/2012
+    HastaFecha: 31/12/2012
+    Emitidas: 0
+    Recibidas: 0
+    Cobros: 3
+    Pagos: 0
+    Asientos: 3
+    Subcuentas: 2
+    ArchivoDiario: docs/docs001/interfaces/contaplus/20120703_124625_diario.txt
+    ArchivoSubcuentas: docs/docs001/interfaces/contaplus/20120703_124625_subcuentas.txt
