@@ -1,0 +1,30 @@
+# ERP: ADMINISTRACION
+  
+ErpAplicaciones:
+  1: { CodigoApp: Admon, NombreApp: Admon }
+
+ErpModulos:
+  1: { CodigoApp: Admon, NombreModulo: Admon,       Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Admon, Funcionalidades: AC }
+  2: { CodigoApp: Admon, NombreModulo: Empresas,    Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Sucursales, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  3: { CodigoApp: Admon, NombreModulo: Perfiles,    Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Perfiles de usuarios, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  4: { CodigoApp: Admon, NombreModulo: Agentes,     Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Usuarios, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  5: { CodigoApp: Admon, NombreModulo: TiposIva,    Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Tipos de IVA, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  6: { CodigoApp: Admon, NombreModulo: Bancos,      Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Bancos y Oficinas, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  7: { CodigoApp: Admon, NombreModulo: Paises,      Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Paises, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  8: { CodigoApp: Admon, NombreModulo: Provincias,  Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Provincias, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  9: { CodigoApp: Admon, NombreModulo: Parametros,  Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Parámetros, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  10: { CodigoApp: Admon, NombreModulo: Contadores, Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Series y Contadores, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  11: { CodigoApp: Admon, NombreModulo: Tpvs,       Nivel: 1, BelongsTo: Admon,  Publish: 1, Titulo: Tpvs y datáfonos, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+
+ErpPermisos:
+  1: { IdPerfil: 1, NombreModulo: Admon, Funcionalidades: 'AC,VW' }
+  2: { IdPerfil: 1, NombreModulo: Empresas, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  3: { IdPerfil: 1, NombreModulo: Perfiles, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  4: { IdPerfil: 1, NombreModulo: Agentes, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  5: { IdPerfil: 1, NombreModulo: TiposIva, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  6: { IdPerfil: 1, NombreModulo: Bancos, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  7: { IdPerfil: 1, NombreModulo: Paises, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  8: { IdPerfil: 1, NombreModulo: Provincias, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  9: { IdPerfil: 1, NombreModulo: Parametros, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  10: { IdPerfil: 1, NombreModulo: Contadores, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  11: { IdPerfil: 1, NombreModulo: Tpvs, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}

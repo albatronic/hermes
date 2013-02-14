@@ -1,7 +1,11 @@
 <?php
 
 /**
- * Description of EnlaceContaController
+ * GENERA LOS APUNTES CONTABLES Y SUBCUENTAS PARA CONTAPLUS.
+ * 
+ * EN BASE A LAS FACTURAS EMITIDAS, RECIBIDAS, COBROS Y PAGOS
+ * 
+ * UTILIZA LA ESTRUCTURA DE SUBCUENTAS DEL RELEASE V8
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
  * @copyright Informática ALBATRONIC, SL
@@ -71,6 +75,7 @@ class EnlaceContaController extends Controller {
 
     public function TrasvaseAction() {
 
+        // Por si el proceso tarda mucho...
         set_time_limit(0);
 
         $this->arraySubcuentas = array();
@@ -150,7 +155,8 @@ class EnlaceContaController extends Controller {
                 fwrite($this->fpDiario, $apunte);
 
             // Guardar la subcuenta del cliente
-            $this->arraySubcuentas[$factura['IDCliente']] = $this->SubcuentaCliente($cliente);
+            if (!isset($this->arraySubcuentas[$factura['IDCliente']]))
+                $this->arraySubcuentas[$factura['IDCliente']] = $this->SubcuentaCliente($cliente);
         }
     }
 
@@ -194,8 +200,9 @@ class EnlaceContaController extends Controller {
             foreach ($asiento as $apunte)
                 fwrite($this->fpDiario, $apunte);
 
-            // Guardar la subcuenta del cliente
-            $this->arraySubcuentas[$factura['IDProveedor']] = $this->SubcuentaProveedor($proveedor);
+            // Guardar la subcuenta del proveedor
+            if (!isset($this->arraySubcuentas[$factura['IDProveedor']]))
+                $this->arraySubcuentas[$factura['IDProveedor']] = $this->SubcuentaProveedor($proveedor);
         }
     }
 
@@ -226,7 +233,7 @@ class EnlaceContaController extends Controller {
             FROM recibos_clientes
             WHERE {$filtro}
             GROUP BY IDRemesa, CuentaPago
-            ORDER BY Vencimiento ASC, IDRemesa ASC;";echo $query;
+            ORDER BY Vencimiento ASC, IDRemesa ASC;";
             $em->query($query);
             $recibos = $em->fetchResult();
             $em->desConecta();
@@ -248,13 +255,14 @@ class EnlaceContaController extends Controller {
                 $apuntes = $this->ApunteDetalleCobro($recibo);
                 foreach ($apuntes as $apunte)
                     $asiento[] = $apunte;
-                
+
                 // Escribir en el fichero el asiento
                 foreach ($asiento as $apunte)
                     fwrite($this->fpDiario, $apunte);
 
                 // Guardar la subcuenta del cliente
-                $this->arraySubcuentas[$recibo['IDCliente']] = $this->SubcuentaCliente($cliente);
+                if (!isset($this->arraySubcuentas[$recibo['IDCliente']]))
+                    $this->arraySubcuentas[$recibo['IDCliente']] = $this->SubcuentaCliente($cliente);
             }
         }
         unset($em);
@@ -284,15 +292,16 @@ class EnlaceContaController extends Controller {
     }
 
     private function ApunteDetalleCobro(array $cabecera) {
-        
+
         $recibo = new RecibosClientes();
-        $recibos = $recibo->cargaCondicion("*","IDCliente='{$cabecera['IDCliente']}' and Vencimiento='{$cabecera['Vencimiento']}' and IDRemesa='{$cabecera['IDRemesa]']}'");
+        $recibos = $recibo->cargaCondicion("*", "IDCliente='{$cabecera['IDCliente']}' and Vencimiento='{$cabecera['Vencimiento']}' and IDRemesa='{$cabecera['IDRemesa]']}'");
         unset($recibo);
-        
+
         foreach ($recibos as $recibo) {
             
         }
     }
+
     /**
      * Recibe un objeto cliente y devuelve un objeto subcuenta
      * con los datos del cliente
@@ -302,7 +311,7 @@ class EnlaceContaController extends Controller {
      */
     private function SubcuentaCliente(Clientes $cliente) {
 
-        $subCta = new ContaPlusSubcta();
+        $subCta = new ContaPlusSubctaV8();
 
         $subCta->setCodigo($cliente->getCContable());
         $subCta->setTitulo($cliente->getRazonSocial());
@@ -325,7 +334,7 @@ class EnlaceContaController extends Controller {
      */
     private function SubcuentaProveedor(Proveedores $proveedor) {
 
-        $subCta = new ContaPlusSubcta();
+        $subCta = new ContaPlusSubctaV8();
 
         $subCta->setCodigo($proveedor->getCContable());
         $subCta->setTitulo($proveedor->getRazonSocial());
@@ -340,12 +349,9 @@ class EnlaceContaController extends Controller {
     }
 
     /**
-     * Recibe el nombre de archivo a generar (opcional) y lo
-     * rellena con las subcuentas involucradas en el trasvase.
-     *
-     * Si el archivo existe, lo borra y lo genera de nuevo.
-     *
-     * @return boolean
+     * Crea el archivo con las subcuentas involucradas en el traspaso
+     * 
+     * @return boolean TRUE si se creó con éxito
      */
     private function GuardaSubcuentas() {
 
@@ -437,7 +443,7 @@ class EnlaceContaController extends Controller {
                 }
 
                 $subcuenta = str_pad('477', $this->DIGCC - 4, '0') . $sufijo;
-                $apunte = new ContaPlusDiario($this->nAsiento, $fecha);
+                $apunte = new ContaPlusDiario($nAsiento, $fecha);
                 $apunte->setSubCta($subcuenta);
                 $apunte->setContra($cliente->getCContable());
                 $apunte->setConcepto("Ntra. Factura " . $factura['NumeroFactura']);
@@ -460,7 +466,7 @@ class EnlaceContaController extends Controller {
 
                 if ($factura['CuotaRecargo' . $j] <> 0) {
                     $subcuenta = str_pad('475', $this->DIGCC - 4, '0') . $sufijo;
-                    $apunte = new ContaPlusDiario($this->nAsiento, $fecha);
+                    $apunte = new ContaPlusDiario($nAsiento, $fecha);
                     $apunte->setSubCta($subcuenta);
                     $apunte->setContra($cliente->getCContable());
                     $apunte->setConcepto("Ntra. Factura " . $factura['NumeroFactura']);
@@ -559,7 +565,7 @@ class EnlaceContaController extends Controller {
 
                 $subcuenta = str_pad('477', $this->DIGCC - 4, '0') . $sufijo;
 
-                $apunte = new ContaPlusDiario($this->nAsiento, $fecha);
+                $apunte = new ContaPlusDiario($nAsiento, $fecha);
                 $apunte->setSubCta($subcuenta);
                 $apunte->setContra($proveedor->getCContable());
                 $apunte->setConcepto("Su Factura " . $factura['SuFactura']);
@@ -581,8 +587,8 @@ class EnlaceContaController extends Controller {
                     $sufijo = $this->SufijoRecargo($factura['Recargo' . $j], $factura['Iva' . $j]);
                     $subcuenta = str_pad('472', $this->DIGCC - 4, '0') . $sufijo;
 
-                    $apunte = new ContaPlusDiario($this->nAsiento, $fecha);
-                    $apunte->setSubCta($subucuenta);
+                    $apunte = new ContaPlusDiario($nAsiento, $fecha);
+                    $apunte->setSubCta($subcuenta);
                     $apunte->setContra($proveedor->getCContable());
                     $apunte->setConcepto("Su Factura " . $factura['SuFactura']);
                     $apunte->setFactura($factura['SuFactura']);
@@ -606,12 +612,15 @@ class EnlaceContaController extends Controller {
     }
 
     /**
-     * Rellena el string $s con ceros por la izquierda
+     * Rellena un string con ceros por la izquierda
+     * 
+     * @param string $iva El string a rellenar
+     * @return string String relleno de ceros por la izquierda
      */
-    private function SufijoIva($iva) {
+    private function SufijoIva($texto) {
 
         // Relleno con ceros por la izquierda y quito el punto decimal
-        $s = str_pad($iva, 5, "0", STR_PAD_LEFT);
+        $s = str_pad($texto, 5, "0", STR_PAD_LEFT);
         $s = "00" . substr($s, 0, 2);
 
         return($s);
@@ -679,6 +688,11 @@ class EnlaceContaController extends Controller {
         unset($log);
     }
 
+    /**
+     * Realiza validaciones antes del traspaso
+     * 
+     * @return boolean TRUE se todo es correcto
+     */
     private function valida() {
 
         if (trim($this->request['DesdeFecha']) == '')

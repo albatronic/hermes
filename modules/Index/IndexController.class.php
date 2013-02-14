@@ -13,6 +13,54 @@ class IndexController extends Controller {
     protected $entity = "Index";
     protected $parentEntity = "";
 
+    public function __construct($request) {
+
+        // Cargar lo que viene en el request
+        $this->request = $request;
+
+        // Cargar la configuracion del modulo (modules/moduloName/config.yaml)
+        $this->form = new Form($this->entity);
+        
+        $this->cargaValores();
+        
+        // Instanciar el objeto listado con los parametros del modulo
+        // y los eventuales valores del filtro enviados en el request
+        $this->listado = new Listado($this->form, $this->request);
+
+        // Cargar los permisos.
+        // Si la entidad no está sujeta a control de permisos, se habilitan todos
+        if ($this->form->getPermissionControl()) {
+            if ($this->parentEntity == '')
+                $this->permisos = new ControlAcceso($this->entity);
+            else
+                $this->permisos = new ControlAcceso($this->parentEntity);
+        } else
+            $this->permisos = new ControlAcceso();
+
+        $this->values['titulo'] = $this->form->getTitle();
+        $this->values['ayuda'] = $this->form->getHelpFile();
+        $this->values['permisos'] = $this->permisos->getPermisos();
+        $this->values['request'] = $this->request;
+        $this->values['linkBy'] = array(
+            'id' => $this->form->getLinkBy(),
+            'value' => '',
+        );
+
+        $this->values['listado'] = array(
+            'filter' => $this->listado->getFilter(),
+        );
+
+        // Si se ha indicado una entidad en el config.yml del controlador
+        // pero no se ha definido la conexion, se muestra un error
+        if (($this->form->getEntity()) and (!$this->form->getConection())) {
+            echo "No se ha definido la conexión para la entidad: " . $this->entity;
+        }
+
+        // QUITAR LOS COMENTARIOS PARA Actualizar los favoritos para el usuario
+        //if ($this->form->getFavouriteControl())
+        //    $this->actualizaFavoritos();
+    }
+    
     /**
      * Muestra un template con los accesos favoritos del usuario
      * @return array

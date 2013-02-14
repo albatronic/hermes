@@ -1,0 +1,20 @@
+# ERP: COMPRAS
+  
+ErpAplicaciones:
+  1: { CodigoApp: Compras, NombreApp: Compras }
+
+ErpModulos:
+  1: { CodigoApp: Compras, NombreModulo: Compras,            Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Compras, Funcionalidades: AC }
+  2: { CodigoApp: Compras, NombreModulo: PedidosCab,         Nivel: 1, BelongsTo: Compras,  Publish: 1, Titulo: Pedidos, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  3: { CodigoApp: Compras, NombreModulo: ConformarFacturas,  Nivel: 1, BelongsTo: Compras,  Publish: 1, Titulo: Conformar Facturas, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  4: { CodigoApp: Compras, NombreModulo: FrecibidasCab,      Nivel: 1, BelongsTo: Compras,  Publish: 1, Titulo: Facturas recibidas, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  5: { CodigoApp: Compras, NombreModulo: RecibosProveedores, Nivel: 1, BelongsTo: Compras,  Publish: 1, Titulo: Recibos, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  6: { CodigoApp: Compras, NombreModulo: ManufacCab,         Nivel: 1, BelongsTo: Compras,  Publish: 1, Titulo: Elaboraciones, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+
+ErpPermisos:
+  1: { IdPerfil: 1, NombreModulo: Compras, Funcionalidades: 'AC,VW' }
+  2: { IdPerfil: 1, NombreModulo: PedidosCab, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+  3: { IdPerfil: 1, NombreModulo: ConformarFacturas, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  4: { IdPerfil: 1, NombreModulo: FrecibidasCab, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  5: { IdPerfil: 1, NombreModulo: RecibosProveedores, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}
+  6: { IdPerfil: 1, NombreModulo: ManufacCab, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}

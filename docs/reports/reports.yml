@@ -9,6 +9,108 @@
 reports:
 
   # ---------------------------------------------------------
+  # INFORME 347
+  # ---------------------------------------------------------
+  -
+    title: Ventas trimestrales (facturas)
+    comment: >
+      Resumen de ventas por trimestre.
+      Los importes son total factura iva incluido
+    idPerfil: '5,6,8'
+    break_fields: null
+    orientation: P
+    unit: mm
+    format: A4
+    margins: '10,10,15,10'
+    print_total_records: true
+    print_interline:
+    query: >
+      select 
+        c.RazonSocial,c.Cif,
+        SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
+        SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
+        SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
+        SUM( CASE quarter(Fecha) WHEN '4' THEN Total ELSE 0 END ) AS '4T',
+        SUM(Total) AS Total
+      from clientes c, femitidas_cab f
+      where c.IDCliente = f.IDCliente AND YEAR(Fecha) = 'ANIO'
+      group by f.IDCliente
+      order by c.RazonSocial ASC
+    filters:
+      -
+        field: ANIO
+        caption: Año
+        entity: Sucursales
+        method: getSucursalesUsuario
+        params:
+        type: input
+        default: '<?php echo date('Y');?>'
+    columns:
+      -
+        title: Cliente
+        field: RazonSocial
+        length: 25
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: Cif
+        field: Cif
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: 1T
+        field: 1T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 2T
+        field: 2T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 3T
+        field: 3T
+        length: 13
+        align: R
+        type: decimal
+        total: NO
+        formula: null
+        format: %01.2f
+      -
+        title: 4T
+        field: 4T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f  
+      -
+        title: Total
+        field: Total
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f 
+        
+  # ---------------------------------------------------------
   # INFORME DE VENTAS MENSUALES SEGUN ALBARANES. SACA GRAFICO
   # ---------------------------------------------------------
   -
@@ -1188,15 +1290,15 @@ reports:
     print_total_records: true
     print_interline:
     query: >
-      SELECT f.Familia, a.Codigo, a.Descripcion, a.StockMinimo, sum(e.Reales) as Reales, (a.StockMinimo-Reales) as Pedido
+      SELECT f.Familia, a.Codigo, a.Descripcion, a.StockMinimo, sum(e.Reales) as Reales, (a.StockMinimo-sum(e.Reales)) as Pedido
       FROM existencias e, articulos a, familias as f
       WHERE
         e.IDAlmacen = 'ALMACEN' AND
         e.IDArticulo = a.IDArticulo AND
-        a.IDFamilia = f.IDFamilia AND
-        Reales<a.StockMinimo AND
-        a.StockMinimo>0
+        a.IDFamilia = f.IDFamilia AND 
+        a.Vigente = '1'
       GROUP BY e.IDArticulo
+      HAVING a.StockMinimo>Reales AND a.StockMinimo>0      
       ORDER BY f.Familia,a.Descripcion;
     filters:
       -

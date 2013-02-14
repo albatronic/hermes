@@ -1,0 +1,12 @@
+# ERP: ENLACE CONTABILIDAD
+  
+ErpAplicaciones:
+  1: { CodigoApp: Conta, NombreApp: Contabilidad }
+
+ErpModulos:
+  1: { CodigoApp: Conta, NombreModulo: Conta,       Nivel: 0, BelongsTo: 0,      Publish: 1, Titulo: Contabilidad, Funcionalidades: AC }
+  2: { CodigoApp: Conta, NombreModulo: EnlaceConta, Nivel: 1, BelongsTo: Conta,  Publish: 1, Titulo: Enlace con contabilidad, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
+
+ErpPermisos:
+  1: { IdPerfil: 1, NombreModulo: Conta, Funcionalidades: 'AC,VW' }
+  2: { IdPerfil: 1, NombreModulo: EnlaceConta, Funcionalidades: <?php include '../Erp/entities/schema/defaultFunctionality.yml';?>}  
