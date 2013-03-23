@@ -72,7 +72,9 @@
             <div id="headright">
                 <h4>{{user.Nombre}}</h4>
                 <p>Ver. {{emp.IDVersion.Descripcion}}</p>
-                <a href="{{app.url}}" class="logout">Salir</a>
+                <a href="{{app.urlParent}}/return">
+                    <img src="{{app.path}}/images/logout.png" alt="Cerrar Sesión" title="Cerrar Sesión">
+                </a>
             </div>
             </div>
         {% endblock %}

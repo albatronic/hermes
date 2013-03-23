@@ -12,7 +12,7 @@
         {% endfor %}
         <div style="clear: both;"></div>
     </div>
-    {% if not tpv.IDTpv %}
+    {% if  tpv.IDTpv %}
         <form name="setTpv" id="setTpv" method="POST">
             <input name="controller" value="{{values.controller}}" type="hidden" />
             <input name="action" id="action" type="hidden" />

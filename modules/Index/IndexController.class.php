@@ -192,7 +192,7 @@ class IndexController extends Controller {
             unset($usuario);
 
             // Carga las variables de entorno y web del proyecto
-            $this->cargaVariables();
+            $this->cargaVariables();print_r($_SESSION);
         } else {
 
             $aplicacion = $this->request[1];

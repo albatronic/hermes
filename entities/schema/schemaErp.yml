@@ -318,11 +318,20 @@ ErpAgencias:
     <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
+# Zonas Comerciales y/o reparto por sucursal
+ErpZonas:
+  comment: Zonas comerciales/reparto sucursal
+  columns:
+    IDSucursal: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpSucursales,Id' }
+    Zona:       { type: string(50), notnull: true }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+  relations:  
+    
 # Zonas de transporte
 ErpZonasTransporte:
   comment: Zonas de transporte
   columns:
-    Zona:       { type: string(50), notnull: true }
+    Zona: { type: string(50), notnull: true }
     <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:    
 
@@ -378,23 +387,23 @@ ErpDatafonos:
 ErpAlbaranesCab:
   comment: Cabeceras de albaranes
   columns:
-    IDContador: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpContadores,Id' }
-    NumeroAlbaran: { type: varchar(15), notnull: true, index: unique }
-    IDSucursal:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpSucursales,Id' }
-    IDAlmacen:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAlmacenes,Id' }
-    IDAgente:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
-    IDComercial:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
-    Fecha: { type: date, notnull: true, default: '0000-00-00', index: index }
-    FechaEntrega: { type: date, notnull: true, default: '0000-00-00', index: index }
-    IDCliente:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientes,Id' }    
-    IDDirec:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientesDentrega,Id' }    
-    Importe: { type: decimal, notnull: true, default: 0 }
-    Descuento: { type: decimal, notnull: true, default: 0 }    
-    BaseImponible1: { type: decimal, notnull: true, default: 0 }    
-    Iva1: { type: decimal, notnull: true, default: 0 }    
-    CuotaIva1: { type: decimal, notnull: true, default: 0 }    
-    Recargo1: { type: decimal, notnull: true, default: 0 }    
-    CuotaRecargo1: { type: decimal, notnull: true, default: 0 }    
+    IDContador:             { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpContadores,Id' }
+    NumeroAlbaran:          { type: varchar(15), notnull: true, index: unique }
+    IDSucursal:             { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpSucursales,Id' }
+    IDAlmacen:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAlmacenes,Id' }
+    IDAgente:               { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    IDComercial:            { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    Fecha:                  { type: date, notnull: true, default: '0000-00-00', index: index }
+    FechaEntrega:           { type: date, notnull: true, default: '0000-00-00', index: index }
+    IDCliente:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientes,Id' }    
+    IDDirec:                { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientesDentrega,Id' }    
+    Importe:                { type: decimal, notnull: true, default: 0 }
+    Descuento:              { type: decimal, notnull: true, default: 0 }    
+    BaseImponible1:         { type: decimal, notnull: true, default: 0 }    
+    Iva1:                   { type: decimal, notnull: true, default: 0 }    
+    CuotaIva1:              { type: decimal, notnull: true, default: 0 }    
+    Recargo1:               { type: decimal, notnull: true, default: 0 }    
+    CuotaRecargo1:          { type: decimal, notnull: true, default: 0 }    
     BaseImponible2:         { type: decimal, notnull: true, default: 0 }    
     Iva2:                   { type: decimal, notnull: true, default: 0 }    
     CuotaIva2:              { type: decimal, notnull: true, default: 0 }    
@@ -426,4 +435,146 @@ ErpAlbaranesCab:
     DiaReparto:             { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,DiasSemana,IDTipo' }
     IDRepartidor:           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }   
     <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations: 
+    
+# Líneas de albaranes
+ErpAlbaranesLineas:
+  comment: Líneas de albaranes
+  columns:
+    IDAlbaran:        { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAlbaranesCab,Id' }
+    IDArticulo:       { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpArticulos,Id' }
+    Descripcion:      { type: varchar(255), notnull: true }
+    Unidades:         { type: decimal, notnull: true, default: 0 }
+    UnidadMedida:     { type: char(3), notnull: true, default: 'UMV' }
+    Precio:           { type: decimal(3), notnull: true, default: '0.000' }
+    PvpVigente:       { type: decimal(3), notnull: true, default: '0.000' }
+    Descuento:        { type: decimal(2), notnull: true, default: '0.00' }
+    Importe:          { type: decimal(2), notnull: true, default: '0.00' }
+    ImporteCosto:     { type: decimal(2), notnull: true, default: '0.00' }    
+    IDAlmacen:        { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAlmacenes,Id' }
+    Iva:              { type: decimal(2), notnull: true, default: '0.00' }
+    Recargo:          { type: decimal(2), notnull: true, default: '0.00' } 
+    ComisionAgente:   { type: decimal(2), notnull: true, default: '0.00' } 
+    ComisionMontador: { type: decimal(2), notnull: true, default: '0.00' }
+    IDVenta:          { type: bigint(11), notnull: true, default: 1, index: index, comment: 'db,ErpTiposVenta,Id' }
+    Comisionar:       { type: boolean, notnull: true, default: 0, index: index, comment: 'db,ValoresSN,IDTipo' }
+    IDAgente:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    IDComercial:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    IDPromocion:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpPromociones,Id' }
+    IDEstado:         { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'db,ErpEstadosLineasAlbaranes,Id' }
+    AltoAl:           { type: decimal(3), notnull: true, default: '0.000' }
+    AnchoAl:          { type: decimal(3), notnull: true, default: '0.000' }
+    MtsAl:            { type: decimal(3), notnull: true, default: '0.000' }    
+    AltoFa:           { type: decimal(3), notnull: true, default: '0.000' }
+    AnchoFa:          { type: decimal(3), notnull: true, default: '0.000' }
+    MtsFa:            { type: decimal(3), notnull: true, default: '0.000' }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations:  
+    
+# Tipos de venta
+ErpTiposVenta:
+  comment: Tipos de venta
+  columns:
+    TipoVenta: { type: string(50), notnull: true }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations:  
+    
+# Clientes
+ErpClientes:
+  comment: Clientes
+  columns:
+    RazonSocial:         { type: varchar(50), notnull: true, index: index }
+    NombreComercial:     { type: varchar(50), notnull: false, index: index }
+    Cif:                 { type: varchar(15), notnull: true, index: index }
+    Direccion:           { type: varchar(50), notnull: true }
+    IDPais:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommPaises,Id' }
+    IDProvincia:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommProvincias,Id' }
+    IDPoblacion:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommMunicipios,Id' }
+    CodigoPostal:        { type: varchar(10), notnull: true, default: '' }
+    Telefono:            { type: varchar(30), notnull: false }
+    Fax:                 { type: varchar(30), notnull: false }    
+    Movil:               { type: varchar(30), notnull: false }    
+    EMail:               { type: varchar(50), notnull: false }    
+    Web:                 { type: varchar(50), notnull: false }    
+    CContable:           { type: varchar(10), notnull: false, default: '0000000000' } 
+    IDBanco:             { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommBancos,Id' }
+    IDOficina:           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommOficinas,Id' }
+    Digito:              { type: char(2), notnull: true, default: '00' }
+    Cuenta:              { type: char(10), notnull: true, default: '0000000000' }
+    IDTipo:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientesTipos,Id' }    
+    IDGrupo:             { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpClientesGrupos,Id' }    
+    IDFP:                { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpFormasPago,Id' }    
+    DiaDePago:           { type: int(2), notnull: true, defatul: 0 }
+    Iva:                 { type: boolean, notnull: true, default: 0, index: index, comment: 'db,ValoresSN,IDTipo' }
+    RecargoEqui:         { type: boolean, notnull: true, default: 0, index: index, comment: 'db,ValoresSN,IDTipo' }
+    Observaciones:       { type: text, notnull: false, default: NULL }
+    Avisos:              { type: text, notnull: false, default: NULL }
+    Vigente:             { type: boolean, notnull: true, default: 0, index: index, comment: 'db,ValoresSN,IDTipo' }
+    IDComercial:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    IDTarifa:            { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpTarifas,Id' }
+    LimiteRiesgo:        { type: decimal(2), notnull: true, default: '0.00' }
+    FechaRiesgo:         { type: date, notnull: true, default: '0000-00-00' }
+    FechaRiesgo:         { type: date, notnull: true, default: '0000-00-00' }
+    CodigoRiesgo:        { type: varchar(20), notnull: false, default: NULL }
+    Sexo:                { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,Sexos,IDTipo' }
+    Tratamiento:         { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,Tratamientos,IDTipo' }
+    FechaNacimiento:     { type: date, notnull: true, default: '0000-00-00' }
+    Password:            { type: varchar(50), notnull: false, default: NULL }
+    IDSucursal:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpSucursales,Id' }
+    IDZona:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpZonas,Id' }
+    FacturacionAgrupada: { type: boolean, notnull: true, default: 1, index: index, comment: 'db,ValoresSN,IDTipo' }   
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:     
+
+# Tipos de clientes
+ErpClientesTipos:
+  comment: Tipos de clientes
+  columns:
+    Tipo: { type: varchar(30), notnull: true }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations: 
+    
+# Grupos de clientes
+ErpClientesGrupos:
+  comment: Grupos de clientes
+  columns:
+    Grupo: { type: varchar(30), notnull: true }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations: 
+    
+# Clientes Contactos
+ErpClientesContactos:
+  comment: Contactos de clientes
+  columns:
+    IDCliente: { type: bigint(11), notnull: true, index: index, comment: 'db,ErpClientes,Id' }
+    Cargo:     { type: varchar(20), notnull: false }
+    Nombre:    { type: varchar(50), notnull: true }
+    Telefono:  { type: varchar(30), notnull: false }
+    Fax:       { type: varchar(30), notnull: false }    
+    Movil:     { type: varchar(30), notnull: false }    
+    EMail:     { type: varchar(50), notnull: false }    
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations:    
+    
+# Direcciones de entrega de clientes
+ErpClientesDentrega:
+  comment: Direcciones de entrega de clientes
+  columns:
+    IDCliente:       { type: bigint(11), notnull: true, index: index, comment: 'db,ErpClientes,Id' }
+    Nombre:          { type: varchar(50), notnull: true }    
+    Direccion:       { type: varchar(50), notnull: true }
+    IDPais:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommPaises,Id' }
+    IDProvincia:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommProvincias,Id' }
+    IDPoblacion:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,CommMunicipios,Id' }
+    CodigoPostal:    { type: varchar(10), notnull: true, default: '' }
+    Telefono:        { type: varchar(30), notnull: false }
+    Fax:             { type: varchar(30), notnull: false }    
+    Movil:           { type: varchar(30), notnull: false }    
+    EMail:           { type: varchar(50), notnull: false }    
+    Responsable:     { type: varchar(50), notnull: false }    
+    Horario:         { type: varchar(50), notnull: false }    
+    HorarioLlamadas: { type: varchar(50), notnull: false }    
+    IDComercial:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpAgentes,Id' }
+    IDZona:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpZonas,Id' }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations:    
