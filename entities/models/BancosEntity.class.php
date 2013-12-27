@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(bancos)
  */
-class BancosEntity extends Entity {
+class BancosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -34,12 +34,12 @@ class BancosEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'bancos';
+    protected $_tableName = 'ErpBancos';
     /**
      * Nombre de la primaryKey
      * @var string

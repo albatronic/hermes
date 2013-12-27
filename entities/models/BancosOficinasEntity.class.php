@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(bancos_oficinas)
  */
-class BancosOficinasEntity extends Entity {
+class BancosOficinasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -20,72 +20,89 @@ class BancosOficinasEntity extends Entity {
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $ID;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $IDBanco;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $IDOficina;
+
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
-    protected $Digito;
+    protected $Digito = '0';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $Direccion;
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $IDPais = '68';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $IDProvincia = '18';
+
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="bancos_oficinas")
      */
-    protected $Poblacion;
-    /**
-     * @orm:Column(type="")
-     * @assert:NotBlank(groups="bancos_oficinas")
-     */
-    protected $IDProvincia = "18";
+    protected $IDPoblacion = '0';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $CodigoPostal = '0000000000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $Telefono;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $Fax;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="bancos_oficinas")
      */
     protected $EMail;
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'bancos_oficinas';
+    protected $_tableName = 'ErpBancosOficinas';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'ID';
-
 
     /**
      * GETTERS Y SETTERS
@@ -93,6 +110,7 @@ class BancosOficinasEntity extends Entity {
     public function setID($ID) {
         $this->ID = $ID;
     }
+
     public function getID() {
         return $this->ID;
     }
@@ -100,6 +118,7 @@ class BancosOficinasEntity extends Entity {
     public function setIDBanco($IDBanco) {
         $this->IDBanco = $IDBanco;
     }
+
     public function getIDBanco() {
         if (!($this->IDBanco instanceof Bancos))
             $this->IDBanco = new Bancos($this->IDBanco);
@@ -109,6 +128,7 @@ class BancosOficinasEntity extends Entity {
     public function setIDOficina($IDOficina) {
         $this->IDOficina = $IDOficina;
     }
+
     public function getIDOficina() {
         return $this->IDOficina;
     }
@@ -116,6 +136,7 @@ class BancosOficinasEntity extends Entity {
     public function setDigito($Digito) {
         $this->Digito = $Digito;
     }
+
     public function getDigito() {
         return $this->Digito;
     }
@@ -123,20 +144,35 @@ class BancosOficinasEntity extends Entity {
     public function setDireccion($Direccion) {
         $this->Direccion = $Direccion;
     }
+
     public function getDireccion() {
         return $this->Direccion;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = $Poblacion;
+    public function setIDPais($IDPais) {
+        $this->IDPais = $IDPais;
     }
-    public function getPoblacion() {
-        return $this->Poblacion;
+
+    public function getIDPais() {
+        if (!($this->IDPais instanceof Paises))
+            $this->IDPais = new Paises($this->IDPais);
+        return $this->IDPais;
+    }
+
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
+    }
+
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setIDProvincia($IDProvincia) {
         $this->IDProvincia = $IDProvincia;
     }
+
     public function getIDProvincia() {
         if (!($this->IDProvincia instanceof Provincias))
             $this->IDProvincia = new Provincias($this->IDProvincia);
@@ -146,6 +182,7 @@ class BancosOficinasEntity extends Entity {
     public function setCodigoPostal($CodigoPostal) {
         $this->CodigoPostal = $CodigoPostal;
     }
+
     public function getCodigoPostal() {
         return $this->CodigoPostal;
     }
@@ -153,6 +190,7 @@ class BancosOficinasEntity extends Entity {
     public function setTelefono($Telefono) {
         $this->Telefono = $Telefono;
     }
+
     public function getTelefono() {
         return $this->Telefono;
     }
@@ -160,6 +198,7 @@ class BancosOficinasEntity extends Entity {
     public function setFax($Fax) {
         $this->Fax = $Fax;
     }
+
     public function getFax() {
         return $this->Fax;
     }
@@ -167,6 +206,7 @@ class BancosOficinasEntity extends Entity {
     public function setEMail($EMail) {
         $this->EMail = $EMail;
     }
+
     public function getEMail() {
         return $this->EMail;
     }

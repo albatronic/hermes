@@ -31,7 +31,7 @@
                     {% set classFila = 'Par' %}
                 {% endif %}
 
-            <form name="linea{{key}}" action="" method="POST">
+            <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="{{values.controller}}" type="hidden" />
                 <input name="action" value="cambia" type="hidden" />
                 <input name="idPedido" value="{{objeto.IDPedido}}" type="hidden" />
@@ -40,7 +40,7 @@
                 <input name="filtro[hastaFecha]" value="{{values.filtro.hastaFecha}}" type="hidden" />
                 <input name="filtro[idProveedor]" value="{{values.filtro.idProveedor}}" type="hidden" />
             <tr class="{{classFila}}">
-                <td align="right"><a href='{{app.path}}/PedidosCab/Edit/{{objeto.IDPedido}}' target="_blank" title='Ver Pedido ...'>{{objeto.IDPedido}}</a></td>
+                <td align="right"><a href='{{app.path}}/PedidosCab/Edit/{{objeto.PrimaryKeyMD5}}' target="_blank" title='Ver Pedido ...'>{{objeto.IDPedido}}</a></td>
                 <td>{{objeto.SuPedido}}</td>
                 <td align="center">{{objeto.Fecha}}</td>
                 <td>
@@ -77,7 +77,7 @@
 <div style="width: 29%; float: left; margin-bottom: 5px; margin-left: 3px;">
 {% if values.totales.pedidosSeleccionados > 0 %}
         <div class="SubtituloFacturacion">Condiciones Facturación</div>
-        <form name="linea{{key}}" action="" method="POST">
+        <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="{{values.controller}}" type="hidden" />
             <input name="action" value="Conformar" type="hidden" />
             <input name="filtro[idSucursal]" value="{{values.filtro.idSucursal}}" type="hidden" />
@@ -87,10 +87,10 @@
 
             <div style="margin-top: 10px;">
             <div style="float: left;">
-                {{ macro.fecha('Fecha Factura','Etiqueta','fecha','fecha',none,'10') }}
+                {{ macro.fecha('Fecha Factura','Etiqueta','fecha','fecha',none,'10') }}                  
             </div>
             <div style="float: left; margin-left: 10px;">
-                {{ macro.select('Serie','Etiqueta','idContador','idContador',none,none,values.contador.fetchAll(idSucursal,4),'Select') }}
+                {{ macro.select('Serie','Etiqueta','idContador','idContador',45,none,values.contador.fetchAll(idSucursal,4),'Select') }}
             </div>
             </div>
 

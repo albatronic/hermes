@@ -1,0 +1,213 @@
+# FORMATOS DE PLANTILLAS.
+# docs/docsXXX/informes/circulares.yml
+#
+# @author Sergio Perez <sergio.perez@albatronic.com>
+# @copyright Informatica ALBATRONIC
+# @since: 16-11-2013
+#
+---
+circulares:
+
+  # ---------------------------------------------------------
+  # INFORME 347
+  # ---------------------------------------------------------
+  -
+    title: Ventas trimestrales (facturas) Modelo 347
+    comment: >
+      Resumen de ventas por trimestre.
+      Los importes son total factura iva incluido
+    idPerfil: ''
+    plantilla: null
+    formatos : { '0': 'el de origen', '1' : 'Pdf'}
+    archivosSeparados: true
+    orientation: P
+    unit: mm
+    format: A4
+    margins: '10,10,15,10'
+    
+    queryMaster: >
+      SELECT 
+        c.RazonSocial,c.Cif,
+        SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
+        SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
+        SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
+        SUM( CASE quarter(Fecha) WHEN '4' THEN Total ELSE 0 END ) AS '4T',
+        SUM(Total) AS Total
+      FROM 
+        DBNAME.ErpClientes c, 
+        DBNAME.ErpFemitidasCab f
+      WHERE c.IDCliente = f.IDCliente AND YEAR(Fecha) = 'ANIO'
+      group by f.IDCliente
+      order by c.RazonSocial ASC
+      
+    queryDetail: >
+    
+    
+    filters:
+      -
+        field: ANIO
+        caption: Año
+        entity: Sucursales
+        method: getSucursalesUsuario
+        params:
+        type: input
+        default: '<?php echo date('Y');?>'
+      -
+        field: ANIO
+        caption: Mes
+        entity: Sucursales
+        method: getSucursalesUsuario
+        params:
+        type: input
+        default: '<?php echo date('Y');?>'
+        
+    columnsMaster:
+      -
+        title: Cliente
+        field: RazonSocial
+        length: 25
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: Cif
+        field: Cif
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: 1T
+        field: 1T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: NOMBR_EMPR
+        field: 1Tasdasdas
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+        
+    columnsDetail:
+        
+  # ---------------------------------------------------------
+  # RECLAMACIÓN DE MOROSOS
+  # ---------------------------------------------------------
+  -
+    title: Reclamación de morosos
+    comment: >
+      Carta de reclamación de deuda. Para cada cliente se relacionan los
+      recibos pendientes de pago
+    idPerfil: ''
+    plantilla: null
+    formatos : { '0': 'el de origen', '1' : 'Pdf'}
+    archivosSeparados: true
+    orientation: P
+    unit: mm
+    format: A4
+    margins: '10,10,15,10'
+    
+    queryMaster: >
+      SELECT 
+        c.RazonSocial,c.Cif,
+        SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
+        SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
+        SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
+        SUM( CASE quarter(Fecha) WHEN '4' THEN Total ELSE 0 END ) AS '4T',
+        SUM(Total) AS Total
+      FROM 
+        DBNAME.ErpClientes c, 
+        DBNAME.ErpFemitidasCab f
+      WHERE c.IDCliente = f.IDCliente AND YEAR(Fecha) = 'ANIO'
+      group by f.IDCliente
+      order by c.RazonSocial ASC
+      
+    queryDetail: >
+    
+    
+    filters:
+      -
+        field: SUCURSAL
+        caption: Sucursal
+        entity: Sucursales
+        method: getSucursalesUsuario
+        params:
+        type: select
+        default: '<?php echo $_SESSION['suc'];?>'        
+      -
+        field: DESDEFECHA
+        caption: Desde Fecha Vcto.
+        entity:
+        method:
+        params:
+        type: date
+        default: '01-01-<?php echo date('Y');?>'
+      -
+        field: HASTAFECHA
+        caption: Hasta Fecha Vcto.
+        entity:
+        method:
+        params:
+        type: date
+        default: '31-12-<?php echo date('Y');?>'
+      -
+        field: ESTADO
+        caption: Estado recibos
+        entity: EstadosRecibos
+        method: fetchAll
+        params:
+        type: select
+        default: 2
+        
+    columnsMaster:
+      -
+        title: Cliente
+        field: RazonSocial
+        length: 25
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: Cif
+        field: Cif
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: 1T
+        field: 1T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: NOMBR_EMPR
+        field: 1Tasdasdas
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+        
+    columnsDetail:
+        
+

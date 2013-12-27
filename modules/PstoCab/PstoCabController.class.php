@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CONTROLLER FOR PstoCab
  * @author Sergio Perez <sergio.perez@albatronic.com>
@@ -12,18 +13,28 @@ class PstoCabController extends Controller {
     protected $entity = "PstoCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->ListAction();
+    }
+    
     /**
      * Generar el listado de presupuestos apoyándose en el método padre
      * Si el usuario es comercial muestra solo los
      * suyos, si no es comercial muestra todos.
      * @return array
      */
-    public function listAction() {
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
-        if ($usuario->getEsComercial())
+    public function listAction($aditionalFilter = '') {
+
+        $filtro = "";
+
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
+
+        if ($usuario->getEsComercial()) {
+            $psto = new PstoCab();
+            $tabla = $psto->getDataBaseName() . "." . $psto->getTableName();
+            unset($psto);
             $filtro = $tabla . ".IDComercial='" . $usuario->getIDAgente() . "'";
-        unset($usuario);
+        }
 
         return parent::listAction($filtro);
     }
@@ -34,7 +45,7 @@ class PstoCabController extends Controller {
      * @return array Template y values
      */
     public function confirmarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
             $datos->confirma();
@@ -42,7 +53,7 @@ class PstoCabController extends Controller {
             $this->values['alertas'] = $datos->getAlertas();
             unset($datos);
 
-            $template = "PstoCab/edit.html.twig";
+            $template = $this->entity . "/edit.html.twig";
             $this->values['datos'] = new PstoCab($this->request['PstoCab']['IDPsto']);
 
             return array('template' => $template, 'values' => $this->values);
@@ -57,7 +68,8 @@ class PstoCabController extends Controller {
      * @return array Template y values
      */
     public function anularAction() {
-        if ($this->values['permisos']['A']) {
+
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
             $datos->anulaConfirmacion();
@@ -81,7 +93,7 @@ class PstoCabController extends Controller {
      * @return array Template y values
      */
     public function duplicarAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
             $idPstoNuevo = $datos->duplica();
@@ -105,38 +117,73 @@ class PstoCabController extends Controller {
      * @return <type>
      */
     public function enviarAction() {
+        
+        switch ($this->request['accion']) {
+            case 'Enviar':
+                $para = $this->request['Para'];
+                $de = $this->request['De'];
+                $deNombre = $this->request['DeNombre'];
+                $conCopia = $this->request['Cc'];  
+                $conCopiaOculta = $this->request['Cco'];                
+                $asunto = $this->request['Asunto'];
+                $mensaje = $this->request['Mensaje'];
+                $adjuntos = array($this->request['Adjunto'],);
 
-        if ($this->request['accion'] == 'Enviar') {
+                $envio = new Mail();
+                $ok = $envio->send($para, $de, $deNombre, $conCopia, $conCopiaOculta, $asunto, $mensaje, $adjuntos);
+                if ($ok) {
+                    $entidad = new $this->entity($this->request['PstoCab']['IDPsto']);
+                    $entidad->auditaEmail();
+                    unset($entidad);
+                    $this->values['resultadoEnvio'][] = "Envío con éxito";
+                } else {
+                    $this->values['resultadoEnvio'] = $envio->getMensaje();
+                }
+                unset($envio);
+                break;
 
-            $para = $this->request['Para'];
-            $de = $this->request['De'];
-            $deNombre = $this->request['DeNombre'];
-            $asunto = $this->request['Asunto'];
-            $mensaje = $this->request['Mensaje'];
-            $adjuntos = array($this->request['Adjunto'],);
+            case 'CambioFormato':
+                $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
+                $formatos = DocumentoPdf::getFormatos($this->entity);
+                $formato = $this->request['Formato'];
+                if ($formato == '')
+                    $formato = 0;
 
-            $envio = new Mail();
-            $this->values['resultadoEnvio'] = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
-            unset($envio);
-        } else {
-            $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
-            $formatos = DocumentoPdf::getFormatos('presupuestos');
-            $formato = $this->request['Formato'];
-            if ($formato == '')
-                $formato = 0;
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDPsto()), $formato);
+                $this->values['email'] = array(
+                    'Para' => $this->request['Para'],
+                    'De' => $this->request['De'],
+                    'DeNombre' => $this->request['DeNombre'],
+                    'Cc' => $this->request['Cc'],
+                    'Cco' => $this->request['Cco'],                    
+                    'Asunto' => $this->request['Asunto'],
+                    'Formatos' => $formatos,
+                    'Formato' => $formato,
+                    'Mensaje' => $this->request['Mensaje'],
+                    'idAlbaran' => $datos->getIDPsto(),
+                );
+                break;
 
-            $this->values['archivo'] = $this->generaPdf('presupuestos', array('0' => $datos->getIDPsto()), $formato);
-            $this->values['email'] = array(
-                'Para' => $datos->getIDCliente()->getEMail(),
-                'De' => $datos->getIDComercial()->getEMail(),
-                'DeNombre' => $datos->getIDComercial()->getNombre(),
-                'Cc' => '',
-                'Asunto' => 'Presupuesto n. ' . $datos->getIDPsto(),
-                'Formatos' => $formatos,
-                'Formato' => $formato,
-                'Mensaje' => 'Le adjunto el presupuesto ' . $datos->getIDPsto() . "\n\nUn saludo.",
-                'idPsto' => $datos->getIDPsto(),
-            );
+            default:
+                $datos = new PstoCab($this->request['PstoCab']['IDPsto']);
+                $formatos = DocumentoPdf::getFormatos($this->entity);
+                $formato = $this->request['Formato'];
+                if ($formato == '')
+                    $formato = 0;
+
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDPsto()), $formato);
+                $this->values['email'] = array(
+                    'Para' => $datos->getIDCliente()->getEMail(),
+                    'De' => $_SESSION['usuarioPortal']['email'],//$datos->getIDComercial()->getIDAgente()->getEMail(),
+                    'DeNombre' => $datos->getIDComercial()->getNombre(),
+                    'Cco' => $_SESSION['usuarioPortal']['email'],
+                    'Asunto' => 'Presupuesto n. ' . $datos->getIDPsto(),
+                    'Formatos' => $formatos,
+                    'Formato' => $formato,
+                    'Mensaje' => 'Le adjunto el presupuesto ' . $datos->getIDPsto() . "\n\nUn saludo.",
+                    'idPsto' => $datos->getIDPsto(),
+                );
+                break;
         }
 
         return parent::enviarAction();

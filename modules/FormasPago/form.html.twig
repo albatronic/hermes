@@ -3,12 +3,13 @@
 
 {% set digitosCta = emp.DigitosCuentaContable %}
 
-{{ macro.input('Descripción','Etiqueta','text','FormasPago[Descripcion]','FormasPago_Descripcion',datos.Descripcion,'50','CampoTextoLargo') }}
-{{ macro.input('Número de Vctos','Etiqueta','text','FormasPago[NumeroVctos]','FormasPago_NumeroVctos',datos.NumeroVctos,'4','CampoUnidades') }}
-{{ macro.input('Día Primer Vcto','Etiqueta','text','FormasPago[DiaPrimerVcto]','FormasPago_DiaPrimerVcto',datos.DiaPrimerVcto,'4','CampoUnidades') }}
-{{ macro.input('Días de Intervalo','Etiqueta','text','FormasPago[DiasIntervalo]','FormasPago_DiasIntervalo',datos.DiasIntervalo,'4','CampoUnidades') }}
-{{ macro.input('Cta. Contable','Etiqueta','text','FormasPago[CContable]','FormasPago_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}
-{{ macro.select('Anotar en Caja','Etiqueta','FormasPago[AnotarEnCaja]','FormasPago_AnotarEnCaja',none,datos.AnotarEnCaja.IDTipo,datos.AnotarEnCaja.fetchAll,'Select') }}
-{{ macro.select('Estado Recibo','Etiqueta','FormasPago[EstadoRecibo]','FormasPago_EstadoRecibo',none,datos.EstadoRecibo.IDTipo,datos.EstadoRecibo.fetchAll,'Select') }}
-{{ macro.input('Recargo Financiero','Etiqueta','text','FormasPago[RecargoFinanciero]','FormasPago_RecargoFinanciero',datos.RecargoFinanciero,'5','CampoUnidades') }}
-{{ macro.input('Dcto. Financiero','Etiqueta','text','FormasPago[DescuentoFinanciero]','FormasPago_DescuentoFinanciero',datos.DescuentoFinanciero,'5','CampoUnidades') }}
+{{ macro.input(values.atributos.Descripcion,'Etiqueta','text','FormasPago[Descripcion]','FormasPago_Descripcion',datos.Descripcion,'50','CampoTextoLargo') }}
+{{ macro.input(values.atributos.NumeroVctos,'Etiqueta','text','FormasPago[NumeroVctos]','FormasPago_NumeroVctos',datos.NumeroVctos,'4','CampoUnidades') }}
+{{ macro.input(values.atributos.DiaPrimerVcto,'Etiqueta','text','FormasPago[DiaPrimerVcto]','FormasPago_DiaPrimerVcto',datos.DiaPrimerVcto,'4','CampoUnidades') }}
+{{ macro.input(values.atributos.DiasIntervalo,'Etiqueta','text','FormasPago[DiasIntervalo]','FormasPago_DiasIntervalo',datos.DiasIntervalo,'4','CampoUnidades') }}
+{{ macro.input(values.atributos.CContable,'Etiqueta','text','FormasPago[CContable]','FormasPago_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}
+{{ macro.input(values.atributos.AnotarEnCaja,'Etiqueta','checkbox','FormasPago[AnotarEnCaja]','FormasPago_AnotarEnCaja',datos.AnotarEnCaja.IDTipo,'255','CampoTextoLargo') }} 
+{# macro.radio(values.atributos.EstadoRecibo,'Etiqueta','FormasPago[EstadoRecibo]','FormasPago_EstadoRecibo',datos.EstadoRecibo.IDTipo,datos.EstadoRecibo.fetchAll(none,0),'Select') #}
+{{ macro.select(values.atributos.EstadoRecibo,'Etiqueta','FormasPago[EstadoRecibo]','FormasPago_EstadoRecibo',150,datos.EstadoRecibo.IDTipo,datos.EstadoRecibo.fetchAll,'Select') }}
+{{ macro.input(values.atributos.RecargoFinanciero,'Etiqueta','text','FormasPago[RecargoFinanciero]','FormasPago_RecargoFinanciero',datos.RecargoFinanciero,'5','CampoUnidades') }}
+{{ macro.input(values.atributos.DescuentoFinanciero,'Etiqueta','text','FormasPago[DescuentoFinanciero]','FormasPago_DescuentoFinanciero',datos.DescuentoFinanciero,'5','CampoUnidades') }}

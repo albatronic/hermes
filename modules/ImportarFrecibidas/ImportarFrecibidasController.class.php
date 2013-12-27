@@ -171,7 +171,6 @@ class ImportarFrecibidasController extends Controller {
                     $factura->setIDFP($this->request['IDFP']);
                     $factura->setAsiento(9999);
                     $factura->setCuentaCompras($ctaCompras);
-                    $factura->setClave(md5($factura->getNumeroFactura()));
                     if ($factura->create()) {
                         $factura->creaVctos();
                     } else

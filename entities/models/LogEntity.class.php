@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(log)
  */
-class LogEntity extends Entity {
+class LogEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -42,12 +42,12 @@ class LogEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'log';
+    protected $_tableName = 'ErpLog';
     /**
      * Nombre de la primaryKey
      * @var string

@@ -28,7 +28,7 @@ class ManufacLineasController extends Controller {
 
     public function listAction($idManufac='', $tipo='') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idManufac == '')
                 $idManufac = $this->request[2];
             if ($tipo == '')
@@ -94,7 +94,7 @@ class ManufacLineasController extends Controller {
      * @return array con el template y valores a renderizar
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
 
                 case 'POST': //CREAR NUEVO REGISTRO
@@ -145,7 +145,7 @@ class ManufacLineasController extends Controller {
 
         switch ($this->request['accion']) {
             case 'G': //GUARDAR DATOS
-                if ($this->values['permisos']['A']) {
+                if ($this->values['permisos']['permisosModulo']['UP']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
                     $datos->bind($this->request[$this->entity]);
                     if ($datos->valida()) {
@@ -170,7 +170,7 @@ class ManufacLineasController extends Controller {
                 break;
 
             case 'B': //BORRAR DATOS
-                if ($this->values['permisos']['B']) {
+                if ($this->values['permisos']['permisosModulo']['DE']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
 
                     if ($datos->erase()) {
@@ -197,7 +197,7 @@ class ManufacLineasController extends Controller {
      * @return array Template y values
      */
     public function expedirAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
             if ($datos->expide()) {
@@ -215,7 +215,7 @@ class ManufacLineasController extends Controller {
     }
 
     public function recepcionarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
             $datos->recepciona();

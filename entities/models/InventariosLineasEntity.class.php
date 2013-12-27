@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(inventarios_lineas)
  */
-class InventariosLineasEntity extends Entity {
+class InventariosLineasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -66,12 +66,12 @@ class InventariosLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'inventarios_lineas';
+    protected $_tableName = 'ErpInventariosLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string

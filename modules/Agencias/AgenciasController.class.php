@@ -14,5 +14,9 @@ class AgenciasController extends Controller {
     protected $entity = "Agencias";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+        
 }
 ?>

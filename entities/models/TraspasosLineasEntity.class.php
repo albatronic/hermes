@@ -7,68 +7,68 @@
  */
 
 /**
- * @orm:Entity(traspasos_lineas)
+ * @orm:Entity(TraspasosLineas)
  */
-class TraspasosLineasEntity extends Entity {
+class TraspasosLineasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $IDLinea;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      * @var entities\TraspasosCab
      */
     protected $IDTraspaso;
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $Tipo = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      * @var entities\Articulos
      */
     protected $IDArticulo = '0';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $Descripcion;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $Unidades = '1.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $UnidadMedida = 'UMA';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      * @var entities\Almacenes
      */
     protected $IDAlmacen = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $Precio = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="traspasos_lineas")
+     * @assert:NotBlank(groups="TraspasosLineas")
      * @var entities\EstadosManufac
      */
     protected $IDEstado = '0';
@@ -76,12 +76,12 @@ class TraspasosLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'traspasos_lineas';
+    protected $_tableName = 'ErpTraspasosLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -205,5 +205,5 @@ class TraspasosLineasEntity extends Entity {
 
 }
 
-// END class traspasos_lineas
+// END class TraspasosLineas
 ?>

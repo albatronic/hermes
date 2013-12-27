@@ -1,4 +1,4 @@
-# Module: FrecibidasCab
+# Module: ErpFrecibidasCab
 #
 # @author Sergio Perez <sergio.perez@albatronic.com>
 # @copyright Informatica ALBATRONIC
@@ -9,7 +9,7 @@ listados:
   -
     title: Facturas recibidas
     order_by: >
-      frecibidas_cab.Fecha ASC
+      ErpFrecibidasCab.Fecha ASC
     break_field: null
     idPerfil: null
     orientation: P
@@ -93,8 +93,8 @@ listados:
   -
     title: Facturas X Sucursal
     order_by: >
-      frecibidas_cab.IDSucursal,
-      frecibidas_cab.Fecha ASC
+      ErpFrecibidasCab.IDSucursal,
+      ErpFrecibidasCab.Fecha ASC
     break_field: IDSucursal
     idPerfil: null
     orientation: P
@@ -169,8 +169,8 @@ listados:
   -
     title: Facturas X Proveedor
     order_by: >
-      frecibidas_cab.IDProveedor,
-      frecibidas_cab.Fecha ASC
+      ErpFrecibidasCab.IDProveedor,
+      ErpFrecibidasCab.Fecha ASC
     break_field: IDProveedor
     idPerfil: null
     orientation: P
@@ -242,50 +242,3 @@ listados:
         total: YES
         formula: null
         format: %01.2f
-  -
-    title: Listado para subir facturas escaneadas
-    order_by: IDSucursal,NumeroFactura ASC
-    break_field: null
-    idPerfil: null
-    orientation: P
-    unit: mm
-    format: A4
-    margins: 10, 10, 15, 10
-    body_font: Courier, ,8
-    columns:
-      -
-        title: Id
-        field: IDFactura
-        length: 15
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      -
-        title: Número
-        field: NumeroFactura
-        length: 15
-        align: L
-        type: string
-        total: NO
-        formula: null
-        format: null
-      -
-        title: Sucursal
-        field: IDSucursal
-        length: 30
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      -
-        title: Proveedor
-        field: IDProveedor
-        length: 43
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null

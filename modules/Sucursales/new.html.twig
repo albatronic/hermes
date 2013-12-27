@@ -10,11 +10,10 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="{{ values.controller }}" type="hidden" />
         <input name="action" id="action" value="new" type="hidden" />
         <input name="Sucursales[IDSucursal]" value="{{values.datos.IDSucursal}}" type="hidden" />
-        <input name="Sucursales[IDEmpresa]" value="{{ values.linkBy.value }}" type="hidden" />
         {% include '_global/comandosCreate.html.twig' %}
 
         <div class="Cuerpo">

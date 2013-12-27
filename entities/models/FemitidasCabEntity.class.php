@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(femitidas_cab)
  */
-class FemitidasCabEntity extends Entity {
+class FemitidasCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -243,32 +243,22 @@ class FemitidasCabEntity extends Entity {
     protected $IDAgencia = '0';
 
     /**
-     * @orm:Column(type="string")
-     */
-    protected $Clave;
-
-    /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="femitidas_cab")
      */
     protected $IDFP = '0';
-    
-    protected $PrintedAt = '0000-00-00 00:00:00';
-    protected $PrintedBy = '0';
-    protected $EmailedAt = '0000-00-00 00:00:00';
-    protected $EmailedBy = '0';
 
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'femitidas_cab';
+    protected $_tableName = 'ErpFemitidasCab';
 
     /**
      * Nombre de la primaryKey
@@ -608,14 +598,6 @@ class FemitidasCabEntity extends Entity {
         return $this->IDAgencia;
     }
 
-    public function setClave($Clave) {
-        $this->Clave = trim($Clave);
-    }
-
-    public function getClave() {
-        return $this->Clave;
-    }
-
     public function setIDFP($IDFP) {
         $this->IDFP = $IDFP;
     }
@@ -624,42 +606,6 @@ class FemitidasCabEntity extends Entity {
         if (!($this->IDFP instanceof FormasPago))
             $this->IDFP = new FormasPago($this->IDFP);
         return $this->IDFP;
-    }
-
-    public function setPrintedBy($PrintedBy) {
-        $this->PrintedBy = $PrintedBy;
-    }
-
-    public function getPrintedBy() {
-        if (!($this->PrintedBy instanceof Agentes))
-            $this->PrintedBy = new Agentes($this->PrintedBy);
-        return $this->PrintedBy;
-    }
-
-    public function setPrintedAt($PrintedAt) {
-        $this->PrintedAt = $PrintedAt;
-    }
-
-    public function getPrintedAt() {
-        return $this->PrintedAt;
-    }
-
-    public function setEmailedBy($EmailedBy) {
-        $this->EmailedBy = $EmailedBy;
-    }
-
-    public function getEmailedBy() {
-        if (!($this->EmailedBy instanceof Agentes))
-            $this->EmailedBy = new Agentes($this->EmailedBy);
-        return $this->EmailedBy;
-    }
-
-    public function setEmailedAt($EmailedAt) {
-        $this->EmailedAt = $EmailedAt;
-    }
-
-    public function getEmailedAt() {
-        return $this->EmailedAt;
     }
 
 }

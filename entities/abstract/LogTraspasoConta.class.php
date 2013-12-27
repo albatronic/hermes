@@ -8,9 +8,6 @@
  * @since 26-may-2012
  *
  */
-
-
-
 class LogTraspasoConta {
 
     protected $IDTraspaso;
@@ -42,13 +39,13 @@ class LogTraspasoConta {
     }
 
     public function getTraspaso($idTraspaso) {
-        return $this->Trapasos['traspasos'][$idTraspaso];
+        return $this->Traspasos['traspasos'][$idTraspaso];
     }
 
     public function save() {
         $ok = false;
 
-        $stream = Yaml::dump($this->Traspasos, 3);
+        $stream = sfYaml::dump($this->Traspasos, 3);
         $fp = fopen($this->ArchivoLogTraspasos, "w");
         if ($fp) {
             fwrite($fp, $stream);

@@ -34,7 +34,7 @@ class RecepcionarCabController extends Controller {
      */
     public function listAction() {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
 
             switch ($this->request['idTipo']) {
                 case 'PedidosCab':

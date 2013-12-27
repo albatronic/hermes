@@ -12,7 +12,7 @@
         </div>
 
 	{% block filtro %}
-        {% if values.permisos['C'] %}
+        {% if values.permisos.permisosModulo['CO'] %}
             {% include 'Existencias/filtro.html.twig' with {'filter':values.listado.filter} %}
         {%endif%}
 	{% endblock %}

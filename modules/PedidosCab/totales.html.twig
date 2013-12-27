@@ -1,9 +1,9 @@
-    <div class="TotalAlbaran">Total Pedido:&nbsp;{{datos.Total}} €</div>
+    <div class="TotalAlbaran" id="PedidosCab_LiteralTotal">Total Pedido:&nbsp;{{macro.moneda(datos.Total)}}</div>
     <input name="PedidosCab[Total]" value="{{datos.Total}}" type="hidden" />
 
     <p style="margin-top: 10px; margin-bottom: 5px;">
-    Bruto:&nbsp;<input name="PedidosCab[Importe]" value="{{datos.Importe}}" class="CampoImporte" readonly>
-    Descuento:&nbsp;<input name="PedidosCab[Descuento]" value="{{datos.Descuento}}" class="CampoImporte">
+    Bruto:&nbsp;<input name="PedidosCab[Importe]" id="PedidosCab_Importe" value="{{datos.Importe}}" class="CampoImporte" readonly>
+    Descuento:&nbsp;<input name="PedidosCab[Descuento]" id="PedidosCab_Descuento" value="{{datos.Descuento}}" class="CampoImporte">
     </p>
 
     <table align="center" witdh="80%">

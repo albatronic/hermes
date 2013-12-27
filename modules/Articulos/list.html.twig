@@ -14,15 +14,16 @@
             <tr class='Titulos'>
                 <td class='Item'>Código</td>
                 <td class='Item'>Descripción</td>
+                <td class='Item'>CategorÍa</td>
                 <td class='Item'>Familia</td>
-                <td class='Item'>Subfamilia</td>
-                {% if user.Rol.IDTipo == '9'%}
-                <td class='Item'>PVD</td>
+                {% if user.IDRol.IDTipo == '0'%}
+                <td class='Item'>PVD S/I</td>
                 {% endif %}
-                <td class='Item'>PVP</td>
+                <td class='Item'>PVP C/I</td>
                 <td class='Item'>IVA</td>
-                <td class='Item'>Estado</td>
-                <td class='Item'>Fotos</td>
+                <td class='Item'>Estado1</td>
+                {#<td class='Item'>Estado2</td>#}
+                {#<td class='Item'>Fotos</td>#}
             </tr>
 
             <tbody class='Cuerpo'>
@@ -32,20 +33,39 @@
                 {% else %}
                     {% set classFila = 'Par' %}
                 {% endif %}
-            <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.IDArticulo}}'" class='{{classFila}}'>
-                <td class='Item'><a href="{{app.path}}/Articulos/edit/{{objeto.IDArticulo}}" title="Editar...">{{objeto.Codigo}}</a></td>
-                <td class='Item'>{{objeto.Descripcion|slice(0,40)}}</td>
-                <td class='Item'>{{objeto.IDFamilia.Familia|slice(0,30)}}</td>
-                <td class='Item'>{{objeto.IDSubfamilia.Subfamilia}}</td>
-                {% if user.Rol.IDTipo == '9'%}
+                {% set urlAmigable = objeto.getHref.url %}
+            <tr>
+                <td class='Item'><a href="{{app.path}}/Articulos/edit/{{objeto.PrimaryKeyMD5}}" title="Editar...">{{objeto.Codigo}}</a></td>
+                <td class='Item'>
+                    {{ macro.actualizaColumna('Articulos',objeto.getPrimaryKeyValue,'Publish',objeto.Publish.IDTipo,'Publicar/Despublicar')}}  
+                    <a href="{{app.path}}/Articulos/edit/{{objeto.PrimaryKeyMD5}}" title="Editar...">{{objeto.Descripcion|slice(0,30)}}</a>
+                </td>
+                <td class='Item'>{{objeto.IDCategoria.Familia|slice(0,25)}}</td>
+                <td class='Item'>{{objeto.IDFamilia.Familia|slice(0,25)}}</td>
+                {% if user.IDRol.IDTipo == '0'%}
                 <td class='Item' align="right">
-                    {{objeto.Pvd}}
+                    {{objeto.Pvd|number_format(3, '.', ',')}}
                 </td>
                 {% endif %}
-                <td class="Item" align="right">{{objeto.Pvp}}</td>
+                <td class="Item" align="right">{{objeto.PrecioVentaConImpuestos('UMV',3)|number_format(3, '.', ',')}}</td>
                 <td class="Item" align="right">{{objeto.IDIva.Iva}}</td>
-                <td class="Item">{{objeto.IDEstado.Estado}}</td>
-                <td class="Item" align="right">{{objeto.getNumberOfDocuments}}</td>
+                <td class="Item">
+                    <select id="IDEstado1{{key}}" style="width: 100px" onchange="actualizaColumna('Articulos','{{objeto.PrimaryKeyValue}}','IDEstado1',$('#IDEstado1{{key}}').val());">
+                        {% for estado in objeto.IDEstado1.fetchAll('Estado') %}
+                            <option value="{{estado.Id}}" {%if estado.Id == objeto.IDEstado1.IDEstado%} SELECTED{%endif%}>{{estado.Value}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                {#
+                <td class="Item">
+                    <select id="IDEstado2{{key}}" style="width: 100px" onchange="actualizaColumna('Articulos','{{objeto.PrimaryKeyValue}}','IDEstado2',$('#IDEstado2{{key}}').val());">
+                        {% for estado in objeto.IDEstado2.fetchAll('Estado') %}
+                            <option value="{{estado.Id}}" {%if estado.Id == objeto.IDEstado2.IDEstado%} SELECTED{%endif%}>{{estado.Value}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                #}              
+                {#<td class="Item" align="right">{{objeto.getNumberOfDocuments}}</td>#}
             </tr>
             {% else %}
             <tr><td colspan='2'>No hay informaci&oacute;n que cumpla esos criterios</td></tr>

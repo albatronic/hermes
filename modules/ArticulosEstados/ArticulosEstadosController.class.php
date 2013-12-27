@@ -8,11 +8,11 @@
 
  * Extiende a la clase controller
  */
-
 class ArticulosEstadosController extends Controller {
 
     protected $entity = "ArticulosEstados";
     protected $parentEntity = "Articulos";
 
 }
+
 ?>

@@ -57,7 +57,7 @@ class PedidosLineas extends PedidosLineasEntity {
     /**
      * Validaciones antes de actualizar o crear
      */
-    public function valida() {
+    public function valida(array $rules) {
         unset($this->_errores);
 
         //Para tener disponibles los datos de la
@@ -79,6 +79,9 @@ class PedidosLineas extends PedidosLineasEntity {
 
         // Si existe el articulo ...
         if (count($this->_errores) == 0) {
+            $aviso = $articulo->getAvisosPedidos();
+            if ($aviso)
+                $this->_alertas[] = $aviso;
 
             $this->checkPackingCompras($articulo);
 
@@ -101,7 +104,7 @@ class PedidosLineas extends PedidosLineasEntity {
 
             // Poner el mismo almacen de la cabecera del pedido y el agente en curso
             $this->setIDAlmacen($pedido->getIDAlmacen()->getIDAlmacen());
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
             // Si el proveedor no está sujeto a Iva, pongo a 0 el iva y el recargo
             if ($pedido->getIDProveedor()->getIva()->getIDTipo() == '0') {
@@ -147,7 +150,9 @@ class PedidosLineas extends PedidosLineasEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
+
         if ($this->IDEstado != 0) {
             $this->_errores[] = "No se puede borrar la línea. Está confirmada o recepcionada";
         }

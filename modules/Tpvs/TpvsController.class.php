@@ -13,6 +13,10 @@ class TpvsController extends Controller {
     protected $entity = "Tpvs";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return parent::listAction();
+    }
+
 }
 
 ?>

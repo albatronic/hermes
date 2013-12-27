@@ -9,7 +9,7 @@ listados:
   -
     title: Facturas Emitidas
     order_by: >
-      femitidas_cab.Fecha,femitidas_cab.IDFactura ASC
+      ErpFemitidasCab.Fecha,ErpFemitidasCab.IDFactura ASC
     break_field: null
     idPerfil: null
     orientation: P
@@ -93,8 +93,8 @@ listados:
   -
     title: Facturas X Comercial
     order_by: >
-      femitidas_cab.IDComercial,
-      femitidas_cab.Fecha,femitidas_cab.IDFactura ASC
+      ErpFemitidasCab.IDComercial,
+      ErpFemitidasCab.Fecha,ErpFemitidasCab.IDFactura ASC
     break_field: IDComercial
     idPerfil: null
     orientation: P
@@ -178,8 +178,8 @@ listados:
   -
     title: Facturas X Sucursal
     order_by: >
-      femitidas_cab.IDSucursal,
-      femitidas_cab.Fecha,femitidas_cab.IDFactura ASC
+      ErpFemitidasCab.IDSucursal,
+      ErpFemitidasCab.Fecha,ErpFemitidasCab.IDFactura ASC
     break_field: IDSucursal
     idPerfil: null
     orientation: P
@@ -272,8 +272,8 @@ listados:
   -
     title: Facturas X Cliente
     order_by: >
-      femitidas_cab.IDCliente,
-      femitidas_cab.Fecha,femitidas_cab.IDFactura ASC
+      ErpFemitidasCab.IDCliente,
+      ErpFemitidasCab.Fecha,ErpFemitidasCab.IDFactura ASC
     break_field: IDCliente
     idPerfil: null
     orientation: P

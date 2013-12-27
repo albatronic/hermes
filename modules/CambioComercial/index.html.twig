@@ -1,4 +1,4 @@
-{# Template index.html.twig for CajaArqueos #}
+{# Template index.html.twig for CambioComercial        #}
 {# ----------------------------------------------------#}
 {% extends layout %}
 
@@ -22,7 +22,7 @@
         {% endif %}
 
 	{% block filtro %}
-        {% if values.permisos['A'] %}
+        {% if values.permisos.permisosModulo['UP'] %}
             {% include 'CambioComercial/filtro.html.twig' with {'values':values} %}
         {%endif%}
 	{% endblock %}

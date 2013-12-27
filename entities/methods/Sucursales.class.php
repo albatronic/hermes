@@ -19,26 +19,6 @@ class Sucursales extends SucursalesEntity {
     }
 
     /**
-     * Devuelve un array con todas las sucursales de la empresa indicada
-     *
-     * Cada elemento tiene la primarykey y el valor de $column
-     */
-    public function fetchAll($idEmpresa, $column = 'Nombre') {
-        $this->conecta();
-
-        if (is_resource($this->_dbLink)) {
-            $filtro = "WHERE (IDEmpresa='" . $idEmpresa . "') ";
-            $query = "SELECT IDSucursal as Id,$column as Value FROM sucursales $filtro ORDER BY $column ASC;";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $this->_em->desConecta();
-            unset($this->_em);
-        }
-        $rows[] = array('Id' => '', 'Value' => '** Todas **');
-        return $rows;
-    }
-
-    /**
      * Devuelve un array con las sucursales de la empresa en curso
      * a los que tiene acceso el usuario $idUsuario.
      *
@@ -47,13 +27,13 @@ class Sucursales extends SucursalesEntity {
      * @param integer $idUsuario
      * @return array Array de sucursales
      */
-    public function getSucursalesUsuario($idUsuario = '') {
+    public function getSucursalesUsuario($idUsuario = '', $opcionTodas=true) {
 
         if ($idUsuario == '')
-            $idUsuario = $_SESSION['USER']['user']['iu'];
+            $idUsuario = $_SESSION['usuarioPortal']['Id'];
 
         $usuario = new Agentes($idUsuario);
-        $rows = $usuario->getSucursales();
+        $rows = $usuario->getSucursales($_SESSION['emp'],$opcionTodas);
         unset($usuario);
 
         return $rows;

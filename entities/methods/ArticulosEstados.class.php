@@ -11,7 +11,13 @@
 class ArticulosEstados extends ArticulosEstadosEntity {
 
     public function __toString() {
-        return $this->getEstado();
+        return $this->getId();
+    }
+
+    public function fetchAll($column = '', $default = TRUE) {
+        if ($column == '')
+            $column = 'Estado';
+        return parent::fetchAll($column, $default);
     }
 
 }

@@ -15,7 +15,7 @@ class ConformarFacturasController extends Controller {
 
     public function __construct($request) {
 
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
         $this->values['sucursales'] = $usuario->getSucursales();
 
         $this->values['filtro'] = $this->request['filtro'];
@@ -110,7 +110,8 @@ class ConformarFacturasController extends Controller {
         $filter = $filterSucursal . " AND c.IDFactura='0' and c.IDEstado='2' and c.IDProveedor='{$filtro['idProveedor']}' and c.Fecha>='{$desdeFecha}' and c.Fecha<'{$hastaFecha}' and c.FlagFacturar='1'";
 
         //COMPRUEBO QUE NO HAYA MAS DE TRES TIPOS DE IVA ENTRE TODOS LOS ALBARANES A FACTURAR
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $pedidos = new PedidosCab();
+        $em = new EntityManager($pedidos->getConectionName());
         if (!$em->getDbLink()) {
             $this->values['errores'] = $em->getError();
             return $this->listAction();
@@ -118,8 +119,8 @@ class ConformarFacturasController extends Controller {
 
         $query = "SELECT l.Iva
                     FROM
-                        {$em->getDataBase()}.pedidos_lineas as l,
-                        {$em->getDataBase()}.pedidos_cab as c
+                        {$em->getDataBase()}.ErpPedidosLineas as l,
+                        {$em->getDataBase()}.ErpPedidosCab as c
                     WHERE {$filter} and c.IDPedido=l.IDPedido
                     GROUP BY l.Iva";
         $em->query($query);
@@ -137,10 +138,9 @@ class ConformarFacturasController extends Controller {
         $ctaCompras = $sucursal->getCtaContableCompras();
         unset($sucursal);
 
-        $query = "select c.IDFP, sum(c.Total) as Total from pedidos_cab c where $filter GROUP BY c.IDFP;";
-
         //AGRUPO LOS PEDIDOS POR FORMA DE PAGO.
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($pedidos->getConectionName());
+        $query = "SELECT c.IDFP, sum(c.Total) as Total FROM {$pedidos->getDataBaseName()}.ErpPedidosCab as c WHERE {$filter} GROUP BY c.IDFP";
         $em->query($query);
         $rows = $em->fetchResult();
         $em->desConecta();
@@ -154,7 +154,6 @@ class ConformarFacturasController extends Controller {
             $factura->setFecha($this->request['fecha']);
             $factura->setIDProveedor($filtro['idProveedor']);
             $factura->setCuentaCompras($ctaCompras);
-            $factura->setClave(md5($numeroFactura));
             $factura->setIDFP($row['IDFP']);
 
             $idFactura = $factura->create();
@@ -163,8 +162,8 @@ class ConformarFacturasController extends Controller {
 
             if ($idFactura != 0) {
                 // Crear las líneas de factura
-                $em = new EntityManager("datos" . $_SESSION['emp']);
-                $query = "select l.* from pedidos_lineas l, pedidos_cab c where (c.IDPedido=l.IDPedido) and (c.IDFP='{$row['IDFP']}') and {$filter}";
+                $em = new EntityManager($pedidos->getConectionName());
+                $query = "select l.* from {$pedidos->getDataBaseName()}.ErpPedidosLineas l, {$pedidos->getDataBaseName()}.ErpPedidosCab c where (c.IDPedido=l.IDPedido) and (c.IDFP='{$row['IDFP']}') and {$filter}";
                 $em->query($query);
                 $lineas = $em->fetchResult();
                 $em->desConecta();
@@ -202,8 +201,8 @@ class ConformarFacturasController extends Controller {
                 $factura->anotaEnCaja();
 
                 // Actualiza las cabecera del grupo de pedidos
-                $em = new EntityManager("datos" . $_SESSION['emp']);
-                $query = "update pedidos_cab c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and ({$filter})";
+                $em = new EntityManager($pedidos->getConectionName());
+                $query = "update {$pedidos->getDataBaseName()}.ErpPedidosCab c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and ({$filter})";
                 $em->query($query);
                 $em->desConecta();
 

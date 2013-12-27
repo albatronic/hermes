@@ -1,0 +1,49 @@
+# VARIABLES DE ENTORNO ESPECIFICAS DEL MODULO ErpArticulos
+#
+# Module: ErpArticulos
+# author Sergio Pérez <sergio.perez@albatronic.com>
+# copyright INFORMATICA ALBATRONIC, SL
+# date 25-03-2013 20:02:24
+#
+# ejemplo:
+#
+# nombreVariable: el texto del caption
+---
+CriterioOrden:
+  caption: Criterio Orden Artículos
+  values:
+    - {'Id':'SortOrder ASC','Value':'Orden a-z'} 
+    - {'Id':'SortOrder DESC','Value':'Orden z-a'}
+    - {'Id':'PublishedAt ASC','Value':'Fecha Publicación a-z'}
+    - {'Id':'PublishedAt DESC','Value':'Fecha Publicación z-a'}
+  default: 'SortOrder ASC'
+    
+NumArticulosListado:
+  caption: Productos por página
+  values:
+    - {'Id':'8','Value':'8'} 
+    - {'Id':'16','Value':'16'}
+    - {'Id':'24','Value':'24'}
+    - {'Id':'32','Value':'32'}
+  default: '8'
+  
+censurarArticulos:
+  caption: ¿Censurar productos subidos por los usuarios?
+  values:
+    - {'Id':'0','Value':'No, se publican directamente'} 
+    - {'Id':'1','Value':'Sí, los publica el web master'}
+  default: '1'  
+  
+notificarCreacionArticulo:
+  caption: ¿Notificar al webmaster cuando se crea un artículo?
+  values:
+    - {'Id':'0','Value':'No'} 
+    - {'Id':'1','Value':'Sí'}
+  default: '0'  
+  
+notificarModificacionArticulo:
+  caption: ¿Notificar al webmaster cuando se modifica un artículo?
+  values:
+    - {'Id':'0','Value':'No'} 
+    - {'Id':'1','Value':'Sí'}
+  default: '0'   

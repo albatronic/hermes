@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(datafonos)
  */
-class DatafonosEntity extends Entity {
+class DatafonosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -34,12 +34,12 @@ class DatafonosEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'datafonos';
+    protected $_tableName = 'ErpDatafonos';
     /**
      * Nombre de la PrimaryKey
      * @var string

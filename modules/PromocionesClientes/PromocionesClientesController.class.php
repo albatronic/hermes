@@ -33,9 +33,11 @@ class PromocionesClientesController extends Controller {
         $this->listado->filter['columnsSelected'] = array();
         $this->listado->filter['valuesSelected'] = array();
 
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $promo = new PromocionesClientes();
+        $tabla = $promo->getDataBaseName() . "." . $promo->getTableName();
         $filtro = $tabla . ".IDPromocion='" . $idPromocion . "'";
-
+        unset($promo);
+        
         $this->values['linkBy']['value'] = $idPromocion;
 
         return parent::listAction($filtro);
@@ -51,7 +53,7 @@ class PromocionesClientesController extends Controller {
      */
     public function newAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
                 case 'GET': //MOSTRAR FORMULARIO VACIO
                     //SI EN LA POSICION 2 DEL REQUEST VIENE ALGO,

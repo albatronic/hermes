@@ -4,7 +4,7 @@
 
 {% block listado %}
 <div class="FormManto">
-	<form name="manto" action="" method="POST">
+	<form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
 	<input name="controller" value="ExpedirCab" type="hidden" />
         <input name="action" value="" type="hidden" />
         <input name="filter" value="{{values.listado.filter}}" type="hidden" />
@@ -48,7 +48,7 @@
             {% endif %}
             {% set albaanti = objeto.IDAlbaran.IDAlbaran %}
 
-            <form name="linea{{key+1}}" action="" method="POST">
+            <form name="linea{{key+1}}" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="ExpedirCab" type="hidden" />
             <input name="action" value="edit" type="hidden" />
             <input name="ExpedirCab[IDAlbaran]" value="{{ objeto.IDAlbaran }}" type="hidden" />

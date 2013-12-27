@@ -6,15 +6,57 @@
 #
 ---
 TiposIva:
+  app: ''
+  isModuleRoot: 0
+  linkModule:
+    fromColumn: ''
+    toEntity: ''
+    toColumn: ''
+  translatable: false
+  searchable: false
+  showCommonFields: false
+  numMaxRecords: ''
+  numberOfImages: '0'
+  withGalery: '0'
+  withDocuments: '0'
+  withVideos: 0
+  withAudios: '0'
+  maxSizes:
+    image: '400000'
+    document: ''
+    video: ''
+    audio: ''
+  galery:
+    maxWidthImage: '500'
+    maxHeightImage: '400'
+    generateThumbnail: '0'
+    widthThumbnail: '50'
+    heightThumbnail: '50'
+  urlFriendlyManagement: false
+  fieldGeneratorUrlFriendly: Tipo
+  metatagTitleManagement: false
+  fieldGeneratorMetatagTitle: Tipo
+  controller: TiposIva
+  action: Index
+  template: index.html.twig
+  parametros: ''
+  includesHead:
+    twigCss: _global/css.html.twig
+    twigJs: _global/js.html.twig
   login_required: YES
   permission_control: YES
+  favourite_control: NO
   help_file: help.html.twig
   title: Tipos de Iva
-  conection: 'datos<?php echo $_SESSION['emp'];?>'
+  id_video: tiposIva
+  url_video: null
+  feature_list: YES
+  conection: ''
   entity: TiposIva
-  table: tipos_iva
+  table: ErpTiposIva
   primarykey: IDIva
-  records_per_page: 10
+  linkBy: ''
+  records_per_page: 15
   order_by:
     -
       title: Tipo a-z
@@ -24,12 +66,12 @@ TiposIva:
       criteria: Tipo DESC
   search_default: Tipo
   columns:
-    -
+    IDIva:
       title: Codigo
-      field: IDIva
       filter: NO
       list: NO
-      form: YES
+      visible: false
+      updatable: false
       link:
         route: null
         param: null
@@ -37,12 +79,12 @@ TiposIva:
         target: null
       default: null
       validator: null
-    -
+    Tipo:
       title: Tipo
-      field: Tipo
       filter: YES
       list: YES
-      form: YES
+      visible: true
+      updatable: true    
       link:
         route: null
         param: null
@@ -56,12 +98,12 @@ TiposIva:
         min: null
         max: null
         message: Valor Requerido
-    -
+    Iva:
       title: Iva
-      field: Iva
       filter: NO
       list: YES
-      form: YES
+      visible: true
+      updatable: true    
       link:
         route: null
         param: null
@@ -75,12 +117,12 @@ TiposIva:
         min: 0
         max: 99
         message: Valor Requerido (0-99)
-    -
+    Recargo:
       title: Recargo
-      field: Recargo
       filter: NO
       list: YES
-      form: YES
+      visible: true
+      updatable: true      
       link:
         route: null
         param: null
@@ -94,12 +136,12 @@ TiposIva:
         min: 0
         max: 20
         message: Valor Requerido (0-20)
-    -
-      title: Retencion
-      field: Retencion
+    Retencion:
+      title: Retención
       filter: NO
       list: YES
-      form: YES
+      visible: true
+      updatable: true     
       link:
         route: null
         param: null

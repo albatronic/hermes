@@ -22,7 +22,9 @@ class Expediciones extends ExpedicionesEntity {
      * @return boolean
      */
     public function validaLogico() {
-
+        
+        parent::validaLogico();
+        
         $articulo = new Articulos($this->IDArticulo);
         $bloqueoStock = ($articulo->getBloqueoStock()->getIDTIpo() == '1');
 
@@ -171,23 +173,27 @@ class Expediciones extends ExpedicionesEntity {
     }
 
     /**
-     * Devuelve un string con la descripción de los lotes separados por guión
+     * Devuelve un string con la descripción de los lotes ÚNICOS separados por guión
      * que han sido servidos en la línea $idEntidad de la entidad $entidad.
      *
-     * @param string $entidad El nombre de la entidad (AlbaranesCab,PedidosCab, TraspasosCab, ManufacCab)
+     * @param string $entidad El nombre de la entidad (AlbaranesCab, PedidosCab, TraspasosCab, ManufacCab)
      * @param integer $idLineaEntidad El id de la entidad linea
      * @return string Descripción de lotes seperados por guión
      */
     public function getLotes($entidad, $idLineaEntidad) {
 
-        $lotes = "";
+        $arrayLotes = array();
 
         $rows = $this->cargaCondicion("IDLote", "Entidad='{$entidad}' and IDLineaEntidad='{$idLineaEntidad}'", "IDLinea ASC");
         foreach ($rows as $row) {
             $lote = new Lotes($row['IDLote']);
-            $lotes .= $lote->getLote() . " - ";
+            $arrayLotes[$lote->getLote()] = "";
             unset($lote);
         }
+        
+        foreach ($arrayLotes as $lote => $nada)
+            $lotes .= $lote . " - ";  
+        
         $lotes = substr($lotes, 0, -3);
 
         return $lotes;

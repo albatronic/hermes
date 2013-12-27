@@ -1,11 +1,8 @@
 {# TEMPLATE Perfiles/form.html.twig #}
 {# Muestra los campos editables de la entidad        #}
 
-{% import '_global/macros.html.twig' as macro %}
 
-{{ macro.input('Perfil','Etiqueta','text','Perfiles[Perfil]','Perfiles_Perfil',datos.Perfil,'50','CampoTextoLargo') }}
-{{ macro.input('Descripción','Etiqueta','text','Perfiles[Descripcion]','Perfiles_Descripcion',datos.Descripcion,'255','CampoTextoLargo') }}
-{{ macro.select('Administrador','Etiqueta','Perfiles[Administrador]','Perfiles_Administrador',none,datos.Administrador.IDTipo,datos.Administrador.fetchAll,'Select') }}
+{{ macro.input(values.atributos.Perfil,'Etiqueta','text','Perfiles[Perfil]','Perfiles_Perfil',datos.Perfil,'50','CampoTextoLargo') }}
 
 {% if datos.IDPerfil %}
 

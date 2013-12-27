@@ -12,25 +12,7 @@
 class SucursalesController extends Controller {
 
     protected $entity = "Sucursales";
-    protected $parentEntity = "Empresas";
-
-    /**
-     * Devuelve todas las sucursales de la empresa
-     * indicado en la posicion 2 del request.
-     * @return array
-     */
-    public function listAction($idEmpresa='') {
-
-        if ($idEmpresa == '')
-            $idEmpresa = $this->request[2];
-
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
-        $filtro = $tabla . ".IDEmpresa='" . $idEmpresa . "'";
-
-        $this->values['linkBy']['value'] = $idEmpresa;
-
-        return parent::listAction($filtro);
-    }
+    protected $parentEntity = "PcaeEmpresas";
 
 }
 ?>

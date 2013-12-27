@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(documentos)
  */
-class DocumentosEntity extends Entity {
+class DocumentosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -75,13 +75,13 @@ class DocumentosEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'documentos';
+    protected $_tableName = 'ErpDocumentos';
 
     /**
      * Nombre de la PrimaryKey

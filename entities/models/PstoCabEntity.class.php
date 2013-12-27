@@ -7,190 +7,190 @@
  */
 
 /**
- * @orm:Entity(psto_cab)
+ * @orm:Entity(PstoCab)
  */
-class PstoCabEntity extends Entity {
+class PstoCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDPsto;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDContador;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $NumeroPsto;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDSucursal;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDAlmacen;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDAgente;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDComercial;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Fecha;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $FechaAceptacion = '00/00/0000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDCliente = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDDirec = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Descuento = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $BaseImponible1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Iva1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaIva1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Recargo1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaRecargo1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $BaseImponible2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Iva2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaIva2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Recargo2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaRecargo2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $BaseImponible3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Iva3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaIva3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Recargo3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaRecargo3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $TotalBases = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $TotalIva = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $TotalRecargo = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $RecargoFinanciero = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $CuotaRecargoFinanciero = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Total = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDEstado = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDAlbaran = '0';
     /**
@@ -199,17 +199,17 @@ class PstoCabEntity extends Entity {
     protected $Observaciones;
     /**
      * @orm:Column(type="integer")
-     * @assert:Blank(groups="psto_cab")
+     * @assert:Blank(groups="PstoCab")
      */
     protected $Peso = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Volumen = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $Bultos = '0';
     /**
@@ -218,29 +218,24 @@ class PstoCabEntity extends Entity {
     protected $Expedicion = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDAgencia = '1';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_cab")
+     * @assert:NotBlank(groups="PstoCab")
      */
     protected $IDFP;
-    /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="psto_cab")
-     */
-    protected $Clave;
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'psto_cab';
+    protected $_tableName = 'ErpPstoCab';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -626,15 +621,7 @@ class PstoCabEntity extends Entity {
         return $this->IDFP;
     }
 
-    public function setClave($Clave) {
-        $this->Clave = $Clave;
-    }
-
-    public function getClave() {
-        return $this->Clave;
-    }
-
 }
 
-// END class psto_cab
+// END class PstoCab
 ?>

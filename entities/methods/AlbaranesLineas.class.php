@@ -55,7 +55,7 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
     /**
      * Validaciones antes de actualizar o crear
      */
-    public function valida() {
+    public function valida(array $rules) {
         unset($this->_errores);
 
         if ($this->IDArticulo == '') {
@@ -75,6 +75,9 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
 
         // Si existe el articulo ...
         if (count($this->_errores) == 0) {
+            $aviso = $articulo->getAvisosAlbaranes();
+            if ($aviso)
+                $this->_alertas[] = $aviso;
 
             // Si es version CRISTAL, comprueba múltiplos y calcula medidas
             if ($_SESSION['ver'] == 1)
@@ -84,13 +87,13 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
 
             // Pongo la descripcion del artículo si viene vacía o si el
             // usuario no tiene permiso para cambiarla. Ver parámetro ROLCP
-            if (($this->Descripcion == '') or (!$_SESSION['USER']['user']['cambioPrecios']) )
+            if ($this->Descripcion == '') //or (!$_SESSION['usuarioPortal']['cambioPrecios']) )
                 $this->setDescripcion($articulo->getDescripcion());
 
             // Si hay promo, ver si se aplica en base a la cantidad mínima.
             // Si es aplicable, prevalece sobre el precio y dcto indicado y también
             // sobre la tarifa del cliente.
-            $precios = $articulo->cotizar($albaran,$this->Unidades);
+            $precios = $articulo->cotizar($albaran, $this->Unidades);
             if ($precios['Promocion']) {
                 $alerta = "Promocion hasta el " . $precios['Promocion']->getFinPromocion() . " y compra mínima " . $precios['Promocion']->getCantidadMinima();
                 if ($precios['Promocion']->getIDFP()->getIDFP())
@@ -101,9 +104,9 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
             // Si hay promo, se aplica si se iguala o supera la cantidad mínima y si
             // no se restringe la forma de pago y en caso contrario la forma de pago
             // fijada para la promocion es igual a la del presupuesto
-            if (($precios['Promocion']) and
+            if (is_object($precios['Promocion']) and
                     ($this->getUnidades() >= $precios['Promocion']->getCantidadMinima()) and
-                    ((!$precios['Promocion']->getIDFP()->getIDFP()) or ($albaran->getIDFP()->getIDFP() == $precios['Promocion']->getIDFP()->getIDFP()))) {
+                    (($precios['Promocion']->getIDFP()->getIDFP() == 0) or ($albaran->getIDFP()->getIDFP() == $precios['Promocion']->getIDFP()->getIDFP()))) {
                 $this->IDPromocion = $precios['Promocion']->getIDPromocion();
                 $this->Precio = $precios['Promo']['Precio'];
                 $this->Descuento = $precios['Promo']['Descuento'];
@@ -112,15 +115,16 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
                 $this->PvpVigente = $precios['Tarifa']['Precio'];
                 // Si no hay promo, se aplica la tarifa, o se respeta el precio y descuento
                 // indicado por el usuario si tiene permiso dependiendo de si su rol está
-                // incluido en el parámetro ROLCP
+                // incluido en la VWP "rolesCambioPrecios"
                 $this->IDPromocion = 0;
-                if (($this->Precio == '') or (!$_SESSION['USER']['user']['cambioPrecios']))
+                if (($this->Precio == '') or (!$_SESSION['usuarioPortal']['cambioPrecios']))
                     $this->setPrecio($precios['Tarifa']['Precio']);
-                if (($this->Descuento == '') or (!$_SESSION['USER']['user']['cambioPrecios']))
+                if (($this->Descuento == '') or (!$_SESSION['usuarioPortal']['cambioPrecios']))
                     $this->setDescuento($precios['Tarifa']['Descuento']);
             }
 
-            // Comprobar que no se venda por debajo del tope establecido para la familia
+            // Comprobar que no se venda por debajo del tope establecido para la familia o
+            // el general establecido en VWP[erp][]
             $precioMinimo = $articulo->getPrecioMinimoVenta();
             if ($this->Precio < $precioMinimo) {
                 $this->_alertas[] = "El precio indicado es inferior al permitido " . $precioMinimo;
@@ -137,7 +141,7 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
             // Poner el mismo almacen y comercial de la cabecera del albarán
             $this->setIDAlmacen($albaran->getIDAlmacen()->getIDAlmacen());
             $this->setIDComercial($albaran->getIDComercial()->getIDAgente());
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
             // Si el cliente no está sujeto a Iva, pongo a 0 el iva y el recargo
             if ($albaran->getIDCliente()->getIva()->getIDTipo() == '0') {
@@ -158,7 +162,7 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
             // Comprobar existencias sin tener en cuenta lote ni ubicación
             // de almacen. Solo se buscan existencias en el almacen indicado
             // en la línea del albarán
-            if ($articulo->getInventario()->getIDTipo() == '1') {
+            if (($articulo->getInventario()->getIDTipo() == '1') and ($_SESSION['VARIABLES']['WebPro']['erp']['alertaStock'])) {
                 $existencias = new Existencias();
                 $stock = $existencias->getStock($this->IDArticulo, $this->IDAlmacen, 0, 0, -1, $this->UnidadMedida);
 
@@ -188,7 +192,9 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
+
         if ($this->IDEstado != 0) {
             $this->_errores[] = "No se puede borrar la línea. Está confirmada o expedida";
         }
@@ -260,14 +266,14 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
      * @return array Array con la cabecera de la expedición
      */
     public function getCabeceraExpedicion() {
-        
+
         $expedicion = new Expediciones();
         $cabecera = $expedicion->getCabecera("AlbaranesCab", $this->IDLinea);
         unset($expedicion);
-        
+
         return $cabecera;
     }
-    
+
     /**
      * Devuelve un array de objetos Expediciones de la linea de albaran
      * @return array Array de objetos Expediciones
@@ -317,6 +323,12 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
             case '1': // Version cristal
                 $unidades = $this->MtsFa;
                 break;
+            case '2': // Version tallas y colores
+                $unidades = $this->Unidades;
+                break;
+            case '3': // Version automoción
+                $unidades = $this->Unidades;
+                break;
         }
 
         $this->setImporte($unidades * $this->Precio * (1 - $this->Descuento / 100));
@@ -339,21 +351,29 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
             case '1': // Version cristal
                 $unidades = $this->MtsFa;
                 break;
+            case '2': // Version talas y colores
+                $unidades = $this->Unidades;
+                break;
+            case '3': // Version automoción
+                $unidades = $this->Unidades;
+                break;
         }
 
         $packing = $articulo->getPackingVentas();
-        if (abs($unidades) < $packing) {
-            $this->setUnidades($packing);
-            $this->_alertas[] = "Unidad Mínima de Venta " . $packing;
-        } elseif (abs($unidades) > $packing) {
-            // Compruebo multiplo, redondeo al múltiplo inmediatamente superior
-            $v = explode(".", $unidades / $packing);
-            $resultado = $v[0];
-            if ($v[1])
-                $resultado++;
+        if ($packing > 1) {
+            if (abs($unidades) < $packing) {
+                $this->setUnidades($packing);
+                $this->_alertas[] = "Packing de Venta " . $packing;
+            } elseif (abs($unidades) > $packing) {
+                // Compruebo multiplo, redondeo al múltiplo inmediatamente superior
+                $v = explode(".", $unidades / $packing);
+                $resultado = $v[0];
+                if ($v[1])
+                    $resultado++;
 
-            $this->setUnidades($resultado * $packing);
-            $this->_alertas[] = "Unidad Mínima de Venta " . $packing;
+                $this->setUnidades($resultado * $packing);
+                $this->_alertas[] = "Packing de Venta " . $packing;
+            }
         }
     }
 

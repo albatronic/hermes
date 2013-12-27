@@ -9,7 +9,7 @@ listados:
   - 
     title: Albaranes
     order_by: >
-      albaranes_cab.Fecha ASC
+      ErpAlbaranesCab.Fecha ASC
     break_field: null
     idPerfil: null
     orientation: P
@@ -93,8 +93,8 @@ listados:
   - 
     title: Albaranes X Comercial
     order_by: >
-      albaranes_cab.IDComercial,
-      albaranes_cab.Fecha ASC
+      ErpAlbaranesCab.IDComercial,
+      ErpAlbaranesCab.Fecha ASC
     break_field: IDComercial
     idPerfil: null
     orientation: P
@@ -178,8 +178,8 @@ listados:
   - 
     title: Albaranes X Sucursal
     order_by: >
-      albaranes_cab.IDSucursal,
-      albaranes_cab.Fecha ASC
+      ErpAlbaranesCab.IDSucursal,
+      ErpAlbaranesCab.Fecha ASC
     break_field: IDSucursal
     idPerfil: null
     orientation: P
@@ -272,8 +272,8 @@ listados:
   - 
     title: Albaranes X Cliente
     order_by: >
-      albaranes_cab.IDCliente,
-      albaranes_cab.Fecha ASC
+      ErpAlbaranesCab.IDCliente,
+      ErpAlbaranesCab.Fecha ASC
     break_field: IDCliente
     idPerfil: null
     orientation: P

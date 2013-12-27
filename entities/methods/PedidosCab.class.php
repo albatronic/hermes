@@ -21,11 +21,11 @@ class PedidosCab extends PedidosCabEntity {
     /**
      * Carga de datos en las variables de la clase
      */
-    protected function load() {
+    protected function load($showDeleted = FALSE) {
         if ($this->IDPedido == '') {
             //Si el nº de pedido está vacio (se ha instanciado un objeto vacio),
             //asigno valores por defecto (agente,sucursal,almacen).
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
             $agente = new Agentes();
 
@@ -61,12 +61,12 @@ class PedidosCab extends PedidosCabEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "DELETE FROM pedidos_cab WHERE `IDPedido`='{$this->IDPedido}' AND IDEstado='0'";
+            $query = "DELETE FROM {$this->getDataBaseName()}.{$this->getTableName()} WHERE `IDPedido`='{$this->IDPedido}' AND IDEstado='0'";
             if ($this->_em->query($query)) {
                 //Borrar líneas de pedidos
-                $query = "DELETE FROM pedidos_lineas where `IDPedido`='{$this->IDPedido}'";
-                if (!$this->_em->query($query))
-                    $this->_errores = $this->_em->getError();
+                $lineas = new PedidosLineas();
+                $lineas->queryDelete("`IDPedido`='{$this->IDPedido}'");
+                unset($lineas);
             } else
                 $this->_errores = $this->_em->getError();
             $this->_em->desConecta();
@@ -84,25 +84,18 @@ class PedidosCab extends PedidosCabEntity {
     public function recalcula() {
 
         //Fuerzo el almacen al de la cabecera del pedido
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "UPDATE pedidos_lineas SET `IDAlmacen`='{$this->IDAlmacen}' WHERE `IDPedido` = '{$this->IDPedido}'";
-            $this->_em->query($query);
-        }
-        $this->_em->desConecta();
-
+        $lineas = new PedidosLineas();
+        $lineas->queryUpdate(array("IDAlmacen" => $this->IDAlmacen), "`IDPedido`='{$this->IDPedido}'");
+        unset($lineas);
 
         //Si el proveedor no está sujeto a iva
         //pongo el iva a cero en las líneas para evitar que por cambio
         //de proveedor se aplique indebidamente
         $proveedor = new Proveedores($this->IDProveedor);
         if ($proveedor->getIva()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "UPDATE pedidos_lineas SET `Iva`='0', `Recargo`='0' WHERE `IDPedido`= '{$this->IDPedido}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new PedidosLineas();
+            $lineas->queryUpdate(array("Iva" => 0, "Recargo" => 0), "`IDPedido`='{$this->IDPedido}'");
+            unset($lineas);
         }
         unset($proveedor);
 
@@ -113,69 +106,64 @@ class PedidosCab extends PedidosCabEntity {
             $pordcto = round(100 * ($this->getDescuento() / $this->getImporte()), 2);
 
         //Calcular los totales, desglosados por tipo de iva.
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select sum(importe) as Bruto from pedidos_lineas where (IDPedido='{$this->IDPedido}')";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $bruto = $rows[0]['Bruto'];
+        $lineas = new PedidosLineas();
+        $rows = $lineas->cargaCondicion("sum(importe) as Bruto", "IDPedido='{$this->IDPedido}'");
+        $bruto = $rows[0]['Bruto'];
 
-            $query = "select Iva, Recargo, sum(Importe) as Importe from pedidos_lineas where (IDPedido='{$this->IDPedido}') group by Iva, Recargo order by Iva";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $totbases = 0;
-            $totiva = 0;
-            $totrec = 0;
-            $bases = array();
+        $rows = $lineas->cargaCondicion("Iva, Recargo, sum(Importe) as Importe", "(IDPedido='{$this->IDPedido}') group by Iva, Recargo order by Iva");
 
-            foreach ($rows as $key => $row) {
-                $importe = $row['Importe'] * (1 - $pordcto / 100);
-                $cuotaiva = round($importe * $row['Iva'] / 100, 2);
-                $cuotarecargo = round($importe * $row['Recargo'] / 100, 2);
-                $totbases += $importe;
-                $totiva += $cuotaiva;
-                $totrec += $cuotarecargo;
+        $totbases = 0;
+        $totiva = 0;
+        $totrec = 0;
+        $bases = array();
 
-                $bases[$key] = array(
-                    'b' => $importe,
-                    'i' => $row['Iva'],
-                    'ci' => $cuotaiva,
-                    'r' => $row['Recargo'],
-                    'cr' => $cuotarecargo
-                );
-            }
+        foreach ($rows as $key => $row) {
+            $importe = $row['Importe'] * (1 - $pordcto / 100);
+            $cuotaiva = round($importe * $row['Iva'] / 100, 2);
+            $cuotarecargo = round($importe * $row['Recargo'] / 100, 2);
+            $totbases += $importe;
+            $totiva += $cuotaiva;
+            $totrec += $cuotarecargo;
 
-            $total = $totbases + $totiva + $totrec;
-
-            //Calcular el peso, volumen y n. de bultos de los productos inventariables
-            //$query = "select sum(articulos.Peso*pedidos_lineas.Unidades) as Peso, sum(articulos.volumen*pedidos_lineas.Unidades) as Volumen, sum(Unidades) as Bultos from articulos,pedidos_lineas where (pedidos_lineas.IDArticulo=articulos.IDArticulo) and (articulos.Inventario='1') and (pedidos_lineas.IDPedido='" . $this->getIDPedido() . "')";
-            //$this->_em->query($query);
-            //$rows = $this->_em->fetchResult();
-
-            $this->setImporte($bruto);
-            $this->setBaseImponible1($bases[0]['b']);
-            $this->setIva1($bases[0]['i']);
-            $this->setCuotaIva1($bases[0]['ci']);
-            $this->setRecargo1($bases[0]['r']);
-            $this->setCuotaRecargo1($bases[0]['cr']);
-            $this->setBaseImponible2($bases[1]['b']);
-            $this->setIva2($bases[1]['i']);
-            $this->setCuotaIva2($bases[1]['ci']);
-            $this->setRecargo2($bases[1]['r']);
-            $this->setCuotaRecargo2($bases[1]['cr']);
-            $this->setBaseImponible3($bases[2]['b']);
-            $this->setIva3($bases[2]['i']);
-            $this->setCuotaIva3($bases[2]['ci']);
-            $this->setRecargo3($bases[2]['r']);
-            $this->setCuotaRecargo3($bases[2]['cr']);
-            $this->setTotalBases($totbases);
-            $this->setTotalIva($totiva);
-            $this->setTotalRecargo($totrec);
-            $this->setTotal($total);
-            //$this->setPeso($rows[0]['Peso']);
-            //$this->setVolumen($rows[0]['Volumen']);
-            //$this->setBultos($rows[0]['Bultos']);
+            $bases[$key] = array(
+                'b' => $importe,
+                'i' => $row['Iva'],
+                'ci' => $cuotaiva,
+                'r' => $row['Recargo'],
+                'cr' => $cuotarecargo
+            );
         }
+
+        $total = $totbases + $totiva + $totrec;
+
+        //Calcular el peso, volumen y n. de bultos de los productos inventariables
+        //$query = "select sum(articulos.Peso*pedidos_lineas.Unidades) as Peso, sum(articulos.volumen*pedidos_lineas.Unidades) as Volumen, sum(Unidades) as Bultos from articulos,pedidos_lineas where (pedidos_lineas.IDArticulo=articulos.IDArticulo) and (articulos.Inventario='1') and (pedidos_lineas.IDPedido='" . $this->getIDPedido() . "')";
+        //$this->_em->query($query);
+        //$rows = $this->_em->fetchResult();
+
+        $this->setImporte($bruto);
+        $this->setBaseImponible1($bases[0]['b']);
+        $this->setIva1($bases[0]['i']);
+        $this->setCuotaIva1($bases[0]['ci']);
+        $this->setRecargo1($bases[0]['r']);
+        $this->setCuotaRecargo1($bases[0]['cr']);
+        $this->setBaseImponible2($bases[1]['b']);
+        $this->setIva2($bases[1]['i']);
+        $this->setCuotaIva2($bases[1]['ci']);
+        $this->setRecargo2($bases[1]['r']);
+        $this->setCuotaRecargo2($bases[1]['cr']);
+        $this->setBaseImponible3($bases[2]['b']);
+        $this->setIva3($bases[2]['i']);
+        $this->setCuotaIva3($bases[2]['ci']);
+        $this->setRecargo3($bases[2]['r']);
+        $this->setCuotaRecargo3($bases[2]['cr']);
+        $this->setTotalBases($totbases);
+        $this->setTotalIva($totiva);
+        $this->setTotalRecargo($totrec);
+        $this->setTotal($total);
+        //$this->setPeso($rows[0]['Peso']);
+        //$this->setVolumen($rows[0]['Volumen']);
+        //$this->setBultos($rows[0]['Bultos']);
     }
 
     /**
@@ -195,9 +183,14 @@ class PedidosCab extends PedidosCabEntity {
         // Si no está confirmado
         if (($this->getIDEstado()->getIDTipo() == 0) and (count($this->_errores) == 0)) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $lineas = new PedidosLineas();
+            $tablaLineas = $lineas->getDataBaseName() . "." . $lineas->getTableName();
+            $articulos = new Articulos();
+            $tablaArticulos = $articulos->getDataBaseName() . "." . $articulos->getTableName();
+
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, sum(t1.Unidades) as Entrando, t1.UnidadMedida
-                        FROM pedidos_lineas as t1, articulos as t2
+                        FROM {$tablaLineas} as t1, {$tablaArticulos} as t2
                         WHERE t1.IDPedido='{$this->IDPedido}'
                             AND t1.IDEstado='0'
                             AND t1.IDArticulo=t2.IDArticulo
@@ -214,11 +207,7 @@ class PedidosCab extends PedidosCabEntity {
             unset($exi);
 
             // Marcar como Entrando las líneas de pedido
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update pedidos_lineas set IDEstado='1' where IDPedido='{$this->IDPedido}' and IDEstado='0'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $lineas->queryUpdate(array("IDEstado" => 1), "IDPedido='{$this->IDPedido}' and IDEstado='0'");
 
             // Confirmar la cabecera del pedido
             $this->setIDEstado(1);
@@ -236,9 +225,14 @@ class PedidosCab extends PedidosCabEntity {
         // Si está confirmado
         if ($this->getIDEstado()->getIDTipo() == 1) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $lineas = new PedidosLineas();
+            $tablaLineas = $lineas->getDataBaseName() . "." . $lineas->getTableName();
+            $articulos = new Articulos();
+            $tablaArticulos = $articulos->getDataBaseName() . "." . $articulos->getTableName();
+
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, sum(t1.Unidades) as Entrando, t1.UnidadMedida
-                        FROM pedidos_lineas as t1, articulos as t2
+                        FROM {$tablaLineas} as t1, {$tablaArticulos} as t2
                         WHERE t1.IDPedido='{$this->IDPedido}'
                             AND t1.IDEstado='1'
                             AND t1.IDArticulo=t2.IDArticulo
@@ -256,14 +250,11 @@ class PedidosCab extends PedidosCabEntity {
 
             // Marcar como NO CONFIRMADAS las líneas de pedido y
             // quitar la eventual asignación de lotes y UnidadesRecbidas
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update pedidos_lineas set IDEstado='0' where IDPedido='{$this->IDPedido}' and IDEstado='1'";
-            $em->query($query);
+            $lineas->queryUpdate(array("IDEstado" => 0), "IDPedido='{$this->IDPedido}' and IDEstado='1'");
 
-            // Borrar las eventuales lineas de recepción
-            $query = "delete from {$em->getDataBase()}.recepciones where Entidad='PedidosCab' and IDEntidad='{$this->IDPedido}'";
-            $em->query($query);
-            $em->desConecta();
+            // Borrar las eventuales líneas de recepción
+            $recepciones = new Recepciones();
+            $recepciones->queryDelete("Entidad='PedidosCab' and IDEntidad='{$this->IDPedido}'");
 
             // Anular la reserva en la cabecera del pedido
             // y quitar la fecha prevista de entrega y las posibles incidencias
@@ -301,7 +292,7 @@ class PedidosCab extends PedidosCabEntity {
 
             if (count($this->_errores) == 0) {
                 //Marcar el pedido como recepcionado, poner la fecha de entrada y guardar las eventuales incidencias
-                $usuario = new Agentes($_SESSION['USER']['user']['id']);
+                $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
                 unset($usuario);
                 $this->setIDEstado('2');
                 $this->setFechaEntrada('');
@@ -321,16 +312,17 @@ class PedidosCab extends PedidosCabEntity {
      * @param Contadores $contador El objeto contador
      * @param date $fecha La fecha de la factura (opcional, toma la del sistema)
      * @param string $suFactura El numero de factura del proveedor (opcional)
+     * @param integer $idFp El id de la forma de pago (opcional)
      * @return int El id de la factura generada
      */
-    public function facturar(Contadores $contador, $fecha='', $suFactura='') {
+    public function facturar(Contadores $contador, $fecha = '', $suFactura = '', $idFp = '') {
 
         if ($fecha == '')
             $fecha = date('d-m-Y');
 
         $idFactura = 0;
 
-        if ( ($this->getIDEstado()->getIDTipo() == 2) and ($this->getIDFactura()->getIDFactura() == 0) ) {
+        if (($this->getIDEstado()->getIDTipo() == 2) and ($this->getIDFactura()->getIDFactura() == 0)) {
             // Buscar la cuenta contable de compras para la sucursal
             $sucursal = new Sucursales($this->IDSucursal);
             $ctaCompras = $sucursal->getCtaContableCompras();
@@ -372,8 +364,10 @@ class PedidosCab extends PedidosCabEntity {
             $factura->setTotal($this->Total);
             $factura->setReferencia($this->Referencia);
             $factura->setCuentaCompras($ctaCompras);
-            $factura->setClave(md5($numeroFactura));
-            $factura->setIDFP($this->IDFP);
+            if ($idFp == '')
+                $factura->setIDFP($this->IDFP);
+            else
+                $factura->setIDFP($idFp);
 
             $idFactura = $factura->create();
 
@@ -383,13 +377,15 @@ class PedidosCab extends PedidosCabEntity {
                 $rows = $linPedido->cargaCondicion("*", "IDPedido='{$this->IDPedido}'", "IDLinea ASC");
                 unset($linPedido);
                 foreach ($rows as $row) {
+                    $importe = ($row['UnidadesRecibidas'] * $row['Precio']) * ( 1 - $row['Descuento'] / 100);
                     $linFactura = new FrecibidasLineas();
                     $linFactura->setIDFactura($idFactura);
                     $linFactura->setIDArticulo($row['IDArticulo']);
                     $linFactura->setDescripcion($row['Descripcion']);
-                    $linFactura->setUnidades($row['UnidadesPtesFacturar']);
+                    $linFactura->setUnidades($row['UnidadesRecibidas']);
                     $linFactura->setPrecio($row['Precio']);
                     $linFactura->setDescuento($row['Descuento']);
+                    $linFactura->setImporte($importe);
                     $linFactura->setIDPedido($row['IDPedido']);
                     $linFactura->setIDLineaPedido($row['IDLinea']);
                     $linFactura->setIva($row['Iva']);
@@ -404,9 +400,7 @@ class PedidosCab extends PedidosCabEntity {
                     }
                     unset($linFactura);
                 }
-            }
 
-            if ($idFactura != 0) {
                 // Recalcula la factura: 
                 // puede que las cantidades facturas sean distintas a las pedidas
                 $factura->recalcula();
@@ -422,6 +416,7 @@ class PedidosCab extends PedidosCabEntity {
                 $this->setIDEstado(3);
                 $this->save();
             }
+
             unset($factura);
         }
         return $idFactura;
@@ -441,8 +436,9 @@ class PedidosCab extends PedidosCabEntity {
         // Crear la cabecera del pedido
         $destino = $this;
         $destino->setIDPedido('');
-        $destino->setIDAgente($_SESSION['USER']['user']['id']);
+        $destino->setIDAgente($_SESSION['usuarioPortal']['Id']);
         $destino->setIDEstado(0);
+        $destino->setIDFactura(0);
         $destino->setFecha(date('d-m-Y'));
         $destino->setFechaEntrega('00-00-0000');
         $destino->setFechaEntrada('00-00-0000');
@@ -450,7 +446,7 @@ class PedidosCab extends PedidosCabEntity {
         $destino->setReferencia('');
         $destino->setObservaciones('Duplicado del pedido n. ' . $idOrigen);
         $destino->setIncidencias('');
-        $destino->setClave('');
+        $destino->setPrimaryKeyMD5('');
         $idDestino = $destino->create();
 
         // Crear las líneas de pedido
@@ -460,8 +456,9 @@ class PedidosCab extends PedidosCabEntity {
         foreach ($rows as $row) {
             $lineaDestino = new PedidosLineas($row['IDLinea']);
             $lineaDestino->setIDPedido($idDestino);
-            $lineaDestino->setIDAgente($_SESSION['USER']['user']['id']);
+            $lineaDestino->setIDAgente($_SESSION['usuarioPortal']['Id']);
             $lineaDestino->setIDEstado(0);
+            $lineaDestino->setPrimaryKeyMD5('');
             $lineaDestino->valida(); // Toma los precios vigentes (tarifa, promociones, etc)
             $lineaDestino->create();
         }
@@ -489,9 +486,8 @@ class PedidosCab extends PedidosCabEntity {
         $hastaFecha = $fecha->getaaaammdd();
         unset($fecha);
 
-        if ($idSucursal == '')
-            $filtroSucursal = "(1)"; else
-            $filtroSucursal = "(IDSucursal = '{$idSucursal}')";
+        $filtroSucursal = ($idSucursal == '') ? "(1)" : "(IDSucursal = '{$idSucursal}')";
+
         $filtro = $filtroSucursal . " and
                   (IDProveedor='{$idProveedor}') and
                   (Fecha>='{$desdeFecha}') and
@@ -504,6 +500,7 @@ class PedidosCab extends PedidosCabEntity {
 
         return $rows;
     }
+
 }
 
 ?>

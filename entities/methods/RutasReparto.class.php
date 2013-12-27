@@ -18,10 +18,10 @@ class RutasReparto extends RutasRepartoEntity {
     /**
      * Fuerzo la sucursal a la actual
      */
-    protected function load() {
+    protected function load($showDeleted = false) {
         $this->setIDSucursal($_SESSION['suc']);
 
-        parent::load();
+        parent::load($showDeleted = false);
     }
 
     /**

@@ -3,11 +3,11 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @since 16.01.2012 23:56:05
+ * @date 12.10.2013 14:52:11
  */
 
 /**
- * @orm:Entity(favoritos)
+ * @orm:Entity(Favoritos)
  */
 class Favoritos extends FavoritosEntity {
 

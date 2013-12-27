@@ -233,7 +233,7 @@ class ContaPlusSubctaV8 {
      * @var boolena(1)
      */
     protected $IDeducible = 'F';
-
+    
     // --------------------------------
     // COLUMNAS AÑADIDAS EN LA RELASE 8
     // --------------------------------
@@ -242,12 +242,12 @@ class ContaPlusSubctaV8 {
      * @var boolean(1)
      */
     protected $ICritCaja = 'F';
-
     /**
      *
      * @var string(12)
      */
     protected $cSubivaas = '            ';
+
 
     public function __toString() {
 

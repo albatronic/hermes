@@ -54,7 +54,7 @@ class MvtosAlmacen extends MvtosAlmacenEntity {
 
     protected function load() {
         if ($this->Id == '') {
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
             $this->setFecha('');
             $this->setHora(date('H:i:s'));
         } else
@@ -136,9 +136,12 @@ class MvtosAlmacen extends MvtosAlmacenEntity {
                         $exi->actualiza($idAlmacen, $idArticulo, $idLote, $idUbicacion, $flagDeposito, $valores);
                         $this->_errores = $exi->getErrores();
                         unset($exi);
-                    }
-                }
-            }
+                    } else
+                        print_r($this->_errores);
+                } else
+                    print_r($this->_errores);
+            } else
+                "NO SE HA DEFINIDIO EL TIPO DE MOVIMIENTO DE ALMACEN";
         } else
             $ok = true;
 
@@ -164,11 +167,21 @@ class MvtosAlmacen extends MvtosAlmacenEntity {
         $hayBloqueoStock = $articulo->getBloqueoStock()->getIDTipo();
         $hayControlUbicaciones = $almacen->getControlUbicaciones()->getIDTipo();
 
-        if (($hayBloqueoStock) and ($signo == 'S')) {
+        if ($hayBloqueoStock) {
+
             $exi = new Existencias();
             $stock = $exi->getStock($this->IDArticulo, $this->IDAlmacen, $this->IDLote, $this->IDUbicacion, '', 'UMA');
             unset($exi);
-            $okBloqueoStock = ($stock['RE'] >= abs($this->UnidadesE + $this->UnidadesS) );
+
+            switch ($signo) {
+                case 'S':
+                    $okBloqueoStock = ($stock['RE'] >= ($this->UnidadesE + $this->UnidadesS) );
+                    break;
+                case 'E':
+                    $unidades = $this->UnidadesE + $this->UnidadesS;
+                    $okBloqueoStock = ( (abs($unidades) >= 0) or ($stock['RE'] >= abs($unidades)) );
+                    break;
+            }
         } else
             $okBloqueoStock = true;
 

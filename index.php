@@ -59,28 +59,11 @@ include_once $app['framework'] . "Autoloader.class.php";
 Autoloader::setCacheFilePath(APP_PATH . 'tmp/class_path_cache.txt');
 Autoloader::excludeFolderNamesMatchingRegex('/^CVS|\..*$/');
 Autoloader::setClassPaths(array(
-    $app['framework'],
-    'entities/',
-    'lib/',
+    APP_PATH . $app['framework'],
+    APP_PATH . 'entities/',
+    APP_PATH . 'lib/',
 ));
 spl_autoload_register(array('Autoloader', 'loadClass'));
-
-// ---------------------------------------------------------------
-// ACTIVAR EL IDIOMA.
-// ---------------------------------------------------------------
-/**
-  include_once "lang/languages.php";
-
-  if ($_SESSION['IDIOMA'] == '') {
-  $idioma = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-  if ((file_exists('lang/' . $idioma . '.php')) and (in_array($idioma, $_SESSION['IDIOMAS']))) {
-  $_SESSION['IDIOMA'] = $idioma;
-  } else
-  $_SESSION['IDIOMA'] = 'es';
-
-  include "lang/" . $_SESSION['IDIOMA'] . ".php";
-  }
- */
 
 //----------------------------------------------------------------
 // ACTIVAR EL MOTOR DE PDF'S
@@ -164,7 +147,7 @@ if ($rq->isOldBrowser()) {
             break;
     }
 
-    if (!isset($_SESSION['USER'])) {
+    if (!isset($_SESSION['usuarioPortal'])) {
 
         // No está logeado
         $controller = "Index";
@@ -203,7 +186,7 @@ if ($config['debug_mode']) {
     $result['values']['_debugMode'] = true;
     $result['values']['_auditMode'] = (string) $config['audit_mode'];
     $result['values']['_session'] = print_r(array('emp' => $_SESSION['emp'], 'suc' => $_SESSION['suc'], 'tpv' => $_SESSION['tpv']), true);
-    $result['values']['_user'] = print_r($_SESSION['USER'], true);
+    $result['values']['_user'] = print_r($_SESSION['usuarioPortal'], true);
     $result['values']['_debugValues'] = print_r($result['values'], true);
 }
 
@@ -220,21 +203,27 @@ if ($browser->isMobile()) {
     $popup = "_global/popupTablet.html.twig";
 } else {
     $layout = "_global/layoutStd.html.twig";
-    $popup = "_global/popupStd.html.twig";
+    $popup = "_global/layoutPopup.html.twig";
 }
 
 // Renderizo el template y los valores devueltos por el método
+
+$twig->addGlobal('user', new Agentes($_SESSION['usuarioPortal']['Id']));
+$twig->addGlobal('appPath', $app['path']);
+$twig->addGlobal('varEnvMod', $result['values']['varEnvMod']);
+$twig->addGlobal('permisosModulo', $result['values']['permisos']['permisosModulo']);
+$twig->addGlobal('idiomas', $_SESSION['idiomas']);
 $twig->loadTemplate($result['template'])
         ->display(array(
             'layout' => $layout,
             'popup' => $popup,
             'values' => $result['values'],
             'app' => $app,
-            'user' => new Agentes($_SESSION['USER']['user']['id']),
-            'menu' => $_SESSION['USER']['menu'],
-            'emp' => new Empresas($_SESSION['emp']),
+            'menu' => $_SESSION['usuarioPortal']['menu'],
+            'emp' => new PcaeEmpresas($_SESSION['project']['IdEmpresa']),
             'suc' => $_SESSION['suc'],
             'tpv' => new Tpvs($_SESSION['tpv']),
+            'project' => $_SESSION['project'],            
         ));
 
 //------------------------------------------------------------

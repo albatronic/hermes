@@ -17,12 +17,17 @@ class RecibosProveedoresController extends Controller {
 
         $formasPago = new FormasPago();
         $this->values['formasPago'] = $formasPago;
-        
+
         $acceso = new ControlAcceso('CajaArqueos');
-        $this->values['permisosCajas'] = $acceso->getPermisos();
+        $permisos = $acceso->getPermisos();
+        $this->values['permisosCajas'] = $permisos['permisosModulo'];
         unset($acceso);
 
         parent::__construct($request);
+    }
+
+    public function IndexAction() {
+        return $this->listAction();
     }
 
     /**
@@ -34,9 +39,9 @@ class RecibosProveedoresController extends Controller {
      */
     public function listAction($aditionalFilter = '') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             $this->values['listado'] = $this->listado->getAll($aditionalFilter);
-            $this->values['filtroRemesa'] = ($this->values['listado']['filter']['valuesSelected'][7]);
+            $this->values['filtroRemesa'] = $this->values['listado']['filter']['valuesSelected'][9];
             $template = $this->entity . '/list.html.twig';
         } else {
             $template = "_global/forbiden.html.twig";
@@ -54,7 +59,7 @@ class RecibosProveedoresController extends Controller {
      */
     public function guardarAction() {
 
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $arrayFacturas = array();
 
             foreach ($this->request['RecibosProveedores'] as $recibo) {
@@ -78,8 +83,13 @@ class RecibosProveedoresController extends Controller {
                 $factura = new FrecibidasCab($idFactura);
                 $totalFactura = $factura->getTotal();
                 $sumaRecibos = $factura->getSumaRecibos();
-                if ($totalFactura != $sumaRecibos)
-                    $this->values['errores'][] = "Descuadre en factura " . $factura->getNumeroFactura() . " -> Total Factura: " . $totalFactura . " Suma Recibos " . $sumaRecibos;
+                if ($totalFactura != $sumaRecibos) {
+                    $diferencia = $totalFactura - $sumaRecibos;
+                    $this->values['errores'][] = "Descuadre en factura {$factura->getNumeroFactura()}";
+                    $this->values['errores'][] = "Total Factura: {$totalFactura}";
+                    $this->values['errores'][] = "Suma Recibos {$sumaRecibos}.";
+                    $this->values['errores'][] = "Diferencia {$diferencia}";
+                }
             }
             unset($factura);
             return $this->listAction();
@@ -97,12 +107,13 @@ class RecibosProveedoresController extends Controller {
      */
     public function DesdoblarAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             if ($this->request['idReciboDesdoblar']) {
                 $recibo = new RecibosProveedores($this->request['idReciboDesdoblar']);
                 $reciboNuevo = $recibo;
                 $reciboNuevo->setIDRecibo('');
                 $reciboNuevo->setRecibo('9999');
+                $reciboNuevo->setPrimaryKeyMD5('');
                 $reciboNuevo->create();
                 unset($recibo);
                 unset($reciboNuevo);
@@ -122,7 +133,7 @@ class RecibosProveedoresController extends Controller {
      * @return array
      */
     public function PagarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $formaPago = new FormasPago($this->request['idFP']);
             $anotarEnCaja = ($formaPago->getAnotarEnCaja()->getIDTipo() == '1');
@@ -132,7 +143,7 @@ class RecibosProveedoresController extends Controller {
             foreach ($this->request['RecibosProveedores'] as $recibo) {
                 $objeto = new RecibosProveedores($recibo['IDRecibo']);
                 $objeto->setVencimiento($this->request['fechaPago']);
-                $objeto->setCContable($formaPago->getCContable());                
+                $objeto->setCContable($formaPago->getCContable());
                 $objeto->setIDEstado($formaPago->getEstadoRecibo()->getIDTipo());
                 if (($objeto->save()) and ($anotarEnCaja)) {
                     $caja->anotaEnCaja($objeto, $this->request['idFP']);

@@ -54,17 +54,12 @@ if (is_array($config['config']['graph'])) {
 
 // Se define el array de datos
 $datosy = array(0,0,0,0,0,0,0,0,0,0,0,0);
-$em = new EntityManager("datos" . $_SESSION['emp']);
-if ($em->getDbLink()) {
-    $query = "SELECT DATE_FORMAT(Fecha,'%m') as mes,sum(TotalBases) as base
-            FROM femitidas_cab
-            WHERE IDSucursal='{$_SESSION['suc']}'
-            GROUP BY mes
-            ORDER BY mes ASC;";
-    $em->query($query);
-    $rows = $em->fetchResult();
-    $em->desConecta();
-}
+$femitidas = new FemitidasCab();
+$rows = $femitidas->cargaCondicion(
+        "DATE_FORMAT(Fecha,'%m') as mes,sum(TotalBases) as base",
+        "IDSucursal='{$_SESSION['suc']}' GROUP BY mes","mes ASC");
+unset($femitidas);
+
 foreach ($rows as $value) $datosy[$value['mes']-1] = $value['base'];
 // Creamos el grafico
 

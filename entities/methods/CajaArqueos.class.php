@@ -49,8 +49,6 @@ class CajaArqueos extends CajaArqueosEntity {
      */
     public function estaAbierta() {
 
-        $idArqueo = 0;
-
         $filtro = "IDSucursal='{$this->IDSucursal}' and IDTpv='{$this->IDTpv}' and Dia='{$this->Dia}' and CajaCerrada='0'";
         $arqueo = new CajaArqueos();
         $rows = $arqueo->cargaCondicion('IDArqueo', $filtro);
@@ -82,6 +80,8 @@ class CajaArqueos extends CajaArqueosEntity {
      */
     public function validaLogico() {
 
+        parent::validaLogico();
+
         // Comprobar que la fecha indicada no sea anterior a la actual.
         if ($this->Dia < date('Y-m-d'))
             $this->_errores[] = "La fecha no puede ser anterior a la actual";
@@ -94,23 +94,17 @@ class CajaArqueos extends CajaArqueosEntity {
      */
     public function recalcula() {
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            // Calcular el importe de los movimientos de apertura (Origen=0)
-            $query = "select sum(Importe) as Importe from {$this->_dataBaseName}.caja_lineas where (IDArqueo='{$this->IDArqueo}' and Origen='0')";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $this->setSaldoApertura($rows[0]['Importe']);
+        $lineas = new CajaLineas();
 
-            // Calcular el importe del resto de los movimientos (Origen<>0)
-            $query = "select sum(Importe) as Importe from {$this->_dataBaseName}.caja_lineas where (IDArqueo='{$this->IDArqueo}' and Origen<>'0')";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $this->setSumaMvtos($rows[0]['Importe']);
-
-            // Calcular el importe total de los movimientos
-            $this->setSaldoCierre($this->SaldoApertura + $this->SumaMvtos);
-        }
+        $rows = $lineas->cargaCondicion("sum(Importe) as Importe", "IDArqueo='{$this->IDArqueo}' and Origen='0'");
+        $this->setSaldoApertura($rows[0]['Importe']);
+        
+        $rows = $lineas->cargaCondicion("sum(Importe) as Importe", "IDArqueo='{$this->IDArqueo}' and Origen<>'0'");
+        $this->setSumaMvtos($rows[0]['Importe']);
+        
+        $this->setSaldoCierre($this->SaldoApertura + $this->SumaMvtos);
+        
+        unset($lineas);
     }
 
     /**
@@ -161,7 +155,7 @@ class CajaArqueos extends CajaArqueosEntity {
                 $apunte->setEntidad('CajaArqueos');
                 $apunte->setIDEntidad($arqueoAnterior['IDArqueo']);
                 $apunte->setImporte($importe['Importe']);
-                $apunte->setIDAgente($_SESSION['USER']['user']['id']);
+                $apunte->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $apunte->create();
                 $this->_errores = $apunte->getErrores();
                 unset($apunte);
@@ -201,12 +195,19 @@ class CajaArqueos extends CajaArqueosEntity {
 
         $resumen = array();
 
+        $formasPago = new FormasPago();
+        $tablaFp = $formasPago->getDataBaseName().".".$formasPago->getTableName();
+        unset($formasPago);
+        $lineas = new CajaLineas();
+        $tablaLineas = $lineas->getDataBaseName().".".$lineas->getTableName();
+        unset($lineas);
+        
         $this->conecta();
         if (is_resource($this->_dbLink)) {
             $query = "SELECT t1.IDFP as IDFP, t2.Descripcion, sum(t1.Importe) as Importe
                 FROM
-                    {$this->_dataBaseName}.caja_lineas as t1,
-                    {$this->_dataBaseName}.formas_pago as t2
+                    {$tablaLineas} as t1,
+                    {$tablaFp} as t2
                 WHERE
                     (t1.IDArqueo='{$this->IDArqueo}') AND
                     (t1.IDFP=t2.IDFP)
@@ -222,6 +223,8 @@ class CajaArqueos extends CajaArqueosEntity {
     /**
      * Recibe un objeto y realiza un apunte en caja con los
      * valores del mismo. Si la caja no estuviera abierta, la abre.
+     * 
+     * El apunte de caja se realiza en la sucursal y tpv en curso
      *
      * Los objetos posibles son:
      *
@@ -249,7 +252,7 @@ class CajaArqueos extends CajaArqueosEntity {
         }
 
         $entidad = get_class($objeto);
-        $idSucursal = $objeto->getIDSucursal()->getIDSucursal();
+        //$idSucursal = $objeto->getIDSucursal()->getIDSucursal();
         if ($idFormaPago == '')
             $idFormaPago = $objeto->getIDFP()->getIDFP();
 
@@ -270,7 +273,6 @@ class CajaArqueos extends CajaArqueosEntity {
 
             case 'RecibosClientes':
                 $concepto = "Cobro N/Fra. {$objeto->getIDFactura()->getNumeroFactura()} de {$objeto->getIDCliente()}";
-                echo $concepto;
                 $origen = 3;
                 $importe = $objeto->getImporte();
                 $idEntidad = $objeto->getPrimaryKeyValue();
@@ -292,7 +294,7 @@ class CajaArqueos extends CajaArqueosEntity {
         }
 
         // Comprobar que la caja esté abierta, si no, abrirla
-        $this->setIDSucursal($idSucursal);
+        $this->setIDSucursal($_SESSION['suc']);
         $this->setIDTpv($_SESSION['tpv']);
         $this->setDia(date('Y-m-d'));
         $idArqueo = $this->estaAbierta();
@@ -310,7 +312,7 @@ class CajaArqueos extends CajaArqueosEntity {
             $apunte->setEntidad($entidad);
             $apunte->setIDEntidad($idEntidad);
             $apunte->setImporte($importe);
-            $apunte->setIDAgente($_SESSION['USER']['user']['id']);
+            $apunte->setIDAgente($_SESSION['usuarioPortal']['Id']);
             $ok = $apunte->create();
             $this->_errores = $apunte->getErrores();
         } else
@@ -330,7 +332,7 @@ class CajaArqueos extends CajaArqueosEntity {
      * @param string $idTpv El id de tpv o '%', opcional
      * @return array Array
      */
-    public function getArqueosAbiertos($idSucursal='',$idTpv='') {
+    public function getArqueosAbiertos($idSucursal = '', $idTpv = '') {
 
         if ($idSucursal == '')
             $idSucursal = $_SESSION['suc'];
@@ -338,7 +340,7 @@ class CajaArqueos extends CajaArqueosEntity {
             $idTpv = $_SESSION['tpv'];
 
         $dia = date('Y-m-d');
-        $rows = $this->cargaCondicion('IDArqueo',"IDSucursal LIKE '{$idSucursal}' AND IDTpv LIKE '{$idTpv}' AND CajaCerrada='0' AND Dia<'$dia'");
+        $rows = $this->cargaCondicion('IDArqueo', "IDSucursal LIKE '{$idSucursal}' AND IDTpv LIKE '{$idTpv}' AND CajaCerrada='0' AND Dia<'$dia'");
 
         return $rows;
     }

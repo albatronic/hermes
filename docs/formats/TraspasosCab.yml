@@ -33,7 +33,7 @@ TraspasosCab:
       - $this->SetLeftMargin(65)
       - $this->Cell(0, 4, $this->empresa->getCif(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getDireccion(), 0, 1, 'R')
-      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getPoblacion(), 0, 1, 'R')
+      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getIdMunicipio(), 0, 1, 'R')
       - $this->Cell(0, 4, 'Tlf ' . $this->empresa->getTelefono() . ' Fax ' . $this->empresa->getFax(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getWeb(), 0, 1, 'R', 0, 'http://' . $this->empresa->getWeb())
       - $this->Cell(0, 4, $this->empresa->getEMail(), 0, 1, 'R')
@@ -54,7 +54,7 @@ TraspasosCab:
       - $this->Cell(85, 5, "Fecha Salida " . $this->master->getFechaSalida(), 0, 1)
       - $this->SetFont('Arial','',10)
       - $this->Cell(85, 5, $this->master->getIDAlmacenOrigen()->getDireccion(), 0, 1, 'L')
-      - $this->Cell(85, 5, $this->master->getIDAlmacenOrigen()->getCodigoPostal() . ' ' . $this->master->getIDAlmacenOrigen()->getPoblacion() . ' ' . $this->master->getIDAlmacenOrigen()->getIDProvincia()->getProvincia(), 0, 1, 'L')
+      - $this->Cell(85, 5, $this->master->getIDAlmacenOrigen()->getCodigoPostal() . ' ' . $this->master->getIDAlmacenOrigen()->getIDPoblacion() . ' ' . $this->master->getIDAlmacenOrigen()->getIDProvincia()->getProvincia(), 0, 1, 'L')
       - $this->Cell(85, 5, 'Tlfs ' . $this->master->getIDAlmacenOrigen()->getTelefono(), 0, 1, 'L')
 
       #-- Datos del almacén destino --
@@ -67,7 +67,7 @@ TraspasosCab:
       - $this->Cell(90, 5, "Fecha Entrada " . $this->master->getFechaSalida(), 0, 1)
       - $this->SetFont('Arial','',10)
       - $this->Cell(90, 5, $this->master->getIDAlmacenDestino()->getDireccion(), 0, 1, 'L')
-      - $this->Cell(90, 5, $this->master->getIDAlmacenDestino()->getCodigoPostal() . ' ' . $this->master->getIDAlmacenDestino()->getPoblacion() . ' ' . $this->master->getIDAlmacenDestino()->getIDProvincia()->getProvincia(), 0, 1, 'L')
+      - $this->Cell(90, 5, $this->master->getIDAlmacenDestino()->getCodigoPostal() . ' ' . $this->master->getIDAlmacenDestino()->getIDPoblacion() . ' ' . $this->master->getIDAlmacenDestino()->getIDProvincia()->getProvincia(), 0, 1, 'L')
       - $this->Cell(90, 5, 'Tlfs ' . $this->master->getIDAlmacenDestino()->getTelefono(), 0, 1, 'L')
       - $this->SetLeftMargin(15)
 

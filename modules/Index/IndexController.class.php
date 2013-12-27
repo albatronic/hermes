@@ -20,9 +20,9 @@ class IndexController extends Controller {
 
         // Cargar la configuracion del modulo (modules/moduloName/config.yaml)
         $this->form = new Form($this->entity);
-        
+
         $this->cargaValores();
-        
+
         // Instanciar el objeto listado con los parametros del modulo
         // y los eventuales valores del filtro enviados en el request
         $this->listado = new Listado($this->form, $this->request);
@@ -56,41 +56,22 @@ class IndexController extends Controller {
             echo "No se ha definido la conexión para la entidad: " . $this->entity;
         }
 
-        // QUITAR LOS COMENTARIOS PARA Actualizar los favoritos para el usuario
-        //if ($this->form->getFavouriteControl())
-        //    $this->actualizaFavoritos();
+        // Menu de favoritos
+        $this->values['favoritos'] = $this->getFavoritos();
     }
-    
+
     /**
      * Muestra un template con los accesos favoritos del usuario
      * @return array
      */
     public function IndexAction() {
-        // QUITAR LOS COMENTARIOS PARA MOSTAR LOS FAVORITOS
-        //$this->values = array('favoritos' => $this->getTopFavoritos());
-
-        // Poner en la sesión el id del Rol del usuario
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
-        $_SESSION['USER']['user']['idRol'] = $usuario->getRol()->getIDTipo();
-
-        // Poner en la sesión TRUE/FALSE para la posibilidad de cambiar
-        // los precios unitarios de los albaranes dependieno del rol del usuraio
-        // según el parámetro ROLCP
-        $param = new Parametros();
-        $param = $param->find("Codigo","ROLCP");
-        $rolesCambioPrecio = explode(",",  trim($param->getValor()));
-        $_SESSION['USER']['user']['cambioPrecios'] = in_array($_SESSION['USER']['user']['idRol'], $rolesCambioPrecio);
-
-        // Poner en la sesión la política de actualización de precios en base
-        // al parámetro ACTU_PRECIOS
-        $param = new Parametros();
-        $param = $param->find("Codigo","ACTU_PRECIOS");
-        $_SESSION['USER']['user']['actuPrecios'] = strtoupper(trim($param->getValor()));
-
-        unset($usuario);
-        unset($param);
 
         $this->values['sucursal'] = new Sucursales($_SESSION['suc']);
+
+        if ($_SESSION['tpv']) {
+            $this->values['dashBoard'] = $this->getDashBoard();
+        }
+
         return array('template' => 'Index/index.html.twig', 'values' => $this->values);
     }
 
@@ -105,16 +86,11 @@ class IndexController extends Controller {
         $_SESSION['emp'] = $this->request['Empresa'];
 
         //Buscar las sucursales de la nueva empresa seleccionada
-        $user = new Agentes($_SESSION['USER']['user']['id']);
-        $_SESSION['USER']['sucursales'] = $user->getSucursales($_SESSION['emp']);
+        $user = new Agentes($_SESSION['usuarioPortal']['Id']);
+        $_SESSION['usuarioPortal']['sucursales'] = $user->getSucursales($_SESSION['emp']);
 
         //Activo la sucursal nueva
-        $_SESSION['suc'] = $_SESSION['USER']['sucursales'][0]['Id'];
-
-        //Activo la version
-        $empresa = new Empresas($_SESSION['emp']);
-        $_SESSION['ver'] = $empresa->getIDVersion()->getIDTipo();
-        unset($empresa);
+        $_SESSION['suc'] = $_SESSION['usuarioPortal']['sucursales'][0]['Id'];
 
         //Desactivo el tpv para forzar a la elección de un nuevo
         unset($_SESSION['tpv']);
@@ -150,9 +126,9 @@ class IndexController extends Controller {
     }
 
     protected function cargaValores() {
-        if (!isset($_SESSION['USER']['menu'])) {
+        if (!isset($_SESSION['usuarioPortal']['menu'])) {
             // Está logeado (viene del portal), pero es la primera vez que entra
-            unset($_SESSION['USER']['accesosPortal']);
+            $_SESSION['usuarioPortal']['accesosPortal'] = array();
 
             // Carga la cadena de conexion a la base de datos del proyecto
             $proyectoApp = new PcaeProyectosApps();
@@ -183,49 +159,50 @@ class IndexController extends Controller {
 
             // Establece el perfil del usuario para el proyecto y carga
             // el menú en base a su perfil
-            $usuario = new CpanUsuarios($_SESSION['USER']['user']['Id']);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
             if ($usuario->getStatus()) {
-                $_SESSION['USER']['user']['IdPerfil'] = $usuario->getIdPerfil()->getId();
-                $_SESSION['USER']['menu'] = $usuario->getArrayMenu();
-            } else
-                $template = $this->entity . "/noLoged.html.twig";
-            unset($usuario);
+                $idPerfil = $usuario->getIDPerfil()->getPrimaryKeyValue();
+                $_SESSION['usuarioPortal']['IdPerfil'] = $idPerfil;
+                $_SESSION['usuarioPortal']['IdRol'] = $usuario->getIDRol()->getIDTipo();
+                $_SESSION['usuarioPortal']['email'] = $usuario->getEMail();
 
-            // Carga las variables de entorno y web del proyecto
-            $this->cargaVariables();print_r($_SESSION);
-        } else {
+                $_SESSION['emp'] = $_SESSION['project']['IdEmpresa'];
+                $_SESSION['usuarioPortal']['sucursales'] = $usuario->getSucursales('', false);
+                $_SESSION['suc'] = $_SESSION['usuarioPortal']['sucursales'][0]['Id'];
+                $_SESSION['usuarioPortal']['menu'] = $usuario->getArrayMenu();
+                // Carga las variables de entorno y web del proyecto
+                $this->cargaVariables();
 
-            $aplicacion = $this->request[1];
-            if ($aplicacion != '') {
-                // Ha seleccionado una app, hay que mostrar sus modulos públicos (Publicar = 1)
-                $permisos = new ControlAcceso($aplicacion);
-                $this->values['permisos'] = $permisos->getPermisos();
-                unset($permisos);
+                // Activar la versión
+                $var = new CpanVariables('Pro', 'Web');
+                $erp = $var->getNode('erp');
+                $_SESSION['ver'] = ($erp['version'] != '') ? $erp['version'] : '0';
 
-                $this->values['enCurso']['app'] = $aplicacion;
-                $this->values['titulo'] = $_SESSION['USER']['menu'][$aplicacion]['titulo'];
-                $this->values['menu']['tipo'] = "modulos";
-                $this->values['menu']['perteneceA'] = $aplicacion;
-                foreach ($_SESSION['USER']['menu'][$aplicacion]['modulos'] as $key => $value)
-                    if ($value['publicar'])
-                        $this->values['menu']['modulos'][$key] = $value;
+                // Activar o no la posibilidad de cambiar precios
+                $rolesCambioPrecio = explode(",", trim($erp['rolesCambioPrecios']));
+                $_SESSION['usuarioPortal']['cambioPrecios'] = in_array($_SESSION['usuarioPortal']['IdRol'], $rolesCambioPrecio);
+
+                // Poner en la sesión la política de actualización de precios en base
+                $_SESSION['usuarioPortal']['actuPrecios'] = ($erp['actuPrecios'] != '') ? $erp['actuPrecios'] : 'PVP';
+
+                // Poner en la sesión el margén mínimo de venta
+                $_SESSION['usuarioPortal']['margenMinimo'] = ($erp['alertaMargen'] > 0) ? $erp['alertaMargen'] : 0;
+
+                // Poner en la sesión si se generar alertas o no por falta de stock
+                $_SESSION['usuarioPortal']['alertaStock'] = $erp['alertaStock'];
+
+                // Establece los idiomas en base a la varible web del proyecto
+                $langs = trim($_SESSION['VARIABLES']['WebPro']['globales']['lang']);
+                $_SESSION['idiomas']['disponibles'] = ($langs == '') ? array('0' => 'es') : explode(",", $langs);
+
+                if (!isset($_SESSION['idiomas']['actual'])) {
+                    $_SESSION['idiomas']['actual'] = 0;
+                }
             } else {
-                // No ha seleccionado ninguna app, hay que mostrar todas las apps públicas (Publicar = 1)
-
-                $this->values['permisos'] = array(
-                    'VW' => true,
-                );
-
-                $this->values['titulo'] = 'Apps disponibles';
-                $this->values['menu']['tipo'] = 'apps';
-                foreach ($_SESSION['USER']['menu'] as $key => $value)
-                    if ($value['publicar']) {
-                        $this->values['menu']['apps'][$key] = array(
-                            'titulo' => $value['titulo'],
-                            'descripcion' => $value['descripcion'],
-                        );
-                    }
+                $template = $this->entity . "/noLoged.html.twig";
             }
+
+            unset($usuario);
         }
     }
 
@@ -269,7 +246,97 @@ class IndexController extends Controller {
         } else
             $this->varWebPro = $_SESSION['VARIABLES']['WebPro'];
         $this->values['varWebPro'] = $this->varWebPro;
-    }    
+
+        unset($variables);
+    }
+
+    public function ImportarAction() {
+        set_time_limit(0);
+        //CARGAR EL ARCHIVO XML
+        cargaDatosDemo::LeeArchivo('tmp/fixturesDemo.xml');
+
+        //VACIAR LAS TABLAS
+        cargaDatosDemo::VaciarTablas();
+
+        //Creo las familias y subfamilias en las tablas de la BD en base al array bidemensional
+        cargaDatosDemo::CrearFamilias(cargaDatosDemo::getFamilias());
+
+        //Cargo los articulos en la BD.
+        $fallos = cargaDatosDemo::CargaArticulos();
+        echo "Articulos Fallidos: ", $fallos;
+
+        return $this->IndexAction();
+    }
+
+    /**
+     * Activa o desactiva el modo debuger de Twig
+     * 
+     * Para activar: Index/Debuger/true
+     * Para desactivar: Index/Debuger/false
+     * 
+     * @return void
+     */
+    public function DebugerAction() {
+
+        $fileConfig = 'config/config.yml';
+        $array = sfYaml::load($fileConfig);
+        $array['config']['twig']['debug_mode'] = ($this->request[2] == 'true') ? true : false;
+        $yml = sfYaml::dump($array);
+        $archivo = new Archivo($fileConfig);
+        $archivo->write($yml);
+        $archivo->close();
+
+        echo "Modo debuger Twig: ", $array['config']['twig']['debug_mode'], "----";
+
+        return $this->IndexAction();
+    }
+
+    /**
+     * Devuelve un array con los favoritos del
+     * usuario en curso.
+     * 
+     * @return array Controller,Titulo
+     */
+    public function getFavoritos() {
+
+        $fav = new Favoritos();
+        $rows = $fav->cargaCondicion("Controller,Titulo", "IDUsuario='{$_SESSION['usuarioPortal']['Id']}'", "SortOrder");
+        unset($fav);
+
+        return $rows;
+    }
+
+    /**
+     * Genera el array con la información para el dashboard
+     * 
+     * @return array
+     */
+    public function getDashBoard() {
+
+        $idRol = $_SESSION['usuarioPortal']['IdRol'];
+
+        $array = array();
+
+        $array['presupuestos'] = DashBoard::getPresupuestos();
+
+        // La tesoreria la muestro si el rol es admon o super
+        if ($idRol == '0' or $idRol == '9')
+            $array['tesoreria'] = DashBoard::getTesoreria();
+
+        $array['logistica']['entradasRetrasadas'] = DashBoard::getEntradasRetrasadas();
+        $array['logistica']['entradasHoy'] = DashBoard::getEntradasHoy();
+        $array['logistica']['pendienteServir'] = DashBoard::getPteServir();
+        $array['logistica']['roturasStock'] = DashBoard::getRoturasStock();
+
+        $array['tops']['clientes'] = DashBoard::getTopNClientes();
+        $array['tops']['articulos'] = DashBoard::getTopNArticulos();
+        $array['tops']['categorias'] = DashBoard::getTopNCategorias();
+        $array['tops']['familias'] = DashBoard::getTopNFamilias();
+        $array['tops']['comerciales'] = DashBoard::getTopNComerciales();
+
+        return $array;
+    }
+
 }
 
 ?>

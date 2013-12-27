@@ -27,11 +27,11 @@ class ZonasTransporte extends ZonasTransporteEntity {
 
         $rows = array();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
             $query = "
                 SELECT DISTINCT tp.IDAgencia AS Id, ag.Agencia AS Value
-                FROM tablas_portes as tp, agencias as ag
+                FROM ErpTablaPortes as tp, ErpAgencias as ag
                 WHERE
                   tp.IDZona='{$this->IDZona}' AND
                   tp.IDAgencia=zt.IDAgencia

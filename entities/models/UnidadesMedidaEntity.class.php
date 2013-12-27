@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(unidades_medida)
  */
-class UnidadesMedidaEntity extends Entity {
+class UnidadesMedidaEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -26,12 +26,12 @@ class UnidadesMedidaEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'unidades_medida';
+    protected $_tableName = 'ErpUnidadesMedida';
     /**
      * Nombre de la primaryKey
      * @var string

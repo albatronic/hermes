@@ -22,7 +22,7 @@
                     {% set classFila = 'Par' %}
                 {% endif %}
 
-            <form name="linea{{key}}" action="" method="POST">
+            <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="ExpedirCab" type="hidden" />
                 <input name="action" value="CambiaRepartidor" type="hidden" />
                 <input name="idAlmacen" value="{{objeto.IDAlmacen.IDAlmacen}}" type="hidden" />

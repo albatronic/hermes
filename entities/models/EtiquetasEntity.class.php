@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(etiquetas)
  */
-class EtiquetasEntity extends Entity {
+class EtiquetasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -49,12 +49,12 @@ class EtiquetasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'etiquetas';
+    protected $_tableName = 'ErpEtiquetas';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -77,6 +77,8 @@ class EtiquetasEntity extends Entity {
     }
 
     public function getIDAgente() {
+        if (!($this->IDAgente instanceof Agentes))
+            $this->IDAgente = new Agentes($this->IDAgente);
         return $this->IDAgente;
     }
 
@@ -85,6 +87,8 @@ class EtiquetasEntity extends Entity {
     }
 
     public function getIDArticulo() {
+        if (!($this->IDArticulo instanceof Articulos))
+            $this->IDArticulo = new Articulos($this->IDArticulo);
         return $this->IDArticulo;
     }
 

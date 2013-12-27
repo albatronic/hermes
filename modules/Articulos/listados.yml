@@ -7,11 +7,11 @@
 ---
 listados:
   -
-    title: Listado de Artículos X Familias
+    title: Listado de Artículos X Categorías
     order_by: >
-      articulos.IDFamilia,articulos.Codigo
+      ErpArticulos.IDCategoria,ErpArticulos.Codigo
       ASC
-    break_field: IDFamilia
+    break_field: IDCategoria
     idPerfil: null
     orientation: P
     unit: mm
@@ -31,25 +31,16 @@ listados:
       -
         title: Descripción
         field: Descripcion
-        length: 35
+        length: 45
         align: L
         type: string
         total: NO
         formula: null
         format: null
       -
-        title: Subfamilia
-        field: IDSubfamilia
-        length: 10
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      -
         title: Pvp
         field: Pvp
-        length: 10
+        length: 13
         align: R
         type: decimal
         total: NO
@@ -58,43 +49,25 @@ listados:
       -
         title: Iva
         field: IDIva
-        length: 5
+        length: 7
         align: R
         type: integer
         total: NO
         formula: null
         format: null
       -
-        title: UMB
-        field: UMB
-        length: 5
-        align: L
-        type: integer
+        title: Pvp C/I
+        field: PrecioVentaConImpuestos
+        length: 13
+        align: R
+        type: decimal
         total: NO
         formula: null
-        format: null
-      -
-        title: UMC
-        field: UMC
-        length: 5
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      -
-        title: UMA
-        field: UMA
-        length: 5
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
+        format: null        
       -
         title: UMV
         field: UMV
-        length: 5
+        length: 10
         align: L
         type: integer
         total: NO
@@ -103,9 +76,9 @@ listados:
   -
     title: Listado Precios Punteo
     order_by: >
-      articulos.IDFamilia,articulos.Descripcion
+      ErpArticulos.IDCategoria,ErpArticulos.Descripcion
       ASC
-    break_field: IDFamilia
+    break_field: IDCategoria
     idPerfil: null
     orientation: P
     unit: mm
@@ -169,8 +142,8 @@ listados:
         format: null
   -
     title: Listado Subir Fotos
-    order_by: articulos.IDFamilia,articulos.Codigo ASC
-    break_field: IDFamilia
+    order_by: ErpArticulos.IDCategoria,ErpArticulos.Codigo ASC
+    break_field: IDCategoria
     idPerfil: null
     orientation: P
     unit: mm
@@ -208,9 +181,9 @@ listados:
   -
     title: Listado Punteo Packing
     order_by: >
-      articulos.IDFamilia,articulos.Codigo
+      ErpArticulos.IDCategoria,ErpArticulos.Codigo
       ASC
-    break_field: IDFamilia
+    break_field: IDCategoria
     idPerfil: null
     orientation: L
     unit: mm
@@ -311,8 +284,8 @@ listados:
   -
     title: Listado Tarifa Precios
     order_by: >
-      articulos.IDFamilia ASC, Descripcion ASC
-    break_field: IDFamilia
+      ErpArticulos.IDCategoria ASC, Descripcion ASC
+    break_field: IDCategoria
     idPerfil: null
     orientation: P
     unit: mm
@@ -386,9 +359,9 @@ listados:
   -
     title: Listado Tarifa Precios Unidad Básica
     order_by: >
-      articulos.IDFamilia,articulos.Descripcion
+      ErpArticulos.IDCategoria,ErpArticulos.Descripcion
       ASC
-    break_field: IDFamilia
+    break_field: IDCategoria
     idPerfil: null
     orientation: P
     unit: mm

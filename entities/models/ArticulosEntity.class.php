@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(articulos)
  */
-class ArticulosEntity extends Entity {
+class ArticulosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -34,21 +34,51 @@ class ArticulosEntity extends Entity {
     protected $Descripcion = '';
 
     /**
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $Subtitulo;
+
+    /**
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $Resumen;
+
+    /**
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $ReclamoCorto;
+
+    /**
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $ReclamoLargo;
+
+    /**
+     * @var entities\ErpFamilias
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDCategoria = '0';
+
+    /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="articulos")
      */
-    protected $IDFamilia = '';
+    protected $IDFamilia = '0';
 
     /**
      * @orm:Column(type="integer")
      */
-    protected $IDSubfamilia = '';
+    protected $IDSubfamilia = '0';
 
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="articulos")
      */
-    protected $IDFabricante = '';
+    protected $IDFabricante = '0';
 
     /**
      * @orm:Column(type="integer")
@@ -79,6 +109,12 @@ class ArticulosEntity extends Entity {
      * @assert:NotBlank(groups="articulos")
      */
     protected $IDIva = '1';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="articulos")
+     */
+    protected $PvpAnterior = '0.000';
 
     /**
      * @orm:Column(type="string")
@@ -134,13 +170,13 @@ class ArticulosEntity extends Entity {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="articulos")
      */
-    protected $Inventario = '1';
+    protected $Inventario = '0';
 
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="articulos")
      */
-    protected $Trazabilidad = '1';
+    protected $Trazabilidad = '0';
 
     /**
      * @orm:Column(type="integer")
@@ -170,7 +206,37 @@ class ArticulosEntity extends Entity {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="articulos")
      */
-    protected $IDEstado = '1';
+    protected $BajoPedido = '0';
+
+    /**
+     * @var entities\ArticulosEstados
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDEstado1 = '0';
+
+    /**
+     * @var entities\ArticulosEstados
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDEstado2 = '0';
+
+    /**
+     * @var entities\ArticulosEstados
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDEstado3 = '0';
+
+    /**
+     * @var entities\ArticulosEstados
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDEstado4 = '0';
+
+    /**
+     * @var entities\ArticulosEstados
+     * @assert NotBlank(groups="ErpArticulos")
+     */
+    protected $IDEstado5 = '0';
 
     /**
      * @orm:Column(type="integer")
@@ -270,33 +336,34 @@ class ArticulosEntity extends Entity {
     protected $CUMV = '1';
 
     /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="articulos")
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
      */
-    protected $PublicarWeb = '1';
+    protected $AvisosPedidos;    
 
     /**
-     * @orm:Column(type="string")
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
      */
-    protected $UrlAmigable;
+    protected $AvisosPresupuestos;    
 
     /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="articulos")
+     * @var string
+     * @assert NotBlank(groups="ErpArticulos")
      */
-    protected $ConTallasColores = '0';
-
+    protected $AvisosAlbaranes;    
+   
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'articulos';
+    protected $_tableName = 'ErpArticulos*';
 
     /**
      * Nombre de la primaryKey
@@ -320,6 +387,7 @@ class ArticulosEntity extends Entity {
         array('SourceColumn' => 'IDArticulo', 'ParentEntity' => 'Lotes', 'ParentColumn' => 'IDArticulo'),
         array('SourceColumn' => 'IDArticulo', 'ParentEntity' => 'TraspasosLineas', 'ParentColumn' => 'IDArticulo'),
         array('SourceColumn' => 'IDArticulo', 'ParentEntity' => 'MvtosAlmacen', 'ParentColumn' => 'IDArticulo'),
+        array('SourceColumn' => 'IDArticulo', 'ParentEntity' => 'ArticulosPropiedades', 'ParentColumn' => 'IDArticulo'),
     );
 
     /**
@@ -356,6 +424,48 @@ class ArticulosEntity extends Entity {
         return $this->Descripcion;
     }
 
+    public function setSubtitulo($Subtitulo) {
+        $this->Subtitulo = trim($Subtitulo);
+    }
+
+    public function getSubtitulo() {
+        return $this->Subtitulo;
+    }
+
+    public function setResumen($Resumen) {
+        $this->Resumen = trim($Resumen);
+    }
+
+    public function getResumen() {
+        return $this->Resumen;
+    }
+
+    public function setReclamoCorto($ReclamoCorto) {
+        $this->ReclamoCorto = trim($ReclamoCorto);
+    }
+
+    public function getReclamoCorto() {
+        return $this->ReclamoCorto;
+    }
+
+    public function setReclamoLargo($ReclamoLargo) {
+        $this->ReclamoLargo = trim($ReclamoLargo);
+    }
+
+    public function getReclamoLargo() {
+        return $this->ReclamoLargo;
+    }
+
+    public function setIDCategoria($IDCategoria) {
+        $this->IDCategoria = $IDCategoria;
+    }
+
+    public function getIDCategoria() {
+        if (!($this->IDCategoria instanceof Familias))
+            $this->IDCategoria = new Familias($this->IDCategoria);
+        return $this->IDCategoria;
+    }
+
     public function setIDFamilia($IDFamilia) {
         $this->IDFamilia = $IDFamilia;
     }
@@ -371,8 +481,8 @@ class ArticulosEntity extends Entity {
     }
 
     public function getIDSubfamilia() {
-        if (!($this->IDSubfamilia instanceof Subfamilias))
-            $this->IDSubfamilia = new Subfamilias($this->IDSubfamilia);
+        if (!($this->IDSubfamilia instanceof Familias))
+            $this->IDSubfamilia = new Familias($this->IDSubfamilia);
         return $this->IDSubfamilia;
     }
 
@@ -426,6 +536,14 @@ class ArticulosEntity extends Entity {
         if (!($this->IDIva instanceof TiposIva))
             $this->IDIva = new TiposIva($this->IDIva);
         return $this->IDIva;
+    }
+
+    public function setPvpAnterior($PvpAnterior) {
+        $this->PvpAnterior = $PvpAnterior;
+    }
+
+    public function getPvpAnterior() {
+        return $this->PvpAnterior;
     }
 
     public function setEtiqueta($Etiqueta) {
@@ -522,6 +640,16 @@ class ArticulosEntity extends Entity {
         return $this->Trazabilidad;
     }
 
+    public function setBajoPedido($BajoPedido) {
+        $this->BajoPedido = $BajoPedido;
+    }
+
+    public function getBajoPedido() {
+        if (!($this->BajoPedido instanceof ValoresSN))
+            $this->BajoPedido = new ValoresSN($this->BajoPedido);
+        return $this->BajoPedido;
+    }
+
     public function setPackingCompras($PackingCompras) {
         $this->PackingCompras = $PackingCompras;
     }
@@ -556,14 +684,54 @@ class ArticulosEntity extends Entity {
         return $this->BloqueoStock;
     }
 
-    public function setIDEstado($IDEstado) {
-        $this->IDEstado = $IDEstado;
+    public function setIDEstado1($IDEstado1) {
+        $this->IDEstado1 = $IDEstado1;
     }
 
-    public function getIDEstado() {
-        if (!($this->IDEstado instanceof ArticulosEstados))
-            $this->IDEstado = new ArticulosEstados($this->IDEstado);
-        return $this->IDEstado;
+    public function getIDEstado1() {
+        if (!($this->IDEstado1 instanceof ArticulosEstados))
+            $this->IDEstado1 = new ArticulosEstados($this->IDEstado1);
+        return $this->IDEstado1;
+    }
+
+    public function setIDEstado2($IDEstado2) {
+        $this->IDEstado2 = $IDEstado2;
+    }
+
+    public function getIDEstado2() {
+        if (!($this->IDEstado2 instanceof ArticulosEstados))
+            $this->IDEstado2 = new ArticulosEstados($this->IDEstado2);
+        return $this->IDEstado2;
+    }
+
+    public function setIDEstado3($IDEstado3) {
+        $this->IDEstado3 = $IDEstado3;
+    }
+
+    public function getIDEstado3() {
+        if (!($this->IDEstado3 instanceof ArticulosEstados))
+            $this->IDEstado3 = new ArticulosEstados($this->IDEstado3);
+        return $this->IDEstado3;
+    }
+
+    public function setIDEstado4($IDEstado4) {
+        $this->IDEstado4 = $IDEstado4;
+    }
+
+    public function getIDEstado4() {
+        if (!($this->IDEstado4 instanceof ArticulosEstados))
+            $this->IDEstado4 = new ArticulosEstados($this->IDEstado4);
+        return $this->IDEstado4;
+    }
+
+    public function setIDEstado5($IDEstado5) {
+        $this->IDEstado5 = $IDEstado5;
+    }
+
+    public function getIDEstado5() {
+        if (!($this->IDEstado5 instanceof ArticulosEstados))
+            $this->IDEstado5 = new ArticulosEstados($this->IDEstado5);
+        return $this->IDEstado5;
     }
 
     public function setStockMinimo($StockMinimo) {
@@ -696,34 +864,29 @@ class ArticulosEntity extends Entity {
         return $this->CUMV;
     }
 
-    public function setPublicarWeb($PublicarWeb) {
-        $this->PublicarWeb = $PublicarWeb;
+    public function setAvisosPedidos($AvisosPedidos) {
+        $this->AvisosPedidos = trim($AvisosPedidos);
     }
 
-    public function getPublicarWeb() {
-        if (!($this->PublicarWeb instanceof ValoresSN))
-            $this->PublicarWeb = new ValoresSN($this->PublicarWeb);
-        return $this->PublicarWeb;
+    public function getAvisosPedidos() {
+        return $this->AvisosPedidos;
     }
 
-    public function setUrlAmigable($UrlAmigable) {
-        $this->UrlAmigable = trim($UrlAmigable);
+    public function setAvisosPresupuestos($AvisosPresupuestos) {
+        $this->AvisosPresupuestos = trim($AvisosPresupuestos);
     }
 
-    public function getUrlAmigable() {
-        return $this->UrlAmigable;
+    public function getAvisosPresupuestos() {
+        return $this->AvisosPresupuestos;
+    }    
+    
+    public function setAvisosAlbaranes($AvisosAlbaranes) {
+        $this->AvisosAlbaranes = trim($AvisosAlbaranes);
     }
 
-    public function setConTallasColores($ConTallasColores) {
-        $this->ConTallasColores = $ConTallasColores;
+    public function getAvisosAlbaranes() {
+        return $this->AvisosAlbaranes;
     }
-
-    public function getConTallasColores() {
-        if (!($this->ConTallasColores instanceof ValoresSN))
-            $this->ConTallasColores = new ValoresSN($this->ConTallasColores);
-        return $this->ConTallasColores;
-    }
-
 }
 
 // END class articulos

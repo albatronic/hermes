@@ -14,5 +14,9 @@ class ProvinciasController extends Controller {
     protected $entity = "Provincias";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return $this->listAction();
+    }
+        
 }
 ?>

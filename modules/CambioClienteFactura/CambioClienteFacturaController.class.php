@@ -117,40 +117,29 @@ class CambioClienteFacturaController extends Controller {
 
         $ok = false;
 
-        $em = new EntityManager($this->form->getConection());
-        if ($em->getDbLink()) {
+        // Cambiar factura
+        $femitidas = new FemitidasCab();
+        $filtro = "NumeroFactura='{$this->request['numeroFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
+        $okFactura = $femitidas->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
+        $this->values['errores'] = $femitidas->getErrores();
 
-            // Cambiar factura
-            $filtro = "NumeroFactura='{$this->request['numeroFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-            $query = "update femitidas_cab set IDCliente='{$this->request['idClienteNuevo']}' where {$filtro}";
-            $em->query($query);
-            $this->values['errores'] = $em->getError();
-            $okFactura = $em->getAffectedRows();
+        if ($okFactura) {
 
-            if ($okFactura) {
-                
-                $this->values['mensaje'][] = "Se ha cambiado " . $okFactura . " factura.";
-                // Cambiar albaran/es
-                $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-                $query = "update albaranes_cab set IDCliente='{$this->request['idClienteNuevo']}' where {$filtro}";
-                $em->query($query);
-                $this->values['errores'] = $em->getError();
-                $nAlbaranes = $em->getAffectedRows();
-                $this->values['mensaje'][] = "Se han cambiado " . $nAlbaranes . " albaranes.";
-                
-                // Cambiar recibos
-                $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-                $query = "update recibos_clientes set IDCliente='{$this->request['idClienteNuevo']}' where {$filtro}";
-                $em->query($query);
-                $this->values['errores'] = $em->getError();
-                $nRecibos = $em->getAffectedRows();
-                $this->values['mensaje'][] = "Se han cambiado " . $nRecibos . " recibos.";
-                
-            }
+            $this->values['mensaje'][] = "Se ha cambiado " . $okFactura . " factura.";
+            // Cambiar albaran/es
+            $albaranes = new AlbaranesCab();
+            $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
+            $nAlbaranes = $albaranes->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
+            $this->values['errores'] = $albaranes->getErrores();
+            $this->values['mensaje'][] = "Se han cambiado " . $nAlbaranes . " albaranes.";
+
+            // Cambiar recibos
+            $recibos = new RecibosClientes();
+            $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
+            $nRecibos = $recibos->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
+            $this->values['errores'] = $recibos->getErrores();
+            $this->values['mensaje'][] = "Se han cambiado " . $nRecibos . " recibos.";
         }
-
-        $em->desConecta();
-        unset($em);
     }
 
     /**
@@ -171,7 +160,6 @@ class CambioClienteFacturaController extends Controller {
             $this->values['errores'][] = "El cliente origen y destino debe ser diferente";
 
         return (count($this->values['errores']) == 0);
-
     }
 
 }

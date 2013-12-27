@@ -38,7 +38,7 @@ class CajaLineasController extends Controller {
      * @return array con el template y valores a renderizar
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
 
                 case 'POST': //CREAR NUEVO REGISTRO
@@ -75,7 +75,7 @@ class CajaLineasController extends Controller {
 
     public function listAction($idArqueo='') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idArqueo == '')
                 $idArqueo = $this->request[2];
 
@@ -85,7 +85,7 @@ class CajaLineasController extends Controller {
                 // por lo tanto le añado un objeto linea vacío
                 $objetoNuevo = new $this->entity();
                 $objetoNuevo->setIDArqueo($idArqueo);
-                $objetoNuevo->setIDAgente($_SESSION['USER']['user']['id']);
+                $objetoNuevo->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $lineas[] = $objetoNuevo;
                 unset($objetoNuevo);
             }

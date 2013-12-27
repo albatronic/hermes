@@ -7,15 +7,15 @@
         <div>
 
         <div style="float: left;">
-        {{ macro.select('Sucursal',none,'filtro[idSucursal]','filtro_idSucursal',none,values.filtro.idSucursal,values.sucursales,'Select',none,'submit();') }}
+        {{ macro.select({'caption':'Sucursal','visible':'1','updatable':'1','varEnv':'0'},none,'filtro[idSucursal]','filtro_idSucursal',none,values.filtro.idSucursal,values.sucursales,'Select',none,'submit();') }}
         </div>
 
         <div style="float: left; margin-left: 10px;">
-        {{ macro.fecha('Desde Fecha',none,'filtro[desdeFecha]','filtro_desdeFecha',values.filtro.desdeFecha) }}
+        {{ macro.fecha({'caption':'Desde fecha','visible':'1','updatable':'1','varEnv':'0'},none,'filtro[desdeFecha]','filtro_desdeFecha',values.filtro.desdeFecha) }}
         </div>
 
         <div style="float: left; margin-left: 10px;">
-        {{ macro.fecha('Hasta Fecha',none,'filtro[hastaFecha]','filtro_hastaFecha',values.filtro.hastaFecha) }}
+        {{ macro.fecha({'caption':'Hasta fecha','visible':'1','updatable':'1','varEnv':'0'},none,'filtro[hastaFecha]','filtro_hastaFecha',values.filtro.hastaFecha) }}
         </div>
 
         <div style="float: left; margin-left: 0px; margin-top:15px;">

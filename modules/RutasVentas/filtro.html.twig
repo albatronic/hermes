@@ -11,7 +11,7 @@
             {% endfor %}
         </select>
 
-        {% if (values.permisos['L'] and values.linkBy.value) %}
+        {% if (values.permisos['permisosModulo']['LI'] and values.linkBy.value) %}
             <input type="image" style="float:right;" src="{{app.path}}/images/icon_printgreen.gif" title="Imprimir..." alt="Imprimir..."
                  onClick="action.value='listado';submit();"
             />

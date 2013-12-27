@@ -3,13 +3,13 @@
 
 <div class="CajaIzquierda" style="width: 50%; height: 120px;">
     {% if not datos.IDInventario %}
-        {{ macro.select('Almacén','Etiqueta','InventariosCab[IDAlmacen]','InventariosCab_IDAlmacen',none,datos.IDAlmacen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select')}}
+        {{ macro.select(values.atributos.IDAlmacen,'Etiqueta','InventariosCab[IDAlmacen]','InventariosCab_IDAlmacen',200,datos.IDAlmacen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select')}}
     {% else %}
         <input name="InventariosCab[IDAlmacen]" value="{{datos.IDAlmacen.IDAlmacen}}" type="hidden" />
-        {{ macro.etiqueta('Almacén','Etiqueta',datos.IDAlmacen.Nombre)}}
+        {{ macro.etiqueta(values.atributos.IDAlmacen,'Etiqueta',datos.IDAlmacen.Nombre)}}
     {% endif %}
-    {{ macro.fecha('Fecha','Etiqueta','InventariosCab[Fecha]','InventariosCab_Fecha',datos.Fecha,'10','CampoFecha') }}
-    {{ macro.textarea('Motivo','Etiqueta','InventariosCab[Comentarios]','InventariosCab_Comentarios',datos.Comentarios,none,none,'TextArea')}}
+    {{ macro.fecha(values.atributos.Fecha,'Etiqueta','InventariosCab[Fecha]','InventariosCab_Fecha',datos.Fecha,'10','CampoFecha') }}
+    {{ macro.textarea(values.atributos.Comentarios,'Etiqueta','InventariosCab[Comentarios]','InventariosCab_Comentarios',datos.Comentarios,none,none,'TextArea')}}
 </div>
 
 {% if datos.IDInventario %}

@@ -3,8 +3,9 @@
 {% extends 'Facturacion/index.html.twig' %}
 
 {% block listado %}
-	{% include "_global/FormErrores.html.twig" with {'errores': values.errores} %}
-	{% include "_global/alertas.html.twig" with {'errores': values.errores} %}
+
+{% include "_global/FormErrores.html.twig" with {'errores': values.errores} %}
+{% include "_global/alertas.html.twig" with {'errores': values.errores} %}
 <div id='Listado' class='Listado' style="width: 63%; float: left;">
     <div class="SubtituloFacturacion">Albaranes pendientes de <b>{{values.cliente.RazonSocial}}</b> ({{values.cliente.NombreComercial}})</div>
         <table width='100%'>
@@ -23,7 +24,7 @@
                 {% else %}
                     {% set classFila = 'Par' %}
                 {% endif %}
-            <form name="linea{{key}}" action="" method="POST">
+            <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="facturacion" type="hidden" />
                 <input name="action" value="cambia" type="hidden" />
                 <input name="idAlbaran" value="{{objeto.IDAlbaran}}" type="hidden" />
@@ -32,7 +33,7 @@
                 <input name="filtro[hastaFecha]" value="{{values.filtro.hastaFecha}}" type="hidden" />
                 <input name="filtro[idCliente]" value="{{values.filtro.idCliente}}" type="hidden" />
             <tr class="{{classFila}}">
-                <td><a href='{{app.path}}/AlbaranesCab/Edit/{{objeto.IDAlbaran}}' target="_blank" title='Ver Albaran ...'>{{objeto.NumeroAlbaran}}</a></td>
+                <td><a href='{{app.path}}/AlbaranesCab/Edit/{{objeto.PrimaryKeyMD5}}' target="_blank" title='Ver Albaran ...'>{{objeto.NumeroAlbaran}}</a></td>
                 <td align="center">{{objeto.FechaEntrega}}</td>
                 <td>
                     <select name="idFormaPago" style="width: 250px;" onchange="submit();">
@@ -55,20 +56,20 @@
         <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 150px; font-weight: bold;">
             <div>
                 <div style="float: left; width: 100px;">Total:</div>
-                <div style="float: left; width: 50px; text-align: right;">{{values.totales.facturable|number_format}}</div>
+                <div id="facturable" style="float: left; width: 50px; text-align: right;">{{values.totales.facturable|number_format}}</div>
             </div>
             <div style="clear: both;">
                 <div style="float: left; width: 100px;">Selección:</div>
-                <div style="float: left; width: 50px; text-align: right;">{{values.totales.seleccion|number_format}}</div>
+                <div id="seleccion" style="float: left; width: 50px; text-align: right;">{{values.totales.seleccion|number_format}}</div>
             </div>
         </div>
 </div>
 
 
-<div style="width: 350px; float: left; margin-bottom: 5px; margin-left: 3px;">
+<div id="condiciones" style="width: 350px; float: left; margin-bottom: 5px; margin-left: 3px;">
 {% if values.totales.albaranesSeleccionados %}
         <div class="SubtituloFacturacion">Condiciones Facturación</div>
-        <form name="linea{{key}}" action="" method="POST">
+        <form name="facturacion" id="facturacion" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="facturacion" type="hidden" />
             <input name="action" value="facturar" type="hidden" />
             <input name="filtro[idSucursal]" value="{{values.filtro.idSucursal}}" type="hidden" />
@@ -78,10 +79,10 @@
 
             <div style="margin-top: 10px;">
             <div style="float: left;">
-                {{ macro.fecha('Fecha Factura','Etiqueta','fecha','fecha',none,'10') }}
+                {{ macro.fecha('Fecha Factura','Etiqueta','fecha','fecha',values.hoy,'10') }}
             </div>
             <div style="float: left; margin-left: 10px;">
-                {{ macro.select('Serie','Etiqueta','idContador','idContador',none,none,values.contador.fetchAll(values.filtro.idSucursal,2),'Select') }}
+                {{ macro.select('Serie','Etiqueta','idContador','idContador',60,none,values.contador.fetchAll(values.filtro.idSucursal,2),'Select') }}
             </div>
             </div>
 
@@ -107,7 +108,7 @@
             <div style="clear: both;"></div>
 
             <div style="margin-top: 10px; text-align: center;" id="div_botonFacturar">
-                <input type="submit" value="Facturar" class="Comando" onClick="$('#div_botonFacturar').html('<img src={{app.path}}/images/loading.gif>'); submit();"/>
+                <input type="submit" value="Facturar" class="Comando" onClick="$('#div_botonFacturar').html('<img src={{app.path}}/images/loading.gif>'); $('#facturacion').submit();"/>
             </div>
         </form>
 {% endif %}

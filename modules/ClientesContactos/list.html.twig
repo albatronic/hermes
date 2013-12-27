@@ -19,9 +19,9 @@
                 {% else %}
                     {% set classFila = 'Par' %}
                 {% endif %}
-            <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.IDContacto}}'" class='{{classFila}}'>
+            <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.PrimaryKeyMD5}}'" class='{{classFila}}'>
 
-                <td><a href="{{app.path}}/ClientesContactos/edit/{{objeto.IDContacto}}/{{objeto.IDCliente}}" title="Editar...">{{objeto.Cargo}}</a></td>
+                <td><a href="{{app.path}}/ClientesContactos/edit/{{objeto.PrimaryKeyMD5}}/{{objeto.IDCliente}}" title="Editar...">{{objeto.Cargo}}</a></td>
                 <td>{{objeto.Nombre}}</td>
                 <td>{{objeto.Telefono}}</td>
                 <td>{{objeto.EMail}}</td>

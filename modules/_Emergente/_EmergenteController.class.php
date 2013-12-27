@@ -36,13 +36,15 @@ class _EmergenteController {
             case 'GET':
                 $idArticulo = $this->request['2'];
                 $idAlmacen = $this->request['3'];
+                $albaran = new AlbaranesCab();
                 $condicion = " JOIN albaranes_cab USING(IDAlbaran) where t1.IDAlmacen='{$idAlmacen}' and t1.IDArticulo='{$idArticulo}' and t1.IDEstado='1' ";
-                $query = "select IDLinea from albaranes_lineas as t1 {$condicion} order by albaranes_cab.Fecha ASC";
-                $em = new EntityManager("datos" . $_SESSION['emp']);
+                $query = "select IDLinea from ErpAlbaranesLineas as t1 {$condicion} order by ErpAlbaranesCab.Fecha ASC";
+                $em = new EntityManager($albaran->getConectionName());
                 $em->query($query);
                 $rows = $em->fetchResult();
                 $em->desConecta();
                 unset($em);
+                unset($albaran);
 
                 foreach ($rows as $key => $value) {
                     $data[] = new AlbaranesLineas($value['IDLinea']);
@@ -67,13 +69,15 @@ class _EmergenteController {
             case 'GET':
                 $idArticulo = $this->request['2'];
                 $idAlmacen = $this->request['3'];
-                $condicion = " JOIN pedidos_cab USING(IDPedido) where t1.IDAlmacen='{$idAlmacen}' and t1.IDArticulo='{$idArticulo}' and t1.IDEstado='1' ";
-                $query = "select IDLinea from pedidos_lineas as t1 {$condicion} order by pedidos_cab.FechaEntrega ASC";
-                $em = new EntityManager("datos" . $_SESSION['emp']);
+                $pedido = new PedidosCab();
+                $condicion = " JOIN ErpPedidosCab USING(IDPedido) where t1.IDAlmacen='{$idAlmacen}' and t1.IDArticulo='{$idArticulo}' and t1.IDEstado='1' ";
+                $query = "select IDLinea from ErpPedidosLineas as t1 {$condicion} order by ErpPedidosCab.FechaEntrega ASC";
+                $em = new EntityManager($pedido->getConectionName());
                 $em->query($query);
                 $rows = $em->fetchResult();
                 $em->desConecta();
                 unset($em);
+                unset($pedido);
 
                 foreach ($rows as $key => $value) {
                     $data[] = new PedidosLineas($value['IDLinea']);
@@ -195,16 +199,24 @@ class _EmergenteController {
         unset($fecha);
 
         $proveedor = new Proveedores($idProveedor);
+        $proveedorTabla = $proveedor->getDataBaseName() . "." . $proveedor->getTableName();
+        $articulo = new Articulos($idArticulo);
+        $articuloTabla = $articulo->getDataBaseName() . "." . $articulo->getTableName();
+        $pedidos = new PedidosCab();
+        $pedidosTabla = $pedidos->getDataBaseName() . "." . $pedidos->getTableName();
+        unset($pedidos);
+        $lineas = new PedidosLineas();
+        $lineasTabla = $lineas->getDataBaseName() . "." . $lineas->getTableName();
+        unset($lineas);
 
         // Calcular el total de unidades compradas y el precio medio de compra
         // Solo calcula los pedidos que están recepcionados o facturados
         if ($idArticulo != '') {
-            $articulo = new Articulos($idArticulo);
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($articulo->getConectionName());
             if ($em->getDbLink()) {
                 $query = "SELECT SUM(t1.Unidades) as Unidades, SUM(t1.Importe) as Importe
-                FROM pedidos_lineas as t1, pedidos_cab as t2
+                FROM {$lineasTabla} as t1, {$pedidosTabla} as t2
                 WHERE t1.IDPedido=t2.IDPedido
                 AND t2.IDProveedor='{$idProveedor}'
                 AND t1.IDArticulo='{$idArticulo}'
@@ -215,8 +227,8 @@ class _EmergenteController {
                 $em->desConecta();
             }
 
-            ($rows[0]['Unidades'] != 0) ? $precioMedio = $rows[0]['Importe'] / $rows[0]['Unidades'] : $precioMedio = 0;
-            ($rows[0]['Unidades'] == '') ? $unidades = 0 : $unidades = $rows['0']['Unidades'];
+            $precioMedio = ($rows[0]['Unidades'] != 0) ? $rows[0]['Importe'] / $rows[0]['Unidades'] : 0;
+            $unidades = ($rows[0]['Unidades'] == '') ? 0 : $rows['0']['Unidades'];
         }
 
         $this->values['datos'] = array(
@@ -231,10 +243,10 @@ class _EmergenteController {
 
         // Obtener el litado historico de compras para el articulo y proveedor
         // Solo muestra los pedidos que están confirmador o facturados
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($articulo->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT t2.IDLinea,t1.IDPedido,DATE_FORMAT(t1.FechaEntrada,'%d-%m-%Y') as FechaEntrada,t4.Descripcion,t2.Unidades,t2.Precio,t2.Descuento,t2.Importe
-                FROM pedidos_cab as t1, pedidos_lineas as t2, proveedores as t3, articulos as t4
+            $query = "SELECT t2.IDLinea,t1.IDPedido,t1.PrimaryKeyMD5,DATE_FORMAT(t1.FechaEntrada,'%d-%m-%Y') as FechaEntrada,t4.Descripcion,t2.Unidades,t2.Precio,t2.Descuento,t2.Importe
+                FROM {$pedidosTabla} as t1, {$lineasTabla} as t2, {$proveedorTabla} as t3, {$articuloTabla} as t4
                 WHERE t1.IDPedido=t2.IDPedido
                 AND t1.IDProveedor=t3.IDProveedor
                 AND t1.IDProveedor='{$idProveedor}'
@@ -321,16 +333,24 @@ class _EmergenteController {
         unset($fecha);
 
         $cliente = new Clientes($idCliente);
+        $clienteTabla = $cliente->getDataBaseName() . "." . $cliente->getTableName();
+        $articulo = new Articulos($idArticulo);
+        $articuloTabla = $articulo->getDataBaseName() . "." . $articulo->getTableName();
+        $albaran = new AlbaranesCab();
+        $albaranTabla = $albaran->getDataBaseName() . "." . $albaran->getTableName();
+        unset($albaran);
+        $lineas = new AlbaranesLineas();
+        $lineasTabla = $lineas->getDataBaseName() . "." . $lineas->getTableName();
+        unset($lineas);
 
         // Calcular el total de unidades vendidas y el precio medio de venta
         // No tiene en cuenta los albaranes que no están confirmados
         if ($idArticulo != '') {
-            $articulo = new Articulos($idArticulo);
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($articulo->getConectionName());
             if ($em->getDbLink()) {
                 $query = "SELECT SUM(t1.Unidades) as Unidades, SUM(t1.Importe) as Importe
-                FROM albaranes_lineas as t1, albaranes_cab as t2
+                FROM {$lineasTabla} as t1, {$albaranTabla} as t2
                 WHERE t1.IDAlbaran=t2.IDAlbaran
                 AND t2.IDCliente='{$idCliente}'
                 AND t1.IDArticulo='{$idArticulo}'
@@ -341,8 +361,8 @@ class _EmergenteController {
                 $em->desConecta();
             }
 
-            ($rows[0]['Unidades'] != 0) ? $precioMedio = $rows[0]['Importe'] / $rows[0]['Unidades'] : $precioMedio = 0;
-            ($rows[0]['Unidades'] == '') ? $unidades = 0 : $unidades = $rows['0']['Unidades'];
+            $precioMedio = ($rows[0]['Unidades'] != 0) ? $rows[0]['Importe'] / $rows[0]['Unidades'] : 0;
+            $unidades = ($rows[0]['Unidades'] == '') ? 0 : $rows['0']['Unidades'];
         }
 
         $this->values['datos'] = array(
@@ -357,20 +377,26 @@ class _EmergenteController {
 
         // Obtener el litado histórico de ventas para el articulo y cliente
         // Solo muestra los albaranes que están confirmador o facturados
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($articulo->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT t2.IDLinea,t1.IDAlbaran,t1.NumeroAlbaran,DATE_FORMAT(t1.Fecha,'%d-%m-%Y') as Fecha,t1.IDEstado,t1.IDFactura,t4.Descripcion,t2.Unidades,t2.Precio,t2.Descuento,t2.Importe,t2.IDPromocion
-                FROM albaranes_cab as t1, albaranes_lineas as t2, clientes as t3, articulos as t4
-                WHERE t1.IDAlbaran=t2.IDAlbaran
+            $query = "SELECT t2.IDLinea,t1.IDAlbaran,t1.NumeroAlbaran,t1.PrimaryKeyMD5,DATE_FORMAT(t1.Fecha,'%d-%m-%Y') as Fecha,t1.IDEstado,t1.IDFactura,t2.Descripcion,t2.Unidades,t2.Precio,t2.Descuento,t2.Importe,t2.IDPromocion
+                FROM {$albaranTabla} as t1, {$lineasTabla} as t2, {$clienteTabla} as t3";
+            if ($idArticulo != ''){
+                $query .= ", {$articuloTabla} as t4";
+            }
+            $query .= " WHERE t1.IDAlbaran=t2.IDAlbaran
                 AND t1.IDCliente=t3.IDCliente
-                AND t1.IDCliente='{$idCliente}'
-                AND t2.IDArticulo=t4.IDArticulo ";
-            if ($idArticulo != '')
-                $query .= "AND t2.IDArticulo='{$idArticulo}'";
+                AND t1.IDCliente='{$idCliente}' ";
+
+            if ($idArticulo != '') {
+                $query .= "AND t2.IDArticulo=t4.IDArticulo AND t2.IDArticulo='{$idArticulo}'";
+            }
+
             $query .= "
                 AND t1.IDEstado<>'0'
                 AND t1.Fecha>='{$desdeFecha}'
                 ORDER BY t1.Fecha DESC, t1.IDAlbaran DESC";
+
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -393,6 +419,19 @@ class _EmergenteController {
         unset($cliente);
 
         return array('template' => '_Emergente/historicoVentas.html.twig', 'values' => $this->values);
+    }
+
+    /**
+     * Muestra emergente con la ficha de un producto
+     * @return type
+     */
+    public function fichaProductoAction() {
+        
+        $idArticulo = $this->request['2'];
+
+        $this->values['producto'] = new Articulos($idArticulo);
+
+        return array('values' => $this->values, 'template' => '_Emergente/fichaProducto.html.twig');
     }
 
 }

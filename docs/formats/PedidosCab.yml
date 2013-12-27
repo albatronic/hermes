@@ -15,7 +15,7 @@ PedidosCab:
     margins: '10,10,15,10'
     header:
       # -- Logo --
-      - $this->Image($this->empresa->getLogo(),15,15,40,30)
+      - $this->Image($this->empresa->getLogo(),15,15,30)
       # -- Datos de la Empresa --
       - $this->SetXY(65,15)
       - $this->SetFont('Arial', 'B', 12)
@@ -24,7 +24,7 @@ PedidosCab:
       - $this->SetLeftMargin(65)
       - $this->Cell(0, 4, $this->empresa->getCif(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getDireccion(), 0, 1, 'R')
-      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getPoblacion(), 0, 1, 'R')
+      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getIdMunicipio(), 0, 1, 'R')
       - $this->Cell(0, 4, 'Tlf ' . $this->empresa->getTelefono() . ' Fax ' . $this->empresa->getFax(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getWeb(), 0, 1, 'R', 0, 'http://' . $this->empresa->getWeb())
       - $this->Cell(0, 4, $this->empresa->getEMail(), 0, 1, 'R')
@@ -51,7 +51,7 @@ PedidosCab:
       - $this->Cell(0, 5, $this->master->getIDProveedor()->getRazonSocial(), 0, 1)
       - $this->SetFont('Arial', '', 10)
       - $this->Cell(85, 5, $this->master->getIDProveedor()->getDireccion(), 0, 1, "L")
-      - $this->Cell(85, 5, $this->master->getIDProveedor()->getCodigoPostal() . " " . $this->master->getIDProveedor()->getPoblacion() . " " . $this->master->getIDProveedor()->getIDProvincia()->getProvincia(), 0, 1, "L")
+      - $this->Cell(85, 5, $this->master->getIDProveedor()->getCodigoPostal() . " " . $this->master->getIDProveedor()->getIDPoblacion() . " " . $this->master->getIDProveedor()->getIDProvincia()->getProvincia(), 0, 1, "L")
       - $this->Cell(85, 5, "C.I.F." . $this->master->getIDProveedor()->getCif() . "     tlf." . $this->master->getIDProveedor()->getTelefono(), 0, 1, "L")
 
       - $this->SetLeftMargin(15)
@@ -166,7 +166,7 @@ PedidosCab:
     margins: '10,10,15,10'
     header:
       # -- Logo --
-      - $this->Image($this->empresa->getLogo(),15,15,40,30)
+      - $this->Image($this->empresa->getLogo(),15,15,30)
       # -- Datos de la Empresa --
       - $this->SetXY(65,15)
       - $this->SetFont('Arial', 'B', 12)
@@ -175,7 +175,7 @@ PedidosCab:
       - $this->SetLeftMargin(65)
       - $this->Cell(0, 4, $this->empresa->getCif(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getDireccion(), 0, 1, 'R')
-      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getPoblacion(), 0, 1, 'R')
+      - $this->Cell(0, 4, $this->empresa->getCodigoPostal() . ' ' . $this->empresa->getIdMunicipio(), 0, 1, 'R')
       - $this->Cell(0, 4, 'Tlf ' . $this->empresa->getTelefono() . ' Fax ' . $this->empresa->getFax(), 0, 1, 'R')
       - $this->Cell(0, 4, $this->empresa->getWeb(), 0, 1, 'R', 0, 'http://' . $this->empresa->getWeb())
       - $this->Cell(0, 4, $this->empresa->getEMail(), 0, 1, 'R')
@@ -202,7 +202,7 @@ PedidosCab:
       - $this->Cell(0, 5, $this->master->getIDProveedor()->getRazonSocial(), 0, 1)
       - $this->SetFont('Arial', '', 10)
       - $this->Cell(85, 5, $this->master->getIDProveedor()->getDireccion(), 0, 1, "L")
-      - $this->Cell(85, 5, $this->master->getIDProveedor()->getCodigoPostal() . " " . $this->master->getIDProveedor()->getPoblacion() . " " . $this->master->getIDProveedor()->getIDProvincia()->getProvincia(), 0, 1, "L")
+      - $this->Cell(85, 5, $this->master->getIDProveedor()->getCodigoPostal() . " " . $this->master->getIDProveedor()->getIDPoblacion() . " " . $this->master->getIDProveedor()->getIDProvincia()->getProvincia(), 0, 1, "L")
       - $this->Cell(85, 5, "C.I.F." . $this->master->getIDProveedor()->getCif() . "     tlf." . $this->master->getIDProveedor()->getTelefono(), 0, 1, "L")
 
       - $this->SetLeftMargin(15)

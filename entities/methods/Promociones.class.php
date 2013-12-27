@@ -15,6 +15,9 @@ class Promociones extends PromocionesEntity {
     }
 
     protected function validaLogico() {
+        
+        parent::validaLogico();
+                
         if ($this->IDFamilia != '')
             $this->IDArticulo = NULL;
         if (($this->IDFamilia == '') and ($this->IDArticulo == ''))

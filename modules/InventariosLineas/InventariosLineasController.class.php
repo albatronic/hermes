@@ -31,7 +31,7 @@ class InventariosLineasController extends Controller {
 
     public function listAction($idInventario='') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idInventario == '')
                 $idInventario = $this->request[2];
 
@@ -81,7 +81,7 @@ class InventariosLineasController extends Controller {
      * @return array con el template y valores a renderizar
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
 
                 case 'POST': //CREAR NUEVO REGISTRO
@@ -98,6 +98,7 @@ class InventariosLineasController extends Controller {
                         $this->values['alertas'] = $datos->getAlertas();
                     } else {
                         $this->values['errores'] = $datos->getErrores();
+                        print_r($datos->getErrores());
                     }
                     unset($datos);
                     return $this->listAction($this->values['linkBy']['value']);
@@ -125,7 +126,7 @@ class InventariosLineasController extends Controller {
 
         switch ($this->request['accion']) {
             case 'G': //GUARDAR DATOS
-                if ($this->values['permisos']['A']) {
+                if ($this->values['permisos']['permisosModulo']['UP']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
                     $datos->bind($this->request[$this->entity]);
                     if ($datos->valida($this->form->getRules())) {
@@ -143,7 +144,7 @@ class InventariosLineasController extends Controller {
                 break;
 
             case 'B': //BORRAR DATOS
-                if ($this->values['permisos']['B']) {
+                if ($this->values['permisos']['permisosModulo']['DE']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
                     if ($datos->erase()) {
                         $this->values['errores'] = array();

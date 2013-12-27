@@ -4,19 +4,19 @@
 <div>
 {% if datos.IDEstado.IDTipo == '0' %}
     <div style="float: left; width: 49%">
-        {{ macro.fecha('Fecha Orden','Etiqueta','ManufacCab[FechaOrden]','ManufacCab_FechaOrden',datos.FechaOrden,'10','CampoFecha') }}
-        {{ macro.fecha('Fecha Envio','Etiqueta','ManufacCab[FechaEnvio]','ManufacCab_FechaEnvio',datos.FechaEnvio,'10','CampoFecha','disabled') }}
-        {{ macro.fecha('Fecha Entrega','Etiqueta','ManufacCab[FechaEntrega]','ManufacCab_FechaEntrega',datos.FechaEntrega,'10','CampoFecha','disabled') }}
+        {{ macro.fecha(values.atributos.FechaOrden,'Etiqueta','ManufacCab[FechaOrden]','ManufacCab_FechaOrden',datos.FechaOrden,'10','CampoFecha') }}
+        {{ macro.fecha(values.atributos.FechaEnvio,'Etiqueta','ManufacCab[FechaEnvio]','ManufacCab_FechaEnvio',datos.FechaEnvio,'10','CampoFecha','disabled') }}
+        {{ macro.fecha(values.atributos.FechaEntrega,'Etiqueta','ManufacCab[FechaEntrega]','ManufacCab_FechaEntrega',datos.FechaEntrega,'10','CampoFecha','disabled') }}
         <div class="Item" id="div_ManufacCab_RazonSocial">
             <input name="ManufacCab[IDElaborador]" id="ManufacCab_IDElaborador" value="{{datos.IDElaborador.IDProveedor}}" type="hidden"/>
-            <div class="Etiqueta">Sala Elaboradora</div>
+            {{ macro.label(values.atributos.IDElaborador)}}
             <input value="{{datos.IDElaborador.RazonSocial}}" id="RazonSocial" type="text" maxlength="50" class="CampoTextoLargo"
                onkeyup="autoCompletar('RazonSocial','ManufacCab_IDElaborador','RazonSocial','proveedores','',['div_ManufacCab_IDFP','ManufacCab_IDFP','ManufacCab[IDFP]','formaspagoproveedor']);"/>
         </div>
     </div>
     <div style="float: right; width: 49%">
-        {{ macro.select('Almacén Origen','Etiqueta','ManufacCab[IDAlmacenOrigen]','ManufacCab_IDAlmacenOrigen',none,datos.IDAlmacenOrigen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
-        {{ macro.select('Almacén Destino','Etiqueta','ManufacCab[IDAlmacenDestino]','ManufacCab_IDAlmacenDestino',none,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
+        {{ macro.select('Almacén Origen','Etiqueta','ManufacCab[IDAlmacenOrigen]','ManufacCab_IDAlmacenOrigen',200,datos.IDAlmacenOrigen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
+        {{ macro.select('Almacén Destino','Etiqueta','ManufacCab[IDAlmacenDestino]','ManufacCab_IDAlmacenDestino',200,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
         {{ macro.textarea('Descripción','Etiqueta','ManufacCab[Descripcion]','ManufacCab_Descripcion',datos.Descripcion,none,none,'TextArea')}}
     </div>
     {{ macro.foco('RazonSocial') }}

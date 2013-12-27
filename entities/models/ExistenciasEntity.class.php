@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(existencias)
  */
-class ExistenciasEntity extends Entity {
+class ExistenciasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -88,12 +88,12 @@ class ExistenciasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'existencias';
+    protected $_tableName = 'ErpExistencias';
     /**
      * Nombre de la PrimaryKey
      * @var string

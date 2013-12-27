@@ -71,7 +71,7 @@ class ImportarFemitidasController extends Controller {
      */
     public function UploadAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             // Ruta al archivo destino sin la extensión
             $path = "docs/docs" . $_SESSION['emp'] . "/tmp/femitidas" . "_" . date('His');
@@ -149,7 +149,7 @@ class ImportarFemitidasController extends Controller {
 
                     $factura->setNumeroFactura($numeroFactura);
                     $factura->setIDSucursal($_SESSION['suc']);
-                    $factura->setIDAgente($_SESSION['USER']['user']['id']);
+                    $factura->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $factura->setIDComercial(1);
                     $factura->setFecha($fecha[0] . "/" . $fecha[1] . "/20" . $fecha[2]);
                     $factura->setIDCliente($cliente->getIDCliente());
@@ -171,7 +171,6 @@ class ImportarFemitidasController extends Controller {
                     $factura->setIDFP($this->request['IDFP']);
                     $factura->setAsiento(9999);
                     $factura->setCuentaVentas($ctaVentas);
-                    $factura->setClave(md5($factura->getNumeroFactura()));
                     if ($factura->create()) {
                         $factura->creaVctos();
                     } else

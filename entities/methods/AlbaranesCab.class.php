@@ -18,16 +18,16 @@ class AlbaranesCab extends AlbaranesCabEntity {
         return $this->NumeroAlbaran;
     }
 
-    protected function load() {
+    protected function load($showDeleted = FALSE) {
         if ($this->IDAlbaran == '') {
             //Si el nº de albaran está vacio (se ha instanciado un objeto vacio),
             //asigno valores por defecto (agente,comercial,sucursal,almacen y cliente).
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
-            $agente = new Agentes($_SESSION['USER']['user']['id']);
+            $agente = new Agentes($_SESSION['usuarioPortal']['Id']);
             $esComercial = ($agente->getEsComercial());
             if ($esComercial) {
-                $idComercial = $_SESSION['USER']['user']['id'];
+                $idComercial = $_SESSION['usuarioPortal']['Id'];
                 $this->setIDComercial($idComercial);
             }
 
@@ -50,7 +50,6 @@ class AlbaranesCab extends AlbaranesCabEntity {
         // Calcular el Numero de albaran en base al contador
         $contador = new Contadores($this->IDContador);
         $this->setNumeroAlbaran($contador->asignaContador());
-        $this->setClave(md5($this->NumeroAlbaran));
         unset($contador);
 
         // Poner la ruta de reparto, día de reparto y el repartidor
@@ -82,7 +81,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
         }
 
         unset($albaranDB);
-        return $ok;        
+        return $ok;
     }
 
     /**
@@ -95,18 +94,23 @@ class AlbaranesCab extends AlbaranesCabEntity {
 
         $this->conecta();
 
+        $lineas = new AlbaranesLineas();
+
         if (is_resource($this->_dbLink)) {
-            $query = "DELETE FROM {$this->_dataBaseName}.albaranes_cab WHERE `IDAlbaran`='{$this->IDAlbaran}' AND IDEstado='0' and IDFactura='0'";
+            $query = "DELETE FROM {$this->_dataBaseName}.{$this->_tableName} WHERE `IDAlbaran`='{$this->IDAlbaran}' AND IDEstado='0' and IDFactura='0'";
             if ($this->_em->query($query)) {
                 //Borrar líneas de albaranes
-                $query = "DELETE FROM {$this->_dataBaseName}.albaranes_lineas where `IDAlbaran`='{$this->IDAlbaran}'";
+                $query = "DELETE FROM {$lineas->getDataBaseName()}.{$lineas->getTableName()} where `IDAlbaran`='{$this->IDAlbaran}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
-            } else
+            }
+            else
                 $this->_errores = $this->_em->getError();
             $this->_em->desConecta();
         }
         unset($this->_em);
+
+        unset($lineas);
 
         return (count($this->_errores) == 0);
     }
@@ -119,12 +123,11 @@ class AlbaranesCab extends AlbaranesCabEntity {
     public function recalcula() {
 
         //Fuerzo el almacen y el comercial de las líneas de albaranes al de la cabecera del albaran
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "UPDATE {$this->_dataBaseName}.albaranes_lineas SET `IDComercial`='{$this->IDComercial}', `IDAlmacen`='{$this->IDAlmacen}' WHERE `IDAlbaran` = '{$this->IDAlbaran}'";
-            $this->_em->query($query);
-        }
-        $this->_em->desConecta();
+        $lineas = new AlbaranesLineas();
+        $lineas->queryUpdate(
+                array("IDComercial" => $this->IDComercial, "IDAlmacen" => $this->IDAlmacen), "`IDAlbaran`='{$this->IDAlbaran}'"
+        );
+        unset($lineas);
 
         //Si la version es CRISTAL calculo el eventual recargo energetico
         if ($_SESSION['ver'] == 1)
@@ -135,23 +138,21 @@ class AlbaranesCab extends AlbaranesCabEntity {
         //de cliente se aplique indebidamente
         $cliente = new Clientes($this->IDCliente);
         if ($cliente->getIva()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "UPDATE {$this->_dataBaseName}.albaranes_lineas SET `Iva`='0', `Recargo`='0' WHERE `IDAlbaran`= '{$this->getIDAlbaran()}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new AlbaranesLineas();
+            $lineas->queryUpdate(
+                    array("Iva" => 0, "Recargo" => 0), "`IDAlbaran`='{$this->IDAlbaran}'"
+            );
+            unset($lineas);
         }
         //Si el cliente no está sujeto a recargo de equivalencia
         //lo pongo a cero en las líneas para evitar que por cambio
         //de cliente se aplique indebidamente
         elseif ($cliente->getRecargoEqu()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "update albaranes_lineas set `Recargo`='0' where `IDAlbaran` = '{$this->getIDAlbaran()}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new AlbaranesLineas();
+            $lineas->queryUpdate(
+                    array("Recargo" => 0), "`IDAlbaran`='{$this->IDAlbaran}'"
+            );
+            unset($lineas);
         }
         unset($cliente);
 
@@ -164,12 +165,19 @@ class AlbaranesCab extends AlbaranesCabEntity {
         //Calcular los totales, desglosados por tipo de iva.
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "select sum(Importe) as Bruto,sum(ImporteCosto) as Costo from {$this->_dataBaseName}.albaranes_lineas where (IDAlbaran='" . $this->getIDAlbaran() . "')";
+            $lineas = new AlbaranesLineas();
+            $tableLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            $articulos = new Articulos();
+            $tableArticulos = "{$articulos->getDataBaseName()}.{$articulos->getTableName()}";
+            unset($lineas);
+            unset($articulos);
+
+            $query = "select sum(Importe) as Bruto,sum(ImporteCosto) as Costo from {$tableLineas} where (IDAlbaran='" . $this->getIDAlbaran() . "')";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $bruto = $rows[0]['Bruto'];
 
-            $query = "select Iva,Recargo, sum(Importe) as Importe from {$this->_dataBaseName}.albaranes_lineas where (IDAlbaran='" . $this->getIDAlbaran() . "') group by Iva,Recargo order by Iva";
+            $query = "select Iva,Recargo, sum(Importe) as Importe from {$tableLineas} where (IDAlbaran='" . $this->getIDAlbaran() . "') group by Iva,Recargo order by Iva";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $totbases = 0;
@@ -213,13 +221,14 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     $columna = "MtsAl";
                     break;
             }
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "select sum(articulos.Peso*albaranes_lineas.{$columna}) as Peso,
-                        sum(articulos.Volumen*albaranes_lineas.{$columna}) as Volumen,
-                        sum(Unidades) as Bultos from articulos,albaranes_lineas
-                      where (albaranes_lineas.IDArticulo=articulos.IDArticulo)
-                        and (articulos.Inventario='1')
-                        and (albaranes_lineas.IDAlbaran='{$this->IDAlbaran}')";
+            $em = new EntityManager($this->getConectionName());
+            $query = "select sum(a.Peso*l.{$columna}) as Peso,
+                        sum(aVolumen*l.{$columna}) as Volumen,
+                        sum(Unidades) as Bultos 
+                      from {$tableArticulos} as a,{$tableLineas} as l
+                      where (l.IDArticulo=a.IDArticulo)
+                        and (a.Inventario='1')
+                        and (l.IDAlbaran='{$this->IDAlbaran}')";
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -246,14 +255,44 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $this->setRecargoFinanciero($recFinanciero);
             $this->setCuotaRecargoFinanciero($cuotaRecFinanciero);
             $this->setTotal($total);
-            $this->setPeso($rows[0]['Peso']);
-            $this->setVolumen($rows[0]['Volumen']);
-            $this->setBultos($rows[0]['Bultos']);
+            if ($this->Peso == 0)
+                $this->setPeso($rows[0]['Peso']);
+            if ($this->Volumen == 0)
+                $this->setVolumen($rows[0]['Volumen']);
+            if ($this->Bultos == 0)
+                $this->setBultos($rows[0]['Bultos']);
         }
     }
 
     /**
-     * Confirma el albaran, que consiste en:
+     * Devuelve un array con las agencias de transporte para la zona
+     * del cliente y según el peso del albarán según la tabla de portes
+     * 
+     * Si no hubiera ninguna, se devuelve todas las agencias
+     * 
+     * @return array
+     */
+    public function getAgencias() {
+
+        $tablaPortes = new TablaPortes();
+
+        $cliente = new Clientes($this->IDCliente);
+        $idZona = $cliente->getIDProvincia()->getIDZona()->getIDZona();
+        unset($cliente);
+
+        $agencias = $tablaPortes->getAgenciasZona($idZona, $this->getPeso());
+
+        if (count($agencias) == 0) {
+            $agencia = new Agencias();
+            $agencias = $agencia->fetchAll("Agencia");
+            unset($agencia);
+        }
+
+        return $agencias;
+    }
+
+    /**
+     * Confirma el albaran si no se ha superado el riesgo, que consiste en:
      *
      *  1.- Reservar mercancía en el registro de existencias sin indicar lote ni ubiación
      *      solo para aquellos artículos que estén sujetos a inventario
@@ -264,33 +303,49 @@ class AlbaranesCab extends AlbaranesCabEntity {
 
         // Si no está confirmado
         if ($this->getIDEstado()->getIDTipo() == 0) {
+            // Comprobar el riesgo
+            $cliente = new Clientes($this->IDCliente);
+            $riesgo = $cliente->getRiesgo();
+            $superadoRiesgo = ( ($riesgo['RI'] > 0) and ($riesgo['RE']['Importe'] >= $riesgo['RI']));
+            unset($cliente);
+            if (!$superadoRiesgo) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.albaranes_lineas as t1, articulos as t2
+                $lineas = new AlbaranesLineas();
+                $tableLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+                $articulos = new Articulos();
+                $tableArticulos = "{$articulos->getDataBaseName()}.{$articulos->getTableName()}";
+                unset($lineas);
+                unset($articulos);
+                $em = new EntityManager($this->getConectionName());
+                $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
+                        FROM {$tableLineas} as t1, {$tableArticulos} as t2
                         WHERE t1.IDAlbaran='{$this->IDAlbaran}'
                             AND t1.IDEstado='0'
                             AND t1.IDArticulo=t2.IDArticulo
                             AND t2.Inventario='1'";
-            $em->query($query);
-            $rows = $em->fetchResult();
-            $em->desConecta();
+                $em->query($query);
+                $rows = $em->fetchResult();
+                $em->desConecta();
 
-            $exi = new Existencias();
-            foreach ($rows as $row)
-                $exi->HazReserva($row['IDAlmacen'], $row['IDArticulo'], $row['Unidades'], $row['UnidadMedida']);
-            unset($exi);
+                $exi = new Existencias();
+                foreach ($rows as $row)
+                    $exi->HazReserva($row['IDAlmacen'], $row['IDArticulo'], $row['Unidades'], $row['UnidadMedida']);
+                unset($exi);
 
-            // Marcar como Reservadas las líneas de albarán
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.albaranes_lineas set IDEstado='1' where IDAlbaran='{$this->IDAlbaran}' and IDEstado='0'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+                // Marcar como Reservadas las líneas de albarán
+                $lineas = new AlbaranesLineas();
+                $lineas->queryUpdate(array("IDEstado" => 1), "IDAlbaran='{$this->IDAlbaran}' and IDEstado='0'");
+                unset($lineas);
 
-            // Confirmar la cabecera del albaran
-            $this->setIDEstado(1);
-            $this->save();
+                // Confirmar la cabecera del albaran
+                $this->setIDEstado(1);
+                $this->save();
+            } else {
+                $this->_errores[] = "No se puede confirmar se ha superado el riesgo";
+                $this->_errores[] = "Albaranes Ptes Facturar " . $riesgo['AL']['Albaranes'] . " por " . $riesgo['AL']['Importe'] . "€";
+                $this->_errores[] = "Recibos Ptes Cobro " . $riesgo['RE']['Recibos'] . " por " . $riesgo['RE']['Importe'] . "€";
+                $this->_errores[] = "Límite de Riesgo " . $riesgo['RI'] . "€";
+            }
         }
     }
 
@@ -306,9 +361,15 @@ class AlbaranesCab extends AlbaranesCabEntity {
         // Si está confirmado
         if ($this->getIDEstado()->getIDTipo() == 1) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $lineas = new AlbaranesLineas();
+            $tableLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            $articulos = new Articulos();
+            $tableArticulos = "{$articulos->getDataBaseName()}.{$articulos->getTableName()}";
+            unset($lineas);
+            unset($articulos);
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.albaranes_lineas as t1, articulos as t2
+                        FROM {$tableLineas} as t1, {$tableArticulos} as t2
                         WHERE t1.IDAlbaran='{$this->IDAlbaran}'
                             AND t1.IDEstado='1'
                             AND t1.IDArticulo=t2.IDArticulo
@@ -324,15 +385,14 @@ class AlbaranesCab extends AlbaranesCabEntity {
             unset($exi);
 
             // Poner en estado de PTE DE CONFIRMAR las líneas de albarán
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.albaranes_lineas set IDEstado='0' where IDAlbaran='{$this->IDAlbaran}' and IDEstado='1'";
-            $em->query($query);
+            $lineas = new AlbaranesLineas();
+            $lineas->queryUpdate(array("IDEstado" => 0), "IDAlbaran='{$this->IDAlbaran}' and IDEstado='1'");
+            unset($lineas);
 
             // Borrar las eventuales lineas de expedicion
-            $query = "delete from {$em->getDataBase()}.expediciones where Entidad='AlbaranesCab' and IDEntidad='{$this->IDAlbaran}'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='AlbaranesCab' and IDEntidad='{$this->IDAlbaran}'");
+            unset($expediciones);
 
             // Anular la reserva en la cabecera del albaran
             $this->setIDEstado(0);
@@ -365,7 +425,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             if (count($this->_errores) == 0) {
                 //Marcar el albarán como expedido y establecer la fecha de entrega
                 $this->setIDEstado('2');
-                $this->setFechaEntrega('');
+                $this->setFechaEntrega('', false);
                 $this->save();
             }
         }
@@ -387,12 +447,12 @@ class AlbaranesCab extends AlbaranesCabEntity {
         // Crear la cabecera del albaran
         $destino = $this;
         $destino->setIDAlbaran('');
-        $destino->setIDAgente($_SESSION['USER']['user']['id']);
+        $destino->setIDAgente($_SESSION['usuarioPortal']['Id']);
         $destino->setIDEstado(0);
         $destino->setFecha(date('d-m-Y'));
         $destino->setFechaEntrega('00-00-0000');
         $destino->setIDFactura(0);
-        $destino->setClave('');
+        $destino->setPrimaryKeyMD5('');
         $idDestino = $destino->create();
 
         // Crear las líneas de albaran
@@ -403,8 +463,9 @@ class AlbaranesCab extends AlbaranesCabEntity {
             foreach ($rows as $row) {
                 $lineaDestino = new AlbaranesLineas($row['IDLinea']);
                 $lineaDestino->setIDAlbaran($idDestino);
-                $lineaDestino->setIDAgente($_SESSION['USER']['user']['id']);
+                $lineaDestino->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $lineaDestino->setIDEstado(0);
+                $lineaDestino->setPrimaryKeyMD5('');
                 $lineaDestino->valida(); // Toma los precios vigentes (tarifa, promociones, etc)
                 $lineaDestino->create();
             }
@@ -448,7 +509,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $factura->setIDSucursal($this->IDSucursal);
             $factura->setIDContador($idContador);
             $factura->setNumeroFactura($numeroFactura);
-            $factura->setIDAgente($_SESSION['USER']['user']['id']);
+            $factura->setIDAgente($_SESSION['usuarioPortal']['Id']);
             $factura->setIDComercial($this->IDComercial);
             $factura->setFecha($fecha);
             $factura->setIDCliente($this->IDCliente);
@@ -481,7 +542,6 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $factura->setBultos($this->Bultos);
             $factura->setExpedicion($this->Expedicion);
             $factura->setIDAgencia($this->IDAgencia);
-            $factura->setClave(md5($numeroFactura));
             $factura->setIDFP($this->IDFP);
 
             $idFactura = $factura->create();
@@ -509,7 +569,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     $linFactura->setComisionAgente($row['ComisionAgente']);
                     $linFactura->setComisionMontador($row['ComisionMontador']);
                     $linFactura->setComisionar($row['Comisionar']);
-                    $linFactura->setIDAgente($_SESSION['USER']['user']['id']);
+                    $linFactura->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $linFactura->setIDComercial($row['IDComercial']);
                     $linFactura->setIDPromocion($row['IDPromocion']);
                     $linFactura->setAltoAl($row['AltoAl']);
@@ -539,9 +599,11 @@ class AlbaranesCab extends AlbaranesCabEntity {
 
                 // Actualiza la cabecera del albarán
                 $this->setIDFactura($idFactura);
-                $this->setIDEstado(3);
                 $this->save();
+                $this->queryUpdate(array("IDEstado" => '3'), "IDAlbaran='{$this->IDAlbaran}'");
             }
+            else
+                $this->_errores[] = "Se ha producido un error al generar la factura, posiblemente estén mal los contadores";
             unset($factura);
         }
         return $idFactura;
@@ -558,21 +620,26 @@ class AlbaranesCab extends AlbaranesCabEntity {
      */
     public function calculaRecargoEnergetico() {
 
-        $parametro = new Parametros();
-        $reArticulo = $parametro->find('Codigo', 'REART');
-        unset($parametro);
+        $var = new CpanVariables("Mod", "Web", "PcaeEmpresas");
+        $parametro = $var->getNode("especificas");
+        $reArticulo = $parametro['reArticulo'];
+        unset($var);
 
         // Ver si existe el articulo que se ha definido en parametros
         // para facturar el recargo energetico
         $articulo = new Articulos();
-        $articulo = $articulo->find('Codigo', $reArticulo->getValor());
+        $articulo = $articulo->find('Codigo', $reArticulo);
 
         if ($articulo->getIDArticulo()) {
             // Se ha definido el parametro con el codigo del articulo
             // para aplicar el recargo energetico. Ahora hay que ver si en el albaran
             // en curso hay articulos sujetos a recargo energético.
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "select t1.*,t2.Peso from albaranes_lineas as t1, articulos as t2 where t1.IDAlbaran='{$this->IDAlbaran}' and t1.IDArticulo=t2.IDArticulo and t2.RecargoEnergetico='1'";
+            $em = new EntityManager($this->getConectionName());
+            $tablaArticulos = "{$articulo->getDataBaseName()}.{$articulo->getTableName()}";
+            $lineas = new AlbaranesLineas();
+            $tablaLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            unset($lineas);
+            $query = "select t1.*,t2.Peso from {$tablaLineas} as t1, {$tablaArticulos} as t2 where t1.IDAlbaran='{$this->IDAlbaran}' and t1.IDArticulo=t2.IDArticulo and t2.RecargoEnergetico='1'";
             $em->query($query);
             $rows = $em->fetchResult();
             if ($rows) {
@@ -584,12 +651,12 @@ class AlbaranesCab extends AlbaranesCabEntity {
 
                 $reImporte = $reKilos * $articulo->getPrecioVenta();
                 //Ver si ya está la linea de albaran creada.
-                $query = "select IDLinea from albaranes_lineas where IDAlbaran='{$this->IDAlbaran}' and IDArticulo='{$articulo->getIDArticulo()}'";
+                $query = "select IDLinea from {$tablaLineas} where IDAlbaran='{$this->IDAlbaran}' and IDArticulo='{$articulo->getIDArticulo()}'";
                 $em->query($query);
                 $rows = $em->fetchResult();
                 if ($rows) {
                     // Ya estaba, actualizar
-                    $query = "update albaranes_lineas set Unidades='{$reKilos}',Precio='{$articulo->getPrecioVenta()}',Importe='{$reImporte}' where IDLinea='{$rows[0]['IDLinea']}'";
+                    $query = "update {$tablaLineas} set Unidades='{$reKilos}',Precio='{$articulo->getPrecioVenta()}',Importe='{$reImporte}' where IDLinea='{$rows[0]['IDLinea']}'";
                     $em->query($query);
                 } else {
                     // No está, crear
@@ -600,7 +667,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     $lineaAlbaran->setUnidades($reKilos);
                     $lineaAlbaran->setPrecio($articulo->getPrecioVenta());
                     $lineaAlbaran->setImporte($reImporte);
-                    $lineaAlbaran->setIDAgente($_SESSION['USER']['user']['id']);
+                    $lineaAlbaran->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $lineaAlbaran->setIDComercial($this->IDComercial);
                     $lineaAlbaran->setIDAlmacen($this->IDAlmacen);
                     $lineaAlbaran->setIva($articulo->getIDIva()->getIva());
@@ -610,8 +677,9 @@ class AlbaranesCab extends AlbaranesCabEntity {
             } else {
                 // No hay articulos con recargo energetico.
                 // Borro el eventual cargo de recargo energetico.
-                $query = "delete from albaranes_lineas where IDAlbaran='{$this->IDAlbaran}' and IDArticulo='{$articulo->getIDArticulo()}'";
-                $em->query($query);
+                $lineas = new AlbaranesLineas();
+                $lineas->queryDelete("IDAlbaran='{$this->IDAlbaran}' and IDArticulo='{$articulo->getIDArticulo()}'");
+                unset($lineas);
             }
             $em->desConecta();
             unset($em);
@@ -637,24 +705,15 @@ class AlbaranesCab extends AlbaranesCabEntity {
         if ($idAlbaran == '')
             $idAlbaran = $this->getIDAlbaran();
 
-        $beneficio = array();
+        $lineas = new AlbaranesLineas();
+        $rows = $lineas->cargaCondicion("sum(ImporteCosto) as Costo", "IDAlbaran='{$idAlbaran}'");
+        unset($lineas);
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select sum(ImporteCosto) as Costo from {$this->_dataBaseName}.albaranes_lineas where IDAlbaran='{$idAlbaran}';";
-            if ($this->_em->query($query)) {
-                $rows = $this->_em->fetchResult();
-                $beneficio = $rows[0];
-            } else {
-                $this->_errores[] = $this->_em->getError();
-            }
-            $this->_em->desConecta();
-        } else {
-            $this->_errores[] = $this->_em->getError();
-        }
-
-        $beneficio['Venta'] = $this->TotalBases;
-        $beneficio['Beneficio'] = $beneficio['Venta'] - $beneficio['Costo'];
+        $beneficio = array(
+            'Venta' => $this->TotalBases,
+            'Costo' => $rows[0]['Costo'],
+            'Beneficio' => $this->TotalBases - $rows[0]['Costo'],
+        );
 
         return $beneficio;
     }
@@ -663,6 +722,9 @@ class AlbaranesCab extends AlbaranesCabEntity {
      * Comprueba el riesgo del cliente
      */
     protected function validaLogico() {
+
+        parent::validaLogico();
+
         $cliente = new Clientes($this->IDCliente);
         $riesgo = $cliente->getRiesgo();
         unset($cliente);
@@ -708,9 +770,8 @@ class AlbaranesCab extends AlbaranesCabEntity {
         $hastaFecha = $fecha->getaaaammdd();
         unset($fecha);
 
-        if ($idSucursal != '')
-            $filtroSucursal = "(1)"; else
-            $filtroSucursal = "(IDSucursal = '{$idSucursal}')";
+        $filtroSucursal = ($idSucursal != '') ? "(1)" : "(IDSucursal = '{$idSucursal}')";
+
         $filtro = $filtroSucursal . " and
                   (IDCliente='{$idCliente}') and
                   (FechaEntrega>='{$desdeFecha}') and
@@ -722,6 +783,17 @@ class AlbaranesCab extends AlbaranesCabEntity {
         unset($albaran);
 
         return $rows;
+    }
+
+    public function getVencimiento() {
+
+        $fecha = $this->getFecha();
+        $f = new Fecha($fecha);
+        $dias = $this->getIDFP()->getDiaPrimerVcto();
+
+        $nuevaFecha = date('d-m-Y', strtotime("+{$dias} day", strtotime($f->getaaaammdd())));
+
+        return $nuevaFecha;
     }
 
 }

@@ -50,7 +50,7 @@ class Grafico {
 
     public function getGrafico() {
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($_SESSION['project']['conection']);
         $em->query($this->query);
         $rows = $em->fetchResult();
         $nRegistros = $em->numRows();

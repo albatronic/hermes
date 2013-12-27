@@ -57,10 +57,14 @@ class RecepcionarLineasController extends Controller {
     private function cargaLineasPedido($idPedido) {
 
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $lineas = new PedidosLineas();
+        $articulos = new Articulos();
+        
+        $em = new EntityManager($lineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.pedidos_lineas l, {$em->getDataBase()}.articulos a
+                    from {$lineas->getDataBaseName()}.{$lineas->getTableName()} l, {$articulos->getDataBaseName()}.{$articulos->getTableName()} a
                     where l.IDPedido='{$idPedido}' and
                           l.IDEstado='1' and
                           l.IDArticulo=a.IDArticulo and
@@ -69,8 +73,9 @@ class RecepcionarLineasController extends Controller {
             $em->query($query);
             $rows = $em->fetchResult();
 
-            $query = "delete from recepciones where Entidad='PedidosCab' and IDEntidad='{$idPedido}' and Recepcionada='0'";
-            $em->query($query);
+            // Borrar eventuales recepciones del pedido que no estén recepcionadas
+            $recepciones = new Recepciones();
+            $recepciones->queryDelete("Entidad='PedidosCab' and IDEntidad='{$idPedido}' and Recepcionada='0'");
 
             $em->desConecta();
         }
@@ -90,10 +95,13 @@ class RecepcionarLineasController extends Controller {
         // Cargo las lineas de la elaboración de tipo 1 que no están recepcionadas y cuyos artículos son inventariables.
         // Borro las eventuales líneas de recepción que no están recepcionadas.
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $manufacLineas = new ManufacLineas();
+        
+        $em = new EntityManager($manufacLineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.manufac_lineas l, {$em->getDataBase()}.articulos a
+                    from {$em->getDataBase()}.ErpManufacLineas l, {$em->getDataBase()}.ErpArticulos a
                     where l.IDManufac = '{$idManufac}' and
                           l.IDEstado = '0' and
                           l.Tipo = '1' and
@@ -103,13 +111,14 @@ class RecepcionarLineasController extends Controller {
             $em->query($query);
             $rows = $em->fetchResult();
 
-            $query = "delete from recepciones where Entidad='ManufacCab' and IDEntidad='{$idManufac}' and Recepcionada='0'";
+            $query = "delete from ErpRecepciones where Entidad='ManufacCab' and IDEntidad='{$idManufac}' and Recepcionada='0'";
             $em->query($query);
 
             $em->desConecta();
         }
         unset($em);
-
+        unset($manufacLineas);
+        
         // Por cada línea de elaboración crea una línea de recepción
         foreach ($rows as $row) {
             $this->creaLineaRecepcion('ManufacCab', $idManufac, new ManufacLineas($row['IDLinea']));
@@ -122,13 +131,16 @@ class RecepcionarLineasController extends Controller {
      * @param integer $idTraspaso
      */
     public function cargaLineasTraspaso($idTraspaso) {
-        // Cargo las lineas dl trapaso que no están recibidas y cuyos artículos son inventariables.
+        // Cargo las lineas dl traspaso que no están recibidas y cuyos artículos son inventariables.
         // Borro las eventuales líneas de recepción que no están recibidas
+        
+        $traspasosLineas = new TraspasosLineas();
+        
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($traspasosLineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.traspasos_lineas l, {$em->getDataBase()}.articulos a
+                    from {$em->getDataBase()}.ErpTraspasosLineas l, {$em->getDataBase()}.ErpArticulos a
                     where l.IDTraspaso = '{$idTraspaso}' and
                           l.IDEstado = '2' and
                           l.Tipo = '0' and
@@ -138,12 +150,14 @@ class RecepcionarLineasController extends Controller {
             $em->query($query);
             $rows = $em->fetchResult();
 
-            $query = "delete from recepciones where Entidad='TraspasosCab' and IDEntidad='{$idTraspaso}' and Recepcionada='0'";
+            $query = "delete from ErpRecepciones where Entidad='TraspasosCab' and IDEntidad='{$idTraspaso}' and Recepcionada='0'";
             $em->query($query);
 
             $em->desConecta();
         }
         unset($em);
+        unset($traspasosLineas);
+        
 
         // Por cada lína de traspaso crea una línea de recepción
         foreach ($rows as $row) {
@@ -222,7 +236,7 @@ class RecepcionarLineasController extends Controller {
                 $lineaPedido->setDescripcion($this->request['Descripcion']);
                 $lineaPedido->setUnidades(0);
                 $lineaPedido->setIDEstado(1);
-                $lineaPedido->setIDAgente($_SESSION['USER']['user']['id']);
+                $lineaPedido->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $lineaPedido->setIDAlmacen($pedido->getIDAlmacen()->getIDAlmacen());
                 if ($lineaPedido->valida()) {
                     if ($lineaPedido->create()) {
@@ -379,7 +393,7 @@ class RecepcionarLineasController extends Controller {
         $linea->setIDEntidad($idEntidad);
         $linea->setIDLineaEntidad($objetoLinea->getIDLinea());
         $linea->setIDAlmacen($objetoLinea->getIDAlmacen()->getIDAlmacen());
-        $linea->setIDAlmacenero($_SESSION['USER']['user']['id']);
+        $linea->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
         $linea->setIDArticulo($objetoLinea->getIDArticulo()->getIDArticulo());
         $linea->setUnidades($objetoLinea->getUnidades());
         $linea->setUnidadMedida($objetoLinea->getUnidadMedida());

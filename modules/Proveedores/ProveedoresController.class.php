@@ -15,6 +15,10 @@ class ProveedoresController extends Controller {
     protected $parentEntity = "";
 
 
+    public function IndexAction() {
+        return parent::ListAction();
+    }
+    
     /**
      * Devuelve el template "listVencimientos" con un listado
      * de todos los vencimientos del proveedor en curso
@@ -26,9 +30,7 @@ class ProveedoresController extends Controller {
      */
     public function listVencimientosAction() {
 
-        $idProveedor = $this->request[2];
-
-        $datos = new Proveedores($idProveedor);
+        $datos = new Proveedores($this->request[2]);
         $this->values['recibos'] = $datos->getRecibos();
         unset($datos);
 

@@ -7,13 +7,13 @@
  */
 
 /**
- * @orm:Entity(psto_lineas)
+ * @orm:Entity(PstoLineas)
  */
-class PstoLineasEntity extends Entity {
+class PstoLineasEntity extends EntityComunes {
 
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\PstoCab
      */
     protected $IDPsto = '0';
@@ -21,146 +21,146 @@ class PstoLineasEntity extends Entity {
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $IDLinea;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\Articulos
      */
     protected $IDArticulo;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Descripcion;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Unidades = '1.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Precio = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Descuento = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $ImporteCosto = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\Almacenes
      */
     protected $IDAlmacen = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Iva = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Recargo = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $ComisionAgente = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $ComisionMontador = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\TiposVenta
      */
     protected $IDVenta = '1';
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $Comisionar = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\Agentes
      */
     protected $IDAgente = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\Agentes
      */
     protected $IDComercial = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\Promociones
      */
     protected $IDPromocion = '0';
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      * @var entities\EstadosLineasPresupuestos
      */
     protected $IDEstado = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $AltoAl = '0.000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $AnchoAl = '0.000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $MtsAl = '0.000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $AltoFa = '0.000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $AnchoFa = '0.000';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="psto_lineas")
+     * @assert:NotBlank(groups="PstoLineas")
      */
     protected $MtsFa = '0.000';
     /**
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'psto_lineas';
+    protected $_tableName = 'ErpPstoLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -417,5 +417,5 @@ class PstoLineasEntity extends Entity {
 
 }
 
-// END class psto_lineas
+// END class PstoLineas
 ?>

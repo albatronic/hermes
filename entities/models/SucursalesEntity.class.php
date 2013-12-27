@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(sucursales)
  */
-class SucursalesEntity extends Entity {
+class SucursalesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -18,11 +18,6 @@ class SucursalesEntity extends Entity {
      * @assert:NotBlank(groups="sucursales")
      */
     protected $IDSucursal;
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="sucursales")
-     */
-    protected $IDEmpresa;
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="sucursales")
@@ -37,12 +32,17 @@ class SucursalesEntity extends Entity {
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="sucursales")
      */
-    protected $Poblacion;
+    protected $IDPais = '68';
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="sucursales")
      */
     protected $IDProvincia = '18';
+    /**
+     * @orm:Column(type="string")
+     * @assert:NotBlank(groups="sucursales")
+     */
+    protected $IDPoblacion = '0';    
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="sucursales")
@@ -87,12 +87,12 @@ class SucursalesEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'sucursales';
+    protected $_tableName = 'ErpSucursales';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -121,16 +121,6 @@ class SucursalesEntity extends Entity {
         return $this->IDSucursal;
     }
 
-    public function setIDEmpresa($IDEmpresa) {
-        $this->IDEmpresa = $IDEmpresa;
-    }
-
-    public function getIDEmpresa() {
-        if (!$this->IDEmpresa instanceof Empresas)
-            $this->IDEmpresa = new Empresas($this->IDEmpresa);
-        return $this->IDEmpresa;
-    }
-
     public function setNombre($Nombre) {
         $this->Nombre = trim($Nombre);
     }
@@ -147,12 +137,14 @@ class SucursalesEntity extends Entity {
         return $this->Direccion;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = trim($Poblacion);
+    public function setIDPais($IDPais) {
+        $this->IDPais = $IDPais;
     }
 
-    public function getPoblacion() {
-        return $this->Poblacion;
+    public function getIDPais() {
+        if (!($this->IDPais instanceof Paises))
+            $this->IDPais = new Paises($this->IDPais);
+        return $this->IDPais;
     }
 
     public function setIDProvincia($IDProvincia) {
@@ -163,6 +155,16 @@ class SucursalesEntity extends Entity {
         if (!($this->IDProvincia instanceof Provincias))
             $this->IDProvincia = new Provincias($this->IDProvincia);
         return $this->IDProvincia;
+    }
+    
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
+    }
+
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setCodigoPostal($CodigoPostal) {
@@ -207,46 +209,6 @@ class SucursalesEntity extends Entity {
         return $this->IDResponsable;
     }
 
-    public function setContadorEmitidasA($ContadorEmitidasA) {
-        $this->ContadorEmitidasA = $ContadorEmitidasA;
-    }
-
-    public function getContadorEmitidasA() {
-        return $this->ContadorEmitidasA;
-    }
-
-    public function setContadorEmitidasB($ContadorEmitidasB) {
-        $this->ContadorEmitidasB = $ContadorEmitidasB;
-    }
-
-    public function getContadorEmitidasB() {
-        return $this->ContadorEmitidasB;
-    }
-
-    public function setContadorEmitidasAbono($ContadorEmitidasAbono) {
-        $this->ContadorEmitidasAbono = $ContadorEmitidasAbono;
-    }
-
-    public function getContadorEmitidasAbono() {
-        return $this->ContadorEmitidasAbono;
-    }
-
-    public function setContadorRecibidasA($ContadorRecibidasA) {
-        $this->ContadorRecibidasA = $ContadorRecibidasA;
-    }
-
-    public function getContadorRecibidasA() {
-        return $this->ContadorRecibidasA;
-    }
-
-    public function setContadorRecibidasB($ContadorRecibidasB) {
-        $this->ContadorRecibidasB = $ContadorRecibidasB;
-    }
-
-    public function getContadorRecibidasB() {
-        return $this->ContadorRecibidasB;
-    }
-
     public function setCtaContableClientes($CtaContableClientes) {
         $this->CtaContableClientes = trim($CtaContableClientes);
     }
@@ -254,7 +216,7 @@ class SucursalesEntity extends Entity {
     public function getCtaContableClientes() {
         return $this->CtaContableClientes;
     }
-
+    
     public function setCtaContableVentas($CtaContableVentas) {
         $this->CtaContableVentas = trim($CtaContableVentas);
     }

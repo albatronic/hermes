@@ -95,27 +95,37 @@
 class XmlTools {
 
     /**
-     * Lee el archivo $file XML y devuelve un array con
-     * su contenido.
+     * Transforma XML a array php
+     * 
+     * El XML se puede obtener desde un archivo o desde un string
      *
-     * Si no existe el archivo, muestra un mensaje de error
+     * Si no existe el archivo o el string está mal construido devuelve error
      *
-     * @param string Nombre del archivo XML
+     * @param string $fileString Nombre del archivo XML o string XML
+     * @param string $origen F=fichero, S=string
      * @return array Array con el contenido del archivo XML
      */
-    public function Xml2Array($file) {
-        if (!($fp = fopen($file, "r"))) {
-            die("could not open XML input");
+    static public function Xml2Array($fileString, $origen = "F") {
+
+        if (!in_array(strtoupper(trim($origen)), array("F", "S"))) {
+            $origen = "F";
         }
 
-        $contents = fread($fp, filesize($file));
-        fclose($fp);
+        if ($origen == "F") {
+            if (!($fp = fopen($fileString, "r"))) {
+                die("{$fileString} no existe o no tiene permisos de lectura");
+            }
+            $contents = fread($fp, filesize($fileString));
+            fclose($fp);
+        } else {
+            $contents = $fileString;
+        }
 
         if (!$contents)
             return array();
 
         if (!function_exists('xml_parser_create')) {
-            throw new Exception("'xml_parser_create()' function not found!");
+            throw new Exception("'xml_parser_create()' función no encontrada!");
             return null;
         }
 
@@ -129,7 +139,9 @@ class XmlTools {
 
         if (!$xml_values)
             return; //Hmm...
-            //Initializations
+
+            
+//Initializations
         $xml_array = array();
         $parents = array();
         $level = 0;
@@ -200,7 +212,7 @@ class XmlTools {
         return $res;
     }
 
-    public function ValidateXML($xml, $schema) {
+    static public function ValidateXML($xml, $schema) {
         if (!class_exists('DOMDocument')) {
             throw new Exception("'DOMDocument' class not found!");
             return False;

@@ -6,56 +6,56 @@
  */
 
 /**
- * @orm:Entity(tipos_pales)
+ * @orm:Entity(TiposPales)
  */
-class TiposPalesEntity extends Entity {
+class TiposPalesEntity extends EntityComunes {
 	/**
 	 * @orm:GeneratedValue
 	 * @orm:Id
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Id;
 	/**
 	 * @orm:Column(type="string")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Descripcion;
 	/**
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Ancho = '0.00';
 	/**
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Fondo = '0.00';
 	/**
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Alto = '0.00';
 	/**
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Cubicaje = '0.00';
 	/**
 	 * @orm:Column(type="integer")
-	 * @assert:NotBlank(groups="tipos_pales")
+	 * @assert:NotBlank(groups="TiposPales")
 	 */
 	protected $Tara = '0.00';
 	/**
 	 * Nombre de la conexion a la BD
 	 * @var string
 	 */
-	protected $_conectionName = 'datos#';
+	protected $_conectionName = '';
 	/**
 	 * Nombre de la tabla física
 	 * @var string
 	 */
-	protected $_tableName = 'tipos_pales';
+	protected $_tableName = 'ErpTiposPales';
 	/**
 	 * Nombre de la PrimaryKey
 	 * @var string
@@ -125,6 +125,6 @@ class TiposPalesEntity extends Entity {
 		return $this->Tara;
 	}
 
-} // END class tipos_pales
+} // END class TiposPales
 
 ?>

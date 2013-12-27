@@ -4,38 +4,45 @@
  * Class Log
  *
  * Registra evento en un fichero de texto
+ * Se va generando un fichero log para cada semana del año
+ * El archivo log se guarda en docs/docsxxx/log
  *
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright Informatica ALBATRONIC, SL
- * @version 1.0 24.05.2011
+ * @version 1.0 05.10.2013
  */
 class Log {
 
-    private $logFile;
-    private $event;
-
-    public function __construct($event, $logFile='tmp/log.txt') {
-        $this->logFile = $logFile;
-        $this->event = $event;
-    }
-
     /**
-     * Escribe el texto "$this->event"
-     * en el fichero de texto "$this->logFile". Si no existe el fichero lo crea
+     * Escribe en el archivo log si el usuario no es el super:
+     * 
+     * la ip
+     * la fecha y hora
+     * json con los datos del usuario
+     * json con el request
      */
-    public function write() {
+    static function write($request) {
 
-        $ip = substr($_SERVER['REMOTE_ADDR'] . str_repeat(" ", 15), 0, 15);
-        $this->event.="\n";
+        if ($_SESSION['usuarioPortal']['Id'] != '1') {
+            $ficheroLog = "docs/docs" . $_SESSION['emp'] . "/log/" . date('YW');
+            $ip = substr($_SERVER['REMOTE_ADDR'] . str_repeat(" ", 15), 0, 15);
+            $time = date('d-m-Y H:i:s');
+            $user = json_encode($_SESSION['usuarioPortal']);
+            $accion = json_encode($request);
 
-        if (!file_exists($this->logFile)) {
-            $fp = fopen($this->logFile, 'w');
-            fwrite($fp, "FICHERO DE LOGIN CREADO EL " . date('d-m-Y H:i:s') . " " . $ip . " " . $_SESSION['iu'] . " " . $_SESSION['login'] . "\n");
-            fclose($fp);
+            $evento = "{$ip}\t{$time}\t{$user}\t{$accion}\n";
+
+            if (!file_exists($ficheroLog)) {
+                $fp = fopen($ficheroLog, 'w');
+            } else {
+                $fp = fopen($ficheroLog, 'a');
+            }
+
+            if ($fp) {
+                fwrite($fp, $evento);
+                fclose($fp);
+            }
         }
-        $fp = fopen($this->logFile, 'a');
-        fwrite($fp, $this->event);
-        fclose($fp);
     }
 
 }

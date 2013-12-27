@@ -23,6 +23,8 @@ class Recepciones extends RecepcionesEntity {
      * @return boolean
      */
     public function validaLogico() {
+        
+        parent::validaLogico();        
 
         $this->setUnidadesNetas($this->UnidadesBrutas - ($this->Pales * $this->DestarePale + $this->Cajas * $this->DestareCaja));
         if (($this->Unidades == 0) or ($this->UnidadesNetas == 0))

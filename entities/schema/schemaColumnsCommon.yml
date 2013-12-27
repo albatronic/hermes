@@ -1,4 +1,4 @@
-# COLUMNAS COMUNES A TODAS LAS TABLAS DEL ERP.
+# COLUMNAS COMUNES A TODAS LAS TABLAS.
     Observations:         {type: text, default: NULL}
     PrimaryKeyMD5:        {type: string(100), default: NULL, index: unique}
     IsDefault:            {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
@@ -6,7 +6,7 @@
     Checked:              {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     Publish:              {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     BelongsTo:            {type: integer(11), notnull: true, default: 0, index: index}
-    AllowsChildren:       {type: tinyint, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
+    AllowsChildren:       {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
 
     # Auditoria
     CreatedBy:            {type: integer, notnull: true, default: 0}
@@ -19,7 +19,7 @@
     PrintedBy:            {type: integer, notnull: true, default: 0}
     PrintedAt:            {type: datetime, notnull: true, default: '0000-00-00 00:00:00'}
     EmailedBy:            {type: integer, notnull: true, default: 0}
-    EmailedAt:            {type: datetime, notnull: true, default: '0000-00-00 00:00:00'}    
+    EmailedAt:            {type: datetime, notnull: true, default: '0000-00-00 00:00:00'}   
     
     Privacy:              {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresPrivacy,IDTipo'}
     SortOrder:            {type: integer(11), notnull: true, default: 0, index: index}
@@ -33,11 +33,11 @@
     Slug:                 {type: string(255), default: NULL}
     LockSlug   :          {type: tinyint, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     UrlFriendly:          {type: string(255), default: NULL}
-    UrlHeritable:         {type: tinyint, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
+    UrlHeritable:         {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
 
     NumberVisits:         {type: integer(11), notnull: true, default: 0}
     MetatagTitle:         {type: string(255), default: NULL}
-    LockMetatagTitle:     {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
+    LockMetatagTitle:     {type: tinyint, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     MetatagKeywords:      {type: string(255), default: NULL}
     MetatagDescription:   {type: string(255), default: NULL}
     MetatagTitleSimple:   {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
@@ -52,10 +52,11 @@
     ShowRelatedContents:  {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     ShowPublishedAt:      {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
 
-    # Los Ids de perfiles de usuario separados por coma que tienen acceso al contenido
+    # Los Ids de perfiles de usuario en formato YAML que tienen acceso al contenido
     # por defecto el super y el administrador
-    AccessProfileList:    {type: string(100), notnull: true, default: '1,2'}
-
+    AccessProfileList:    {type: string(100), notnull: true, default: "perfiles: {1:1,2:2}"}
+    AccessProfileListWeb: {type: string(100), notnull: true, default: "perfiles: {1:1}"}
+    
     # Url destino
     UrlTarget:            {type: string(255), default: NULL}
     UrlParameters:        {type: string(255), default: NULL}
@@ -70,5 +71,5 @@
     IdSeccionEnlaces:     { type: bigint(11), notnull: false, default: NULL }
     IdSeccionVideos:      { type: bigint(11), notnull: false, default: NULL }      
     DateTimeLastVisit:    { type: bigint(11), notnull: true,  default: 0 }
-    RevisitAfter:         { type: string(25), notnull: false, default: NULL }
+    RevisitAfter:         { type: string(25), notnull: false, default: '10' }
     NivelJerarquico:      { type: int(4),     notnull: true,  default: 1 }

@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(promociones)
  */
-class PromocionesEntity extends Entity {
+class PromocionesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -59,12 +59,12 @@ class PromocionesEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'promociones';
+    protected $_tableName = 'ErpPromociones';
     /**
      * Nombre de la primaryKey
      * @var string

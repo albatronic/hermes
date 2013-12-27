@@ -28,6 +28,9 @@ class NbPermisosController extends Controller {
     public function listopcionesAction() {
         $this->listado->filter['columnSelected'] = $this->form->getLinkBy();
 
+        $funcionalidad = new Funcionalidades();
+        $arrayFuncioneslidades = $funcionalidad->getArrayFuncionalidades();
+
         switch ($this->request['METHOD']) {
             case 'GET':
                 $this->listado->filter['value'] = $this->request[2];
@@ -40,20 +43,16 @@ class NbPermisosController extends Controller {
                 $this->values['IDOpcion'] = $this->request['IDOpcion'];
 
                 $menu = new Menu($this->values['linkBy']['value']);
-                $subopciones = $menu->getSubopciones($this->request['IDOpcion'],$this->values['linkBy']['value']);
+
+                $subopciones = $menu->getSubopciones($this->request['IDOpcion'], $this->values['linkBy']['value']);
                 unset($menu);
 
                 //El campo Permisos lo transformo en un array con los
                 //permisos independientes para poder tratar cada uno por separado
                 foreach ($subopciones as $key => $value) {
-                    $permisos['C'] = substr($subopciones[$key]['Permisos'], 0, 1);
-                    $permisos['I'] = substr($subopciones[$key]['Permisos'], 1, 1);
-                    $permisos['B'] = substr($subopciones[$key]['Permisos'], 2, 1);
-                    $permisos['A'] = substr($subopciones[$key]['Permisos'], 3, 1);
-                    $permisos['L'] = substr($subopciones[$key]['Permisos'], 4, 1);
-                    $permisos['E'] = substr($subopciones[$key]['Permisos'], 5, 1);
-
-                    $subopciones[$key]['Permisos'] = $permisos;
+                    $permisos = explode(",", $subopciones[$key]['Funcionalidades']);
+                    foreach ($arrayFuncioneslidades as $permiso)
+                        $subopciones[$key]['Permisos'][$permiso['Id']] = (strpos($subopciones[$key]['Funcionalidades'], $permiso['Id']) !== false);
                 }
                 break;
         }
@@ -61,10 +60,12 @@ class NbPermisosController extends Controller {
         $template = $this->entity . '/list.html.twig';
 
         $menu = new Menu($this->values['linkBy']['value']);
+
         $this->values['listado']['opciones'] = $menu->getOpciones($this->values['linkBy']['value']);
         $this->values['listado']['subopciones'] = $subopciones;
         $this->values['opciones'] = $menu->getOpciones();
         $this->values['subopciones'] = $menu->getSubopciones($this->request['IDOpcion']);
+        $this->values['funcionalidades'] = $arrayFuncioneslidades;
 
         unset($menu);
         return array('template' => $template, 'values' => $this->values);
@@ -75,9 +76,11 @@ class NbPermisosController extends Controller {
      * Recibe por post: IDPerfil y IDOpcion
      */
     public function anadiropcionAction() {
+
         $permiso = new Permisos();
-        $permiso->setIDPerfil($this->request['IDPerfil']);
-        $permiso->setIDOpcion($this->request['IDOpcion']);
+        $permiso->setIdPerfil($this->request['IDPerfil']);
+        $permiso->setNombreModulo($this->request['IDOpcion']);
+        $permiso->setFuncionalidades("AC,VW");
         $permiso->create();
 
         $this->request[2] = $this->request['IDPerfil'];
@@ -89,12 +92,15 @@ class NbPermisosController extends Controller {
      * Recibe por post: IDPerfil y IDOpcion
      */
     public function borraropcionAction() {
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "delete from permisos where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
+
+        $modulo = new Modulos();
+        $rows = $modulo->cargaCondicion("NombreModulo", "CodigoApp='{$this->request['IDOpcion']}'");
+        unset($modulo);
+
+        $permiso = new Permisos();
+        foreach ($rows as $row)
+            $permiso->queryDelete("IdPerfil='{$this->request['IDPerfil']}' and NombreModulo='{$row['NombreModulo']}'");
+        unset($permiso);
 
         $this->request[2] = $this->request['IDPerfil'];
         return $this->listopcionesAction();
@@ -105,10 +111,11 @@ class NbPermisosController extends Controller {
      * Recibe por post: IDPerfil, IDOpcion y IDSubopcion
      */
     public function anadirsubopcionAction() {
+
         $permiso = new Permisos();
-        $permiso->setIDPerfil($this->request['IDPerfil']);
-        $permiso->setIDOpcion($this->request['IDOpcion']);
-        $permiso->setIDSubopcion($this->request['IDSubopcion']);
+        $permiso->setIdPerfil($this->request['IDPerfil']);
+        $permiso->setNombreModulo($this->request['IDSubopcion']);
+        $permiso->setFuncionalidades("");
         $permiso->create();
 
         return $this->listopcionesAction();
@@ -119,141 +126,48 @@ class NbPermisosController extends Controller {
      * Recibe por post: IDPerfil, IDOpcion y IDSubopcion
      */
     public function borrarsubopcionAction() {
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "delete from permisos where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "' and IDSubopcion='" . $this->request['IDSubopcion'] . "';";
-            $em->query($query);
-            $em->desConecta();
-        }
 
-        return $this->listopcionesAction();
-    }
-
-    /**
-     * Guarda una subopcion
-     * Recibe por post el Id del permiso
-     */
-    public function guardarAction() {
-        $v = $this->request;
-
-        $p  = ($v['C'] == 'on') ? 1 : 0;
-        $p .= ( $v['I'] == 'on') ? 1 : 0;
-        $p .= ( $v['B'] == 'on') ? 1 : 0;
-        $p .= ( $v['A'] == 'on') ? 1 : 0;
-        $p .= ( $v['L'] == 'on') ? 1 : 0;
-        $p .= ( $v['E'] == 'on') ? 1 : 0;
-
-        $permiso = new Permisos($this->request['IdPermiso']);
-        $permiso->setPermisos($p);
-        $permiso->save();
+        $permiso = new Permisos();
+        $permiso->queryDelete("IdPerfil='{$this->request['IDPerfil']}' and NombreModulo='{$this->request['IDSubopcion']}'");
+        unset($permiso);
 
         $this->request[2] = $this->request['IDPerfil'];
         return $this->listopcionesAction();
     }
 
     /**
-     * BOTONES DE MODIFICACION GLOBAL
-     * ------------------------------
+     * Pone todas las funcionalidades a un perfil y modulo
+     * @return type
      */
-    public function bconsultarAction() {
-        if ($this->request['bconsultar'] == 'on')
-            $p = '1'; else
-            $p='0';
+    public function PonerTodoAction() {
 
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT('$p',SUBSTRING(Permisos,2,5)) where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
+        $funcionalidad = new Funcionalidades();
+        $funcionalidades = $funcionalidad->getStringFuncionalidades();
+        unset($funcionalidad);
+
+        $idPerfil = $this->request['IDPerfil'];
+        $idSubopcion = $this->request['IDSubopcion'];
+
+        $permiso = new Permisos();
+        $permiso->queryUpdate(array('Funcionalidades' => $funcionalidades), "IDPerfil='{$idPerfil}' and NombreModulo='{$idSubopcion}'");
 
         $this->request[2] = $this->request['IDPerfil'];
-        $this->values['bconsultar'] = $this->request['bconsultar'];
         return $this->listopcionesAction();
     }
 
-    public function binsertarAction() {
-        if ($this->request['binsertar'] == 'on')
-            $p = '1'; else
-            $p='0';
+    /**
+     * Quita todas las funcionalidades de un perfil y modulo
+     * @return type
+     */
+    public function QuitarTodoAction() {
 
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT(SUBSTRING(Permisos,1,1),'$p',SUBSTRING(Permisos,3,4)) where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
+        $idPerfil = $this->request['IDPerfil'];
+        $idSubopcion = $this->request['IDSubopcion'];
 
-        $this->request[2] = $this->request['IDPerfil'];
-        $this->values['binsertar'] = $this->request['binsertar'];
-        return $this->listopcionesAction();
-    }
-
-    public function bborrarAction() {
-        if ($this->request['bborrar'] == 'on')
-            $p = '1'; else
-            $p='0';
-
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT(SUBSTRING(Permisos,1,2),'$p',SUBSTRING(Permisos,4,3)) where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
+        $permiso = new Permisos();
+        $permiso->queryUpdate(array('Funcionalidades' => ''), "IDPerfil='{$idPerfil}' and NombreModulo='{$idSubopcion}'");
 
         $this->request[2] = $this->request['IDPerfil'];
-        $this->values['bborrar'] = $this->request['bborrar'];
-        return $this->listopcionesAction();
-    }
-
-    public function bmodificarAction() {
-        if ($this->request['bmodificar'] == 'on')
-            $p = '1'; else
-            $p='0';
-
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT(SUBSTRING(Permisos,1,3),'$p',SUBSTRING(Permisos,5,2)) where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
-
-        $this->request[2] = $this->request['IDPerfil'];
-        $this->values['bmodificar'] = $this->request['bmodificar'];
-        return $this->listopcionesAction();
-    }
-
-    public function blistadoAction() {
-        if ($this->request['blistado'] == 'on')
-            $p = '1'; else
-            $p='0';
-
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT(SUBSTRING(Permisos,1,4),'$p',SUBSTRING(Permisos,6,1)) where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
-
-        $this->request[2] = $this->request['IDPerfil'];
-        $this->values['blistado'] = $this->request['blistado'];
-        return $this->listopcionesAction();
-    }
-
-    public function bexcelAction() {
-        if ($this->request['bexcel'] == 'on')
-            $p = '1'; else
-            $p='0';
-
-        $em = new EntityManager("empresas");
-        if (is_resource($em->getDbLink())) {
-            $query = "update permisos set Permisos=CONCAT(SUBSTRING(Permisos,1,5),'$p') where IDPerfil='" . $this->request['IDPerfil'] . "' and IDOpcion='" . $this->request['IDOpcion'] . "'";
-            $em->query($query);
-            $em->desConecta();
-        }
-
-        $this->request[2] = $this->request['IDPerfil'];
-        $this->values['bexcel'] = $this->request['bexcel'];
         return $this->listopcionesAction();
     }
 

@@ -7,13 +7,13 @@
  */
 
 /**
- * @orm:Entity(pedidos_lineas)
+ * @orm:Entity(PedidosLineas)
  */
-class PedidosLineasEntity extends Entity {
+class PedidosLineasEntity extends EntityComunes {
 
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      * @var entities\PedidosCab
      */
     protected $IDPedido = '0';
@@ -21,79 +21,79 @@ class PedidosLineasEntity extends Entity {
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $IDLinea;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      * @var entities\Articulos
      */
     protected $IDArticulo;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Descripcion;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Unidades = '1.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $UnidadMedida = 'UMC';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Precio = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Descuento = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Iva = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $Recargo = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $UnidadesRecibidas = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $UnidadesPtesFacturar = '0.00';
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      * @var entities\Abstract\EstadosLineasPedidos
      */
     protected $IDEstado = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      */
     protected $IDAgente = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_lineas")
+     * @assert:NotBlank(groups="PedidosLineas")
      * @var entities\Almacenes
      */
     protected $IDAlmacen = '0';
@@ -101,12 +101,12 @@ class PedidosLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'pedidos_lineas';
+    protected $_tableName = 'ErpPedidosLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -271,5 +271,5 @@ class PedidosLineasEntity extends Entity {
 
 }
 
-// END class pedidos_lineas
+// END class PedidosLineas
 ?>

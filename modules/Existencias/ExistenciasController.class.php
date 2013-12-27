@@ -59,7 +59,7 @@ class ExistenciasController extends Controller {
             if ($this->request['filter']['valuesSelected'][$key] != '') {
                 if ($filtro != '')
                     $filtro .= ' AND ';
-                $filtro .= "({$this->form->getDataBaseName()}.existencias.{$columna} like '{$this->request['filter']['valuesSelected'][$key]}')";
+                $filtro .= "({$this->form->getDataBaseName()}.ErpExistencias.{$columna} like '{$this->request['filter']['valuesSelected'][$key]}')";
             }
         }
 
@@ -71,11 +71,11 @@ class ExistenciasController extends Controller {
 
         if ($this->request['filter']['flags']['agrupado']) {
             if ($this->request['filter']['valuesSelected'][0] == '')
-                $query = "select IDArticulo,sum(Reales) as Reales,sum(Reservadas) as Reservadas,sum(Entrando) as Entrando from {$this->form->getDataBaseName()}.existencias where ({$filtro}) GROUP BY IDArticulo order by {$this->request['filter']['orderBy']}";
+                $query = "select IDArticulo,sum(Reales) as Reales,sum(Reservadas) as Reservadas,sum(Entrando) as Entrando from {$this->form->getDataBaseName()}.ErpExistencias where ({$filtro}) GROUP BY IDArticulo order by {$this->request['filter']['orderBy']}";
             else
-                $query = "select IDAlmacen, IDArticulo,sum(Reales) as Reales,sum(Reservadas) as Reservadas,sum(Entrando) as Entrando from {$this->form->getDataBaseName()}.existencias where ({$filtro}) GROUP BY IDAlmacen,IDArticulo order by {$this->request['filter']['orderBy']}";
+                $query = "select IDAlmacen, IDArticulo,sum(Reales) as Reales,sum(Reservadas) as Reservadas,sum(Entrando) as Entrando from {$this->form->getDataBaseName()}.ErpExistencias where ({$filtro}) GROUP BY IDAlmacen,IDArticulo order by {$this->request['filter']['orderBy']}";
         } else {
-            $query = "select {$this->form->getDataBaseName()}.existencias.* from {$this->form->getDataBaseName()}.existencias where ({$filtro}) {$groupBy} order by {$this->request['filter']['orderBy']}";
+            $query = "select {$this->form->getDataBaseName()}.ErpExistencias.* from {$this->form->getDataBaseName()}.ErpExistencias where ({$filtro}) {$groupBy} order by {$this->request['filter']['orderBy']}";
         }
 
         return $query;

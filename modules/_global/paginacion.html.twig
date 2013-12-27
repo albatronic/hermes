@@ -1,5 +1,5 @@
 {% if filter.pages != 0 %}
-    <form name="paginacion{{position}}" id="paginacion{{position}}" class="Paginacion-{{position}}" action="" method="POST">
+    <form name="paginacion{{position}}" id="paginacion{{position}}" class="Paginacion-{{position}}" action="" method="POST" enctype="multipart/form-data">
     Página {{filter.page}} de {{filter.pages}} ({{filter.records}} registros) &nbsp;
     {% if filter.page != 1 %}
          <input type="image" name="primera"  onClick="$('#Listado').html('<div class=ListadoAnimation><img src={{app.path}}/images/loadingAnimation.gif /></div>');document.getElementById('filter[page{{position}}]').value=1;"  src="{{app.path}}/images/primero1.gif" alt="Primero"/>
@@ -26,7 +26,7 @@
     {% endif %}
 
 
-    {% if values.listado.formatos %}
+    {% if values.listado.formatos and values.permisos.permisosModulo['LI'] %}
         <select name="formatoListado" id="formatolistado{{position}}" size="1" class="select">
         {% for key,title in values.listado.formatos %}
             <option value="{{ key }}">{{ title }}</option>
@@ -36,13 +36,13 @@
             
     {% if position == 'izq'%}
         <div style="float: right;">
-        {% if values.permisos['E'] %}
+        {% if values.permisos.permisosModulo['EX'] %}
             <img style="float:right; cursor: pointer; margin-left: 3px;" src="{{app.path}}/images/ico_excel.gif" width="18px" height="17px" title="Exportar..." alt="Exportar..."
                  onclick="$('#dialog').dialog('open');"
             />
             {% include "_Emergente/dialogoExportar.html.twig" with {'filter': filter, 'export_types': values.listado.export_types} %}
         {%endif%}
-        {% if values.permisos['L'] %}
+        {% if values.permisos.permisosModulo['LI'] %}
             <img style="float:right; cursor: pointer;" src="{{app.path}}/images/icon_printgreen.gif" width="37px" height="21px" title="Imprimir..." alt="Imprimir..."
                  onClick="$('#action{{position}}').val('listado');
                           $('#Listado').html('<div class=ListadoAnimation><img src={{app.path}}/images/loadingAnimation.gif /></div>');

@@ -24,15 +24,15 @@ class Almacenes extends AlmacenesEntity {
      * @param string $column La columna a mostrar
      * @return array Array con los almacenes
      */
-    public function fetchAll($idEmpresa='', $column='Nombre') {
+    public function fetchAll($idEmpresa='', $column='Nombre', $defecto = true) {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
             if ($idEmpresa == '') {
-                $query = "SELECT IDAlmacen as Id, $column as Value from almacenes order by $column ASC;";
+                $query = "SELECT IDAlmacen as Id, $column as Value from {$this->getTableName()} order by $column ASC;";
             } else {
-                $filtro = "WHERE (t1.IDEmpresa='" . $idEmpresa . "')  AND (t1.IDAlmacen=t2.IDAlmacen)";
-                $query = "SELECT t1.IDAlmacen as Id, t2.$column as Value FROM empresas_almacenes as t1, almacenes as t2 $filtro ORDER BY t2.$column ASC;";
+                //$filtro = "WHERE (t1.IDEmpresa='" . $idEmpresa . "')  AND (t1.IDAlmacen=t2.IDAlmacen)";
+                //$query = "SELECT t1.IDAlmacen as Id, t2.$column as Value FROM empresas_almacenes as t1, almacenes as t2 $filtro ORDER BY t2.$column ASC;";
             }
 
             $this->_em->query($query);
@@ -40,7 +40,8 @@ class Almacenes extends AlmacenesEntity {
             $this->_em->desConecta();
             unset($this->_em);
         }
-        $rows[] = array('Id' => '', Value => ':: Indique un valor');
+        if ($defecto)
+            $rows[] = array('Id' => '', Value => ':: Indique un valor');
         return $rows;
     }
 
@@ -56,7 +57,7 @@ class Almacenes extends AlmacenesEntity {
     public function getAlmacenesUsuario($idUsuario='') {
         
         if ($idUsuario == '')
-            $idUsuario = $_SESSION['USER']['user']['iu'];
+            $idUsuario = $_SESSION['usuarioPortal']['Id'];
         
         $usuario = new Agentes($idUsuario);
         $rows = $usuario->getAlmacenes();
@@ -72,7 +73,6 @@ class Almacenes extends AlmacenesEntity {
      * @return array Las ubicaciones del almacen
      */
     public function getUbicaciones($filtroUbicacion="%") {
-        $ubicaciones = array();
 
         $mapa = new AlmacenesMapas();
         $ubicaciones = $mapa->fetchAll($this->IDAlmacen, $filtroUbicacion);
@@ -97,16 +97,16 @@ class Almacenes extends AlmacenesEntity {
         $huecos = array();
 
         // LLamo al procedimiento almacenado 'UbicacionesLibres'
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
             //$query = "Call UbicacionesLibres('{$this->IDAlmacen}');";
             $query = "SELECT IDUbicacion as Id, Ubicacion as Value
-                        FROM {$this->_dataBaseName}.almacenes_mapas
+                        FROM {$this->_dataBaseName}.ErpAlmacenesMapas
                         WHERE
                             IDAlmacen = '{$this->IDAlmacen}' AND
                             IDUbicacion NOT IN (
                                 SELECT t1.IDUbicacion
-                                FROM existencias as t1
+                                FROM ErpExistencias as t1
                                 GROUP BY t1.IDAlmacen, t1.IDUbicacion
                                 HAVING t1.IDAlmacen =  '{$this->IDAlmacen}'
                                 AND SUM( t1.Reales ) > 0

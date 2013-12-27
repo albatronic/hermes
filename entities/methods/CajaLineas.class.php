@@ -53,6 +53,9 @@ class CajaLineas extends CajaLineasEntity {
     }
 
     public function validaLogico() {
+        
+        parent::validaLogico();
+                
         $this->setFecha(date('Y-m-d H:i:s'));
     }
 

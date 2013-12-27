@@ -18,15 +18,6 @@ listados:
     body_font: Courier, ,8
     columns:
       - 
-        title: IDFamilia
-        field: IDFamilia
-        length: 4
-        align: R
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
         title: Familia
         field: Familia
         length: 50
@@ -36,47 +27,30 @@ listados:
         formula: null
         format: null
       - 
-        title: Inventario
+        title: Inv
         field: Inventario
-        length: 1
-        align: R
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: Trazabilidad
-        field: Trazabilidad
-        length: 1
-        align: R
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: PublicarWeb
-        field: PublicarWeb
-        length: 1
-        align: R
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: MargenWeb
-        field: MargenWeb
-        length: 5
-        align: R
-        type: decimal
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: Caducidad
-        field: Caducidad
         length: 3
         align: R
         type: integer
         total: NO
         formula: null
         format: null
+      - 
+        title: Traz
+        field: Trazabilidad
+        length: 4
+        align: R
+        type: integer
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: Margen Web
+        field: MargenWeb
+        length: 10
+        align: R
+        type: decimal
+        total: NO
+        formula: null
+        format: null
+

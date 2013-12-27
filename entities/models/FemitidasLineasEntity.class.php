@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(femitidas_lineas)
  */
-class FemitidasLineasEntity extends Entity {
+class FemitidasLineasEntity extends EntityComunes {
 
     /**
      * @orm:Column(type="integer")
@@ -158,12 +158,12 @@ class FemitidasLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'femitidas_lineas';
+    protected $_tableName = 'ErpFemitidasLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string

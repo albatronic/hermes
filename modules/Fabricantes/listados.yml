@@ -19,7 +19,7 @@ listados:
     columns:
       - 
         title: Fabricante
-        field: Fabricante
+        field: Titulo
         length: 35
         align: L
         type: string
@@ -27,7 +27,7 @@ listados:
         formula: null
         format: null
       - 
-        title: Telefono
+        title: Teléfono
         field: Telefono
         length: 15
         align: L

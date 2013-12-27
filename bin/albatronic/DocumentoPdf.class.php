@@ -58,7 +58,7 @@ class DocumentoPdf extends FPDF {
      * @param string $tipoDocumento
      * @return array Array del tipo Id,Value con los formatos posibles del documento 
      */
-    public function getFormatos($tipoDocumento) {
+    static function getFormatos($tipoDocumento) {
 
         $file = "docs/docs" . $_SESSION['emp'] . "/formats/" . $tipoDocumento . ".yml";
         if (!file_exists($file))
@@ -66,7 +66,7 @@ class DocumentoPdf extends FPDF {
         if (file_exists($file)) {
             $yml = sfYaml::load($file);
 
-            $perfilUsuario = $_SESSION['USER']['user']['IDPerfil'];
+            $perfilUsuario = $_SESSION['usuarioPortal']['IdPerfil'];
             $i = 0;
             foreach ($yml[$tipoDocumento] as $formato) {
                 $perfiles = $formato['idPerfil'];
@@ -89,7 +89,7 @@ class DocumentoPdf extends FPDF {
      * @param integer $formato El numero de formato
      * @return array Array con los comandos de configuracion del formato
      */
-    public function getConfigFormato($tipoDocumento, $formato=0) {
+    static function getConfigFormato($tipoDocumento, $formato=0) {
 
         $config = array();
 
@@ -134,7 +134,7 @@ class DocumentoPdf extends FPDF {
      * @param string $archivo El nombre del archivo a generar con la ruta completa
      */
     public function generaDocumento($format, $master, $arrayDetail, $archivo) {
-        $this->empresa = new Empresas($_SESSION['emp']);
+        $this->empresa = new PcaeEmpresas($_SESSION['emp']);
         $this->format = $format;
 
         // Márgenes: top,right,bottom,left
@@ -225,6 +225,9 @@ class DocumentoPdf extends FPDF {
         $this->imprime($this->format['footer']);
     }
 
+    public function moneda($importe) {
+        return number_format($importe,2,",",".") . " E";
+    }
 }
 
 ?>

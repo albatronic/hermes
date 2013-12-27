@@ -1,6 +1,4 @@
 {# TEMPLATE ClientesTipos/form.html.twig #}
 {# Muestra los campos editables de la entidad        #}
 
-{% import '_global/macros.html.twig' as macro %}
-
-{{ macro.input('Tipo','Etiqueta','text','ClientesTipos[Tipo]','ClientesTipos_Tipo',datos.Tipo,'30','CampoTextoLargo') }}
+{{ macro.input(values.atributos.Tipo,'Etiqueta','text','ClientesTipos[Tipo]','ClientesTipos_Tipo',datos.Tipo,'30','CampoTextoLargo') }}

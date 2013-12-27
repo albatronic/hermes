@@ -8,7 +8,7 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" enctype="multipart/form-data" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" enctype="multipart/form-data" method="POST">
         <input name="controller" value="MvtosAlmacen" type="hidden" />
         <input name="action" id="action" value="new" type="hidden" />
         <input name="MvtosAlmacen[Id]" value="{{ values.datos.Id }}" type="hidden" />

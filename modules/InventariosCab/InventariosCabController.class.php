@@ -13,11 +13,15 @@ class InventariosCabController extends Controller {
     protected $entity = "InventariosCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+        
     /**
      * Cierra el inventario
      */
     public function cerrarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new InventariosCab($this->request['InventariosCab']['IDInventario']);
             $datos->cierra();
@@ -41,7 +45,7 @@ class InventariosCabController extends Controller {
      */
     public function importarAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             // Ruta al archivo destino sin la extensión
             $path = "docs/docs" . $_SESSION['emp'] . "/tmp/inventario" . $this->request['InventariosCab']['IDInventario'] . "_" . date('His');
@@ -111,7 +115,7 @@ class InventariosCabController extends Controller {
 
         if ($archivoImportar->open("r")) {
             // Abrir en modo escritura el archivo de log.
-            $usuario = new Agentes($_SESSION['USER']['user']['id']);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
             $pathArchivoLog = "docs/docs" . $_SESSION['emp'] . "/tmp/logImportarInventario.txt";
             $archivoLog = new Archivo($pathArchivoLog);
             $archivoLog->open("w");

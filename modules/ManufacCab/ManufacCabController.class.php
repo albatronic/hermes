@@ -13,6 +13,10 @@ class ManufacCabController extends Controller {
     protected $entity = "ManufacCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+    
     /**
      * Marca el parte de elaboración como Confirmado (estado 1)
      * Pone sus líneas como Reservadas (estado 1)
@@ -20,7 +24,7 @@ class ManufacCabController extends Controller {
      * @return array Template y values
      */
     public function confirmarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             // Se puede confirmar si está en estado de PTE. CONFIRMAR (0)
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
@@ -46,7 +50,7 @@ class ManufacCabController extends Controller {
      * @return array Template y values
      */
     public function anularAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
             if ($datos->getIDEstado()->getIDTipo() == '1') {
@@ -73,7 +77,7 @@ class ManufacCabController extends Controller {
      * y en base a la política de recálculo de precios definida con el parámetro ACTU_PRECIOS
      */
     public function CotizarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $idManufac = $this->request['ManufacCab']['IDManufac'];
             $datos = new ManufacCab($idManufac);
@@ -115,7 +119,7 @@ class ManufacCabController extends Controller {
      * @return array Template y values
      */
     public function duplicarAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
             $idManufacNuevo = $datos->duplica();
@@ -153,7 +157,7 @@ class ManufacCabController extends Controller {
             $this->values['resultadoEnvio'] = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
             unset($envio);
         } else {
-            $usuario = new Agentes($_SESSION['USER']['user']['id']);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
             $datos = new ManufacCab($this->request['ManufacCab']['IDManufac']);
             $formatos = DocumentoPdf::getFormatos('parteElaboracion');

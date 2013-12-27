@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(manufac_cab)
  */
-class ManufacCabEntity extends Entity {
+class ManufacCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -109,12 +109,12 @@ class ManufacCabEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'manufac_cab';
+    protected $_tableName = 'ErpManufacCab';
     /**
      * Nombre de la PrimaryKey
      * @var string

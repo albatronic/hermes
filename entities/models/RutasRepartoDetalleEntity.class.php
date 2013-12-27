@@ -7,53 +7,53 @@
  */
 
 /**
- * @orm:Entity(rutas_reparto_detalle)
+ * @orm:Entity(RutasRepartoDetalle)
  */
-class RutasRepartoDetalleEntity extends Entity {
+class RutasRepartoDetalleEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      */
     protected $Id;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      * @var entities\RutasReparto
      */
     protected $IDRuta;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      * @var entities\Agentes
      */
     protected $IDRepartidor;
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      */
     protected $Dia;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      */
     protected $OrdenZona = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      * @var entities\Zonas
      */
     protected $IDZona = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      */
     protected $OrdenDirec = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto_detalle")
+     * @assert:NotBlank(groups="RutasRepartoDetalle")
      * @var entities\ClientesDentrega
      */
     protected $IDDirec;
@@ -61,12 +61,12 @@ class RutasRepartoDetalleEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'rutas_reparto_detalle';
+    protected $_tableName = 'ErpRutasRepartoDetalle';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -168,5 +168,5 @@ class RutasRepartoDetalleEntity extends Entity {
 
 }
 
-// END class rutas_reparto_detalle
+// END class RutasRepartoDetalle
 ?>

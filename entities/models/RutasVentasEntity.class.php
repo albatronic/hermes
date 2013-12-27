@@ -7,47 +7,47 @@
  */
 
 /**
- * @orm:Entity(rutas_ventas)
+ * @orm:Entity(RutasVentas)
  */
-class RutasVentasEntity extends Entity {
+class RutasVentasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      */
     protected $Id;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      * @var entities\Agentes
      */
     protected $IDComercial;
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      */
     protected $Dia;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      */
     protected $OrdenZona = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      * @var entities\Zonas
      */
     protected $IDZona = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      */
     protected $OrdenCliente = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_ventas")
+     * @assert:NotBlank(groups="RutasVentas")
      * @var entities\Clientes
      */
     protected $IDCliente;
@@ -55,12 +55,12 @@ class RutasVentasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'rutas_ventas';
+    protected $_tableName = 'ErpRutasVentas';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -151,5 +151,5 @@ class RutasVentasEntity extends Entity {
 
 }
 
-// END class rutas_ventas
+// END class RutasVentas
 ?>

@@ -1,0 +1,42 @@
+{# CATEGORIAS DE PRODUCTOS TPV #}
+<div class="ticketFavoritos">
+    {% if (albaran.IDEstado.IDTipo == 0) %}
+    <h3>FAMILIAS</h3>
+    <div class="addFavorito">      
+        <ul id="categorias">
+            {% for categoria in values.categorias %}
+                <li id="categoria{{categoria.Id}}">                  
+                    {{categoria.Value|slice(0,20)}}   
+                </li>
+            {% endfor %}
+        </ul>
+    </div>        
+    {% endif %}
+</div>
+
+<script>
+$(function(){
+    $('#categorias').sortable({
+        update: function(event,ui){
+            
+            // Crea un array con el nuevo orden.
+            // El índice el array es el orden y el valor es el id
+            // del objeto que ocupará ese orden
+            var datos = [];
+            var id;
+            $('#categorias li').each(function(key,objetoLi){
+                id = $(objetoLi).attr("id").replace("categoria","");
+                datos.push(id);
+            });
+
+            // Actualizar en la base de datos
+            $.ajax({
+                url: appPath + '/lib/actualizaOrden.php',
+                dataType: 'html',
+                type: 'post',
+                data: {'entidad': 'Familias', 'sortBy': 'OrdenTpv', 'orden': datos}
+            });
+        }
+    });
+});    
+</script>

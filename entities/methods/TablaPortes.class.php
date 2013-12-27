@@ -24,11 +24,17 @@ class TablaPortes extends TablaPortesEntity {
 
         $tabla = array();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $zonas = new ZonasTransporte();
+        $tablaZonas = $zonas->getTableName();
+        unset($zonas);
+        
+        $em = new EntityManager($_SESSION['project']['conection']);
         if ($em->getDbLink()) {
             $query = "
                 SELECT tp.IDZona,zt.Zona,tp.Kilos,tp.Importe
-                FROM tabla_portes as tp, zonas_transporte as zt
+                FROM 
+                    {$this->getDataBaseName()}.{$this->getTableName()} as tp, 
+                    {$this->getDataBaseName()}.{$tablaZonas} as zt
                 WHERE
                   tp.IDAgencia='{$idAgencia}' AND
                   tp.IDZona=zt.IDZona
@@ -62,12 +68,18 @@ class TablaPortes extends TablaPortesEntity {
     public function getTablaPortesZona($idZona) {
 
         $tabla = array();
-
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $agencias = new Agencias();
+        $tablaAgencias = $agencias->getTableName();
+        unset($agencias);
+        
+        $em = new EntityManager($_SESSION['project']['conection']);
         if ($em->getDbLink()) {
             $query = "
                 SELECT tp.IDAgencia,ag.Agencia,tp.Kilos,tp.Importe
-                FROM tabla_portes as tp, agencias as ag
+                FROM
+                    {$this->getDataBaseName()}.{$this->getTableName()} as tp, 
+                    {$this->getDataBaseName()}.{$tablaAgencias} as ag
                 WHERE
                   tp.IDZona='{$idZona}' AND
                   tp.IDAgencia=ag.IDAgencia
@@ -111,15 +123,21 @@ class TablaPortes extends TablaPortesEntity {
      */
     public function getAgenciasZona($idZona, $kilos = '0') {
 
-        $tabla = array();
+        $rows = array();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $agencias = new Agencias();
+        $tablaAgencias = $agencias->getTableName();
+        unset($agencias);
+        
+        $em = new EntityManager($_SESSION['project']['conection']);
         if ($em->getDbLink()) {
             $query = "
                 SELECT tp.IDAgencia as Id,ag.Agencia as Value,tp.Kilos as Kilos,tp.Importe as Importe
-                FROM tabla_portes as tp, agencias as ag
+                FROM
+                    {$this->getDataBaseName()}.{$this->getTableName()} as tp, 
+                    {$this->getDataBaseName()}.{$tablaAgencias} as ag
                 WHERE
-                  tp.IDIDZona='{$idZona}' AND
+                  tp.IDZona='{$idZona}' AND
                   tp.IDAgencia=ag.IDAgencia AND
                   tp.Kilos>='{$kilos}'
                 ORDER BY tp.Kilos,tp.Importe ASC
@@ -130,7 +148,7 @@ class TablaPortes extends TablaPortesEntity {
             $em->desConecta();
         }
 
-        return $tabla;
+        return $rows;
     }
 
 }

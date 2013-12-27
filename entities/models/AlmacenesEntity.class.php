@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(almacenes)
  */
-class AlmacenesEntity extends Entity {
+class AlmacenesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -20,71 +20,90 @@ class AlmacenesEntity extends Entity {
      * @assert:NotBlank(groups="almacenes")
      */
     protected $IDAlmacen;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $Nombre = '';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $Direccion;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="almacenes")
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
      */
-    protected $Poblacion;
+    protected $IDPais = '68';
+
     /**
-     * @orm:Column(type="")
-     * @assert:NotBlank(groups="almacenes")
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
      */
     protected $IDProvincia = '18';
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $IDPoblacion = '0';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $CodigoPostal = '0000000000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $Telefono;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $Fax;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $EMail;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $Tipo = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="almacenes")
      */
     protected $ControlUbicaciones = '0';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'almacenes';
+    protected $_tableName = 'ErpAlmacenes';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDAlmacen';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -127,12 +146,24 @@ class AlmacenesEntity extends Entity {
         return $this->Direccion;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = $Poblacion;
+    public function setIDPais($IDPais) {
+        $this->IDPais = $IDPais;
     }
 
-    public function getPoblacion() {
-        return $this->Poblacion;
+    public function getIDPais() {
+        if (!($this->IDPais instanceof Paises))
+            $this->IDPais = new Paises($this->IDPais);
+        return $this->IDPais;
+    }
+
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
+    }
+
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setIDProvincia($IDProvincia) {

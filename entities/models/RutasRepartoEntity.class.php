@@ -7,15 +7,15 @@
  */
 
 /**
- * @orm:Entity(rutas_reparto)
+ * @orm:Entity(RutasReparto)
  */
-class RutasRepartoEntity extends Entity {
+class RutasRepartoEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="rutas_reparto")
+     * @assert:NotBlank(groups="RutasReparto")
      */
     protected $IDRuta;
     /**
@@ -25,19 +25,19 @@ class RutasRepartoEntity extends Entity {
     protected $IDSucursal;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="rutas_reparto")
+     * @assert:NotBlank(groups="RutasReparto")
      */
     protected $Descripcion;
     /**
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'rutas_reparto';
+    protected $_tableName = 'ErpRutasReparto';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -88,5 +88,5 @@ class RutasRepartoEntity extends Entity {
 
 }
 
-// END class rutas_reparto
+// END class RutasReparto
 ?>

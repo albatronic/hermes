@@ -10,10 +10,13 @@
         </div>
 
 	{% block filtro %}
-        {% if values.permisos['C'] %}
-		{% include 'RecibosClientes/filtro.html.twig' with {'filter': values.listado.filter} %}
+        {% if values.permisos.permisosModulo['CO'] %}
+            {% include 'RecibosClientes/filtro.html.twig' with {'filter': values.listado.filter} %}
         {%endif%}
 	{% endblock %}
+
+	{% include "_global/FormErrores.html.twig" with {'errores': values.errores} %}
+        {% include "_global/alertas.html.twig" with {'alertas': values.alertas} %}
 
         <div id="div_listado">
         {% block listado %}

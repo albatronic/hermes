@@ -22,12 +22,12 @@
                 {% endif %}
                 <tr class='{{classFila}}'>
                     <td>
-                        <a href='{{app.path}}/RecibosClientes/Edit/{{recibo.IDRecibo}}' target="_blank" title='Editar Recibo ...'>
+                        <a href='{{app.path}}/RecibosClientes/Edit/{{recibo.PrimaryKeyMD5}}' target="_blank" title='Editar Recibo ...'>
                             <img src="{{app.path}}/images/botoneditar.png" width="16px" height="16px" />
                         <a>
                     </td>                    
                     <td align="left">
-                        <a href="{{app.path}}/FemitidasCab/Edit/{{recibo.IDFactura.IDFactura}}" target="_blank">{{recibo.IDFactura}}</a>
+                        <a href="{{app.path}}/FemitidasCab/Edit/{{recibo.IDFactura.PrimaryKeyMD5}}" target="_blank">{{recibo.IDFactura}}</a>
                     </td>
                     <td align="center">{{recibo.Fecha}}</td>
                     <td align="center">{{recibo.Vencimiento}}</td>

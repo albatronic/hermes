@@ -7,32 +7,32 @@
  */
 
 /**
- * @orm:Entity(tipos_venta)
+ * @orm:Entity(TiposVenta)
  */
-class TiposVentaEntity extends Entity {
+class TiposVentaEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_venta")
+     * @assert:NotBlank(groups="TiposVenta")
      */
     protected $IDVenta;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="tipos_venta")
+     * @assert:NotBlank(groups="TiposVenta")
      */
     protected $TipoVenta;
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'tipos_venta';
+    protected $_tableName = 'ErpTiposVenta';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -67,5 +67,5 @@ class TiposVentaEntity extends Entity {
 
 }
 
-// END class tipos_venta
+// END class TiposVenta
 ?>

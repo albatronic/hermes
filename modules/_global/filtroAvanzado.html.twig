@@ -1,68 +1,103 @@
 {# empty Twig template #}
 
 {% set i = 0 %}
-<div class="FiltrosAdicionales" style="display:none;" id="FiltrosAdicionales">
-{% for key,value in filter.aditional %}
-    {% set i = i+1 %}
-    {% if filter.valuesSelected[i] %}
-        {% set valor = filter.valuesSelected[i] %}
-    {% else %}
-        {% set valor = value.default %}
-    {% endif %}
-
-    <div class="FiltroAdicional">
-        <div style="float: left; width: 90px; border-bottom: 1px dotted grey; margin-right: 3px;">{{value.caption}}:</div>
-
-        <div style="float: left;">
-        {% if value.type == 'select' %}
-            <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
-            <select name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" {{ value.event }} style="width: 100px;">
-                {% for objeto in value.values  %}
-                <option value="{{ objeto.Id }}" {% if objeto.Id == valor %} SELECTED {% endif %}>{{ objeto.Value }}</option>
-                {% endfor %}
+<div id="filtroAvanzado" title="Filtro avanzado de {{values.titulo}}" style="background-color: white;">
+    <form name='formFiltroAvanzado' id='formFiltroAvanzado' action='' method='POST'>
+        <input name='controller' value='{{values.controller}}' type='hidden' />
+        <input name='action' value='list' type='hidden' />  
+        <div class="FiltroAdicional">
+            <div class="FiltroAdicionalEtiqueta">Ordenar por:</div>            
+            <div style="float:left;">
+            <select name="filter[orderBy]">
+            {% for criterio in filter.columnsOrder %}
+                <option value="{{ criterio.criteria }}" {% if (criterio.criteria == filter.orderBy)%} SELECTED {%endif%}>{{criterio.title}}</option>
+            {% endfor %}
             </select>
-        {% endif %}
-
-        {% if value.type == 'input' %}
-            <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
-            <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" value ="{{ valor }}" type="text" size="10" {{ value.event }}/>
-        {% endif %}
-
-        {% if value.type == 'range' %}
-            <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
-            {% if value.data_type == 'date' %}
-                {{ macro.fecha(none,none,"filter[valuesSelected]["~i~"]","filter_valuesSelected_"~i,valor) }}
-            {% else %}
-                <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" value ="{{ valor }}" type="text" size="10" {{ value.event }}/>
-            {% endif %}
-        {% endif %}
-
-        {% if value.type == 'check' %}
-            <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
-            <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}"
-             {% if  valor != '' %}
-                {% if  valor == '1' %}
-                   checked="checked"
-                {% endif %}
-             {%else%}
-                {% if  value.default == 'on' %}
-                   checked="checked"
-                {% endif %}
-             {% endif %}
-                   type="checkbox" {{ value.event }}/>
-        {% endif %}
+            </div>
         </div>
-    </div>
-{% endfor %}
+        <div class="FiltroAdicional">        
+            <div class="FiltroAdicionalEtiqueta">Mostrar:</div>              
+            <div style="float:left;">            
+            <input name="filter[recordsPerPage]" value="{{ filter.recordsPerPage }}" type="text" style="width: 25px;"/>
+            </div>
+        </div>
+        {% for key,value in filter.aditional %}
+            {% set i = i+1 %}
+            {% if filter.valuesSelected[i] %}
+                {% set valor = filter.valuesSelected[i] %}
+            {% else %}
+                {% set valor = value.default %}
+            {% endif %}
 
-<div style='clear:both'></div>
-<input class="FiltrosAdicionalesComando" type="buttom" value="Consultar"
-      onclick="
-          $('#div_listado').html('<div class=ListadoAnimation><img src={{app.path}}/images/loadingAnimation.gif /></div>');
-          getElementById('FiltrosAdicionales').style.display='none';
-          $('#filtro').submit();"
-/>
-<input class="FiltrosAdicionalesComando" type="buttom" value="Cerrar"
-      onclick="getElementById('FiltrosAdicionales').style.display='none';"
-/>
+            <div class="FiltroAdicional">
+                <div class="FiltroAdicionalEtiqueta">{{value.caption}}:</div>
+
+                <div style="float: left;">
+                {% if value.type == 'select' %}
+                    <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
+                    <select name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" {{ value.event }} style="width: 120px;">
+                        {% for objeto in value.values  %}
+                        <option value="{{ objeto.Id }}" {% if objeto.Id == valor %} SELECTED {% endif %}>{{ objeto.Value }}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+
+                {% if value.type == 'input' %}
+                    <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
+                    <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" value ="{{ valor }}" type="text" size="10" {{ value.event }}/>
+                {% endif %}
+
+                {% if value.type == 'range' %}
+                    <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
+                    {% if value.data_type == 'date' %}
+                        {{ macro.fecha(none,none,"filter[valuesSelected]["~i~"]","filter_valuesSelected_"~i,valor) }}
+                    {% else %}
+                        <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}" value ="{{ valor }}" type="text" size="10" {{ value.event }}/>
+                    {% endif %}
+                {% endif %}
+
+                {% if value.type == 'check' %}
+                    <input name="filter[columnsSelected][{{i}}]" value="{{value.field}}" type="hidden"/>
+                    <input name="filter[valuesSelected][{{i}}]" id="filter_valuesSelected_{{i}}"
+                     {% if  valor != '' %}
+                        {% if  valor == '1' %}
+                           checked="checked"
+                        {% endif %}
+                     {%else%}
+                        {% if  value.default == 'on' %}
+                           checked="checked"
+                        {% endif %}
+                     {% endif %}
+                           type="checkbox" {{ value.event }}/>
+                {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div style='clear:both'></div>
+    </form>
 </div>
+
+<script language='JavaScript' type='text/javascript'>
+    $(function() {
+	$( "#filtroAvanzado" ).dialog({
+            autoOpen: false,
+            width: 340,
+            //height: 420,
+            position: ['right','center'],
+            closeOnEscape: true,
+            show: 'slide',
+            resizable: false,
+            buttons: {
+                "Consultar" : function() {
+                    $('#div_listado').html('<div class=ListadoAnimation><img src={{app.path}}/images/loadingAnimation.gif /></div>');
+                    $('#formFiltroAvanzado').submit();
+                    },
+                "Cancelar" : function(){
+                    $(this).dialog('close');
+                }
+
+            }            
+        });
+    });
+</script>

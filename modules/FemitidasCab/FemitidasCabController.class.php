@@ -13,18 +13,22 @@ class FemitidasCabController extends Controller {
     protected $entity = "FemitidasCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+
     /**
      * Generar el listado de facturas apoyándose en el método padre
      * Si el usuario es comercial muestra solo las
      * suyas, si no es comercial muestra todos.
      * @return array
      */
-    public function listAction() {
+    public function listAction($aditionalFilter='') {
         $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
         if ($usuario->getEsComercial())
-            $filtro = $tabla . ".IDComercial='" . $usuario->getIDAgente() . "'";
-        return parent::listAction($filtro);
+            $aditionalFilter = $tabla . ".IDComercial='" . $usuario->getIDAgente() . "'";
+        return parent::listAction($aditionalFilter);
     }
 
     /**
@@ -38,12 +42,14 @@ class FemitidasCabController extends Controller {
                 $para = $this->request['Para'];
                 $de = $this->request['De'];
                 $deNombre = $this->request['DeNombre'];
+                $conCopia = $this->request['Cc'];
+                $conCopiaOculta = $this->request['Cco'];                
                 $asunto = $this->request['Asunto'];
                 $mensaje = $this->request['Mensaje'];
                 $adjuntos = array($this->request['Adjunto'],);
 
                 $envio = new Mail();
-                $ok = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
+                $ok = $envio->send($para, $de, $deNombre, $conCopia, $conCopiaOculta, $asunto, $mensaje, $adjuntos);
                 if ($ok) {
                     $entidad = new $this->entity($this->request['FemitidasCab']['IDFactura']);
                     $entidad->auditaEmail();
@@ -57,38 +63,39 @@ class FemitidasCabController extends Controller {
 
             case 'CambioFormato':
                 $datos = new FemitidasCab($this->request['FemitidasCab']['IDFactura']);
-                $formatos = DocumentoPdf::getFormatos('facturas');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('facturas', array('0' => $datos->getIDFactura()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDFactura()), $formato);
                 $this->values['email'] = array(
                     'Para' => $this->request['Para'],
                     'De' => $this->request['De'],
                     'DeNombre' => $this->request['DeNombre'],
                     'Cc' => $this->request['Cc'],
+                    'Cco' => $this->request['Cco'],                    
                     'Asunto' => $this->request['Asunto'],
                     'Formatos' => $formatos,
                     'Formato' => $formato,
                     'Mensaje' => $this->request['Mensaje'],
-                    'idAlbaran' => $datos->getIDFactura(),
+                    'idFactura' => $datos->getIDFactura(),
                 );
                 break;
 
             case '':
                 $datos = new FemitidasCab($this->request['FemitidasCab']['IDFactura']);
-                $formatos = DocumentoPdf::getFormatos('facturas');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('facturas', array('0' => $datos->getIDFactura()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDFactura()), $formato);
                 $this->values['email'] = array(
                     'Para' => $datos->getIDCliente()->getEMail(),
-                    'De' => $datos->getIDComercial()->getEMail(),
+                    'De' => $_SESSION['usuarioPortal']['email'],//$datos->getIDComercial()->getIDAgente()->getEMail(),
                     'DeNombre' => $datos->getIDComercial()->getNombre(),
-                    'Cc' => '',
+                    'Cco' => $_SESSION['usuarioPortal']['email'],
                     'Asunto' => 'Factura N. ' . $datos->getNumeroFactura(),
                     'Formatos' => $formatos,
                     'Formato' => $formato,
@@ -114,7 +121,8 @@ class FemitidasCabController extends Controller {
 
         $idFactura = $this->request[2];
 
-        $datos = new FemitidasCab($idFactura);
+        $datos = new FemitidasCab();
+        $datos = $datos->find("PrimaryKeyMD5", $idFactura);
         $this->values['recibos'] = $datos->getRecibos();
 
         unset($datos);
@@ -166,8 +174,9 @@ class FemitidasCabController extends Controller {
     public function editAction() {
 
         switch ($this->request["METHOD"]) {
+
             case 'GET':
-                if ($this->values['permisos']['C']) {
+                if ($this->values['permisos']['permisosModulo']['CO']) {
                     //SI EN LA POSICION 3 DEL REQUEST VIENE ALGO,
                     //SE ENTIENDE QUE ES EL VALOR DE LA CLAVE PARA LINKAR CON LA ENTIDAD PADRE
                     //ESTO SE UTILIZA PARA LOS FORMULARIOS PADRE->HIJO
@@ -175,18 +184,20 @@ class FemitidasCabController extends Controller {
                         $this->values['linkBy']['value'] = $this->request['3'];
 
                     //MOSTRAR DATOS. El ID viene en la posicion 2 del request
-                    $datos = new $this->entity($this->request[2]);
+                    $datos = new $this->entity();
+                    $datos = $datos->find('PrimaryKeyMD5', $this->request[2]);
                     if ($datos->getStatus()) {
                         $this->values['datos'] = $datos;
                         $this->values['errores'] = $datos->getErrores();
-                        return array('template' => $this->entity . '/edit.html.twig', 'values' => $this->values);
                     } else {
                         $this->values['errores'] = array("Valor no encontrado. El objeto que busca no existe. Es posible que haya sido eliminado por otro usuario.");
-                        return array('template' => $this->entity . '/new.html.twig', 'values' => $this->values);
                     }
+                    $template = $this->entity . '/edit.html.twig';
                 } else {
-                    return array('template' => '_global/forbiden.html.twig');
+                    $template = '_global/forbiden.html.twig';
                 }
+
+                return array('template' => $template, 'values' => $this->values);
                 break;
 
             case 'POST':
@@ -197,7 +208,7 @@ class FemitidasCabController extends Controller {
 
                 switch ($this->request['accion']) {
                     case 'Guardar': //GUARDAR DATOS
-                        if ($this->values['permisos']['A']) {
+                        if ($this->values['permisos']['permisosModulo']['UP']) {
                             // Cargo la entidad
                             $datos = new $this->entity($this->request[$this->entity][$this->form->getPrimaryKey()]);
                             // Comprar si se han cambiado la forma de pago.
@@ -209,7 +220,7 @@ class FemitidasCabController extends Controller {
                             $datos->bind($this->request[$this->entity]);
                             if ($datos->valida($this->form->getRules())) {
                                 $this->values['alertas'] = $datos->getAlertas();
-                                $datos->save();
+                                $datos->recalcula();
                                 if ($cambioFormaPago) {
                                     $datos->creaVctos();
                                     // Anotar en caja sin procede
@@ -232,7 +243,7 @@ class FemitidasCabController extends Controller {
                         break;
 
                     case 'Borrar': //BORRAR DATOS
-                        if ($this->values['permisos']['B']) {
+                        if ($this->values['permisos']['permisosModulo']['DE']) {
                             $datos = new $this->entity($this->request[$this->entity][$this->form->getPrimaryKey()]);
 
                             if ($datos->erase()) {

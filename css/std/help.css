@@ -1,43 +1,43 @@
 /* General page styles ---------------------------------------------------- */
 body, html {
-	margin: 0px;
-	padding: 0px;
-	color: black;
-	background-color: white;
+    margin: 0px;
+    padding: 0px;
+    color: black;
+    background-color: white;
 }
 
 body, input, textarea, select, option {
-	font-family: verdana, arial, helvetica, sans-serif;
+    font-family: verdana, arial, helvetica, sans-serif;
 }
 code, pre, tt {
-	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",  Monaco, "Courier New", Courier, monospace;
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",  Monaco, "Courier New", Courier, monospace;
 }
 tt.parameter {
-	font-style: italic;
+    font-style: italic;
 }
 pre {
-	background-color: #ddd;
+    background-color: #ddd;
 }
 
 #content, #headmenu, #footnav, #copyright, #thismirror,
 #headsearch span, #headsearch input, #headsearch select {
-	font-size: 85%;
+    font-size: 85%;
 }
 
 a, a:visited, a:hover {
-	color: #000099;
-	background-color: transparent;
+    color: #000099;
+    background-color: transparent;
 }
 
 a:active {
-	color: #0000ff;
-	background-color: transparent;
+    color: #0000ff;
+    background-color: transparent;
 }
 
 h1, h2, h3, h4 {
-	font-weight: bold;
-	color: #000066;
-	background-color: transparent;
+    font-weight: bold;
+    color: #000066;
+    background-color: transparent;
 }
 h1 { font-size: 130%; }
 h2 { font-size: 125%; }
@@ -51,25 +51,25 @@ input.max, textarea.max, select.max {
 */
 
 img {
-	border: 0px;
+    border: 0px;
 }
 img.middle {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 #leftbar div.tip, #leftbar div.information {
-	margin: 0;
-	padding: 5px;
-	text-align: left;
+    margin: 0;
+    padding: 5px;
+    text-align: left;
 }
 #leftbar div.tip p, #leftbar div.information p {
-	text-align: left;
+    text-align: left;
 }
 
 /* FIXME: Remove when the new XSL build has finished */
 div.warning table, div.warning table tr, div.warning table td,
 div.caution table, div.caution table tr, div.caution table td {
-	border: 0;
+    border: 0;
 }
 /* }}} */
 
@@ -231,10 +231,10 @@ ul.simple li {
 
 /* Header navigation area ------------------------------------------------- */
 #headnav {
-	color: inherit;
-	background-color: #9999cc;
-	height: 76px;
-	position: relative;
+    color: inherit;
+    background-color: #9999cc;
+    height: 76px;
+    position: relative;
 }
 #headnav img {
 	border: 0px;

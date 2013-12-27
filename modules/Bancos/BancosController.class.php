@@ -8,7 +8,6 @@
 
  * Extiende a la clase controller
  */
-
 include "modules/BancosOficinas/BancosOficinasController.class.php";
 
 class BancosController extends Controller {
@@ -16,10 +15,15 @@ class BancosController extends Controller {
     protected $entity = "Bancos";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return $this->listAction();
+    }
+
     public function listadoAction() {
         $listadoController = new BancosOficinasController($this->request);
         return $listadoController->listadoAction();
     }
+
 }
 
 ?>

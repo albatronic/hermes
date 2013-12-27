@@ -5,7 +5,7 @@
 {% block listado %}
 <div style="margin: 5px; border: solid 1px grey; padding: 5px;">
     <div class="FormManto">
-    <form name="consulta" action="" method="POST">
+    <form name="consulta" id="formConsulta" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="_Emergente" type="hidden" />
         <input name="action" id="action" value="HistoricoCompras" type="hidden" />
         <div class="Cuerpo">
@@ -26,21 +26,21 @@
             <input name="idArticulo" id="idArticulo" value="{{values.datos.articulo.IDArticulo}}" type="hidden" />
             <input value="{{values.datos.articulo.Descripcion}}" id="Descripcion" type="text" maxlength="50" class="CampoTextoLargo"
                    onkeyup="autoCompletar('Descripcion','idArticulo','Descripcion','articulos','','');"
-                   onblur="if (this.value == '') {$('#idArticulo').val('');}"/>
-            Dejar en blanco para ver todos los artículos
+                   onblur="if (this.value == '') {$('#idArticulo').val('');} $('#formConsulta').submit();"/>
+            Dejar en blanco para ver todos los artículos comprados
         </div>
         <div style="clear: both;"></div>
 
         <div class="Item" id="div_periodo" style="margin-top: 3px;">
             <div style="float: left; width: 55px; font-size: 11px;">Periodo</div>
-            <select name="periodo" id="periodo">
+            <select name="periodo" id="periodo" onchange="$('#formConsulta').submit();">
                 {% for periodo in values.datos.periodos%}
                 <option value="{{periodo.Id}}" {% if periodo.Id == values.datos.periodo %} SELECTED {% endif %}>{{periodo.Value}}</option>
                 {% endfor %}
             </select>
         </div>
         <div style="clear: both; margin: 5px;"></div>
-        {% if values.datos.articulo %}
+        {% if values.datos.articulo.IDArticulo %}
         <hr>
         <p>Unidades Compradas: {{values.datos.unidades}}</p>
         <p>Precio Medio: {{values.datos.precioMedio}} €</p>
@@ -67,7 +67,7 @@
         {% for linea in values.listado %}
             <tr>
                 <td style="width: 60px; text-align: right;">
-                    <a href="javascript:;" title="Ver Pedido" onClick="window.open('{{app.path}}/PedidosCab/edit/{{linea.IDPedido}}','Pedido','resizable=yes,scrollbars=yes')">{{linea.IDPedido}}</a>
+                    <a href="javascript:;" title="Ver Pedido" onClick="window.open('{{app.path}}/PedidosCab/edit/{{linea.PrimaryKeyMD5}}','Pedido','resizable=yes,scrollbars=yes')">{{linea.IDPedido}}</a>
                 </td>
                 <td style="width: 80px; text-align: center;">{{linea.FechaEntrada}}</td>
                 <td>{{linea.Descripcion}}</td>

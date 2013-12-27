@@ -25,16 +25,16 @@ class Tpvs extends TpvsEntity {
      * @param integer $idSucursal
      * @return array
      */
-    public function fetchAll($idSucursal = '') {
+    public function fetchAll($idSucursal = '', $default = true) {
 
         if ($idSucursal == '')
             $idSucursal = $_SESSION['suc'];
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($this->getConectionName());
         $link = $em->getDbLink();
 
         if (is_resource($link)) {
-            $query = "select IDTpv as Id, Nombre as Value from tpvs where IDSucursal='" . $idSucursal . "'";
+            $query = "select IDTpv as Id, Nombre as Value from {$this->getDataBaseName()}.{$this->getTableName()} where IDSucursal='" . $idSucursal . "'";
             $em->query($query);
             $tpvs = $em->fetchResult();
             $em->desConecta();

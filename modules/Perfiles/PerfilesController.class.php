@@ -8,13 +8,29 @@
 
  * Extiende a la clase controller
  */
-
 class PerfilesController extends Controller {
 
     protected $entity = "Perfiles";
     protected $parentEntity = "";
 
-    public function listadoAction() {
+    public function indexAction() {
+        return $this->listAction();
+    }
+    
+    /**
+     * Si el usuario no es super no se muestra el super en el listado
+     * 
+     * @param string $aditionalFilter
+     * @return type array
+     */
+    public function listAction($aditionalFilter = '') {
+
+        if ($_SESSION['usuarioPortal']['IdPerfil'] != 1)
+            $aditionalFilter = "IDPerfil <> '1'";
+        return parent::listAction($aditionalFilter);
+    }
+
+    public function listadoAction($aditionalFilter = '') {
 
         $pdf = new PDF("P", 'mm', "A4");
         $pdf->SetTopMargin(15);
@@ -22,9 +38,10 @@ class PerfilesController extends Controller {
         $pdf->AliasNbPages();
         $pdf->SetFillColor(210);
 
-        $em = new EntityManager("empresas");
+        $per = new Permisos();
+        $em = new EntityManager($per->getConectionName());
         $query = "select t1.IDPerfil,t1.Permisos,t4.Perfil,t2.Titulo as Opcion,t3.Titulo as SubOpcion
-                from permisos as t1,menu as t2, submenu as t3, perfiles as t4
+                from ErpPermisos as t1,menu as t2, submenu as t3, perfiles as t4
                 where t1.IDOpcion=t2.IDOpcion
                 and t1.IDOpcion=t3.IDOpcion
                 and t3.Id=t1.IDSubOpcion
@@ -33,7 +50,8 @@ class PerfilesController extends Controller {
         $em->query($query);
         $rows = $em->fetchResult();
         $em->desConecta();
-
+        unset($per);
+        
         $perant = "";
         $opcant = "";
         foreach ($rows as $row) {
@@ -106,7 +124,7 @@ class PDF extends FPDF {
         $this->SetXY(10, -10);
         $this->Cell(5, 4, date('d/m/Y H:i:s'));
         $this->Cell(105, 4, "Pag. " . $this->PageNo() . '/{nb}', 0, 0, "R");
-        $this->Cell(80, 4, $_SESSION['USER']['user']['Nombre'], 0, 0, "R");
+        $this->Cell(80, 4, $_SESSION['usuarioPortal']['Nombre'], 0, 0, "R");
     }
 
 }

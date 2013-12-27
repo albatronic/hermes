@@ -31,28 +31,22 @@ class ControlAcceso {
      * @var integer
      */
     private $idPerfil;
+
     /**
      * El nombre del Controller
      * @var string
      */
     private $controller;
+
     /**
      * Array asociativo con los tipos de permisos.
-     * Inicializo los valores a 0 negándolos
      * @var array
      */
-    private $permisos = array(
-        'C' => '0', //Consulta
-        'I' => '0', //Inserción
-        'B' => '0', //Borrado
-        'A' => '0', //Actualización
-        'L' => '0', //Listado
-        'E' => '0', //Exportar a excel, xml, etc.
-    );
+    private $permisos = array();
 
-    public function __construct($controller='', $idPerfil='') {
+    public function __construct($controller = '', $idPerfil = '') {
         if ($idPerfil == '') {
-            $this->idPerfil = $_SESSION['USER']['user']['IDPerfil'];
+            $this->idPerfil = $_SESSION['usuarioPortal']['IdPerfil'];
         } else {
             $this->idPerfil = $idPerfil;
         }
@@ -64,25 +58,53 @@ class ControlAcceso {
         if ($this->controller)
             $this->load();
         else
-            $this->setPermisos(1);
+            $this->setPermisos(TRUE);
     }
 
     private function load() {
-        $em = new EntityManager('empresas');
-        $query = "select t1.Permisos from permisos as t1, submenu as t2 where (t2.Script='" . $this->controller . "') and (t1.IDPerfil='" . $this->idPerfil . "') and (t1.IDSubopcion=t2.Id);";
-        $em->query($query);
-        $rows = $em->fetchResult();
-        $em->desConecta();
 
-        $row = $rows[0];
-        $this->permisos = array(
-            'C' => substr($row['Permisos'], 0, 1),
-            'I' => substr($row['Permisos'], 1, 1),
-            'B' => substr($row['Permisos'], 2, 1),
-            'A' => substr($row['Permisos'], 3, 1),
-            'L' => substr($row['Permisos'], 4, 1),
-            'E' => substr($row['Permisos'], 5, 1),
-        );
+        // PERMISOS DEL PROYECTO
+        $permiso = new Permisos();
+        $filtro = "IdPerfil='{$this->idPerfil}' AND NombreModulo='VARWEBPRO'";
+        $rows = $permiso->cargaCondicion("Funcionalidades", $filtro);
+        $aux = explode(",", $rows[0]['Funcionalidades']);
+        foreach ($aux as $value)
+            $this->permisos['permisosProyecto'][$value] = TRUE;
+
+        $filtro = "IdPerfil='{$this->idPerfil}' AND NombreModulo='{$this->controller}'";
+        $rows = $permiso->cargaCondicion("Funcionalidades", $filtro);
+        unset($permiso);
+
+        if ($rows[0]['Funcionalidades'] != '') {
+
+            $modulos = new Modulos();
+            $modulo = $modulos->find('NombreModulo', $this->controller);
+            unset($modulos);
+            $this->permisos['enCurso'] = array(
+                'app' => $modulo->getCodigoApp(),
+                'modulo' => $modulo->getNombreModulo(),
+            );
+            unset($modulo);
+
+            // Permisos del módulo
+            $aux = explode(',', $rows[0]['Funcionalidades']);
+            foreach ($aux as $value)
+                $this->permisos['permisosModulo'][$value] = TRUE;
+
+            // SI NO TIENE PERMISOS DE ACCESO AL MODULO, DESHABILITO TODOS LOS
+            // PERMISOS DEL MODULO
+            if (!isset($this->permisos['permisosModulo']['AC']))
+                unset($this->permisos['permisosModulo']);
+
+            // Permisos de la app
+            $permiso = new Permisos();
+            $rows = $permiso->cargaCondicion("Funcionalidades", "IdPerfil='{$this->idPerfil}' AND NombreModulo='{$this->permisos['enCurso']['app']}'");
+            unset($permiso);
+            $aux = explode(',', $rows[0]['Funcionalidades']);
+            foreach ($aux as $value)
+                $this->permisos['permisosApp'][$value] = TRUE;
+
+        }
     }
 
     /**
@@ -94,16 +116,28 @@ class ControlAcceso {
     }
 
     /**
-     * Cambia todos los permisos a verdadero o falso
+     * Cambia TODOS los permisos a verdadero o falso
+     *
      * @param boolean $onOff
      */
     public function setPermisos($onOff) {
-        $this->permisos['C'] = $onOff;
-        $this->permisos['I'] = $onOff;
-        $this->permisos['B'] = $onOff;
-        $this->permisos['A'] = $onOff;
-        $this->permisos['L'] = $onOff;
-        $this->permisos['E'] = $onOff;
+
+        $tiposFuncionalidad = new Funcionalidades();
+        $rows = $tiposFuncionalidad->cargaCondicion("Codigo");
+        unset($tiposFuncionalidad);
+
+        foreach ($rows as $row)
+            $this->setPermiso($row['Codigo'], $onOff);
+    }
+
+    /**
+     * Cambia el permiso $permiso al valor $onOff
+     *
+     * @param string $permiso
+     * @param boolean $onOff
+     */
+    public function setPermiso($permiso, $onOff) {
+        $this->permisos['permisosModulo'][$permiso] = $onOff;
     }
 
 }

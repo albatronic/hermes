@@ -8,15 +8,14 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="Agentes" type="hidden" />
         <input name="action" value="new" type="hidden" />
-        <input name="Agentes[IDAgente]" value="{{ values.datos.IDAgente }}" type="hidden" />
         {% include '_global/comandosCreate.html.twig' %}
 
         <div class="Cuerpo">
         {% include '_global/FormErrores.html.twig' with {'errores': values.errores} %}
-	{% include "Agentes/form.html.twig" with {'datos': values.datos} %}
+	{% include "Agentes/formNew.html.twig" with {'datos': values.datos} %}
         </div>
     </form>
 </div>

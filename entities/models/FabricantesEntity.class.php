@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(fabricantes)
  */
-class FabricantesEntity extends Entity {
+class FabricantesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -20,43 +20,68 @@ class FabricantesEntity extends Entity {
      * @assert:NotBlank(groups="fabricantes")
      */
     protected $IDFabricante;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="fabricantes")
      */
-    protected $Fabricante = '';
+    protected $Titulo = '';
+
+    /**
+     * @var string
+     */
+    protected $Descripcion1;
+
+    /**
+     * @var string
+     */
+    protected $Descripcion2;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Telefono;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Web;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Email;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="fabricantes")
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="ErpFamilias")
      */
-    protected $Icono;
+    protected $MostrarPortada = '0';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="ErpFamilias")
+     */
+    protected $OrdenPortada = '0';    
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'fabricantes';
+    protected $_tableName = 'ErpFabricantes';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDFabricante';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -76,12 +101,28 @@ class FabricantesEntity extends Entity {
         return $this->IDFabricante;
     }
 
-    public function setFabricante($Fabricante) {
-        $this->Fabricante = trim($Fabricante);
+    public function setTitulo($Titulo) {
+        $this->Titulo = trim($Titulo);
     }
 
-    public function getFabricante() {
-        return $this->Fabricante;
+    public function getTitulo() {
+        return $this->Titulo;
+    }
+
+    public function setDescripcion1($Descripcion1) {
+        $this->Descripcion1 = trim($Descripcion1);
+    }
+
+    public function getDescripcion1() {
+        return $this->Descripcion1;
+    }
+
+    public function setDescripcion2($Descripcion2) {
+        $this->Descripcion2 = trim($Descripcion2);
+    }
+
+    public function getDescripcion2() {
+        return $this->Descripcion2;
     }
 
     public function setTelefono($Telefono) {
@@ -108,14 +149,23 @@ class FabricantesEntity extends Entity {
         return $this->Email;
     }
 
-    public function setIcono($Icono) {
-        $this->Icono = $Icono;
+    public function setMostrarPortada($MostrarPortada) {
+        $this->MostrarPortada = $MostrarPortada;
     }
 
-    public function getIcono() {
-        return $this->Icono;
+    public function getMostrarPortada() {
+        if (!($this->MostrarPortada instanceof ValoresSN))
+            $this->MostrarPortada = new ValoresSN($this->MostrarPortada);
+        return $this->MostrarPortada;
     }
 
+    public function setOrdenPortada($OrdenPortada) {
+        $this->OrdenPortada = $OrdenPortada;
+    }
+
+    public function getOrdenPortada() {
+        return $this->OrdenPortada;
+    }
 }
 
 // END class fabricantes

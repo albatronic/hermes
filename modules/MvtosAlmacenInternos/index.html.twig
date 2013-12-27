@@ -10,15 +10,15 @@
 
     {% block mantenimiento %}
     <div class="FormManto">
-    <form name="manto" action="" enctype="multipart/form-data" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" enctype="multipart/form-data" method="POST">
         <input name="controller" value="MvtosAlmacenInternos" type="hidden" />
         <input name="action" id="action" value="new" type="hidden" />
 
         <div class="Cuerpo">
-	{% include '_global/FormErrores.html.twig' with {'errores': values.errores} %}
+        {% include "_global/alertas.html.twig" with {'alertas': values.alertas,'errores': values.errores} %}
 
         <div style="float: left; width: 49%;">
-            {{ macro.select('Almacén','Etiqueta','MvtosAlmacen[IDAlmacen]','MvtosAlmacen_IDAlmacen',none,values.datos.IDAlmacen,values.almacenes,'Select',none,none,"ResetCampos();")}}
+            {{ macro.select('Almacén','Etiqueta','MvtosAlmacen[IDAlmacen]','MvtosAlmacen_IDAlmacen',200,values.datos.IDAlmacen,values.almacenes,'Select',none,none,"ResetCampos();")}}
             <div class="Item" id="div_MvtosAlmacen_IDArticulo">
                 <div class="Etiqueta">Artículo</div>
                 <input name="MvtosAlmacen[IDArticulo]" value="{{values.datos.IDArticulo}}" id="MvtosAlmacen_IDArticulo" type="hidden" />

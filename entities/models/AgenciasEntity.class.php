@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(agencias)
  */
-class AgenciasEntity extends Entity {
+class AgenciasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -57,13 +57,13 @@ class AgenciasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'agencias';
+    protected $_tableName = 'ErpAgencias';
 
     /**
      * Nombre de la primaryKey

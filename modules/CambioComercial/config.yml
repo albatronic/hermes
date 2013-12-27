@@ -14,7 +14,7 @@ CambioComercial:
   title: Cambio de Comercial
   id_video: cambiocomercial
   url_video: null
-  conection: 'datos<?php echo $_SESSION['emp'];?>'
+  conection: 
   entity: CambioComercial
   table:
   primarykey:

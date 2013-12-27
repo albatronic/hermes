@@ -53,23 +53,28 @@ class CambioComercialController extends Controller {
 
     public function indexAction() {
 
-        $agentes = new Agentes();
-        $zonas = new Zonas();
+        if ($this->values['permisos']['permisosModulo']['UP']) {
+            $agentes = new Agentes();
+            $zonas = new Zonas();
 
-        $this->values['comerciales'] = $agentes->getComerciales($_SESSION['emp'], $_SESSION['suc']);
-        $this->values['zonas'] = $zonas->fetchAll($_SESSION['suc']);
+            $this->values['comerciales'] = $agentes->getComerciales('', $_SESSION['suc'], false);
+            $this->values['zonas'] = $zonas->fetchAll($_SESSION['suc']);
 
-        unset($agentes);
-        unset($zonas);
+            unset($agentes);
+            unset($zonas);
 
-        return array('template' => $this->entity . '/index.html.twig', 'values' => $this->values);
+            $template = $this->entity . '/index.html.twig';
+        } else
+            $template = "_global/forbiden.html.twig";
+
+        return array('template' => $template, 'values' => $this->values);
     }
 
     public function cambiarAction() {
 
         switch ($this->request["METHOD"]) {
             case 'POST':
-                if ($this->values['permisos']['A']) {
+                if ($this->values['permisos']['permisosModulo']['UP']) {
                     if ($this->valida()) {
                         $this->cambiarEnFichaCliente();
                         if ($this->request['Dentrega'] == 'on')
@@ -96,21 +101,14 @@ class CambioComercialController extends Controller {
      */
     private function cambiarEnFichaCliente() {
 
-        $numeroCambios = 0;
-
         $filtro = "IDComercial='{$this->request['ComercialOrigen']}'";
         if ($this->request['Zona'] != '')
             $filtro .= " and IDZona='{$this->request['Zona']}'";
 
-        $em = new EntityManager($this->form->getConection());
-        if ($em->getDbLink()) {
-            $query = "update clientes set IDComercial='{$this->request['ComercialDestino']}' where {$filtro}";
-            $em->query($query);
-            $this->values['errores'] = $em->getError();
-            $numeroCambios = $em->getAffectedRows();
-            $em->desConecta();
-        }
-        unset($em);
+        $cliente = new Clientes();
+        $numeroCambios = $cliente->queryUpdate(array("IDComercial" => $this->request['ComercialDestino']), $filtro);
+        $this->values['errores'] = $cliente->getErrores();
+        unset($cliente);
 
         $this->values['mensaje'][] = "Se han cambiado " . $numeroCambios . " clientes.";
     }
@@ -122,10 +120,10 @@ class CambioComercialController extends Controller {
 
         $numeroCambios = 0;
 
-        $tablas = "clientes_dentrega d";
+        $tablas = "ErpClientesDentrega d";
         $filtro = "d.IDComercial='{$this->request['ComercialOrigen']}'";
         if ($this->request['Zona'] != '') {
-            $tablas .= " , clientes c";
+            $tablas .= " , ErpClientes c";
             $filtro .= " and d.IDCliente = c.IDCliente";
             $filtro .= " and c.IDZona='{$this->request['Zona']}'";
         }
@@ -141,9 +139,8 @@ class CambioComercialController extends Controller {
         unset($em);
 
         $this->values['mensaje'][] = "Se han cambiado " . $numeroCambios . " direcciones de entrega.";
-        
     }
-    
+
     /**
      * Realiza la validación previa antes del cambio.
      * 

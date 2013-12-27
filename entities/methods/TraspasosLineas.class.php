@@ -88,9 +88,11 @@ class TraspasosLineas extends TraspasosLineasEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
+  
         if ($this->IDEstado != 0) {
-            $this->_errores[] = "No se puede borrar la línea. Está en elaboración";
+            $this->_errores[] = "No se puede borrar la línea. Está enviada";
         }
         return (count($this->_errores) == 0);
     }
@@ -179,7 +181,7 @@ class TraspasosLineas extends TraspasosLineasEntity {
                 $recepcion->setIDEntidad($row['IDEntidad']);
                 $recepcion->setIDLineaEntidad($idLineaEntrada);
                 $recepcion->setIDAlmacen($idAlmacenDestino);
-                $recepcion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+                $recepcion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
                 $recepcion->setIDArticulo($row['IDArticulo']);
                 $recepcion->setUnidades($row['Unidades']);
                 $recepcion->setUnidadMedida($row['UnidadMedida']);
@@ -233,7 +235,7 @@ class TraspasosLineas extends TraspasosLineasEntity {
         }
 
         if ($ok) {
-            // Marcar la línea de trapaso como recepcionada y
+            // Marcar la línea de traspaso como recepcionada y
             // Poner las unidades netas recibidas
             // Recalcular la línea
             // Actualiza los precios del artículo

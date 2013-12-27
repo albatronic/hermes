@@ -25,7 +25,7 @@
                     {% set classFila = 'Par' %}
                 {% endif %}
 
-            <form name="linea{{puntero}}" action="" method="POST">
+            <form name="linea{{puntero}}" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="AlmacenesMapas" type="hidden" />
             <input name="action" id="action" value="edit" type="hidden" />
             <input name="AlmacenesMapas[IDAlmacen]" value="{{ values.linkBy.value }}" type="hidden" />

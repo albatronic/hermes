@@ -27,29 +27,12 @@ listados:
         formula: null
         format: null
       - 
-        title: IsoNum
-        field: IsoNum
+        title: Codigo
+        field: Codigo
         length: 6
         align: R
         type: integer
         total: NO
         formula: null
         format: null
-      - 
-        title: Iso2
-        field: Iso2
-        length: 4
-        align: R
-        type: null
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: Iso3
-        field: Iso3
-        length: 4
-        align: R
-        type: null
-        total: NO
-        formula: null
-        format: null
+

@@ -13,13 +13,17 @@ class PedidosCabController extends Controller {
     protected $entity = "PedidosCab";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return $this->listAction();
+    }
+
     /**
      * Marca el pedido como confirmado (estado 1)
      * Pone sus líneas como confirmadas (estado 1)
      * @return array Template y values
      */
     public function confirmarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new $this->entity($this->request[$this->entity]['IDPedido']);
             if ($datos->getIDEstado()->getIDTipo() == '0') {
@@ -44,7 +48,7 @@ class PedidosCabController extends Controller {
      * @return array Template y values
      */
     public function anularAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new $this->entity($this->request[$this->entity]['IDPedido']);
             if ($datos->getIDEstado()->getIDTipo() == '1') {
@@ -68,7 +72,8 @@ class PedidosCabController extends Controller {
      * @return array Template y values
      */
     public function facturarAction() {
-        if ($this->values['permisos']['A']) {
+        
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new PedidosCab($this->request['PedidosCab']['IDPedido']);
 
@@ -77,7 +82,11 @@ class PedidosCabController extends Controller {
                 $contador = new Contadores();
                 $contador = $contador->dameContador($idSucursal, 4);
                 $datos = new PedidosCab($this->request['PedidosCab']['IDPedido']);
-                $datos->facturar($contador, $this->request['Factura_FechaFactura'], $this->request['Factura_SuFactura']);
+                $datos->facturar(
+                        $contador, 
+                        $this->request['PedidosCab']['FechaFactura'], 
+                        $this->request['PedidosCab']['SuFactura'], 
+                        $this->request['PedidosCab']['FormaPagoFactura']);
                 $this->values['errores'] = $datos->getErrores();
                 $this->values['alertas'] = $datos->getAlertas();
                 $datos = new PedidosCab($this->request['PedidosCab']['IDPedido']);
@@ -99,7 +108,7 @@ class PedidosCabController extends Controller {
      * @return array Template y values
      */
     public function duplicarAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             $datos = new PedidosCab($this->request['PedidosCab']['IDPedido']);
             $idPedidoNuevo = $datos->duplica();
@@ -126,49 +135,60 @@ class PedidosCabController extends Controller {
                 $para = $this->request['Para'];
                 $de = $this->request['De'];
                 $deNombre = $this->request['DeNombre'];
+                $conCopia = $this->request['Cc'];
+                $conCopiaOculta = $this->request['Cco'];                
                 $asunto = $this->request['Asunto'];
                 $mensaje = $this->request['Mensaje'];
                 $adjuntos = array($this->request['Adjunto'],);
 
                 $envio = new Mail();
-                $this->values['resultadoEnvio'] = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
+                $ok = $envio->send($para, $de, $deNombre, $conCopia, $conCopiaOculta, $asunto, $mensaje, $adjuntos);
+                if ($ok) {
+                    $entidad = new $this->entity($this->request['PedidosCab']['IDPedido']);
+                    $entidad->auditaEmail();
+                    unset($entidad);
+                    $this->values['resultadoEnvio'][] = "Envío con éxito";
+                } else {
+                    $this->values['resultadoEnvio'] = $envio->getMensaje();
+                }
                 unset($envio);
                 break;
 
             case 'CambioFormato':
                 $datos = new PedidosCab($this->request['PedidosCab']['IDPedido']);
-                $formatos = DocumentoPdf::getFormatos('pedidos');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('pedidos', array('0' => $datos->getIDPedido()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDPedido()), $formato);
                 $this->values['email'] = array(
                     'Para' => $this->request['Para'],
                     'De' => $this->request['De'],
                     'DeNombre' => $this->request['DeNombre'],
                     'Cc' => $this->request['Cc'],
+                    'Cco' => $this->request['Cco'],                    
                     'Asunto' => $this->request['Asunto'],
                     'Formatos' => $formatos,
                     'Formato' => $formato,
                     'Mensaje' => $this->request['Mensaje'],
-                    'idAlbaran' => $datos->getIDPedido(),
+                    'idPedido' => $datos->getIDPedido(),
                 );
                 break;
 
             case '':
                 $datos = new $this->entity($this->request[$this->entity]['IDPedido']);
-                $formatos = DocumentoPdf::getFormatos('pedidos');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('pedidos', array('0' => $datos->getIDPedido()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDPedido()), $formato);
                 $this->values['email'] = array(
                     'Para' => $datos->getIDProveedor()->getEMail(),
-                    'De' => $datos->getIDAgente()->getEMail(),
+                    'De' => $_SESSION['usuarioPortal']['email'],//$datos->getIDAgente()->getIDAgente()->getEMail(),
                     'DeNombre' => $datos->getIDAgente()->getNombre(),
-                    'Cc' => '',
+                    'Cco' => $_SESSION['usuarioPortal']['email'],
                     'Asunto' => 'Pedido n. ' . $datos->getIDPedido(),
                     'Formatos' => $formatos,
                     'Formato' => $formato,

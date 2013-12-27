@@ -8,25 +8,51 @@
 
  * Extiende a la clase controller
  */
-
-include "modules/Subfamilias/SubfamiliasController.class.php";
-
 class FamiliasController extends Controller {
 
     protected $entity = "Familias";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return parent::newAction();
+    }
+
     /**
-     * Genera el listado apoyandose en el metodo de SbufamiliasController
-     * @param string $aditionalFilter
-     * @return array Tempalete y valores
-     */
-    public function listadoAction($aditionalFilter = '') {
-        $listadoController = new SubfamiliasController($this->request);
-        return $listadoController->listadoAction();
+     * Importa familias desde fichero externo csv según
+     * el formato de facturaplus
+     */    
+    public function ImportarAction() {
+
+        $fileName = "docs/docs{$_SESSION['emp']}/tmp/familias.csv";
+        $archivo = new Archivo($fileName);
+        $archivo->setColumnsDelimiter(";");
+        //$archivo->setColumnsEnclosure('"');
+
+        if ($archivo->open("r")) {
+            set_time_limit(0);
+            while (($linea = $archivo->readLine()) !== FALSE) {
+                $fp = new Familias();
+                $fp->setFamilia(utf8_encode($linea[1]));
+                $fp->setObservations($linea[0]);
+                $fp->setInventario(1);
+                $id = $fp->create();
+                if (!$id) {
+                    $nErrores += 1;
+                    print_r($fp->getErrores());
+                } else {
+                    $nAciertos += 1;
+                }
+                unset($fp);
+            }
+            $archivo->close();
+        }
+        else
+            $this->values['errores'][] = "El fichero de importación " . $fileName . " no existe";
+
+        echo "Aciertos: {$nAciertos}, Errores: {$nErrores}";
+        unset($archivo);
     }
 
 }
-
 
 ?>

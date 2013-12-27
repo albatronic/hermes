@@ -8,7 +8,7 @@
 listados:
   - 
     title: Recibos X Proveedores
-    order_by: recibos_proveedores.IDProveedor,Vencimiento ASC
+    order_by: ErpRecibosProveedores.IDProveedor,Vencimiento ASC
     break_field: IDProveedor
     idPerfil: null
     orientation: P
@@ -183,7 +183,7 @@ listados:
         format: null
   - 
     title: Recibos X Estado
-    order_by: recibos_proveedores.IDEstado,Vencimiento ASC
+    order_by: ErpRecibosProveedores.IDEstado,Vencimiento ASC
     break_field: IDEstado
     idPerfil: null
     orientation: P

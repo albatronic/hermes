@@ -22,7 +22,7 @@
         <tbody class="Cuerpo">
         {% for key,objeto in values.listado.data %}
         {% set puntero = key %}
-        <form name="linea{{puntero}}" action="" method="POST">
+        <form name="linea{{puntero}}" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="PedidosLineas" type="hidden" />
             <input name="action" id="action" value="edit" type="hidden" />
             <input name="PedidosLineas[IDPedido]" value="{{ values.linkBy.value }}" type="hidden" />
@@ -35,6 +35,9 @@
                     <input name="PedidosLineas[IDArticulo]" value="{{objeto.IDArticulo.IDArticulo}}" id="PedidosLineas_IDArticulo{{puntero}}" type="hidden" />
                     <input value="{{objeto.IDArticulo.Codigo}}" id="Codigo{{puntero}}" type="text" maxlength="25" style="width:100px;"
                            onkeyup="autoCompletar('Codigo{{puntero}}','PedidosLineas_IDArticulo{{puntero}}','PedidosLineas_Descripcion{{puntero}}','articulos','','');"/>
+                    {% if objeto.IDArticulo.IDArticulo %}
+                        {{ macro.fichaProducto(app.path,objeto.IDArticulo.IDArticulo) }}
+                    {% endif %}                     
                     {% if objeto.IDArticulo.IDArticulo %}
                         {{ macro.historicoCompras(app.path,objeto.IDArticulo.IDArticulo,objeto.IDPedido.IDProveedor.IDProveedor) }}
                     {% endif %}
@@ -53,7 +56,7 @@
                     <input type="image" src="{{app.path}}/images/botonsave.png" onclick="getElementById('accion{{puntero}}').value='G';" alt="Guardar" title="Guardar Linea" />
                     <input type="image" src="{{app.path}}/images/papelera.gif" onclick="if (!confirm('Desea eliminar la línea?')) {return false;} else {getElementById('accion{{puntero}}').value='B';}" alt="Borrar" title="Borrar Linea" />
                     {% else %}
-                    <input type="image" src="{{app.path}}/images/nuevo.png" onclick="getElementById('action').value='new';" alt="Nuevo" title="Crear Linea" />
+                    <input id="botonNuevaLinea" type="image" src="{{app.path}}/images/nuevo.png" alt="Nuevo" title="Crear Linea" />
                     {% endif %}
                 </td>
             </tr>
@@ -64,4 +67,15 @@
 </div>
 
 {{ macro.foco('Codigo0') }}
+<script>
+    
+    $(function(){
+        $('#botonNuevaLinea').blur(function(){$(this).click()});
+        $('#botonNuevaLinea').click(function(){
+            $('#action').val('new');
+        });
+    });
+        
+    pintaTotales('PedidosCab','{{values.linkBy.value}}');
+</script>
 {% endblock %}

@@ -18,6 +18,7 @@ class EstadosRecibos extends Tipos {
         array('Id' => '4', 'Value' => 'Endosado'),
         array('Id' => '5', 'Value' => 'Impagado'),
         array('Id' => '6', 'Value' => 'Cobrado'),
+        array('Id' => '7', 'Value' => 'Dudoso cobro'),        
     );
 }
 ?>

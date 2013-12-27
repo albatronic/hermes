@@ -7,110 +7,110 @@
  */
 
 /**
- * @orm:Entity(traspasos_cab)
+ * @orm:Entity(TraspasosCab)
  */
-class TraspasosCabEntity extends Entity {
+class TraspasosCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $IDTraspaso;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\Sucursales
      */
     protected $IDSucursal;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\Contadores
      */
     protected $IDContador;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $NumeroTraspaso;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $FechaOrden = '';
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $FechaSalida = '0000-00-00';
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $FechaEntrada = '0000-00-00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\Almacenes
      */
     protected $IDAlmacenOrigen = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\Almacenes
      */
     protected $IDAlmacenDestino = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\Agencias
      */
     protected $IDAgencia = '0';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $GastosTransporte = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $GastosVarios = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $TotalGastos = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $TotalCosto = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $Peso = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $Volumen = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $Bultos = '0.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      */
     protected $Expedicion = '';
     /**
      * @orm:Column(type="tinyint")
-     * @assert:NotBlank(groups="traspasos_cab")
+     * @assert:NotBlank(groups="TraspasosCab")
      * @var entities\EstadosTraspasos
      */
     protected $IDEstado = '0';
@@ -130,12 +130,12 @@ class TraspasosCabEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'traspasos_cab';
+    protected $_tableName = 'ErpTraspasosCab';
     /**
      * Nombre de la PrimaryKey
      * @var string
@@ -367,5 +367,5 @@ class TraspasosCabEntity extends Entity {
 
 }
 
-// END class traspasos_cab
+// END class TraspasosCab
 ?>

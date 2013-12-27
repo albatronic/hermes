@@ -1,53 +1,172 @@
 <?php
 
 /**
- * Description of Agentes
- *
- * @author Sergio Pérez <sergio.perez@albatronic.com>
- * @copyright Informática ALBATRONIC, SL
- * @since 04-nov-2011
- *
+ * @author Sergio Perez <sergio.perez@albatronic.com>
+ * @copyright INFORMATICA ALBATRONIC SL
+ * @date 24.08.2012 17:27:15
+ */
+
+/**
+ * @orm:Entity(core_usuarios)
  */
 class Agentes extends AgentesEntity {
 
     public function __toString() {
-        if ($this->Nombre)
-            return $this->getNombre();
-        else
-            return "";
+        return $this->getNombreApellidos();
+    }
+
+    public function getNombreApellidos() {
+
+        $usuario = new PcaeUsuarios($this->IDAgente);
+        $nombreApellidos = $usuario->getNombre() . " " . $usuario->getApellidos();
+        unset($usuario);
+
+        return $nombreApellidos;
+    }
+
+    public function getNombre() {
+        return $this->getNombreApellidos();
+    }
+
+    public function getEMail() {
+        return $this->getIDAgente()->getEmail();
+    }
+
+    public function fetchAll($column = '', $default = true) {
+
+        $usuariosPcae = new PcaeUsuarios();
+
+        $filtro = "(a.IDAgente = u.Id)";
+        if ($_SESSION['usuarioPortal']['Id'] !== 1)
+            $filtro .= " AND (a.IDAgente<>'1')";
+
+        $em = new EntityManager($this->getConectionName());
+        $link = $em->getDbLink();
+        if (is_resource($link)) {
+            $query = "select a.IDAgente as Id, concat(u.Nombre,' ',u.Apellidos) as Value
+                             from 
+                                {$this->getDataBaseName()}.{$this->getTableName()} as a,
+                                {$usuariosPcae->getDataBaseName()}.{$usuariosPcae->getTableName()} as u
+                            where {$filtro}";
+            $em->query($query);
+            $rows = $em->fetchResult();
+            $em->desConecta();
+
+            if ($default)
+                $rows[] = array('Id' => '', 'Value' => '** Todos **');
+        }
+        unset($em);
+
+        return $rows;
+    }
+
+    /**
+     * Devuelve un array de dos dimensiones con las aplicaciones
+     * y módulos a los que tiene acceso el ususario en base a su perfil
+     *
+     * @return array $menu El el array con el menu
+     */
+    public function xxx_getArrayMenu() {
+
+        $menu = array();
+
+        $em = new EntityManager($this->getConectionName());
+        if ($em->getDbLink()) {
+            $query = "
+                select m.CodigoApp ,p.NombreModulo, p.Funcionalidades, m.Publish
+                from {$this->getDataBaseName()}.ErpPermisos as p, {$this->getDataBaseName()}.ErpModulos as m
+                where  m.NombreModulo = p.NombreModulo and
+                p.IdPerfil = '{$this->getIDPerfil()->getIDPerfil()}' AND
+                LOCATE('AC',p.Funcionalidades)
+                order by m.Id ASC ,m.SortOrder ASC";
+            $em->query($query);
+            $rows = $em->fetchResult();
+            $em->desConecta();
+        } else
+            echo "NO HAY CONEXION CON LA BASE DE DATOS";
+        unset($em);
+
+        $appAnterior = '';
+        foreach ($rows as $row) {
+
+            if ($row['CodigoApp'] != $appAnterior) {
+
+                $aplicacion = new Aplicaciones();
+                $aplicacion = $aplicacion->find("CodigoApp", $row['CodigoApp']);
+
+                $menu[$row['CodigoApp']] = array(
+                    'titulo' => $aplicacion->getNombreApp(),
+                    'descripcion' => $aplicacion->getDescripcion(),
+                    'funcionalidades' => $row['Funcionalidades'],
+                    'publicar' => $row['Publish'],
+                );
+                unset($aplicacion);
+            } else {
+
+                $modulo = new Modulos();
+                $modulo = $modulo->find('NombreModulo', $row['NombreModulo']);
+
+                $menu[$row['CodigoApp']]['modulos'][$row['NombreModulo']] = array(
+                    'titulo' => $modulo->getTitulo(),
+                    'descripcion' => $modulo->getDescripcion(),
+                    'funcinalidades' => $row['Funcionalidades'],
+                    'controller' => $row['NombreModulo'],
+                    'publicar' => $row['Publish'],
+                );
+                unset($modulo);
+            }
+
+            $appAnterior = $row['CodigoApp'];
+        }
+        return $menu;
+    }
+
+    public function getOpciones($de, $nivel) {
+
+        $rows = array();
+
+        $em = new EntityManager($this->getConectionName());
+        if ($em->getDbLink()) {
+            $query = "
+                select m.Id,m.CodigoApp,m.Titulo ,p.NombreModulo, p.Funcionalidades, m.Publish
+                from {$this->getDataBaseName()}.ErpPermisos as p, {$this->getDataBaseName()}.ErpModulos as m
+                where  m.NombreModulo = p.NombreModulo and m.BelongsTo='{$de}' and m.Nivel='{$nivel}' and
+                p.IdPerfil = '{$this->getIDPerfil()->getIDPerfil()}' AND
+                LOCATE('AC',p.Funcionalidades)
+                order by m.Id ASC ,m.SortOrder ASC";
+            $em->query($query);
+            $rows = $em->fetchResult();
+            $em->desConecta();
+        } else
+            echo "NO HAY CONEXION CON LA BASE DE DATOS";
+        unset($em);
+
+        return $rows;
+    }
+
+    public function getArrayMenu() {
+
+        $menu = $this->getOpciones(0, 0);
+        foreach ($menu as $keyOpcion=>$opcion) {
+            $menu[$keyOpcion]['hijos'] = $this->getOpciones($opcion['Id'], 1);
+            foreach ($menu[$keyOpcion]['hijos'] as $keySubOpcion=>$subOpciones) {
+                $menu[$keyOpcion]['hijos'][$keySubOpcion]['hijos'] = $this->getOpciones($subOpciones['Id'], 2);
+            }
+        }
+
+        return $menu;
     }
 
     public function validaLogico() {
 
-        if ($this->IDEmpresa == '')
-            $this->IDEmpresa = NULL;
+        parent::validaLogico();
+
         if ($this->IDSucursal == '')
             $this->IDSucursal = NULL;
         if ($this->IDAlmacen == '')
             $this->IDAlmacen = NULL;
 
-        $this->Password = md5($this->Password);
-        $this->Quien = md5($this->Password . "Pablo");
-    }
-
-    /**
-     * Devuelve un array con todas las empresas
-     * a las que tiene acceso el usuario
-     * @return array
-     */
-    public function getEmpresas() {
-
-        if ($this->IDEmpresa < 1) { //Puede acceder a todas
-            $empresa = $this->getIDEmpresa();
-            $empresas = $empresa->fetchAll('RazonSocial');
-        } else { //Puede acceder solo a una
-            $empresa = $this->getIDEmpresa();
-            $empresas[] = array(
-                'Id' => $empresa->getIDEmpresa(),
-                'Value' => $empresa->getRazonSocial(),
-            );
-        }
-        return $empresas;
+        //$this->Password = md5($this->Password);
     }
 
     /**
@@ -64,23 +183,17 @@ class Agentes extends AgentesEntity {
      * @param boolean $opcionTodas
      * @return array
      */
-    public function getSucursales($idEmpresa='', $opcionTodas=TRUE) {
+    public function getSucursales($idEmpresa = '', $opcionTodas = TRUE) {
 
         if ($idEmpresa == '')
             $idEmpresa = $_SESSION['emp'];
 
         if ($this->IDSucursal < 1) { //Puede acceder a todas
-            $em = new EntityManager("empresas");
-            $link = $em->getDbLink();
-
-            if (is_resource($link)) {
-                $query = "select IDSucursal as Id, Nombre as Value from sucursales where IDEmpresa='" . $idEmpresa . "'";
-                $em->query($query);
-                $sucursales = $em->fetchResult();
-                $em->desConecta();
-                if ($opcionTodas)
-                    $sucursales[] = array('Id' => '', 'Value' => '** Todas **');
-            }
+            $sucursal = new Sucursales();
+            $sucursales = $sucursal->cargaCondicion("IDSucursal as Id, Nombre as Value");
+            if ($opcionTodas)
+                $sucursales[] = array('Id' => '', 'Value' => '** Todas **');
+            unset($sucursal);
         } else { //Puede acceder solo a una
             $sucursal = $this->getIDSucursal();
             $sucursales[] = array(
@@ -99,14 +212,17 @@ class Agentes extends AgentesEntity {
      * @param integer $idEmpresa EL id de Empresa
      * @return array
      */
-    public function getAlmacenes($idEmpresa='') {
+    public function getAlmacenes($idEmpresa = '', $columna = 'Nombre', $defecto = true) {
 
-        if ($idEmpresa == '')
-            $idEmpresa = $_SESSION['emp'];
+        //if ($idEmpresa == '')
+        //    $idEmpresa = $_SESSION['emp'];
+
+        if ($columna == '')
+            $columna = "Nombre";
 
         if ($this->IDAlmacen < 1) { //Puede acceder a todos
             $almacen = new Almacenes();
-            $almacenes = $almacen->fetchAll($idEmpresa, 'Nombre');
+            $almacenes = $almacen->fetchAll($idEmpresa, $columna, $defecto);
         } else { //Puede acceder solo a una
             $almacen = new Almacenes($this->IDAlmacen);
             $almacenes[] = array(
@@ -128,29 +244,35 @@ class Agentes extends AgentesEntity {
      * @param integer $idSucursal Opcional
      * @return array
      */
-    public function getComerciales($idEmpresa='', $idSucursal='') {
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+    public function getComerciales($idEmpresa = '', $idSucursal = '', $defecto = true) {
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
-        switch ($usuario->getRol()->getIDTipo()) {
+        switch ($usuario->getIDRol()->getIDTipo()) {
             case '1': // ROL COMERCIAL
                 $comerciales[] = array('Id' => $usuario->getIDAgente(), 'Value' => $usuario->getNombre());
                 break;
 
             default: // RESTO DE ROLES
-                if ($idEmpresa == '')
-                    $idEmpresa = $_SESSION['emp'];
+                //if ($idEmpresa == '')
+                //    $idEmpresa = $_SESSION['emp'];
                 if ($idSucursal == '')
                     $idSucursal = $_SESSION['suc'];
 
-                $em = new EntityManager("empresas");
+                $usuariosPcae = new PcaeUsuarios();
+
+                $em = new EntityManager($this->getConectionName());
                 $link = $em->getDbLink();
                 if (is_resource($link)) {
-                    $query = "select IDAgente as Id, Nombre as Value from agentes where " .
-                            "(Rol='1') AND " .
-                            "(Activo='1') AND ( " .
-                            "(IDEmpresa='" . $idEmpresa . "' and IDSucursal='" . $idSucursal . "') OR " .
-                            "isnull(IDEmpresa) OR " .
-                            "(IDEmpresa='" . $idEmpresa . "' AND isnull(IDSucursal)) ) ORDER BY Nombre";
+                    $query = "select a.IDAgente as Id, concat(u.Nombre,u.Apellidos) as Value
+                             from 
+                                {$this->getDataBaseName()}.{$this->getTableName()} as a,
+                                {$usuariosPcae->getDataBaseName()}.{$usuariosPcae->getTableName()} as u
+                            where
+                            (a.IDAgente <> 1) AND
+                            (a.IDAgente = u.Id) AND
+                            (a.IDRol='1') AND
+                            (a.Activo='1') AND (
+                            (a.IDSucursal='{$idSucursal}') OR (a.IDSucursal='0'))";
                     $em->query($query);
                     $comerciales = $em->fetchResult();
                     $em->desConecta();
@@ -173,29 +295,35 @@ class Agentes extends AgentesEntity {
      * @param integer $idSucursal Opcional
      * @return array
      */
-    public function getRepartidores($idEmpresa='', $idSucursal='') {
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+    public function getRepartidores($idEmpresa = '', $idSucursal = '') {
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
-        switch ($usuario->getRol()->getIDTipo()) {
+        switch ($usuario->getIDRol()->getIDTipo()) {
             case '2': // ROLL REPARTIDOR
                 $repartidores[] = array('Id' => $usuario->getIDAgente(), 'Value' => $usuario->getNombre());
                 break;
 
             default: // RESTO DE ROLES
-                if ($idEmpresa == '')
-                    $idEmpresa = $_SESSION['emp'];
+                //if ($idEmpresa == '')
+                //    $idEmpresa = $_SESSION['emp'];
                 if ($idSucursal == '')
                     $idSucursal = $_SESSION['suc'];
 
-                $em = new EntityManager("empresas");
+                $usuariosPcae = new PcaeUsuarios();
+
+                $em = new EntityManager($this->getConectionName());
                 $link = $em->getDbLink();
                 if (is_resource($link)) {
-                    $query = "select IDAgente as Id, Nombre as Value from agentes where " .
-                            "(Rol='2') AND " .
-                            "(Activo='1') AND ( " .
-                            "(IDEmpresa='" . $idEmpresa . "' and IDSucursal='" . $idSucursal . "') OR " .
-                            "isnull(IDEmpresa) OR " .
-                            "(IDEmpresa='" . $idEmpresa . "' AND isnull(IDSucursal)) ) ORDER BY Nombre";
+                    $query = "select a.IDAgente as Id, concat(u.Nombre,u.Apellidos) as Value
+                             from 
+                                {$this->getDataBaseName()}.{$this->getTableName()} as a,
+                                {$usuariosPcae->getDataBaseName()}.{$usuariosPcae->getTableName()} as u
+                            where
+                            (a.IDAgente <> 1) AND                            
+                            (a.IDAgente = u.Id) AND
+                            (a.IDRol='2') AND
+                            (a.Activo='1') AND (
+                            (a.IDSucursal='{$idSucursal}') OR (a.IDSucursal='0'))";
                     $em->query($query);
                     $repartidores = $em->fetchResult();
                     $em->desConecta();
@@ -218,29 +346,28 @@ class Agentes extends AgentesEntity {
      * @param integer $idSucursal Opcional
      * @return array
      */
-    public function getCamaristas($idEmpresa='', $idSucursal='') {
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+    public function getCamaristas($idEmpresa = '', $idSucursal = '') {
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
-        switch ($usuario->getRol()->getIDTipo()) {
+        switch ($usuario->getIDRol()->getIDTipo()) {
             case '3': // ROLL CAMARISTA
                 $camaristas[] = array('Id' => $usuario->getIDAgente(), 'Value' => $usuario->getNombre());
                 break;
 
             default: // RESTO DE ROLES
-                if ($idEmpresa == '')
-                    $idEmpresa = $_SESSION['emp'];
+                //if ($idEmpresa == '')
+                //    $idEmpresa = $_SESSION['emp'];
                 if ($idSucursal == '')
                     $idSucursal = $_SESSION['suc'];
 
-                $em = new EntityManager("empresas");
+                $em = new EntityManager($this->getConectionName());
                 $link = $em->getDbLink();
                 if (is_resource($link)) {
-                    $query = "select IDAgente as Id, Nombre as Value from agentes where " .
+                    $query = "select IDAgente as Id, Nombre as Value from {$this->getTableName()} where " .
+                            "(a.IDAgente <> 1) AND " .
                             "(Rol='3') AND " .
                             "(Activo='1') AND ( " .
-                            "(IDEmpresa='" . $idEmpresa . "' and IDSucursal='" . $idSucursal . "') OR " .
-                            "isnull(IDEmpresa) OR " .
-                            "(IDEmpresa='" . $idEmpresa . "' AND isnull(IDSucursal)) ) ORDER BY Nombre";
+                            "(IDSucursal='{$idSucursal}') OR isnull(IDSucursal))";
                     $em->query($query);
                     $camaristas = $em->fetchResult();
                     $em->desConecta();
@@ -262,27 +389,15 @@ class Agentes extends AgentesEntity {
     }
 
     public function getEsComercial() {
-        return ($this->Rol == '1');
+        return ($this->getIDRol()->getIDTipo() == '1');
     }
 
     public function getEsRepartidor() {
-        return ($this->Rol == '2');
+        return ($this->getIDRol()->getIDTipo() == '2');
     }
 
     public function getEsAlmacenero() {
-        return ($this->Rol == '3');
-    }
-
-    /**
-     * Devuelve un array con las direcciones ips
-     * permitidas para el usuario
-     *
-     * @return array Array con las ips
-     */
-    public function getArrayIps() {
-        $array = array();
-        $array = explode(",", $this->Ips);
-        return $array;
+        return ($this->getIDRol()->getIDTipo() == '3');
     }
 
 }

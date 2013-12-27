@@ -8,7 +8,7 @@
  * @since 17.08.2011 22:57:35
  */
 
-class MvtosAlmacenEntity extends Entity {
+class MvtosAlmacenEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -106,12 +106,12 @@ class MvtosAlmacenEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'mvtos_almacen';
+    protected $_tableName = 'ErpMvtosAlmacen';
     /**
      * Nombre de la primaryKey
      * @var string

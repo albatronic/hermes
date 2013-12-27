@@ -34,16 +34,41 @@ class EnlaceContaController extends Controller {
     protected $errores = array();
 
     public function __construct($request) {
+        // Cargar lo que viene en el request
+        $this->request = $request;
 
-        $empresa = new Empresas($_SESSION['emp']);
+        // Cargar la configuracion del modulo (modules/moduloName/config.yaml)
+        $this->form = new Form($this->entity);
+
+        // Cargar los permisos.
+        // Si la entidad no está sujeta a control de permisos, se habilitan todos
+        if ($this->form->getPermissionControl()) {
+            if ($this->parentEntity == '')
+                $this->permisos = new ControlAcceso($this->entity);
+            else
+                $this->permisos = new ControlAcceso($this->parentEntity);
+        } else
+            $this->permisos = new ControlAcceso();
+
+        $this->values['titulo'] = $this->form->getTitle();
+        $this->values['ayuda'] = $this->form->getHelpFile();
+        $this->values['permisos'] = $this->permisos->getPermisos();
+        $this->values['request'] = $this->request;
+
+        // Cargas las variables
+        $this->cargaVariables();
+        
+        // Registrar en el archivo log
+        if ($this->varEnvPro[log])
+            Log::write($this->request);
+        
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $this->DIGCC = $empresa->getDigitosCuentaContable();
         unset($empresa);
 
         $this->idTraspaso = date('Ymd_His');
         $this->fileDiario = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/docs/docs{$_SESSION['emp']}/interfaces/contaplus/{$this->idTraspaso}_diario.txt";
         $this->fileSubcuentas = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/docs/docs{$_SESSION['emp']}/interfaces/contaplus/{$this->idTraspaso}_subcuentas.txt";
-
-        parent::__construct($request);
     }
 
     public function indexAction() {
@@ -55,7 +80,7 @@ class EnlaceContaController extends Controller {
         $this->values['traspasos'] = $traspasos;
         $this->values['estadosRecibos'] = new EstadosRecibos();
 
-        return parent::indexAction();
+        return array('template' => $this->entity . "/index.html.twig", 'values' => $this->values);
     }
 
     /**
@@ -104,10 +129,6 @@ class EnlaceContaController extends Controller {
             // Registrar el traspaso en el log de traspasos
             $this->RegistroLog();
 
-            $this->values['files'] = array(
-                'diario' => "docs/docs{$_SESSION['emp']}/interfaces/contaplus/" . basename($this->fileDiario),
-                'subctas' => "docs/docs{$_SESSION['emp']}/interfaces/contaplus/" . basename($this->fileSubcuentas),
-            );
         } else
             $this->values['errores'] = $this->errores;
 
@@ -226,13 +247,16 @@ class EnlaceContaController extends Controller {
 
         $filtro .= " Vencimiento>='{$this->desdeFecha}' and Vencimiento<='{$this->hastaFecha}'";
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $recibos = new RecibosClientes();
+        $tabla = $recibos->getDataBaseName().".".$recibos->getTableName();
+        
+        $em = new EntityManager($recibos->getConectionName());
         if ($em->getDbLink()) {
             $query = "
-            SELECT IDCliente, Vencimiento, IDRemesa, CContable as CuentaPago, sum(Importe) as Importe , count(IDRecibo) as NRecibos
-            FROM recibos_clientes
+            SELECT IDCliente, Vencimiento, IDRemesa, CContable as CuentaPago, sum(Importe) as Importe , count(IDRecibo) as NRecibos, IDEstado
+            FROM {$tabla}
             WHERE {$filtro}
-            GROUP BY IDRemesa, CuentaPago
+            GROUP BY IDCliente, IDRemesa, CuentaPago
             ORDER BY Vencimiento ASC, IDRemesa ASC;";
             $em->query($query);
             $recibos = $em->fetchResult();
@@ -252,7 +276,7 @@ class EnlaceContaController extends Controller {
                 $asiento[] = $this->ApunteCobro($this->nAsiento, $fecha, $recibo, $cliente);
 
                 // Apunte(s) de detalle cobros
-                $apuntes = $this->ApunteDetalleCobro($recibo);
+                $apuntes = $this->ApunteDetalleCobro($this->nAsiento, $fecha, $recibo);
                 foreach ($apuntes as $apunte)
                     $asiento[] = $apunte;
 
@@ -266,6 +290,7 @@ class EnlaceContaController extends Controller {
             }
         }
         unset($em);
+        unset($recibos);
     }
 
     /**
@@ -291,15 +316,34 @@ class EnlaceContaController extends Controller {
         return $apunte;
     }
 
-    private function ApunteDetalleCobro(array $cabecera) {
+    private function ApunteDetalleCobro($nAsiento, $fecha, array $cabecera) {
+
+        $filtro = "IDCliente='{$cabecera['IDCliente']}' and Vencimiento='{$cabecera['Vencimiento']}' and IDRemesa='{$cabecera['IDRemesa']}' and IDEstado='{$cabecera['IDEstado']}'";
 
         $recibo = new RecibosClientes();
-        $recibos = $recibo->cargaCondicion("*", "IDCliente='{$cabecera['IDCliente']}' and Vencimiento='{$cabecera['Vencimiento']}' and IDRemesa='{$cabecera['IDRemesa]']}'");
+        $recibos = $recibo->cargaCondicion("*", $filtro);
         unset($recibo);
 
+        $cliente = new Clientes($cabecera['IDCliente']);
+
         foreach ($recibos as $recibo) {
-            
+
+            $recibo = new RecibosClientes($recibo['IDRecibo']);
+
+            $apunte = new ContaPlusDiario($nAsiento, $fecha);
+
+            $apunte->setSubCta($cliente->getCContable());
+            $apunte->setContra($recibo->getCContable());
+            $apunte->setConcepto("Cob Ftra Cliente " . $cliente->getRazonSocial());
+            $apunte->setDocumento($recibo->getIDFactura()->getNumeroFactura());
+            $apunte->setEuroHaber($recibo->getImporte());
+            $apuntes[] = $apunte;
         }
+
+        unset($apunte);
+        unset($recibo);
+
+        return $apuntes;
     }
 
     /**
@@ -317,10 +361,10 @@ class EnlaceContaController extends Controller {
         $subCta->setTitulo($cliente->getRazonSocial());
         $subCta->setNif($cliente->getCif());
         $subCta->setDomicilio($cliente->getDireccion());
-        $subCta->setPoblacion($cliente->getPoblacion());
+        $subCta->setPoblacion($cliente->getIDPoblacion());
         $subCta->setProvincia($cliente->getIDProvincia()->getProvincia());
         $subCta->setCodPostal($cliente->getCodigoPostal());
-        $subCta->setCodPais($cliente->getIDPais()->getIso2());
+        $subCta->setCodPais($cliente->getIDPais()->getCodigo());
 
         return $subCta;
     }
@@ -340,10 +384,10 @@ class EnlaceContaController extends Controller {
         $subCta->setTitulo($proveedor->getRazonSocial());
         $subCta->setNif($proveedor->getCif());
         $subCta->setDomicilio($proveedor->getDireccion());
-        $subCta->setPoblacion($proveedor->getPoblacion());
+        $subCta->setPoblacion($proveedor->getIDPoblacion());
         $subCta->setProvincia($proveedor->getIDProvincia()->getProvincia());
         $subCta->setCodPostal($proveedor->getCodigoPostal());
-        $subCta->setCodPais($proveedor->getIDPais()->getIso2());
+        $subCta->setCodPais($proveedor->getIDPais()->getCodigo());
 
         return $subCta;
     }
@@ -508,7 +552,7 @@ class EnlaceContaController extends Controller {
 
         $apunte->setSubCta($factura['CuentaCompras']);
         $apunte->setContra($proveedor->getCContable());
-        $apunte->setConcepto("Su Factura " . $factura['SuFactura']);
+        $apunte->setConcepto("COMPRA DE MERCADERIAS");
         $apunte->setDocumento($factura['SuFactura']);
         $apunte->setEuroDebe($factura['TotalBases']);
 
@@ -531,7 +575,7 @@ class EnlaceContaController extends Controller {
 
         $apunte->setSubCta($proveedor->getCContable());
         $apunte->setContra($factura['CuentaCompras']);
-        $apunte->setConcepto("Su Factura " . $factura['SuFactura']);
+        $apunte->setConcepto("COMPRA DE MERCADERIAS");
         $apunte->setDocumento($factura['SuFactura']);
         $apunte->setEuroHaber($factura['Total']);
 
@@ -563,12 +607,12 @@ class EnlaceContaController extends Controller {
                     $sufijo = $this->SufijoIva($factura['Iva' . $j]);
                 }
 
-                $subcuenta = str_pad('477', $this->DIGCC - 4, '0') . $sufijo;
+                $subcuenta = str_pad('472', $this->DIGCC - 4, '0') . $sufijo;
 
                 $apunte = new ContaPlusDiario($nAsiento, $fecha);
                 $apunte->setSubCta($subcuenta);
                 $apunte->setContra($proveedor->getCContable());
-                $apunte->setConcepto("Su Factura " . $factura['SuFactura']);
+                $apunte->setConcepto("COMPRA DE MERCADERIAS");
                 $apunte->setFactura($factura['SuFactura']);
                 $apunte->setIVA($factura['Iva' . $j]);
                 $apunte->setDocumento($factura['SuFactura']);
@@ -671,7 +715,7 @@ class EnlaceContaController extends Controller {
         $log->setIDTraspaso($this->idTraspaso);
         $log->setDia(date('d-m-Y'));
         $log->setHora(date('H:i:s'));
-        $log->setIDUsuario($_SESSION['USER']['user']['id']);
+        $log->setIDUsuario($_SESSION['usuarioPortal']['Id']);
         $log->setIDSucursal($this->request['IDSucursal']);
         $log->setDesdeFecha($this->request['DesdeFecha']);
         $log->setHastaFecha($this->request['HastaFecha']);

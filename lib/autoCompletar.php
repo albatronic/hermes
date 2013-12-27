@@ -39,26 +39,11 @@ include_once "../" . $app['framework'] . "Autoloader.class.php";
 Autoloader::setCacheFilePath(APP_PATH . 'tmp/class_path_cache.txt');
 Autoloader::excludeFolderNamesMatchingRegex('/^CVS|\..*$/');
 Autoloader::setClassPaths(array(
-            '../' . $app['framework'],
-            '../entities/',
-            '../lib/',
-        ));
+    '../' . $app['framework'],
+    '../entities/',
+    '../lib/',
+));
 spl_autoload_register(array('Autoloader', 'loadClass'));
-
-/**
- * Calse auxiliar para cargar el array que se devolverrá
- */
-class Elemento {
-
-    var $id;
-    var $value;
-
-    function __construct($id, $value) {
-        $this->id = $id;
-        $this->value = $value;
-    }
-
-}
 
 switch ($_GET['entidad']) {
 
@@ -79,7 +64,12 @@ switch ($_GET['entidad']) {
     // BUSCA ARTICULOS POR %CODIGO%, %DESCRIPCION% Y %CODIGOEAN%
     case 'articulos':
         $articulo = new Articulos();
-        $filtro = "(Vigente='1') and ((Codigo LIKE '%{$_GET['term']}%') or (Descripcion LIKE '%{$_GET['term']}%') or (CodigoEAN LIKE '%{$_GET['term']}%'))";
+        
+        if ($_GET['idSucursal'] == 'simples')
+            // Muestra solo los artículos simples (no compuestos)
+            $filtro = "(AllowsChildren='0') and ";
+        
+        $filtro .= "(Vigente='1') and ((Codigo LIKE '%{$_GET['term']}%') or (Descripcion LIKE '%{$_GET['term']}%') or (CodigoEAN LIKE '%{$_GET['term']}%'))";
         $rows = $articulo->cargaCondicion("IDArticulo as Id, Descripcion as Value", $filtro, "Descripcion");
         unset($articulo);
         break;
@@ -101,12 +91,12 @@ switch ($_GET['entidad']) {
     // BUSCA LAS UBICACIONES DE UN LOTE EN UN ALMACEN
     // EN $_GET['idSucursal'] VIENE SEPARADOS POR @ EL ID DEL ALMACEN Y EL ID DEL LOTE RESPECTIVAMENTE.
     case 'ubicacionesLote':
-        $valores = explode("@",$_GET['idSucursal']);
+        $valores = explode("@", $_GET['idSucursal']);
         $idAlmacen = $valores[0];
-        $idLote= $valores[1];
+        $idLote = $valores[1];
 
         $lote = new Lotes($idLote);
-        $rows = $lote->getUbicaciones($idAlmacen,"%{$_GET['term']}%");
+        $rows = $lote->getUbicaciones($idAlmacen, "%{$_GET['term']}%");
         unset($lote);
         break;
 
@@ -116,13 +106,13 @@ switch ($_GET['entidad']) {
     // EN $_GET['idSucursal'] VIENE SEPARADOS POR @ EL ID DEL ALMACEN Y EL ID DEL ARTICULO RESPECTIVAMENTE.
     case 'ubicacionesAlmacenArticulo':
 
-        $valores = explode("@",$_GET['idSucursal']);
+        $valores = explode("@", $_GET['idSucursal']);
         $idAlmacen = $valores[0];
-        $idArticulo= $valores[1];
+        $idArticulo = $valores[1];
 
         // Busca las ubicaciones con existencias
         $articulo = new Articulos($idArticulo);
-        $rows = $articulo->getUbicaciones($idAlmacen,"%{$_GET['term']}%");
+        $rows = $articulo->getUbicaciones($idAlmacen, "%{$_GET['term']}%");
         unset($articulo);
         break;
 
@@ -143,17 +133,100 @@ switch ($_GET['entidad']) {
         $idArticulo = $_GET['idSucursal'];
 
         $lotes = new Lotes();
-        $rows = $lotes->fetchAll($idArticulo,'Lote',"%{$_GET['term']}%");
+        $rows = $lotes->fetchAll($idArticulo, 'Lote', "%{$_GET['term']}%");
         unset($lotes);
         break;
 
+    // BUSCA PAISES POR %Pais%
+    case 'paises':
+        $pais = new Paises();
+        $rows = $pais->cargaCondicion("IDPais as Id, Pais as Value", "Pais LIKE '%{$_GET['term']}%'", "Pais");
+        unset($pais);
+        break;
+
+    // BUSCA PROVINCIAS POR %Provincia%
+    case 'provincias':
+        $filtro = "Provincia LIKE '%{$_GET['term']}%'";
+        if ($_GET['filtroAdicional'])
+            $filtro .= " and IDPais='{$_GET['filtroAdicional']}'";
+
+        $provincia = new Provincias();
+        $rows = $provincia->cargaCondicion("IDProvincia as Id, Provincia as Value", $filtro, "Provincia");
+        unset($provincia);
+        break;
+
+    // BUSCA MUNICIPIOS POR %Municipio%
+    case 'municipios':
+        $filtro = "Municipio LIKE '%{$_GET['term']}%'";
+        if ($_GET['filtroAdicional'])
+            $filtro .= " and IDProvincia='{$_GET['filtroAdicional']}'";
+        $municipio = new Municipios();
+        $rows = $municipio->cargaCondicion("IDMunicipio as Id, Municipio as Value", $filtro, "Municipio");
+        unset($municipio);
+        break;
+
+    // BUSCA MONEDAS POR %Moneda%
+    case 'monedas':
+        $filtro = "Moneda LIKE '%{$_GET['term']}%'";
+        $moneda = new CommMonedas();
+        $rows = $moneda->cargaCondicion("Id as Id, Moneda as Value", $filtro, "Moneda");
+        unset($moneda);
+        break;
+
+    // BUSCA ZONAS HORARIAS POR %zonaHoraria%
+    case 'zonasHorarias':
+        $filtro = "Zona LIKE '%{$_GET['term']}%'";
+        $zona = new CommZonasHorarias();
+        $rows = $zona->cargaCondicion("Id as Id, Zona as Value", $filtro, "Zona");
+        unset($zona);
+        break;
+
+    // BUSCA CNAES POR %actividad% Y %codigo%
+    // Devuelve solo las que su código es de 5 digitos
+    case 'cnae':
+        $filtro = "(Actividad LIKE '%{$_GET['term']}%' or Codigo LIKE '%{$_GET['term']}%') AND LENGTH(Codigo)=5";
+        $cnae = new CommCnae();
+        $rows = $cnae->cargaCondicion("Id as Id, concat(Actividad,' (',Codigo,')') as Value", $filtro, "Actividad");
+        unset($cnae);
+        break;
+
+    // BUSCA OFICINAS BANCARIAS POR %codigo% y %direccion%
+    case 'oficinasBancarias':
+        $filtro = "(Codigo LIKE '%{$_GET['term']}%' OR Direccion LIKE '%{$_GET['term']}%')";
+        if ($_GET['filtroAdicional'])
+            $filtro .= " and IdBanco='{$_GET['filtroAdicional']}'";
+        $oficina = new CommBancosOficinas();
+        $rows = $oficina->cargaCondicion("Id as Id, CONCAT(Codigo,'-',Direccion) as Value", $filtro, "Codigo,Direccion");
+        unset($oficina);
+        break;
+        
+    case 'categorias':
+        $familia = new Familias();
+        $filtro = "(NivelJerarquico='1') and Familia like '%{$_GET['term']}%'";
+        $rows = $familia->cargaCondicion("IDFamilia as Id, Familia as Value", $filtro, "Familia ASC");
+        unset($familia);
+        break;
+    
+    case 'familias':
+        $familia = new Familias();
+        $filtro = "(NivelJerarquico='2') and BelongsTo='{$_GET['filtroAdicional']}' and Familia like '%{$_GET['term']}%'";
+        $rows = $familia->cargaCondicion("IDFamilia as Id, Familia as Value", $filtro, "Familia ASC");
+        unset($familia);      
+        break;
+
+    case 'subfamilias':
+        $familia = new Familias();
+        $filtro = "(NivelJerarquico='3') and BelongsTo='{$_GET['filtroAdicional']}' and Familia like '%{$_GET['term']}%'";
+        $rows = $familia->cargaCondicion("IDFamilia as Id, Familia as Value", $filtro, "Familia ASC");
+        unset($familia);
+        break;    
 }
 
 // Creo el array de obetos que se va a devolver
 // El compo value se codifica en utf8 porque se supone que van caracteres
 $arrayElementos = array();
 foreach ($rows as $value) {
-    array_push($arrayElementos, new Elemento($value["Id"], utf8_encode($value["Value"])));
+    array_push($arrayElementos, array('id'=>$value["Id"], 'value'=>$value["Value"]));
 }
 
 // El array creado se devuelve en formato JSON, requerido asi

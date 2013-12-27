@@ -22,7 +22,7 @@
             <input name="filter[valuesSelected][1]" id="IDUbicacion" value="{{values.listado.filter.valuesSelected[1].IDUbicacion}}" type="hidden" />
             <input value="{{values.listado.filter.valuesSelected[1].Ubicacion}}" id="Ubicacion" type="text" style="width:100px;"
                 onkeyup="autoCompletar('Ubicacion','IDUbicacion', 'Ubicacion', 'ubicacionesAlmacen', $('#IDAlmacen').val(),'');"
-                onblur="if ($('#Ubicacion').val() == '') {$('#IDUbicacion').val('');}"
+                onblur="if ($('#Ubicacion').val() === '') {$('#IDUbicacion').val('');}"
             />
             </div>
 
@@ -32,7 +32,7 @@
             <input name="filter[valuesSelected][2]" id="IDArticulo" value="{{values.listado.filter.valuesSelected[2].IDArticulo}}" type="hidden" />
             <input value="{{values.listado.filter.valuesSelected[2].Descripcion}}" id="DescripcionArticulo" type="text" style="width:300px;"
                 onkeyup="autoCompletar('DescripcionArticulo','IDArticulo', 'DescripcionArticulo', 'articulos', '','');"
-                onblur="$('#IDLote').val(''); $('#DescripcionLote').val(''); if ($('#DescripcionArticulo').val() == '') {$('#IDArticulo').val('');}"
+                onblur="$('#IDLote').val(''); $('#DescripcionLote').val(''); if ($('#DescripcionArticulo').val() === '') {$('#IDArticulo').val('');}"
             />
             </div>
 
@@ -42,7 +42,7 @@
             <input name="filter[valuesSelected][3]" id="IDLote" value="{{values.listado.filter.valuesSelected[3].IDLote}}" type="hidden" />
             <input value="{{values.listado.filter.valuesSelected[3].Lote}}" id="DescripcionLote" type="text" style="width:100px;"
                 onkeyup="autoCompletar('DescripcionLote','IDLote', 'DescripcionLote', 'lotesArticulo', $('#IDArticulo').val(),'');"
-                onblur="if ($('#DescripcionLote').val() == '') {$('#IDLote').val('');}"
+                onblur="if ($('#DescripcionLote').val() === '') {$('#IDLote').val('');}"
             />
             </div>
         </div>
@@ -77,6 +77,15 @@
                 {% endfor %}
             </select>
             </div>
+                
+            <div id="div_UnidadMedida" style="float:left; margin-left: 5px;">
+            Mostrar Unidad Medida:
+            <select name="filter[flags][unidadMedida]" id="UnidadMedida">
+                {% for key,value in {'UMA':'Almacén','UMC':'Compra','UMV':'Venta'} %}
+                    <option value="{{key}}" {% if key == values.listado.filter.flags.unidadMedida %} SELECTED {% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+            </div>
         </div>
 
     <div style="float:right;">
@@ -97,4 +106,4 @@
 
     </form>
 </div>
-    <div style="clear:both;"></div>
+<div style="clear:both;"></div>

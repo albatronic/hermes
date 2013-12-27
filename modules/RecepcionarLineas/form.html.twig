@@ -26,7 +26,7 @@
         <tbody class="Cuerpo">
         {% set linAnt = 0%}
         {% for key,objeto in values.listado.data %}
-        <form name="linea{{key}}" action="" method="POST">
+        <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
             <input name="controller" value="RecepcionarLineas" type="hidden" />
             <input name="action" value="edit" type="hidden" />
             <input name="accion" id="accion{{key}}" value="" type="hidden" />
@@ -113,7 +113,7 @@
 
 {% if values.anadirProducto %}
 <div class="FormManto" style="margin-top: 10px;">
-    <form name="ProductoNuevo" action="" method="POST">
+    <form name="ProductoNuevo" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="RecepcionarLineas" type="hidden" />
         <input name="action" value="new" type="hidden" />
         <input name="idEntidad" value="{{values.idEntidad}}" type="hidden" />
@@ -132,7 +132,7 @@
 {% endif %}
 
 <div class="FormManto" style="margin-top: 10px; text-align: center;">
-    <form name="Recepcionar" action="" method="POST">
+    <form name="Recepcionar" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="RecepcionarLineas" type="hidden" />
         <input name="entidad" value="{{values.entidad}}" type="hidden" />
         <input name="idEntidad" value="{{values.idEntidad}}" type="hidden" />

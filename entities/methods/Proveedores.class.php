@@ -11,7 +11,17 @@
 class Proveedores extends ProveedoresEntity {
 
     public function __toString() {
-        return $this->getRazonSocial();
+        if ($this->RazonSocial)
+            return $this->getRazonSocial();
+        else
+            return "";
+    }
+
+    public function validaLogico() {
+        parent::validaLogico();
+
+        if ($this->NombreComercial == '')
+            $this->NombreComercial = $this->RazonSocial;
     }
 
     /*
@@ -21,7 +31,7 @@ class Proveedores extends ProveedoresEntity {
      */
 
     public function getCtaCorriente() {
-        return $this->IDBanco . $this->IDOficina . $this->Digito . $this->Cuenta;
+        return $this->Banco . $this->Oficina . $this->Digito . $this->Cuenta;
     }
 
     /**
@@ -36,22 +46,12 @@ class Proveedores extends ProveedoresEntity {
      * @return Array $ptePago Array con lo pendiente de pago
      */
     public function getPtePago() {
-        $ptePago = array();
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select count(IDRecibo) as Recibos, sum(Importe) as Importe from {$this->_dataBaseName}.recibos_proveedores where IDProveedor='{$this->IDProveedor}' and IDEstado<>'6'";
-            if ($this->_em->query($query)) {
-                $rows = $this->_em->fetchResult();
-                $ptePago = $rows[0];
-            } else {
-                $this->_errores[] = $this->_em->getError();
-            }
-            $this->_em->desConecta();
-        } else {
-            $this->_errores[] = $this->_em->getError();
-        }
-
+        $recibos = new RecibosProveedores();
+        $rows = $recibos->cargaCondicion("count(IDRecibo) as Recibos, sum(Importe) as Importe","IDProveedor='{$this->IDProveedor}' and IDEstado<>'6'");
+        unset($recibos);
+        $ptePago = $rows[0];
+        
         return $ptePago;
     }
 
@@ -108,26 +108,29 @@ class Proveedores extends ProveedoresEntity {
 
         $rows = array();
 
-        if (is_resource($this->_dbLink)) {
-            if ($idSucursal == '')
-                $filtroSucursal = "(1)"; else
-                $filtroSucursal = "(a.IDSucursal='{$idSucursal}')";
+        $pedidos = new PedidosCab();
+
+        $em = new EntityManager($pedidos->getConectionName());
+        if (is_resource($em->getDbLink())) {
+            $filtroSucursal = ($idSucursal == '') ? "(1)" : "(a.IDSucursal='{$idSucursal}')";
 
             $filtro = $filtroSucursal . " and
-                      (a.FechaEntrega>='{$desdeFecha}') and
-                      (a.FechaEntrega<='{$hastaFecha}') and
+                      (a.Fecha>='{$desdeFecha}') and
+                      (a.Fecha<='{$hastaFecha}') and
                       (a.IDEstado=2) and
                       (c.IDProveedor=a.IDProveedor)";
 
             $query = "SELECT distinct c.IDProveedor as Id, c.RazonSocial as Value, sum(a.Total) as Total
-                        FROM `{$this->_dataBaseName}`.`proveedores` c, `{$this->_dataBaseName}`.`pedidos_cab` a
-                        where ( {$filtro} )
+                        FROM 
+                            `{$this->_dataBaseName}`.`{$this->_tableName}` c, 
+                            `{$pedidos->getDataBaseName()}`.`{$pedidos->getTableName()}` a
+                        WHERE ( {$filtro} )
                         GROUP BY c.IDProveedor
                         ORDER BY c.RazonSocial";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $this->_em->desConecta();
-            unset($this->_em);
+            $em->query($query);
+            $rows = $em->fetchResult();
+            $em->desConecta();
+            unset($em);
         }
         return $rows;
     }

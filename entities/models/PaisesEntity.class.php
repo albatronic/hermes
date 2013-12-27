@@ -3,59 +3,94 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @since 12.06.2011 18:39:47
+ * @date 17.10.2012 14:24:31
  */
 
 /**
- * @orm:Entity(paises)
+ * @orm:Entity(CommPaises)
  */
-class PaisesEntity extends Entity {
+class PaisesEntity extends EntityComunes {
 
     /**
-     * @orm:GeneratedValue
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="paises")
+     * @orm GeneratedValue
+     * @orm ID
+     * @var integer
+     * @assert NotBlank(groups="CommPaises")
      */
     protected $IDPais;
+
     /**
-     * @orm:Column(type="integer")
+     * @var string
+     * @assert NotBlank(groups="CommPaises")
      */
-    protected $IsoNum;
+    protected $Codigo;
+
     /**
-     * @orm:Column(type="")
+     * @var string
+     * @assert NotBlank(groups="CommPaises")
      */
-    protected $Iso2;
+    protected $Pais = '';
+
     /**
-     * @orm:Column(type="")
+     * @var entities\CommMonedas
      */
-    protected $Iso3;
+    protected $IDMoneda = '0';
+
     /**
-     * @orm:Column(type="string")
+     * @var entities\CommZonasHorarias
      */
-    protected $Pais;
+    protected $IDZonaHoraria = '0';
+
     /**
-     * Nombre de la conexion a la DB
+     * @var integer
+     * @assert NotBlank(groups="CommPaises")
+     */
+    protected $Latitud = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="CommPaises")
+     */
+    protected $Longitud = '0';
+
+    /**
+     * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'paises';
+    protected $_tableName = 'ErpPaises';
+
     /**
-     * Nombre de la primaryKey
+     * Nombre de la PrimaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDPais';
+
     /**
      * Relacion de entidades que dependen de esta
-     * @var array
+     * @var string
      */
     protected $_parentEntities = array(
         array('SourceColumn' => 'IDPais', 'ParentEntity' => 'Clientes', 'ParentColumn' => 'IDPais'),
         array('SourceColumn' => 'IDPais', 'ParentEntity' => 'Proveedores', 'ParentColumn' => 'IDPais'),
+    );
+
+    /**
+     * Relacion de entidades de las que esta depende
+     * @var string
+     */
+    protected $_childEntities = array(
+        'Monedas',
+        'ZonasHorarias',
+        'ValoresSN',
+        'ValoresPrivacy',
+        'ValoresDchaIzq',
+        'ValoresChangeFreq',
     );
 
     /**
@@ -69,28 +104,12 @@ class PaisesEntity extends Entity {
         return $this->IDPais;
     }
 
-    public function setIsoNum($IsoNum) {
-        $this->IsoNum = $IsoNum;
+    public function setCodigo($Codigo) {
+        $this->Codigo = trim($Codigo);
     }
 
-    public function getIsoNum() {
-        return $this->IsoNum;
-    }
-
-    public function setIso2($Iso2) {
-        $this->Iso2 = $Iso2;
-    }
-
-    public function getIso2() {
-        return $this->Iso2;
-    }
-
-    public function setIso3($Iso3) {
-        $this->Iso3 = $Iso3;
-    }
-
-    public function getIso3() {
-        return $this->Iso3;
+    public function getCodigo() {
+        return $this->Codigo;
     }
 
     public function setPais($Pais) {
@@ -101,7 +120,43 @@ class PaisesEntity extends Entity {
         return $this->Pais;
     }
 
+    public function setIDMoneda($IDMoneda) {
+        $this->IDMoneda = $IDMoneda;
+    }
+
+    public function getIDMoneda() {
+        if (!($this->IDMoneda instanceof Monedas))
+            $this->IDMoneda = new Monedas($this->IDMoneda);
+        return $this->IDMoneda;
+    }
+
+    public function setIDZonaHoraria($IDZonaHoraria) {
+        $this->IDZonaHoraria = $IDZonaHoraria;
+    }
+
+    public function getIDZonaHoraria() {
+        if (!($this->IDZonaHoraria instanceof ZonasHorarias))
+            $this->IDZonaHoraria = new ZonasHorarias($this->IDZonaHoraria);
+        return $this->IDZonaHoraria;
+    }
+
+    public function setLatitud($Latitud) {
+        $this->Latitud = $Latitud;
+    }
+
+    public function getLatitud() {
+        return $this->Latitud;
+    }
+
+    public function setLongitud($Longitud) {
+        $this->Longitud = $Longitud;
+    }
+
+    public function getLongitud() {
+        return $this->Longitud;
+    }
+
 }
 
-// END class paises
+// END class CommPaises
 ?>

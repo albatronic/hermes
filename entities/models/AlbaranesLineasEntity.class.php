@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(albaranes_lineas)
  */
-class AlbaranesLineasEntity extends Entity {
+class AlbaranesLineasEntity extends EntityComunes {
 
     /**
      * @orm:Column(type="integer")
@@ -193,13 +193,13 @@ class AlbaranesLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'albaranes_lineas';
+    protected $_tableName = 'ErpAlbaranesLineas';
 
     /**
      * Nombre de la PrimaryKey

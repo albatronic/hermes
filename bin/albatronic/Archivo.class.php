@@ -199,12 +199,14 @@ class Archivo {
 
     /**
      * Genera un nombre de archivo aleatorio (md5) para crearlo en la
-     * carpeta docs/docsPPP/pdfs/XX/nombreDeArchivo.pdf
+     * carpeta docs/docsPPP/SUBCARPETA/XX/nombreDeArchivo.pdf
      *
      * Donde:
      *
-     *  * PPP es el nombre del proyecto en curso
+     *  * PPP es el número del proyecto en curso
      *
+     *  * SUBCARPETA es el nombre de la subcarpeta 
+     * 
      *  * XX es el nombre de subcarpeta que se creará si no existe y se
      *    obtiene con los dos primeros caracteres del nombre de archivo
      *
@@ -215,16 +217,18 @@ class Archivo {
      *
      * Uso:
      *
-     *   $fichero = Archivo::getTemporalFileName();
-     *   echo $fichero; -> docs/docs001/pdfs/a0/a0asdasdfasd.pdf
+     *   $fichero = Archivo::getTemporalFileName('XXXXX','EXT');
+     *   echo $fichero; -> docs/docs001/XXXXX/a0/a0asdasdfasd.EXT
      *
+     * @param string $subcarpeta La subcarpeta donde se creará el archivo
+     * @param string $extension La extensión del archivo
      * @return string El nombre de archivo con el path completo
      */
-    static function getTemporalFileName() {
-        $fileName = md5($_SESSION['USER']['user']['iu'] . date('d-m-Y H:i:s'));
+    static function getTemporalFileName($subcarpeta='pdfs',$extension='pdf') {
+        $fileName = md5($_SESSION['usuarioPortal']['iu'] . date('d-m-Y H:i:s'));
         $prefijoCarpeta = substr($fileName, 0, 2);
-        $path = "docs/docs" . $_SESSION['emp'] . "/pdfs/" . $prefijoCarpeta;
-        $archivo = $path . "/" . $fileName . ".pdf";
+        $path = "docs/docs" . $_SESSION['emp'] . "/{$subcarpeta}/" . $prefijoCarpeta;
+        $archivo = "{$path}/{$fileName}.{$extension}";
         if (!is_dir($path))
             $ok = mkdir($path);
         if (!is_dir($path))
@@ -233,6 +237,22 @@ class Archivo {
         return $archivo;
     }
 
+    /**
+     * Devuelve un array con los nombres de los archivos y directorios
+     * que hay dentro del directorio $carpeta
+     * 
+     * @param string $carpeta
+     * @return array
+     */
+    static function getDirectorios($carpeta) {
+
+        $carpetas = scandir($carpeta);
+        // quito lo dos primeros elementos (. , ..)
+        array_shift($carpetas);
+        array_shift($carpetas);
+        return $carpetas;
+    }
+    
     /**
      * Sube un archivo al servidor
      *
@@ -353,13 +373,14 @@ class Archivo {
      * Lee el archivo indicado en el constructor
      * y devuelve su contenido. Si no se pudo abrir, devuelve FALSE
      *
+     * @param $modeOpen Modo de apertura. Por defecto "r"
      * @return string La cadena de texto leida o FALSE
      */
-    public function read() {
+    public function read($modeOpen = "r") {
 
         $cadena = '';
 
-        if ($this->open('r')) {
+        if ($this->open($modeOpen)) {
             $cadena = fread($this->fp, $this->getSize());
             $this->close();
         }
@@ -401,9 +422,9 @@ class Archivo {
     public function readLine() {
         if (!feof($this->fp)) {
             if ($this->columnsEnclosure)
-                return fgetcsv($this->fp, 1000, $this->columnsDelimiter, $this->columnsEnclosure, $this->escape);
+                return fgetcsv($this->fp, 0, $this->columnsDelimiter, $this->columnsEnclosure, $this->escape);
             else
-                return fgetcsv($this->fp, 1000, $this->columnsDelimiter);
+                return fgetcsv($this->fp, 0, $this->columnsDelimiter);
         } else
             return false;
     }

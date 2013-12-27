@@ -26,7 +26,11 @@ class PromocionesController extends Controller {
 
         $this->values['formasPago'] = $formasPago;
     }
-
+    
+    public function IndexAction() {
+        return $this->listAction();
+    }
+    
     /**
      * Genera el listado apoyandose en el metodo de PromocionesClientesController
      * @param string $aditionalFilter
@@ -50,7 +54,7 @@ class PromocionesController extends Controller {
 
         switch ($this->request["METHOD"]) {
             case 'GET':
-                if ($this->values['permisos']['C']) {
+                if ($this->values['permisos']['permisosModulo']['CO']) {
                     //SI EN LA POSICION 3 DEL REQUEST VIENE ALGO,
                     //SE ENTIENDE QUE ES EL VALOR DE LA CLAVE PARA LINKAR CON LA ENTIDAD PADRE
                     //ESTO SE UTILIZA PARA LOS FORMULARIOS PADRE->HIJO
@@ -58,7 +62,8 @@ class PromocionesController extends Controller {
                         $this->values['linkBy']['value'] = $this->request['3'];
 
                     //MOSTRAR DATOS. El ID viene en la posicion 2 del request
-                    $datos = new $this->entity($this->request[2]);
+                    $datos = new $this->entity();
+                    $datos = $datos->find('PrimaryKeyMD5', $this->request[2]);
                     if ($datos->getStatus()) {
                         $lineasAlbaranes = new AlbaranesLineas();
                         $promoAplicada = $lineasAlbaranes->cargaCondicion("IDPromocion", "IDPromocion='{$datos->getIDPromocion()}'");
@@ -83,9 +88,11 @@ class PromocionesController extends Controller {
 
                 switch ($this->request['accion']) {
                     case 'Guardar': //GUARDAR DATOS
-                        if ($this->values['permisos']['A']) {
-                            $datos = new $this->entity();
-                            $datos->bind($this->request[$this->entity]);
+                        if ($this->values['permisos']['permisosModulo']['UP']) {
+                            // Cargo la entidad
+                            $datos = new $this->entity($this->request[$this->entity][$this->form->getPrimaryKey()]);
+                            // Vuelco los datos del request
+                            $datos->bind($this->request[$this->entity]);                            
                             if ($datos->valida($this->form->getRules())) {
                                 $this->values['alertas'] = $datos->getAlertas();
                                 $datos->save();
@@ -106,7 +113,7 @@ class PromocionesController extends Controller {
                         break;
 
                     case 'Borrar': //BORRAR DATOS
-                        if ($this->values['permisos']['B']) {
+                        if ($this->values['permisos']['permisosModulo']['DE']) {
                             $datos = new $this->entity();
                             $datos->bind($this->request[$this->entity]);
 

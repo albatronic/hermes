@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(frecibidas_lineas)
  */
-class FrecibidasLineasEntity extends Entity {
+class FrecibidasLineasEntity extends EntityComunes {
 
     /**
      * @orm:Column(type="integer")
@@ -74,12 +74,12 @@ class FrecibidasLineasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'frecibidas_lineas';
+    protected $_tableName = 'ErpFrecibidasLineas';
     /**
      * Nombre de la primaryKey
      * @var string

@@ -13,6 +13,10 @@ class FrecibidasCabController extends Controller {
     protected $entity = "FrecibidasCab";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return $this->listAction();
+    }
+
     /**
      * Edita, actualiza o borrar un registro
      *
@@ -26,7 +30,7 @@ class FrecibidasCabController extends Controller {
 
         switch ($this->request["METHOD"]) {
             case 'GET':
-                if ($this->values['permisos']['C']) {
+                if ($this->values['permisos']['permisosModulo']['CO']) {
                     //SI EN LA POSICION 3 DEL REQUEST VIENE ALGO,
                     //SE ENTIENDE QUE ES EL VALOR DE LA CLAVE PARA LINKAR CON LA ENTIDAD PADRE
                     //ESTO SE UTILIZA PARA LOS FORMULARIOS PADRE->HIJO
@@ -34,7 +38,8 @@ class FrecibidasCabController extends Controller {
                         $this->values['linkBy']['value'] = $this->request['3'];
 
                     //MOSTRAR DATOS. El ID viene en la posicion 2 del request
-                    $datos = new $this->entity($this->request[2]);
+                    $datos = new $this->entity();
+                    $datos = $datos->find('PrimaryKeyMD5', $this->request[2]);
                     if ($datos->getStatus()) {
                         $this->values['datos'] = $datos;
                         $this->values['errores'] = $datos->getErrores();
@@ -56,7 +61,7 @@ class FrecibidasCabController extends Controller {
 
                 switch ($this->request['accion']) {
                     case 'Guardar': //GUARDAR DATOS
-                        if ($this->values['permisos']['A']) {
+                        if ($this->values['permisos']['permisosModulo']['UP']) {
                             // Cargo la entidad
                             $datos = new $this->entity($this->request[$this->entity][$this->form->getPrimaryKey()]);
                             // Comprar si se han cambiado la forma de pago.
@@ -91,7 +96,7 @@ class FrecibidasCabController extends Controller {
                         break;
 
                     case 'Borrar': //BORRAR DATOS
-                        if ($this->values['permisos']['B']) {
+                        if ($this->values['permisos']['permisosModulo']['DE']) {
                             $datos = new $this->entity($this->request[$this->entity][$this->form->getPrimaryKey()]);
 
                             if ($datos->erase()) {
@@ -130,6 +135,7 @@ class FrecibidasCabController extends Controller {
         $idFactura = $this->request[2];
 
         $datos = new FrecibidasCab($idFactura);
+        $datos = $datos->find("PrimaryKeyMD5", $idFactura);
         $this->values['recibos'] = $datos->getRecibos();
 
         unset($datos);
@@ -147,7 +153,7 @@ class FrecibidasCabController extends Controller {
      */
     public function ImportarAction($fileName = '') {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             if ($fileName == '')
                 $fileName = $this->request[2];
 

@@ -39,7 +39,7 @@ listados:
         format: null
       - 
         title: Población
-        field: Poblacion
+        field: IDPoblacion
         length: 15
         align: L
         type: string

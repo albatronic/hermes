@@ -31,7 +31,7 @@ class Articulos extends ArticulosEntity {
             $filtro = "WHERE (Vigente='1') AND (Trazabilidad='{$trazabilidad}') AND (Inventario='{$inventario}')";
             if ($idFamilia != '')
                 $filtro .= " AND (IDFamilia='{$idFamilia}')";
-            $query = "SELECT IDArticulo as Id,$column as Value FROM articulos $filtro ORDER BY $column ASC;";
+            $query = "SELECT IDArticulo as Id,$column as Value FROM {$this->getDataBaseName()}.{$this->getTableName()} $filtro ORDER BY $column ASC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
@@ -42,15 +42,119 @@ class Articulos extends ArticulosEntity {
     }
 
     /**
-     * Pongo el precio medio de compra igual al precio de costo
-     *
+     * Pongo el precio medio de compra igual al precio de costo y
+     * Aplico las reglas de ordenacion si está vigente
+     * 
      * @return integer El id del ultimo articulo creado
      */
     public function create() {
 
         $this->Pmc = $this->Pvd;
 
-        return parent::create();
+        if (trim($this->CodigoEAN == ''))
+            $this->CodigoEAN = $this->Codigo;
+        if (trim($this->Subtitulo == ''))
+            $this->Subtitulo = $this->Descripcion;
+        if (trim($this->Resumen == ''))
+            $this->Resumen = $this->Descripcion;
+        if (trim($this->Etiqueta == ''))
+            $this->Etiqueta = substr($this->Descripcion, 0, 29);
+
+        $id = parent::create();
+        if (($id) and ($this->Vigente == '1')) {
+            $reglas = new CpanEsqueletoWeb();
+            $reglas->aplicaReglasArticulo($id);
+            unset($reglas);
+        }
+        return $id;
+    }
+
+    /**
+     * Guardo y aplico las reglas de ordenación si está vigente
+     * 
+     * @return boolean
+     */
+    public function save() {
+
+        $reglas = new CpanEsqueletoWeb();
+        // reglas antes de guardar
+        $reglasAntes = $reglas->getReglasArticulo($this->IDArticulo);
+
+        $ok = parent::save();
+        if ($ok) {
+            // Se recalculan las reglas solo en el caso en que haya algún cambio.
+            // Para ello comparo las reglas del artículo antes y despues de guardar.
+            $reglasNuevas = $reglas->getReglasArticulo($this->IDArticulo);
+            $diferenciaReglas1 = array_diff($reglasAntes, $reglasNuevas);
+            $diferenciaReglas2 = array_diff($reglasNuevas, $reglasAntes);
+            
+            if ((count($diferenciaReglas1) + count($diferenciaReglas2)) > 0) {
+
+                // Borro los eventuales ordenes que existieran para el artículo
+                $ordenes = new OrdenesArticulos();
+
+                $ordenes->borraOrdenesArticulo($this->IDArticulo);
+                unset($ordenes);
+                // Aplico las reglas de ordenes 
+                if ($this->Vigente == '1') {
+                    $reglas = new CpanEsqueletoWeb();
+                    $reglas->aplicaReglasArticulo($this->IDArticulo);
+                    unset($reglas);
+                }
+            }
+            
+            // Borro el eventual escandallo
+            if ($this->AllowsChildren == '0') {
+                $escan = new ArticulosEscandallos();
+                $escan->queryDelete("IDArticuloOrigen='{$this->IDArticulo}'");
+                unset($escan);
+            }
+        }
+        return $ok;
+    }
+
+    /**
+     * Marco de borrado el artículo y borro sus eventuales órdenes.
+     * 
+     * Cuando borramos un artículo cambiamos el código para poder reutilizarlo.
+     * De forma que si el código era 043, ahora se llama deleted043,
+     * y entonces podemos volver a dar de alta otro artículo con código 043. 
+     * 
+     * @return boolean
+     */
+    public function delete() {
+
+        $ok = $this->validaBorrado();
+
+        if ($ok) {
+            $id = $this->IDArticulo;
+
+            $this->setCodigo("deleted_{$this->IDArticulo}_{$this->Codigo}");
+            $this->save();
+
+            $ok = parent::delete();
+
+            if ($ok) {
+                // Borro los eventuales ordenes que existieran para el artículo
+                $ordenes = new OrdenesArticulos();
+                $ordenes->borraOrdenesArticulo($id);
+                unset($ordenes);
+
+                // Borro las eventuales propiedades
+                $propiedades = new ArticulosPropiedades();
+                $propiedades->queryDelete("IDArticulo='{$id}'");
+                unset($propiedades);
+
+                // Borro el eventual escandallo
+                if ($this->AllowsChildren == '0') {
+                    $escan = new ArticulosEscandallos();
+                    $escan->queryDelete("IDArticuloOrigen='{$id}'");
+                    unset($escan);
+                }
+            }
+        }
+
+        return $ok;
     }
 
     /**
@@ -58,11 +162,15 @@ class Articulos extends ArticulosEntity {
      * Si las unidades de media son iguales, los factores de conversión los pongo a 1
      * Calculo el precio de venta sobre EL PRECIO MEDIO DE COSTO
      * Si columna 'etiqueta' está vacía, le pongo valor de la descripción del artículo
-     * Crear la Url Amigable
      */
     protected function validaLogico() {
 
-        // Si hay stock no se puede cambiar el estado de inventario ni las unidades de medida
+        parent::validaLogico();
+
+        // Si hay stock no se puede cambiar:
+        // - ni el estado de inventario
+        // - ni las unidades de medida
+        // - ni si es compuesto o no
         $exi = new Existencias();
 
         if ($exi->hayRegistroExistencias($this->IDArticulo)) {
@@ -72,8 +180,9 @@ class Articulos extends ArticulosEntity {
             $this->setUMA($articulo->getUMA()->getId());
             $this->setUMC($articulo->getUMC()->getId());
             $this->setUMV($articulo->getUMV()->getId());
+            $this->setAllowsChildren($articulo->getAllowsChildren()->getIDTipo());
             unset($articulo);
-            $this->_alertas[] = "Hay Stock, no puede cambiar ni el estado de Inventario ni las Unidades de Medida";
+            $this->_alertas[] = "Hay Stock, no puede cambiar ni el estado de Inventario ni las Unidades de Medida, ni si es compuesto";
         } else {
             // Si no es inventariable, pongo los valores relativos
             // al inventario a 0.
@@ -100,12 +209,29 @@ class Articulos extends ArticulosEntity {
         if ($this->Pmc != 0)
             $this->Pvp = $this->Pmc * ( 1 + $this->Margen / 100);
 
-        // Si columna 'etiqueta' está vacía, le pongo valor
-        if ($this->Etiqueta == '')
-            $this->setEtiqueta($this->Descripcion);
+        // Pongo valores por defecto
+        if (trim($this->CodigoEAN == ''))
+            $this->CodigoEAN = $this->Codigo;
+        if (trim($this->Subtitulo == ''))
+            $this->Subtitulo = $this->Descripcion;
+        if (trim($this->Resumen == ''))
+            $this->Resumen = $this->Descripcion;
+        if (trim($this->Etiqueta == ''))
+            $this->Etiqueta = substr($this->Descripcion, 0, 29);
 
-        // Crear la Url Amigable
-        $this->setUrlAmigable($this->validaUrlAmigable($this->UrlAmigable));
+        // Valido que no se dupliquen los estados
+        $valida = array();
+        for ($i = 1; $i <= 5; $i++) {
+            $idEstado = $this->{"IDEstado$i"};
+            if (isset($valida[$idEstado]))
+                $this->{"IDEstado$i"} = 0;
+            else
+                $valida[$idEstado] = '1';
+        }
+
+        // Si no está vigente, entonces tampoco se publica
+        if (!$this->Vigente)
+            $this->Publish = 0;
 
         unset($exi);
     }
@@ -201,7 +327,7 @@ class Articulos extends ArticulosEntity {
      * @param objeto $objetoVenta Un objeto albaran o presupuesto
      * @return array Array con el objeto promocion, el precio y el descuento de la tarifa y de la promocion
      */
-    public function cotizar($objetoVenta,$unidades) {
+    public function cotizar($objetoVenta, $unidades) {
         $precios = array();
 
         // ---------------------------------------------------------------------
@@ -244,19 +370,35 @@ class Articulos extends ArticulosEntity {
 
         $hayPromo = false;
         if (count($promociones)) {
+            // Recorro las promos-clientes a ver si hay alguna especifica para el cliente
             while ((!$hayPromo) and (list(, $promocion) = each($promociones))) {
 
-                // El articulo está en promocion, ver si aplica al cliente o grupo de clientes
+                // El articulo está en promocion, ver si aplica al cliente
                 $promoCliente = new PromocionesClientes();
-                $filtro = "IDPromocion='{$promocion['IDPromocion']}' and ((IDCliente='{$objetoVenta->getIDCliente()->getIDCliente()}') or (IDGrupo='{$objetoVenta->getIDCliente()->getIDGrupo()->getIDGrupo()}'))";
+                $filtro = "IDPromocion='{$promocion['IDPromocion']}' and (IDCliente='{$objetoVenta->getIDCliente()->getIDCliente()}')";
                 $promoClientes = $promoCliente->cargaCondicion("Id,IdPromocion", $filtro);
-                if ($promoClientes[0]['Id']) {
+                if ($promoClientes[0]['Id'] != '') {
                     // La promo aplica
                     $hayPromo = true;
                     $promocion = new Promociones($promoClientes[0]['IdPromocion']);
                 }
             }
-            unset($promoCliente);
+
+            if (!$hayPromo) {
+                // Recorro los promos-clientes a ver si hay alguna para el grupo de clientes
+                reset($promociones);
+                while ((!$hayPromo) and (list(, $promocion) = each($promociones))) {
+                    $promoCliente = new PromocionesClientes();
+                    $filtro = "IDPromocion='{$promocion['IDPromocion']}' and (IDGrupo='{$objetoVenta->getIDCliente()->getIDGrupo()->getIDGrupo()}')";
+                    $promoClientes = $promoCliente->cargaCondicion("Id,IdPromocion", $filtro);
+                    if ($promoClientes[0]['Id'] != '') {
+                        // La promo aplica
+                        $hayPromo = true;
+                        $promocion = new Promociones($promoClientes[0]['IdPromocion']);
+                    }
+                }
+                unset($promoCliente);
+            }
         }
 
         if ($hayPromo) {
@@ -321,7 +463,7 @@ class Articulos extends ArticulosEntity {
         // Leo el parametro 'ACTU_PRECIOS' para ver el comportamiento a seguir
         // en el cambio de precio de venta o margen. Si no estuviera definido,
         // se respeta el PVP a costa del MARGEN
-        $parametro = $_SESSION['USER']['user']['actuPrecios'];
+        $parametro = $_SESSION['usuarioPortal']['actuPrecios'];
         if (($parametro != 'MARGEN') and ($parametro != 'PVP'))
             $parametro = 'MARGEN';
 
@@ -415,15 +557,16 @@ class Articulos extends ArticulosEntity {
         $ubicaciones = array();
 
         $mapa = new AlmacenesMapas();
+        $existencias = new Existencias();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
             //Ubicaciones donde haya existencias.
             //$query = "Call UbicacionesArticulo({$idAlmacen},{$this->IDArticulo});";
             $query = "SELECT DISTINCT e.IDUbicacion AS Id, m.Ubicacion AS Value, e.Reales as Reales
                         FROM
-                            {$this->_dataBaseName}.existencias e,
-                            {$mapa->getDataBaseName()}.almacenes_mapas m
+                            {$existencias->getDataBaseName()}.{$existencias->getTableName()} e,
+                            {$mapa->getDataBaseName()}.{$mapa->getTableName()} m
                         WHERE
                             e.IDUbicacion = m.IDUbicacion AND
                             e.IDAlmacen= '{$idAlmacen}' AND
@@ -439,10 +582,12 @@ class Articulos extends ArticulosEntity {
         if ($todas) {
             $habituales[] = array('Id' => '0', 'Value' => ':: Resto de Ubicaciones ::');
             $ubicaciones = array_merge($habituales, $mapa->fetchAll($idAlmacen, $filtroUbicacion));
-        } else
+        }
+        else
             $ubicaciones = $habituales;
 
         unset($mapa);
+        unset($existencias);
 
         return $ubicaciones;
     }
@@ -467,7 +612,11 @@ class Articulos extends ArticulosEntity {
      * @return array Array de lotes
      */
     public function getLotesDisponibles($idAlmacen, $agrupado = FALSE) {
+
         $lotes = array();
+
+        $tablaExistencias = new Existencias();
+        $tablaLotes = new Lotes();
 
         $this->conecta();
         if (is_resource($this->_dbLink)) {
@@ -475,7 +624,9 @@ class Articulos extends ArticulosEntity {
             //$query = "Call LotesArticulo({$idAlmacen},{$this->IDArticulo});";
             if ($agrupado) {
                 $query = "SELECT e.IDLote AS Id, l.Lote AS Value, sum(e.Reales) as Reales
-                        FROM {$this->_dataBaseName}.existencias e, {$this->_dataBaseName}.lotes l
+                        FROM 
+                            {$tablaExistencias->getDataBaseName()}.{$tablaExistencias->getTableName()} e, 
+                            {$tablaLotes->getDataBaseName()}.{$tablaLotes->getTableName()} l
                         WHERE
                             e.IDArticulo = '{$this->IDArticulo}' AND
                             e.IDAlmacen = '{$idAlmacen}' AND
@@ -485,7 +636,9 @@ class Articulos extends ArticulosEntity {
                         ORDER BY l.FechaCaducidad ASC";
             } else {
                 $query = "SELECT distinct e.IDLote AS Id, l.Lote AS Value, e.Reales as Reales
-                        FROM {$this->_dataBaseName}.existencias e, {$this->_dataBaseName}.lotes l
+                        FROM 
+                            {$tablaExistencias->getDataBaseName()}.{$tablaExistencias->getTableName()} e, 
+                            {$tablaLotes->getDataBaseName()}.{$tablaLotes->getTableName()} l
                         WHERE
                             e.IDArticulo = '{$this->IDArticulo}' AND
                             e.IDAlmacen = '{$idAlmacen}' AND
@@ -498,6 +651,9 @@ class Articulos extends ArticulosEntity {
             $this->_em->desConecta();
             unset($this->_em);
         }
+
+        unset($tablaExistencias);
+        unset($tablaLotes);
 
         return $lotes;
     }
@@ -519,12 +675,17 @@ class Articulos extends ArticulosEntity {
     public function getLotesUbicaciones($idAlmacen, $cantidad = 0) {
         $lotesUbicaciones = array();
 
+        $tablaExistencias = new Existencias();
+        $tablaLotes = new Lotes();
+
         $this->conecta();
         if (is_resource($this->_dbLink)) {
             //Lotes con existencias.
             //$query = "Call LotesUbicacionesArticulo({$idAlmacen},{$this->IDArticulo});";
             $query = "SELECT DISTINCT e.IDLote, l.FechaCaducidad, e.IDUbicacion, e.Reales
-                        FROM {$this->_dataBaseName}.existencias e, {$this->_dataBaseName}.lotes l
+                        FROM 
+                            {$tablaExistencias->getDataBaseName()}.{$tablaExistencias->getTableName()} e, 
+                            {$tablaLotes->getDataBaseName()}.{$tablaLotes->getTableName()} l
                         WHERE
                             e.IDArticulo = '{$this->IDArticulo}' AND
                             e.IDAlmacen= '{$idAlmacen}' AND
@@ -536,6 +697,8 @@ class Articulos extends ArticulosEntity {
             $this->_em->desConecta();
             unset($this->_em);
         }
+        unset($tablaExistencias);
+        unset($tablaLotes);
 
         if ($cantidad > 0) {
             //Devolver solo lo necesario para satisfacer esta cantidad
@@ -571,7 +734,11 @@ class Articulos extends ArticulosEntity {
     public function getReservas($idAlmacen) {
         $reservas = array();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $tablaAlbaranes = new AlbaranesCab();
+        $tablaAlbaranesLineas = new AlbaranesLineas();
+        $tablaClientes = new Clientes();
+
+        $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
             //$query = "Call ReservasArticuloAlmacen('{$this->IDArticulo}','{$idAlmacen}');";
             $query = "select
@@ -581,9 +748,9 @@ class Articulos extends ArticulosEntity {
                         cli.RazonSocial,
                         sum(lin.Unidades) as Reservas
                       from
-                        {$this->_dataBaseName}.albaranes_cab    as cab,
-                        {$this->_dataBaseName}.albaranes_lineas as lin,
-                        {$this->_dataBaseName}.clientes         as cli
+                        {$tablaAlbaranes->getDataBaseName()}.{$tablaAlbaranes->getTableName()} as cab,
+                        {$tablaAlbaranesLineas->getDataBaseName()}.{$tablaAlbaranesLineas->getTableName()} as lin,
+                        {$tablaClientes->getDataBaseName()}.{$tablaClientes->getTableName()} as cli
                       where
                         cab.IDAlbaran  = lin.IDAlbaran and
                         cab.IDCliente  = cli.IDCliente and
@@ -598,55 +765,251 @@ class Articulos extends ArticulosEntity {
         }
         unset($em);
 
+        unset($tablaAlbaranes);
+        unset($tablaAlbaranesLineas);
+        unset($tablaClientes);
+
         return $reservas;
     }
 
     /**
-     * Genera la Url amigable del articulo
-     * Utiliza el parametro pasado o en su defecto la descripcion del articulo
-     * para generar la url amigable. La url generada es 100 caracteres a lo sumo
-     * @param <type> $UrlAmigable
-     * @return string La Url Amigable
+     * Devuelve el registro de existencias del artículo para cada almacén
+     * @return array
      */
-    public function validaUrlAmigable($UrlAmigable = '') {
+    public function getExistencias() {
 
-        if (trim($UrlAmigable) == '')
-            $UrlAmigable = $this->Descripcion . "_" . $this->Codigo;
+        $array = array();
 
-        $url = Textos::limpia($UrlAmigable);
-        $url = substr(trim($UrlAmigable), 0, 100);
+        $existencias = new Existencias();
+        $tablaExistencias = $existencias->getDataBaseName() . "." . $existencias->getTableName();
+        $almacenes = new Almacenes();
+        $tablaAlmacenes = $almacenes->getDataBaseName() . "." . $almacenes->getTableName();
 
-        $url = str_replace(" ", "-", $url);
-        $url = str_replace("/", "-", $url);
-        $url = str_replace("\"", "", $url);
-        $url = str_replace("+", "-", $url);
-        $url = str_replace("&", "", $url);
-
-        $arti = new Articulos();
-        $rows = $arti->cargaCondicion('Codigo', "UrlAmigable='{$url}'");
-        if (count($rows)) {
-            if ((count($rows) == 1) and ($rows[0]['Codigo'] == $this->Codigo)) {
-                
-            } else
-                $url .= "_" . date("s");
+        $em = new EntityManager($this->getConectionName());
+        if ($em->getDbLink()) {
+            $query = "select
+                        a.Nombre,
+                        sum(e.Reales) as Reales,
+                        sum(e.Pales) as Pales,
+                        sum(e.Cajas) as Cajas,
+                        sum(e.Reservadas) as Reservadas,
+                        sum(e.Entrando) as Entrando
+                      from
+                        {$tablaExistencias} as e
+                        left join {$tablaAlmacenes} as a on e.IDAlmacen=a.IDAlmacen
+                      where
+                        e.IDArticulo='{$this->IDArticulo}'
+                      group by a.Nombre
+                      order by a.Nombre ASC";
+            $em->query($query);
+            $array = $em->fetchResult();
+            $em->desConecta();
         }
+        unset($em);
 
-        unset($arti);
-
-        return $url;
+        return $array;
     }
 
-    public function kk() {
-        $a = new Articulos();
-        $rows = $a->cargaCondicion('IDArticulo');
-        foreach ($rows as $key => $value) {
-            $a = new Articulos($value['IDArticulo']);
-            $a->setUrlAmigable($a->validaUrlAmigable($a->getUrlAmigable()));
-            $a->save();
+    /**
+     * Devuelve los mvtos de almacén del artículo en curso para
+     * el almacen y el periodo de fechas indicado.
+     * 
+     * Los movimientos se ordenan por almacén y descendentemente por fecha y hora
+     * 
+     * @param integer $idAlmacen Por defecto todos los almacenes
+     * @param date $desdeFecha Por defecto todas
+     * @param date $hastaFecha Por defecto todas
+     * @return array
+     */
+    public function getMvtosAlmacen($idAlmacen = 0, $desdeFecha = '', $hastaFecha = '') {
+
+        $array = array();
+
+        $filtro = "(mv.IDArticulo='{$this->IDArticulo}')";
+        $filtro .= ($idAlmacen <= 0) ? " and (1)" : " and (mv.IDAlmacen='$idAlmacen')";
+        $filtro .= ($desdeFecha == '') ? " and (1)" : " and (mv.Fecha>='{$desdeFecha}')";
+        $filtro .= ($hastaFecha == '') ? " and (1)" : " and (mv.Fecha<='{$hastaFecha}')";
+
+        $mvtosAlmacen = new MvtosAlmacen();
+        $tablaMvtos = $mvtosAlmacen->getDataBaseName() . "." . $mvtosAlmacen->getTableName();
+        $almacenes = new Almacenes();
+        $tablaAlmacenes = $almacenes->getDataBaseName() . "." . $almacenes->getTableName();
+        $tipos = new TiposMvtosAlmacen();
+        $tablaTipos = $tipos->getDataBaseName() . "." . $tipos->getTableName();
+
+        $em = new EntityManager($this->getConectionName());
+        if ($em->getDbLink()) {
+            $query = "select
+                        al.Nombre as Almacen,
+                        ti.Descripcion,
+                        ti.Signo,
+                        ti.TipoDocumento,
+                        mv.Fecha,
+                        mv.Hora,
+                        mv.IDUbicacion,
+                        mv.IDLote,
+                        mv.IDDocumento,
+                        mv.UnidadesE,
+                        mv.UnidadesS
+                      from
+                        {$tablaMvtos} as mv
+                        left join {$tablaAlmacenes} as al on mv.IDAlmacen=al.IDAlmacen                        
+                        left join {$tablaTipos} as ti on mv.IDTipo=ti.Id                        
+                      where {$filtro}
+                      order by mv.IDAlmacen,mv.Fecha DESC,mv.Hora DESC";
+            $em->query($query);
+            $array = $em->fetchResult();
+            $em->desConecta();
         }
-        unset($a);
+        unset($em);
+
+        return $array;
     }
 
+    /**
+     * Devuelve un valor numérico segun el artículo está sujeto a propiedades o no
+     * 
+     * El valor será:
+     * 
+     *      0 si no tiene propiedades
+     *      1 si tiene a nivel de categoria
+     *      2 si tiene a nivel de familia
+     *      3 si tiene a nivel de subfamilia
+     * 
+     * Un artículo está sujeto a propiedades si su categoria, familia o subfamilia lo están
+     * 
+     * @return integer 0,1,2,3 indicando el nivel al que tiene propiedades
+     */
+    public function TienePropiedades() {
+
+        $tiene = $this->IDSubfamilia->TienePropiedades();
+
+        if (!$tiene) {
+            $tiene = $this->IDFamilia->TienePropiedades();
+            if (!$tiene) {
+                $tiene = $this->IDCategoria->TienePropiedades();
+                if ($tiene)
+                    $tiene = 1;
+            }
+            else
+                $tiene = 2;
+        }
+        else
+            $tiene = 3;
+
+        return $tiene;
+    }
+
+    /**
+     * Devuelve un array con las propiedades que están definidas
+     * para el artículo en curso.
+     * 
+     * Cada elemento del array es:
+     * 
+     * - Id: El id de la propiedad
+     * - Titulo: El título de la propiedad
+     * - IDTipo: el id de tipo de la propiedad
+     * - IDValor: el id del valor actual de la propiedad
+     * - Valores: array con los valores posibles para dicha propiedad
+     * 
+     * @param boolean $valorAditional Si true añade el valor adicional "Indique un valor" en el subarray de valores. Por defato true
+     * @return array
+     */
+    public function getPropiedades($valorAditional = true) {
+
+        $array = array();
+
+        switch ($this->TienePropiedades()) {
+            case 0:
+                break;
+            case 1:
+                $propiedades = new FamiliasPropiedades();
+                $rows = $propiedades->cargaCondicion("IDPropiedad", "IDFamilia='{$this->IDCategoria->getIDFamilia()}'");
+                break;
+            case 2:
+                $propiedades = new FamiliasPropiedades();
+                $rows = $propiedades->cargaCondicion("IDPropiedad", "IDFamilia='{$this->IDFamilia->getIDFamilia()}'");
+                break;
+            case 3:
+                $propiedades = new FamiliasPropiedades();
+                $rows = $propiedades->cargaCondicion("IDPropiedad", "IDFamilia='{$this->IDSubfamilia->getIDFamilia()}'");
+                break;
+        }
+
+        foreach ($rows as $row) {
+            $propiedad = new Propiedades($row['IDPropiedad']);
+            $propiedadesValores = new PropiedadesValores();
+            $propArticulo = new ArticulosPropiedades();
+            $propiedadesArticulo = $propArticulo->cargaCondicion("IDValor", "IDArticulo='{$this->IDArticulo}' and IDPropiedad='{$row['IDPropiedad']}'");
+            $array[$propiedad->getId()] = array(
+                'Id' => $propiedad->getId(),
+                'Titulo' => $propiedad->getTitulo(),
+                'IDTipo' => $propiedad->getIDTipo()->getIDTipo(),
+                'IDValor' => $propiedadesArticulo[0]['IDValor'],
+                'Valores' => $propiedadesValores->getValores($row['IDPropiedad'], $valorAditional),
+            );
+        }
+
+        unset($propiedadesValores);
+        unset($propiedades);
+        unset($propiedad);
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con los artículos que forman
+     * parte del escandallo del articulo actual
+     * 
+     * array('IDArticulo'=>,'Codigo'=>,'Descripcion'=>,'Unidades'=>,'UMV'=>)
+     * 
+     * @return array \Articulos
+     */
+    public function getEscandallo() {
+
+        $escan = new ArticulosEscandallos();
+        $filtro = "IDArticuloOrigen='{$this->IDArticulo}' and IDArticuloDestino<>'0'";
+        $rows = $escan->cargaCondicion("IDArticuloDestino,Unidades", $filtro, "Id ASC");
+        unset($escan);
+        $array = array();
+
+        foreach ($rows as $row) {
+            $articulo = new Articulos($row['IDArticuloDestino']);
+            $array[] = array(
+                'IDArticulo' => $articulo->getIDArticulo(),
+                'Codigo' => $articulo->getCodigo(),
+                'Descripcion' => $articulo->getDescripcion(),
+                'Unidades' => $row['Unidades'],
+                'UMV' => $articulo->getUMV()->getUnidadMedida(),
+            );
+            unset($articulo);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array con los $nTop objetos Articulos más vendidos
+     * 
+     * @param int $nTop Por defecto 20
+     * @return array \Articulos
+     */
+    public function getTops($nTop = 20) {
+
+        if ($nTop<=0) $nTop = 20;
+        
+        $lineasAlbaranes = new AlbaranesLineas();
+        $rows = $lineasAlbaranes->cargaCondicion("IDArticulo,sum(Unidades)","1 group by IDArticulo","sum(Unidades) DESC limit {$nTop}");
+        unset($lineasAlbaranes);
+
+        $array = array();
+        
+        foreach ($rows as $row) {
+            $array[] = new Articulos($row['IDArticulo']);
+        }
+        
+        return $array;
+    }
 }
 
 ?>

@@ -14,5 +14,9 @@ class TarifasController extends Controller {
     protected $entity = "Tarifas";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+        
 }
 ?>

@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(sms)
  */
-class SmsEntity extends Entity {
+class SmsEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -65,12 +65,12 @@ class SmsEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'sms';
+    protected $_tableName = 'ErpSms';
     /**
      * Nombre de la primaryKey
      * @var string

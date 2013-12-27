@@ -139,8 +139,12 @@ switch ($_GET['t']) {
         $tag = formasPagoProveedor($_GET['filtro']);
         break;
 
+    // Construye un tag html <select> con todas las familias de una categoria dada.
+    case 'familias':
+        $tag = familias($_GET['filtro']);
+        break;    
+
     // Construye un tag html <select> con todas las subfamilias de una familia dada.
-    // Le añade una opcion para todas la sucursales.
     case 'subfamilias':
         $tag = subfamilias($_GET['filtro']);
         break;
@@ -428,15 +432,35 @@ function formasPagoProveedor($idProveedor, $nameSelect = '', $idSelect = '') {
 }
 
 /**
+ * Construye un tag html <select> con todas las familias de una categoria dada
+ * @param integer $idCategoria ID de categoria
+ * @return string Codigo html con el tag select
+ */
+function familias($idCategoria) {
+    $familia = new Familias();
+    $filtro = "(NivelJerarquico='2') and BelongsTo='{$idCategoria}'";
+    $rows = $familia->cargaCondicion("Id as Id, Familia as Value", $filtro, "SortOrder ASC");
+    unset($familia);
+
+    $ch = "<select name='" . $_GET['nameselect'] . "' id='" . $_GET['idselect'] . "' class='Select'>";
+    foreach ($rows as $row) {
+        $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . "</option>";
+    }
+    $ch .= "</select>";
+
+    return $ch;
+}
+
+/**
  * Construye un tag html <select> con todas las subfamilias de una familia dada
  * @param integer $idFamilia ID de familia
  * @return string Codigo html con el tag select
  */
 function subfamilias($idFamilia) {
-
-    $subfamilia = new Subfamilias();
-    $rows = $subfamilia->fetchAll($idFamilia, 'Subfamilia');
-    unset($subfamilia);
+    $familia = new Familias();
+    $filtro = "(NivelJerarquico='3') and BelongsTo='{$idFamilia}'";
+    $rows = $familia->cargaCondicion("Id as Id, Familia as Value", $filtro, "SortOrder ASC");
+    unset($familia);
 
     $ch = "<div class='Etiqueta'>Subfamilia</div>";
     $ch .= "<select name='" . $_GET['nameselect'] . "' id='" . $_GET['idselect'] . "' class='Select'>";
@@ -497,7 +521,7 @@ function clientesSucursalAgente($idSucursal = '', $idAgente = '', $nameSelect = 
     if ($idSucursal == '')
         $idSucursal = $_SESSION['suc'];
     if ($idAgente == '')
-        $idAgente == $_SESSION['USER']['user']['id'];
+        $idAgente == $_SESSION['usuarioPortal']['Id'];
 
     if ($nameSelect == '')
         $nameSelect = $_GET['nameselect'];
@@ -607,7 +631,7 @@ function lotesAlmacenArticulo($filtro, $nameSelect = '', $idSelect = '') {
     $idArticulo = $valores[1];
 
     $articulo = new Articulos($idArticulo);
-    $rows = $articulo->getLotesDisponibles($idAlmacen,true);
+    $rows = $articulo->getLotesDisponibles($idAlmacen, true);
     $uma = $articulo->getUMA();
     unset($articulo);
 
@@ -617,7 +641,7 @@ function lotesAlmacenArticulo($filtro, $nameSelect = '', $idSelect = '') {
         $ch .= "onblur=\"DesplegableAjax('div_MvtosAlmacen_IDUbicacion','MvtosAlmacen_IDUbicacion','MvtosAlmacen[IDUbicacion]','mvtosAlmacenUbicacion',this.value+'-'+$('#MvtosAlmacen_IDAlmacen').val());\"";
         $ch .= ">";
         foreach ($rows as $row) {
-            $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . " -> " . sprintf("%9.2f",$row['Reales']) . " {$uma}</option>";
+            $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . " -> " . sprintf("%9.2f", $row['Reales']) . " {$uma}</option>";
         }
     } else {
         $ch .= "No hay lotes";
@@ -654,7 +678,7 @@ function ubicacionesLoteStock($filtro, $nameSelect = '', $idSelect = '') {
     if (count($rows)) {
         $ch .= "<select name='" . $nameSelect . "' id='" . $idSelect . "' class='Select' style='width:190px;'>";
         foreach ($rows as $row) {
-            $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . " -> " . sprintf("%9.2f",$row['Reales']) . " {$uma}</option>";
+            $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . " -> " . sprintf("%9.2f", $row['Reales']) . " {$uma}</option>";
         }
         $ch .= "</select>";
     } else {
@@ -718,11 +742,10 @@ function ubicacionesAlmacen($filtro, $nameSelect = '', $idSelect = '') {
     $rows = $almacen->getUbicaciones();
     unset($almacen);
 
-    $ch .= "<select name='" . $nameSelect . "' id='" . $idSelect . "' class='Select' style='width:110px;'>";
+    $ch = "";
     foreach ($rows as $row) {
         $ch .= "<option value='" . $row['Id'] . "'>" . $row['Value'] . "</option>";
     }
-    $ch .= "</select>";
 
     return $ch;
 }

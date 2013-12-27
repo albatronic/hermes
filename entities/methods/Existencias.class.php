@@ -49,10 +49,10 @@ class Existencias extends ExistenciasEntity {
         if (is_resource($this->_dbLink)) {
 
             //$query = "Call {$this->_dataBaseName}.getStock({$idArticulo},{$idAlmacen},{$idLote},{$idUbicacion},{$enDeposito})";
-            ($idAlmacen == 0) ? $filtroAlmacen = "LIKE '%'" : $filtroAlmacen = "='{$idAlmacen}'";
-            ($idLote == 0) ? $filtroLote = "LIKE '%'" : $filtroLote = "='{$idLote}'";
-            ($idUbicacion == 0) ? $filtroUbicacion = "LIKE '%'" : $filtroUbicacion = "='{$idUbicacion}'";
-            ($enDeposito == -1) ? $filtroDeposito = "LIKE '%'" : $filtroDeposito = "='{$enDeposito}'";
+            $filtroAlmacen = ($idAlmacen == 0) ? "LIKE '%'" : "='{$idAlmacen}'";
+            $filtroLote = ($idLote == 0) ? "LIKE '%'" : "='{$idLote}'";
+            $filtroUbicacion = ($idUbicacion == 0) ? "LIKE '%'" : "='{$idUbicacion}'";
+            $filtroDeposito = ($enDeposito == -1) ? "LIKE '%'" : "='{$enDeposito}'";
 
             $query = "SELECT
                         SUM(e.Reales) as RE,
@@ -60,7 +60,7 @@ class Existencias extends ExistenciasEntity {
                         SUM(e.Cajas) as CA,
                         SUM(e.Reservadas) as RV,
                         SUM(e.Entrando) as PE
-                      FROM {$this->_dataBaseName}.existencias e
+                      FROM {$this->_dataBaseName}.{$this->_tableName} e
                       WHERE
                         (e.IDAlmacen {$filtroAlmacen}) AND
                         (e.IDArticulo = '{$idArticulo}') AND
@@ -223,7 +223,7 @@ class Existencias extends ExistenciasEntity {
      */
     public function hazEntrando($idAlmacen, $idArticulo, $unidades, $unidadMedida, $flagDeposito=false) {
 
-        //Quitar el 'Entrando' de las unidades pedidas sin indicar lote
+        //Poner el 'Entrando' de las unidades pedidas sin indicar lote
         $valores = array(
             'UM' => $unidadMedida,
             'Reales' => 0,
@@ -236,6 +236,7 @@ class Existencias extends ExistenciasEntity {
 
         return (count($this->getErrores()) == 0);
     }
+    
     /**
      * Quita el 'entrando' de stock sin indicar lote ni ubicación
      *

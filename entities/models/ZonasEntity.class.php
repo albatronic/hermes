@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(zonas)
  */
-class ZonasEntity extends Entity {
+class ZonasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -32,12 +32,12 @@ class ZonasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'zonas';
+    protected $_tableName = 'ErpZonas';
     /**
      * Nombre de la PrimaryKey
      * @var string

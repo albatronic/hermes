@@ -7,70 +7,75 @@
  */
 
 /**
- * @orm:Entity(recibos_clientes)
+ * @orm:Entity(RecibosClientes)
  */
-class RecibosClientesEntity extends Entity {
+class RecibosClientesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDRecibo;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Recibo;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDSucursal;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDFactura;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDCliente;
     /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="RecibosClientes")
+     */
+    protected $IDComercial;
+    /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Fecha;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Vencimiento;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $CBanco = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Asiento = 0;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Concepto = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDEstado;
     /**
@@ -79,24 +84,24 @@ class RecibosClientesEntity extends Entity {
     protected $IDRemesa;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Remesar = '1';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_clientes")
+     * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $CContable = '0000000000';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'recibos_clientes';
+    protected $_tableName = 'ErpRecibosClientes';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -150,6 +155,16 @@ class RecibosClientesEntity extends Entity {
         if (!($this->IDCliente instanceof Clientes))
             $this->IDCliente = new Clientes($this->IDCliente);
         return $this->IDCliente;
+    }
+
+    public function setIDComercial($IDComercial) {
+        $this->IDComercial = $IDComercial;
+    }
+
+    public function getIDComercial() {
+        if (!($this->IDComercial instanceof Agentes))
+            $this->IDComercial = new Agentes($this->IDComercial);
+        return $this->IDComercial;
     }
 
     public function setFecha($Fecha) {
@@ -248,5 +263,5 @@ class RecibosClientesEntity extends Entity {
 
 }
 
-// END class recibos_clientes
+// END class RecibosClientes
 ?>

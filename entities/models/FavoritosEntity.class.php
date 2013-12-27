@@ -1,73 +1,79 @@
 <?php
 
 /**
- * Favoritos
- * 
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @since 17.01.2012 01:04:42
+ * @date 12.10.2013 14:52:11
  */
 
 /**
- * @orm:Entity(favoritos)
+ * @orm:Entity(Favoritos)
  */
-class FavoritosEntity extends Entity {
+class FavoritosEntity extends EntityComunes {
 
     /**
-     * @orm:GeneratedValue
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="favoritos")
+     * @orm GeneratedValue
+     * @orm Id
+     * @var integer
+     * @assert NotBlank(groups="Favoritos")
      */
     protected $Id;
+
     /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="favoritos")
-     * @var entities\Agentes
+     * @var integer
+     * @assert NotBlank(groups="Favoritos")
      */
-    protected $IDAgente;
+    protected $IDUsuario;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="favoritos")
+     * @var string
+     * @assert NotBlank(groups="Favoritos")
+     */
+    protected $Controller;
+
+    /**
+     * @var string
+     * @assert NotBlank(groups="Favoritos")
      */
     protected $Titulo;
-    /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="favoritos")
-     */
-    protected $Url;
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="favoritos")
-     */
-    protected $Accesos = '0';
+
     /**
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'favoritos';
+    protected $_tableName = 'ErpFavoritos';
+
     /**
      * Nombre de la PrimaryKey
      * @var string
      */
     protected $_primaryKeyName = 'Id';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var string
      */
     protected $_parentEntities = array(
     );
+
     /**
      * Relacion de entidades de las que esta depende
      * @var string
      */
     protected $_childEntities = array(
-        'Agentes',
+        'ValoresSN',
+        'ValoresPrivacy',
+        'ValoresDchaIzq',
+        'ValoresChangeFreq',
+        'RequestMethods',
+        'RequestOrigins',
+        'CpanAplicaciones',
     );
 
     /**
@@ -81,14 +87,20 @@ class FavoritosEntity extends Entity {
         return $this->Id;
     }
 
-    public function setIDAgente($IDAgente) {
-        $this->IDAgente = $IDAgente;
+    public function setIDUsuario($IDUsuario) {
+        $this->IDUsuario = $IDUsuario;
     }
 
-    public function getIDAgente() {
-        if (!($this->IDAgente instanceof Agentes))
-            $this->IDAgente = new Agentes($this->IDAgente);
-        return $this->IDAgente;
+    public function getIDUsuario() {
+        return $this->IDUsuario;
+    }
+
+    public function setController($Controller) {
+        $this->Controller = trim($Controller);
+    }
+
+    public function getController() {
+        return $this->Controller;
     }
 
     public function setTitulo($Titulo) {
@@ -99,23 +111,7 @@ class FavoritosEntity extends Entity {
         return $this->Titulo;
     }
 
-    public function setUrl($Url) {
-        $this->Url = trim($Url);
-    }
-
-    public function getUrl() {
-        return $this->Url;
-    }
-
-    public function setAccesos($Accesos) {
-        $this->Accesos = $Accesos;
-    }
-
-    public function getAccesos() {
-        return $this->Accesos;
-    }
-
 }
 
-// END class favoritos
+// END class Favoritos
 ?>

@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(caja_lineas)
  */
-class CajaLineasEntity extends Entity {
+class CajaLineasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -94,12 +94,12 @@ class CajaLineasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'caja_lineas';
+    protected $_tableName = 'ErpCajaLineas';
     /**
      * Nombre de la PrimaryKey
      * @var string

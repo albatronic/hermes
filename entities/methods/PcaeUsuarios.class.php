@@ -16,11 +16,12 @@ class PcaeUsuarios extends PcaeUsuariosEntity {
     }
 
     public function create() {
-        
+
         $this->setPublish(1);
+        $this->setPrivacy(0);
         return parent::create();
     }
-    
+
     /**
      * Recalcula el passw y guarda
      * @return boolean
@@ -28,10 +29,10 @@ class PcaeUsuarios extends PcaeUsuariosEntity {
     public function save() {
         $config = sfYaml::load('config/config.yml');
         $this->Password = md5($this->Password . $config['config']['semillaMD5']);
-        
+
         return parent::save();
     }
-    
+
     /**
      * Devuelve el nombre concatenado con los apellidos
      * @return string
@@ -173,6 +174,32 @@ class PcaeUsuarios extends PcaeUsuariosEntity {
         unset($empUsu);
 
         return new PcaePerfiles($rows[0]['IdPerfil']);
+    }
+
+    /**
+     * Devuelve un array (Id,Value) con los usuarios adscritos 
+     * a la empresa $idEmpresa
+     * 
+     * @param integer $idEmpresa El id de la empresa
+     * @return array Array de usuarios
+     */
+    public function getUsuariosEmpresa($idEmpresa) {
+
+        $usuarios = array();
+
+        $usu = new PcaeEmpresasUsuarios();
+        $rows = $usu->cargaCondicion("IdUsuario", "IdEmpresa='{$idEmpresa}'");
+        unset($usu);
+
+        foreach ($rows as $row) {
+            if ($row['IdUsuario'] != '1') {
+                $usu = new PcaeUsuarios($row['IdUsuario']);
+                $usuarios[] = array("Id" => $row['IdUsuario'], "Value" => $usu->getApellidosNombre() . " <" . $usu->getEMail() . ">");
+            }
+        }
+        unset($usu);
+
+        return $usuarios;
     }
 
 }

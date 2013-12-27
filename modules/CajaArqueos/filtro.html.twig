@@ -17,7 +17,7 @@
         <div id="div_IDSucursal" style="float:left;">
             Sucursal:
             <input name="filter[columnsSelected][0]" value="IDSucursal" type="hidden" />
-            <select name="filter[valuesSelected][0]" id="IDSucursal" style="width: 170px;" onchange="DesplegableAjax('div_IDTpv','IDTpv','filter[valuesSelected][1]','tpvs',this.value);">
+            <select name="filter[valuesSelected][0]" id="IDSucursal" style="width: 120px;" onchange="DesplegableAjax('div_IDTpv','IDTpv','filter[valuesSelected][1]','tpvs',this.value);">
             {% for sucursal in user.getSucursales(emp.IDEmpresa,1) %}
                 <option value="{{sucursal.Id}}" {% if sucursal.Id == IDSucursal %} SELECTED {% endif%} >{{sucursal.Value}}</option>
             {% endfor %}
@@ -36,12 +36,12 @@
 
         <div id="div_DiaDesde" style="float:left; margin-left: 10px;">
             <input name="filter[columnsSelected][2]" value="Dia" type="hidden" />
-            {{ macro.fecha('Desde Día','Etiqueta','filter[valuesSelected][2]','DiaDesde',values.listado.filter.valuesSelected[2],'10','CampoFecha') }}
+            {{ macro.fecha({'caption':'Desde','visible':'1','varEnv':'0','updatable':'1'},'Etiqueta','filter[valuesSelected][2]','DiaDesde',values.listado.filter.valuesSelected[2],'10','CampoFecha') }}
         </div>
 
         <div id="div_DiaHasta" style="float:left; margin-left: 10px;">
             <input name="filter[columnsSelected][3]" value="Dia" type="hidden" />
-            {{ macro.fecha('Hasta Día','Etiqueta','filter[valuesSelected][3]','DiaHasta',values.listado.filter.valuesSelected[3],'10','CampoFecha') }}
+            {{ macro.fecha({'caption':'Hasta','visible':'1','varEnv':'0','updatable':'1'},'Etiqueta','filter[valuesSelected][3]','DiaHasta',values.listado.filter.valuesSelected[3],'10','CampoFecha') }}
         </div>
 
         <div id="div_IDTpv" style="float:left; margin-left: 10px;">

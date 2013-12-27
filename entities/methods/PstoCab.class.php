@@ -22,16 +22,16 @@ class PstoCab extends PstoCabEntity {
         return $this->Fecha;
     }
 
-    protected function load() {
+    protected function load($showDeleted = FALSE) {
         if ($this->IDPsto == '') {
             //Si el nº de presupuesto está vacio (se ha instanciado un objeto vacio),
             //asigno valores por defecto (agente,comercial,sucursal y cliente).
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
-            $agente = new Agentes($_SESSION['USER']['user']['id']);
+            $agente = new Agentes($_SESSION['usuarioPortal']['Id']);
             $esComercial = ($agente->getEsComercial());
             if ($esComercial) {
-                $idComercial = $_SESSION['USER']['user']['id'];
+                $idComercial = $_SESSION['usuarioPortal']['Id'];
                 $this->setIDComercial($idComercial);
             }
 
@@ -77,18 +77,12 @@ class PstoCab extends PstoCabEntity {
     public function erase() {
         $this->conecta();
 
-        if (is_resource($this->_dbLink)) {
-            $query = "DELETE FROM {$this->_dataBaseName}.psto_cab WHERE `IDPsto`='{$this->IDPsto}' AND IDEstado='0'";
-            if ($this->_em->query($query)) {
-                //Borrar líneas de presupuestos
-                $query = "DELETE FROM {$this->_dataBaseName}.psto_lineas where `IDPsto`='{$this->IDPsto}'";
-                if (!$this->_em->query($query))
-                    $this->_errores = $this->_em->getError();
-            } else
-                $this->_errores = $this->_em->getError();
-            $this->_em->desConecta();
+        $ok = $this->queryDelete("`IDPsto`='{$this->IDPsto}' AND IDEstado='0'");
+        if ($ok) {
+            //Borrar líneas de presupuestos
+            $lineas = new PstoLineas();
+            $lineas->queryDelete("`IDPsto`='{$this->IDPsto}'");
         }
-        unset($this->_em);
 
         return (count($this->_errores) == 0);
     }
@@ -101,12 +95,11 @@ class PstoCab extends PstoCabEntity {
     public function recalcula() {
 
         //Fuerzo el almacen y el comercial de las líneas de presupuesto al de la cabecera del presupuesto
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "UPDATE {$this->_dataBaseName}.psto_lineas SET `IDComercial`='{$this->IDComercial}', `IDAlmacen`='{$this->IDAlmacen}' WHERE `IDPsto` = '{$this->getIDPsto()}'";
-            $this->_em->query($query);
-        }
-        $this->_em->desConecta();
+        $lineas = new PstoLineas();
+        $lineas->queryUpdate(
+                array("IDComercial" => $this->IDComercial, "IDAlmacen" => $this->IDAlmacen), "`IDPsto`='{$this->IDPsto}'"
+        );
+        unset($lineas);
 
         //Si la version es CRISTAL calculo el eventual recargo energetico
         if ($_SESSION['ver'] == 1)
@@ -117,23 +110,21 @@ class PstoCab extends PstoCabEntity {
         //de cliente se aplique indebidamente
         $cliente = new Clientes($this->IDCliente);
         if ($cliente->getIva()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "UPDATE {$this->_dataBaseName}.psto_lineas SET `Iva`='0', `Recargo`='0' WHERE `IDPsto`= '{$this->getIDsto()}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new PstoLineas();
+            $lineas->queryUpdate(
+                    array("Iva" => 0, "Recargo" => 0), "`IDPsto`='{$this->IDPsto}'"
+            );
+            unset($lineas);
         }
         //Si el cliente no está sujeto a recargo de equivalencia
         //lo pongo a cero en las líneas para evitar que por cambio
         //de cliente se aplique indebidamente
         elseif ($cliente->getRecargoEqu()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "update {$this->_dataBaseName}.psto_lineas set `Recargo`='0' where `IDPsto` = '{$this->getIDPsto()}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new PstoLineas();
+            $lineas->queryUpdate(
+                    array("Recargo" => 0), "`IDPsto`='{$this->IDPsto}'"
+            );
+            unset($lineas);
         }
         unset($cliente);
 
@@ -146,12 +137,19 @@ class PstoCab extends PstoCabEntity {
         //Calcular los totales, desglosados por tipo de iva.
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "select sum(importe) as Bruto,sum(ImporteCosto) as Costo from {$this->_dataBaseName}.psto_lineas where (IDPsto='" . $this->getIDPsto() . "')";
+            $lineas = new PstoLineas();
+            $tableLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            $articulos = new Articulos();
+            $tableArticulos = "{$articulos->getDataBaseName()}.{$articulos->getTableName()}";
+            unset($lineas);
+            unset($articulos);
+            
+            $query = "select sum(Importe) as Bruto,sum(ImporteCosto) as Costo from {$tableLineas} where (IDPsto='" . $this->getIDPsto() . "')";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $bruto = $rows[0]['Bruto'];
 
-            $query = "select Iva,Recargo, sum(Importe) as Importe from {$this->_dataBaseName}.psto_lineas where (IDPsto='" . $this->getIDPsto() . "') group by Iva,Recargo order by Iva";
+            $query = "select Iva,Recargo, sum(Importe) as Importe from {$tableLineas}  where (IDPsto='" . $this->getIDPsto() . "') group by Iva,Recargo order by Iva";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $totbases = 0;
@@ -195,14 +193,14 @@ class PstoCab extends PstoCabEntity {
                     $columna = "MtsAl";
                     break;
             }
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "select sum(articulos.Peso*psto_lineas.{$columna}) as Peso,
-                        sum(articulos.Volumen*psto_lineas.{$columna}) as Volumen,
-                        sum(Unidades) as Bultos
-                      from articulos, psto_lineas
-                      where (psto_lineas.IDArticulo=articulos.IDArticulo)
-                        and (articulos.Inventario='1')
-                        and (psto_lineas.IDPsto='{$this->IDPsto}')";
+            $em = new EntityManager($this->getConectionName());
+            $query = "select sum(a.Peso*l.{$columna}) as Peso,
+                        sum(aVolumen*l.{$columna}) as Volumen,
+                        sum(Unidades) as Bultos 
+                      from {$tableArticulos} as a,{$tableLineas} as l
+                      where (l.IDArticulo=a.IDArticulo)
+                        and (a.Inventario='1')
+                        and (l.IDPsto='{$this->IDPsto}')";
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -229,9 +227,12 @@ class PstoCab extends PstoCabEntity {
             $this->setRecargoFinanciero($recFinanciero);
             $this->setCuotaRecargoFinanciero($cuotaRecFinanciero);
             $this->setTotal($total);
-            $this->setPeso($rows[0]['Peso']);
-            $this->setVolumen($rows[0]['Volumen']);
-            $this->setBultos($rows[0]['Bultos']);
+            if ($this->Peso == 0)
+                $this->setPeso($rows[0]['Peso']);
+            if ($this->Volumen == 0)
+                $this->setVolumen($rows[0]['Volumen']);
+            if ($this->Bultos == 0)
+                $this->setBultos($rows[0]['Bultos']);
         }
     }
 
@@ -245,8 +246,6 @@ class PstoCab extends PstoCabEntity {
      */
     public function confirma() {
 
-        $idAlbaran = 0;
-
         //Crear cabecera de albaran.
         //No pongo los totales porque los recalculo una vez
         //creadas las lineas del albaran.
@@ -255,9 +254,9 @@ class PstoCab extends PstoCabEntity {
 
         $albaran = new AlbaranesCab();
         $albaran->setIDSucursal($this->IDSucursal);
-        $albaran->setIDContador($contador->dameContador($this->IDSucursal,1));
+        $albaran->setIDContador($contador->dameContador($this->IDSucursal, 1));
         $albaran->setIDAlmacen($this->IDAlmacen);
-        $albaran->setIDAgente($_SESSION['USER']['user']['id']);
+        $albaran->setIDAgente($_SESSION['usuarioPortal']['Id']);
         $albaran->setIDComercial($this->IDComercial);
         $albaran->setFecha(date('d-m-Y'));
         $albaran->setIDCliente($this->IDCliente);
@@ -266,6 +265,7 @@ class PstoCab extends PstoCabEntity {
         $albaran->setObservaciones($this->Observaciones . "Proviene del Psto N. " . $this->NumeroPsto);
         $albaran->setIDAgencia($this->IDAgencia);
         $albaran->setIDFP($this->IDFP);
+        $albaran->setIDPsto($this->IDPsto);
         $idAlbaran = $albaran->create();
 
         unset($contador);
@@ -294,7 +294,7 @@ class PstoCab extends PstoCabEntity {
                 $linea->setIDAlmacen($this->IDAlmacen);
                 $linea->setIva($row['Iva']);
                 $linea->setRecargo($row['Recargo']);
-                $linea->setIDAgente($_SESSION['USER']['user']['id']);
+                $linea->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $linea->setIDComercial($this->IDComercial);
                 $linea->setAltoAl($row['AltoAl']);
                 $linea->setAnchoAl($row['AnchoAl']);
@@ -310,9 +310,11 @@ class PstoCab extends PstoCabEntity {
                 }
             }
 
-            // Recalcular el albaran
+            // Recalcular el albarán
             $albaran->recalcula();
             $albaran->save();
+            // Confirmar el albarán
+            $albaran->confirma();
 
             $this->_alertas[] = "Se ha generado el albarán n. " . $albaran->getNumeroAlbaran();
         } else {
@@ -333,16 +335,9 @@ class PstoCab extends PstoCabEntity {
         $this->FechaAceptacion = 0;
         $this->save();
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "update {$this->_dataBaseName}.psto_lineas set IDEstado='0' where IDPsto='{$this->IDPsto}';";
-            if (!$this->_em->query($query)) {
-                $this->_errores[] = $this->_em->getError();
-            }
-            $this->_em->desConecta();
-        } else {
-            $this->_errores[] = $this->_em->getError();
-        }
+        $lineas = new PstoLineas();
+        $lineas->queryUpdate(array("IDEstado" => 0), "IDPsto='{$this->IDPsto}'");
+        unset($lineas);
     }
 
     /**
@@ -359,13 +354,13 @@ class PstoCab extends PstoCabEntity {
         // Crear la cabecera del presupuesto
         $destino = $this;
         $destino->setIDPsto('');
-        $destino->setIDAgente($_SESSION['USER']['user']['id']);
+        $destino->setIDAgente($_SESSION['usuarioPortal']['Id']);
         $destino->setIDEstado(0);
         $destino->setFecha(date('d-m-Y'));
         $destino->setFechaAceptacion('00-00-0000');
         $destino->setIDAlbaran(0);
         $destino->setObservaciones('Proviene del Psto n. ' . $idOrigen);
-        $destino->setClave('');
+        $destino->setPrimaryKeyMD5('');
         $idDestino = $destino->create();
 
         // Crear las líneas de presupuesto
@@ -376,8 +371,9 @@ class PstoCab extends PstoCabEntity {
             foreach ($rows as $row) {
                 $lineaDestino = new PstoLineas($row['IDLinea']);
                 $lineaDestino->setIDPsto($idDestino);
-                $lineaDestino->setIDAgente($_SESSION['USER']['user']['id']);
+                $lineaDestino->setIDAgente($_SESSION['usuarioPortal']['Id']);
                 $lineaDestino->setIDEstado(0);
+                $lineaDestino->setPrimaryKeyMD5('');
                 $lineaDestino->valida(); // Toma los precios vigentes (tarifa, promociones, etc)
                 $lineaDestino->create();
             }
@@ -400,21 +396,26 @@ class PstoCab extends PstoCabEntity {
      */
     public function calculaRecargoEnergetico() {
 
-        $parametro = new Parametros();
-        $reArticulo = $parametro->find('Codigo', 'REART');
-        unset($parametro);
+        $var = new CpanVariables("Mod", "Web", "PcaeEmpresas");
+        $parametro = $var->getNode("especificas");
+        $reArticulo = $parametro['reArticulo'];
+        unset($var);
 
         // Ver si existe el articulo que se ha definido en parametros
         // para facturar el recargo energetico
         $articulo = new Articulos();
-        $articulo = $articulo->find('Codigo', $reArticulo->getValor());
+        $articulo = $articulo->find('Codigo', $reArticulo);
 
         if ($articulo->getIDArticulo()) {
             // Se ha definido el parametro con el codigo del articulo
             // para aplicar el recargo energetico. Ahora hay que ver si en el presupuesto
             // en curso hay articulos sujetos a recargo energético.
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "select t1.*,t2.Peso from psto_lineas as t1, articulos as t2 where t1.IDPsto='{$this->IDPsto}' and t1.IDArticulo=t2.IDArticulo and t2.RecargoEnergetico='1'";
+            $em = new EntityManager($this->getConectionName());
+            $tablaArticulos = "{$articulo->getDataBaseName()}.{$articulo->getTableName()}";
+            $lineas = new PstoLineas();
+            $tablaLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            unset($lineas);
+            $query = "select t1.*,t2.Peso from {$tablaLineas} as t1, {$tablaArticulos} as t2 where t1.IDPsto='{$this->IDPsto}' and t1.IDArticulo=t2.IDArticulo and t2.RecargoEnergetico='1'";
             $em->query($query);
             $rows = $em->fetchResult();
             if ($rows) {
@@ -426,12 +427,12 @@ class PstoCab extends PstoCabEntity {
 
                 $reImporte = $reKilos * $articulo->getPrecioVenta();
                 //Ver si ya está la linea de presupuesto creada.
-                $query = "select IDLinea from psto_lineas where IDPsto='{$this->IDPsto}' and IDArticulo='{$articulo->getIDArticulo()}'";
+                $query = "select IDLinea from {$tablaLineas} where IDPsto='{$this->IDPsto}' and IDArticulo='{$articulo->getIDArticulo()}'";
                 $em->query($query);
                 $rows = $em->fetchResult();
                 if ($rows) {
                     // Ya estaba, actualizar
-                    $query = "update psto_lineas set Unidades='{$reKilos}',Precio='{$articulo->getPrecioVenta()}',Importe='{$reImporte}' where IDLinea='{$rows[0]['IDLinea']}'";
+                    $query = "update {$tablaLineas} set Unidades='{$reKilos}',Precio='{$articulo->getPrecioVenta()}',Importe='{$reImporte}' where IDLinea='{$rows[0]['IDLinea']}'";
                     $em->query($query);
                 } else {
                     // No está, crear
@@ -442,7 +443,7 @@ class PstoCab extends PstoCabEntity {
                     $lineaPsto->setUnidades($reKilos);
                     $lineaPsto->setPrecio($articulo->getPrecioVenta());
                     $lineaPsto->setImporte($reImporte);
-                    $lineaPsto->setIDAgente($_SESSION['USER']['user']['id']);
+                    $lineaPsto->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $lineaPsto->setIDComercial($this->IDComercial);
                     $lineaPsto->setIDAlmacen($this->IDAlmacen);
                     $lineaPsto->setIva($articulo->getIDIva()->getIva());
@@ -452,8 +453,9 @@ class PstoCab extends PstoCabEntity {
             } else {
                 // No hay articulos con recargo energetico.
                 // Borro el eventual cargo de recargo energetico.
-                $query = "delete from psto_lineas where IDPsto='{$this->IDPsto}' and IDArticulo='{$articulo->getIDArticulo()}'";
-                $em->query($query);
+                $lineas = new PstoLineas();
+                $lineas->queryDelete("IDPsto='{$this->IDPsto}' and IDArticulo='{$articulo->getIDArticulo()}'");
+                unset($lineas);
             }
             $em->desConecta();
             unset($em);
@@ -475,28 +477,19 @@ class PstoCab extends PstoCabEntity {
      * @param integer Id del presupuesto
      * @return array
      */
-    public function getBeneficio($idPsto='') {
+    public function getBeneficio($idPsto = '') {
         if ($idPsto == '')
             $idPsto = $this->getIDPsto();
 
-        $beneficio = array();
+        $lineas = new PstoLineas();
+        $rows = $lineas->cargaCondicion("sum(ImporteCosto) as Costo", "IDPsto='{$idPsto}'");
+        unset($lineas);
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select sum(ImporteCosto) as Costo from {$this->_dataBaseName}.psto_lineas where IDPsto='{$idPsto}';";
-            if ($this->_em->query($query)) {
-                $rows = $this->_em->fetchResult();
-                $beneficio = $rows[0];
-            } else {
-                $this->_errores[] = $this->_em->getError();
-            }
-            $this->_em->desConecta();
-        } else {
-            $this->_errores[] = $this->_em->getError();
-        }
-
-        $beneficio['Venta'] = $this->TotalBases;
-        $beneficio['Beneficio'] = $beneficio['Venta'] - $beneficio['Costo'];
+        $beneficio = array(
+            'Venta' => $this->TotalBases,
+            'Costo' => $rows[0]['Costo'],
+            'Beneficio' => $this->TotalBases - $rows[0]['Costo'],
+        );
 
         return $beneficio;
     }
@@ -505,6 +498,9 @@ class PstoCab extends PstoCabEntity {
      * Comprueba el riesdo del cliente
      */
     protected function validaLogico() {
+
+        parent::validaLogico();
+
         $cliente = new Clientes($this->IDCliente);
         $riesgo = $cliente->getRiesgo();
         unset($cliente);

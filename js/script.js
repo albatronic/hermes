@@ -1,30 +1,302 @@
 /*
  * Debe estar definida la variable appPath que indica el path a la app
- * Se le asigna valor en 'modules/_global/layoutStd.html.twig' y 'modules/_global/popupStd.html.twig'
+ * Se le asigna valor en 'modules/_global/layoutStd.html.twig' y 'modules/_global/layoutPopup.html.twig'
  *
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright Informatica Albatronic, sl
  * @since 22/01/2012
  */
 
+$(function(){
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '<Ant',
+        nextText: 'Sig>',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+    
+    /**
+     * Para las solapas
+     */
+    $( "#tabs" ).tabs({active: parseInt($('#solapaActiva').val(),10)});
+    $('#tabs ul li').click(function(){
+        $('#solapaActiva').val( $("#tabs").tabs("option","active") );
+    });     
+    $( "#tabs1" ).tabs(); 
+    $( "#tabsMostrarEnMenu" ).tabs();
 
-/**
- * Para las solapas
- */
-$(function() {
-    $( "#tabs" ).tabs();
-});
+    /**
+     * Diálogo popup variables de entorno
+     */
+    $( "#filtroAvanzado1" ).dialog({
+        autoOpen: false,
+        modal: false,
+        width: 350,
+        height: 540,
+        position: ['right','center'],
+        closeOnEscape: true,
+        buttons: {
+            "Consultar" : function() {
+                // Enviar el formulario por ajax
+                var $formulario = $('#filtro');
+                $(formulario).submit(function(e){
+                    var valores = $formulario.serialize();
+                    alert(valores);
+                    var $envio = $.ajax({
+                        url: appPath + '/GconContenidos/list',
+                        data: valores,
+                        type: 'POST'
+                    });
+                    
+                    $envio.done(function(){
+                        $(this).dialog('close');
+                    });
+                });
+            },
+            
+            "Cancelar" : function(){
+                $(this).dialog('close');
+            }
 
-/**
- * Para el efecto acordeon
- */
-$(function() {
+        }
+    });
+    
     $( "#accordion" ).accordion({
         autoHeight: false,
         navigation: true,
         collapsible: true
+    });    
+    
+    /**
+     * Diálogo popup variables de entorno
+     */
+    $( "#dialogoVarEnv" ).dialog({
+        autoOpen: false,
+        modal: false,
+        width: 400,
+        height: 350,
+        position: ['right','center'],
+        closeOnEscape: true
     });
+
+    /**
+     * Diálogo popup para ordenaciones
+     */
+    $( "#dialogOrdenar" ).dialog({
+        autoOpen: false,
+        width: 500,
+        height: 500,
+        position: ['right','center'],     
+        closeOnEscape: true
+    });
+ 
+    /**
+     * Diálogo para notificaciones
+     */
+    $( "#notificacion" ).dialog({                       
+        resizable: true,
+        modal: true,
+        buttons: {
+        Aceptar: function() { $(this).dialog( "close" ); }
+        },        
+        autoOpen: false,
+        dialogClass: "alert",        
+        width: 400,
+        height: 200,
+        position: ['center','center'],     
+        closeOnEscape: true
+    });
+    
+    /**
+     * Para el efecto acordeón
+     */
+    $( "#acordeonColumnas" ).accordion({
+        autoHeight: false,
+        navigation: true,
+        collapsible: true,
+        active: false,
+        heightStyle: "content"
+    });
+    
+    $( "#acordeonVW" ).accordion({
+        autoHeight: false,
+        navigation: true,
+        collapsible: true,
+        active: false,
+        heightStyle: "content"
+    });    
+    
+    $( "#acordeonOrdenesWeb" ).accordion({
+        autoHeight: false,
+        navigation: true,
+        collapsible: true,
+        active: false,
+        heightStyle: "content"
+    });
+    
+    $( "#acordeonOrden" )
+    .accordion({
+        header: "> div > h3",
+        active: false,
+        collapsible: true            
+    })
+    .sortable({
+        axis: "y",
+        handle: "h3",
+        cursor: "move",
+        opacity: 0.5,
+        stop: function( event, ui ) {
+            // IE doesn't register the blur when sorting
+            // so trigger focusout handlers to remove .ui-state-focus
+            ui.item.children( "h3" ).triggerHandler( "focusout" );
+        }
+    });
+
+    $("#usersSelector").change(function () {
+        submitForm('layoutForm');
+    });
+
+    $("#projectsSelector").change(function () {
+        submitForm('layoutForm');
+    });
+
 });
+
+/**
+ * Pinta los totales de presupuestos, albaranes y pedidos
+ * @param {type} entidad
+ * @param {type} idEntidad
+ * @returns {undefined}
+ */
+function pintaTotales(entidad,idEntidad) {
+    var url = appPath +"/lib/getObjeto.php?formato=JSON&entidad="+entidad+"&idEntidad="+idEntidad;
+ 
+    $.getJSON( url, function( data ) {
+
+        parent.document.getElementById(entidad+"_LiteralTotal").innerHTML="TOTAL "+data['Total'];
+        parent.document.getElementById(entidad+"_Importe").value=data['Importe'];
+        parent.document.getElementById(entidad+"_Descuento").value=data['Descuento'];
+        parent.document.getElementById(entidad+"_BaseImponible1").value=data['BaseImponible1'];
+        parent.document.getElementById(entidad+"_BaseImponible2").value=data['BaseImponible2'];
+        parent.document.getElementById(entidad+"_BaseImponible3").value=data['BaseImponible3'];
+        parent.document.getElementById(entidad+"_Iva1").value=data['Iva1'];
+        parent.document.getElementById(entidad+"_Iva2").value=data['Iva2'];
+        parent.document.getElementById(entidad+"_Iva3").value=data['Iva3'];
+        parent.document.getElementById(entidad+"_CuotaIva1").value=data['CuotaIva1'];
+        parent.document.getElementById(entidad+"_CuotaIva2").value=data['CuotaIva2'];
+        parent.document.getElementById(entidad+"_CuotaIva3").value=data['CuotaIva3'];
+        parent.document.getElementById(entidad+"_Recargo1").value=data['Recargo1'];
+        parent.document.getElementById(entidad+"_Recargo2").value=data['Recargo2'];
+        parent.document.getElementById(entidad+"_Recargo3").value=data['Recargo3'];
+        parent.document.getElementById(entidad+"_CuotaRecargo1").value=data['CuotaRecargo1'];
+        parent.document.getElementById(entidad+"_CuotaRecargo2").value=data['CuotaRecargo2'];
+        parent.document.getElementById(entidad+"_CuotaRecargo3").value=data['CuotaRecargo3'];
+        parent.document.getElementById(entidad+"_TotalBases").value=data['TotalBases'];
+        parent.document.getElementById(entidad+"_TotalIva").value=data['TotalIva'];
+        parent.document.getElementById(entidad+"_TotalRecargo").value=data['TotalRecargo'];
+
+    }); 
+
+}
+
+function solapaActiva(solapa) {
+    alert(solapa);
+//$("#solapaActiva").val(solapa);
+}
+
+function AcordeonActivo(acordeon) {
+    $("#acordeonActivo").val(acordeon);
+}
+
+/**
+ * Oculta (si existe) el elemento html id
+ * @param id
+ * @return void
+ */
+function ocultarElemento(id) {
+
+    if ($('#'+id).length){
+        $('#'+id).css("display", "none");
+    }
+}
+
+/**
+ * Muestra (si existe) el elemento html id
+ * @param id
+ * @return void
+ */
+function mostrarElemento(id) {
+
+    if ($('#'+id).length){
+        $('#'+id).css("display", "block");
+    }
+}
+
+/**
+ * Muestra/oculta el elemento id
+ */
+function switchDisplay(id) {
+    if ($('#'+id).css('display') == 'block') {
+        $('#'+id).css('display','none');
+    } else {
+        $('#'+id).css('display','block')        
+    }
+}
+/**
+ * Muestra un popUp con las variables de entorno
+ * un formulario de mantenimiento de las variables de entorno
+ * del modulo y columna indicado en 'modulo_columna'
+ *
+ * En el parámetro 'modulo_columna' debe venir el nombre del módulo y el
+ * de la columna concatenados con guión bajo
+ *
+ *
+ * @param tipo El tipo de variable
+ * @param ambito El ámbito: Pro,App,Mod
+ * @param modulo_columna El nombre del modulo y de la columna concatenados con guión bajo
+ * @return void
+ */
+function popUpVariablesEnv(tipo, ambito, modulo_columna) {
+
+    var elementos = modulo_columna.split("_");
+
+    var modulo = elementos[0];
+    var columna = elementos[1];
+    var url = '<iframe src="' + appPath + '/CpanVariables/EditNode/' + ambito + '/' + tipo + '/' + modulo + '/' + columna + '" width="100%" height="98%"></iframe>';
+
+    $('#dialogoVarEnv').html(url);
+    $('#dialogoVarEnv').dialog('open');  
+}
+
+/**
+ * Muestra el popUp de ordenacion
+ */
+function popUpOrdenar(controller,columna,key,columnaMostrar) {
+    
+    var url = '<iframe src="' + appPath + '/Ordenar/Index/' + controller + '/' + columna + '/' + key + '/' + columnaMostrar + '" width="100%" height="98%"></iframe>';
+
+    $('#dialogOrdenar').html(url);
+    $('#dialogOrdenar').dialog('open');   
+}
+
+function cargaEtiquetasRelacionadas(idDiv,idModulo,primaryKey) {
+
+    var url = '<iframe src="' + appPath + '/EtiqRelaciones/list/' + idModulo + '/' + primaryKey + '" width="100%" height="520"><p>Tu navegador no soporta iframes</p></iframe>';
+
+    $('#'+idDiv).html(url);
+}
 
 function Confirma(mensaje) {
     var dialogo = $('<div title="Confirmación"><p>' + mensaje + '</p></div>');
@@ -52,6 +324,23 @@ function Confirma(mensaje) {
     });
 }
 
+/**
+ * Submitea el formulario pasado como parámetro
+ *
+ * @param string formulario El nombre del formulario a submitear
+ * @return void
+ */
+function submitForm(formulario) {
+    
+    // Coger el número de acordeon que está activo
+    //var acordeonActivo = $( "#accordion" ).accordion( "option", "active" );
+    
+    // Poner el número acordeon activo para que se submitee
+    //$('#acordeonActivo').val(acordeonActivo);
+    
+    $('#'+formulario).submit();
+}
+
 function Confirma1(mensaje){
     if (confirm(mensaje)) return true;
     else return false;
@@ -64,29 +353,80 @@ function CerrarVentana() {
 function Redondear(cantidad, decimales) {
     var vcantidad = parseFloat(cantidad);
     var vdecimales = parseFloat(decimales);
+    
     vdecimales = (!vdecimales ? 2 : vdecimales);
+    
     return Math.round(vcantidad * Math.pow(10, vdecimales)) / Math.pow(10, vdecimales);
 }
 
-function ValidaNif(documento,campo) {
+function borraMetadato(entidad,metadato) {
+    var url        = appPath + '/lib/metaDatos.php';
+    var parametros = 'entidad='+entidad+'&metadato='+metadato+'&accion=B';
+    var html;
+    
+    // Coloco un gif "Cargando..." en la capa
+    html = $('#div_metaDato_'+metadato).html();    
+    $('#div_metaDato_'+metadato).html("<img src='"+appPath+"/images/loading.gif'>");
+
+    $('#resultadoMetaDatos').load(url, parametros, function(){
+        if ($('#resultadoMetaDatos').html() === '1') {
+            $('#div_metaDato_'+metadato).html('');        
+        } else {
+            $('#div_metaDato_'+metadato).html(html);        
+        }        
+    });
+
+}
+
+function creaMetadato(entidad,metadato,idEntidad) {
+    
+    // Sustituir todos los espacios con guiones bajos
+    metadato = metadato.replace(/ /g,"_");
+    
+    var url        = appPath + '/lib/metaDatos.php';
+    var parametros = 'entidad='+entidad+'&metadato='+metadato+'&idEntidad='+idEntidad+'&accion=C';
+    var html, htmlNuevo;
+
+    if (metadato !== '') {
+        $('#resultadoMetaDatos').load(url,parametros,function(){
+            if ($('#resultadoMetaDatos').html() === '1') {
+                $('#metaDato_nuevo').val('');
+                html = $('#div_metaDatos').html();
+                htmlNuevo = "<div id='div_metaDato_"+metadato+"' class='Item'><span class='Etiqueta'><span>"+metadato+"</span></span><textarea name='metaDato["+metadato+"]' id='metaDato_"+metadato+"' class='TextAreaMeta' rows='2' columns='75'></textarea></div></div>";
+                html = html + htmlNuevo;
+                $('#div_metaDatos').html(html);
+            }
+            if ($('#resultadoMetaDatos').html() === '2') {
+                alert("Ese campo ya existe");
+            }            
+        });
+    } else {
+        alert('Debe indicar un nombre');
+    }
+}
+
+function ValidaNif(idDiv) {
     cadena = "TRWAGMYFPDXBNJZSQVHLCKET";
     mensaje='';
-    caracteres=document.forms[documento].elements[campo].value.length;
+    caracteres = $('#'+idDiv).val().length;
     if ((caracteres < 7) || ( caracteres > 9)) {
         mensaje = 'Faltan caracteres';
     }
     else {
-        nif=document.forms[documento].elements[campo].value;
+        nif=$('#'+idDiv).val();
         primero=nif.substring(0,1);
         if (!isNaN(primero)){
             numeros=nif.substring(0,8);
             letra=nif.substring(8,1);
             posicion=numeros % 23;
             letraok=cadena.substring(posicion,posicion+1);
-            document.forms[documento].elements[campo].value = numeros + letraok;
+            $('#'+idDiv).val(numeros + letraok);
         }
     }
-    if(mensaje!='') alert(mensaje);
+    if(mensaje!==''){
+        $('#notificacion').html(mensaje);
+        $('#notificacion').dialog('open');    
+    }
 }
 
 function esNumero(numero){
@@ -133,7 +473,7 @@ function formateafecha(fecha){
     if ((longitud>=5) && (segundoslap==false))
     {
         mes=fecha.substr(3,2);
-        if ((IsNumeric(mes)==true) &&(mes<=12) && (mes!="00")) {
+        if ((IsNumeric(mes)===true) &&(mes<=12) && (mes!=="00")) {
             fecha=fecha.substr(0,5)+"/"+fecha.substr(6,4);
             segundoslap=true;
         }
@@ -143,7 +483,7 @@ function formateafecha(fecha){
         }
     }
     else {
-        if ((longitud<=5) && (segundoslap=true)) {
+        if ((longitud<=5) && (segundoslap==true)) {
             fecha=fecha.substr(0,4);
             segundoslap=false;
         }
@@ -155,8 +495,8 @@ function formateafecha(fecha){
             fecha=fecha.substr(0,6);
         }
         else {
-            if (longitud==10){
-                if ((ano==0) || (ano<1900) || (ano>2100)) {
+            if (longitud === 10){
+                if ((ano === 0) || (ano<1900) || (ano>2100)) {
                     fecha=fecha.substr(0,6);
                 }
             }
@@ -168,7 +508,7 @@ function formateafecha(fecha){
         mes=fecha.substr(3,2);
         ano=fecha.substr(6,4);
         // A�o no viciesto y es febrero y el dia es mayor a 28
-        if ( (ano%4 != 0) && (mes ==02) && (dia > 28) ) {
+        if ( (ano%4 !== 0) && (mes === 02) && (dia > 28) ) {
             fecha=fecha.substr(0,2)+"/";
         }
     }
@@ -177,7 +517,8 @@ function formateafecha(fecha){
 
 function loading(iddiv) {
     // Coloco un gif "Cargando..." en la capa
-    $('#'+iddiv).html("<img src='"+appPath+"/images/loading.gif'>");
+    var html = "<img src='"+appPath+"/images/loadingAnimation.gif'/>";
+    $('#'+iddiv).html(html);
 }
 
 /*
@@ -200,6 +541,7 @@ function DesplegableAjax(iddiv,idselect,nameselect,tipo,filtro) {
     $('#'+iddiv).html("<img src='"+appPath+"/images/loading.gif'>");
 
     jQuery('#'+iddiv).load(url, parametros);
+
 }
 
 /*
@@ -222,6 +564,30 @@ function autoCompletar(campoAutoCompletar,campoId,campoTexto,entidad,idSucursal,
     });
 }
 
+/*
+ * GENERA UN LISTA DE AUTOCOMPLETADO CON JQUERY. REQUIRE DE LA FUNCION 'devuelve'
+ *
+ * campoAutoCompletar   -> es el id del campo donde se genera el autocompletado
+ * campoId              -> es el id del campo donde se devuelve el id obtenido
+ * campoTexto           -> es el id del campo donde se devuelve el texto obtenido
+ * entidad              -> indica en base a qué entidad de datos se genera el autocompletado
+ * columna              -> la columna de la entidad de datos que se devolverá
+ * filtroAdicional      -> valor para un filtro adicional, es opcional
+ * desplegableAjax      -> array con parametros adicionales para disparar desplegables en cascada
+ */
+function autoComplete(campoAutoCompletar,campoId,campoTexto,entidad,columna,filtroAdicional,desplegableAjax) {
+
+    var url = appPath + "/lib/autoCompletar.php?entidad=" + entidad + "&columna=" + columna + "&filtroAdicional=" + filtroAdicional;
+
+    $("#"+campoAutoCompletar).autocomplete({
+        source: url,
+        minLength: 2,
+        select: function( event, ui ) {
+            devuelve( campoId, ui.item.id, campoTexto, ui.item.value, desplegableAjax );
+        }
+    });
+}
+
 function devuelve( campoId, id, campoTexto, value, desplegableAjax) {
     $( "#"+campoId ).val(id);
     $( "#"+campoTexto ).val(value);
@@ -232,8 +598,119 @@ function devuelve( campoId, id, campoTexto, value, desplegableAjax) {
     $( "#"+campoTexto ).focus();
 }
 
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * Actualiza vía ajax la 'columna' de la 'entidad' e 'idEntidad' con el 'valor'
+ * 
+ * Esta función sirve para actualizar cualquier columna de cualquier entidad
+ * con un valor dado vía ajax
+ * 
+ */
+function actualizaColumna(entidad,idEntidad,columna,valor) {
 
+    var parametros = 'entidad='+entidad+'&idEntidad='+idEntidad+'&columna='+columna+'&valor='+valor;
+
+    $.ajax({
+        url: appPath + "/lib/actualizaColumna.php",
+        type: 'GET',
+        async: true,
+        data: parametros
+    });
+}
+
+/**
+ * Actualiza las variables de entorno de las columnas de las entidades
+ */
+function actualizaVarEntorno(entidadColumnaPropiedad,valor) {
+    var parametros = 'entidadColumnaPropiedad='+entidadColumnaPropiedad+'&valor='+valor;
+
+    $.ajax({
+        url: appPath + "/lib/actualizaVarEntorno.php",
+        type: 'GET',
+        async: true,
+        data: parametros
+    });    
+}
+
+/**
+ * Asigna/Quita permiso a los módulos y perfiles de usuarios del Erp
+ */
+function actualizaPermiso(idPerfil,nombreModulo,permiso,valor) {
+    var parametros = 'idPerfil='+idPerfil+'&nombreModulo='+nombreModulo+'&permiso='+permiso+'&valor='+valor;
+
+    $.ajax({
+        url: appPath + "/lib/actualizaPermiso.php",
+        type: 'GET',
+        async: true,
+        data: parametros
+    });    
+}
+
+/**
+ * Crear o borra la relación entre una entidad-id y otra entidad-id
+ */
+function actualizaRelacion(entidadOrigen,idOrigen,entidadDestino,idDestino,onOff) {
+    var parametros = 'entidadOrigen='+entidadOrigen+'&idOrigen='+idOrigen+'&entidadDestino='+entidadDestino+'&idDestino='+idDestino+'&onOff='+onOff;
+
+    $.ajax({
+        url: appPath + '/lib/actualizaRelacion.php',
+        type: 'GET',
+        async: true,
+        data: parametros
+    });    
+}
+
+function actualizaEtiquetasRelacionadas(idModulo,idEntidad,idEtiqueta,onOff) {
+
+    var parametros = 'idModulo='+idModulo+'&idEntidad='+idEntidad+'&idEtiqueta='+idEtiqueta+'&onOff='+onOff;
+
+    $.ajax({
+        url: appPath + '/lib/etiquetasRelacionadas.php',
+        type: 'GET',
+        async: true,
+        data: parametros
+    });
+}
+
+/**
+ * Actualiza la tripleta idarticulo-idpropiedad-idvalor
+ **/
+function actualizaArticuloPropiedad(idArticulo,idPropiedad,idValor) {
+    var url = appPath + '/lib/actualizaArticuloPropiedad.php';
+    var parametros = 'idArticulo='+idArticulo+'&idPropiedad='+idPropiedad+'&idValor='+idValor;
+    $('#resultado').load(url, parametros);
+}
+
+/**
+ * Actualiza la tabla de portes
+ */
+function actualizaTablaPortes(idAgencia,idZona,kilos,importe) {
+    var url = appPath + '/lib/actualizaTablaPortes.php';
+    var parametros = 'idAgencia='+idAgencia+'&idZona='+idZona+'&kilos='+kilos+'&importe='+importe;
+
+    $('#resultado').load(url, parametros);
+    
+}
+
+/**
+ * Actualiza la relacion familias-propiedades
+ */
+function actualizaFamiliaPropiedad(idFamilia,idPropiedad,valor) {
+    var url = appPath + '/lib/actualizaFamiliaPropiedad.php';
+    var parametros = 'idFamilia='+idFamilia+'&idPropiedad='+idPropiedad+'&valor='+valor;
+
+    $('#resultado').load(url, parametros);
+    
+}
+/**
+ * Actualiza la columna 'Filtrable' de una familia y propiedad
+ */
+function actualizaFamiliaPropiedadFiltrable(idFamilia,idPropiedad,valor) {
+    var url = appPath + '/lib/actualizaFamiliaPropiedadFiltrable.php';
+    var parametros = 'idFamilia='+idFamilia+'&idPropiedad='+idPropiedad+'&valor='+valor;
+
+    $('#resultado').load(url, parametros);
+    
+}
 /*
  * ----------------------------------------------------------------
  * FUNCION PARA LOS MENSAJES DE NOTIFICACION
@@ -252,21 +729,18 @@ function devuelve( campoId, id, campoTexto, value, desplegableAjax) {
 function notificacion(mensaje,tipo) {
     var v=0;
     var errores="";
+    
     for (var i=0; i<=mensaje.length;i++)
     {
-        if(mensaje[i]=='#')
+        if(mensaje[i]==='#')
         {
             errores += '<p>' + mensaje.substring(i, v) + '</p>';
             v=i+1;
         }
     }
 
-    document.getElementById('notificacion').innerHTML = errores;
-    document.getElementById('notificacion').className = tipo+" notificacion";
-
-    setTimeout(function(){
-        $(".notificacion").fadeIn(2000).fadeOut(6000);
-    }, 0000);
+    $('#notificacion').html(errores);
+    $('#notificacion').dialog('open');
 }
 
 /**

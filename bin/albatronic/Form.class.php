@@ -9,9 +9,6 @@
  * @copyright Informatica ALBATRONIC, SL
  * @since 24.05.2011
  */
-
-
-
 class Form {
 
     protected $moduleName;
@@ -22,7 +19,7 @@ class Form {
      * @param string $moduleName Nombre del modulo
      * @param string $archivoYaml Nombre del archivo que tiene los parametros
      */
-    public function __construct($moduleName, $archivoYaml='config.yml') {
+    public function __construct($moduleName, $archivoYaml = 'config.yml') {
         $this->moduleName = $moduleName;
         $file = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/modules/" . $this->moduleName . "/" . $archivoYaml;
         $this->yaml = sfYaml::load($file);
@@ -35,8 +32,41 @@ class Form {
      * @param string $node El nombre del nodo solicitado
      * @return array Array con el nodo indicado
      */
-    private function getNode($node) {
+    public function getNode($node) {
         return $this->yaml[$this->moduleName][$node];
+    }
+
+    /**
+     * Devuelve un array con los includes para el HEAD del layout
+     * Nodo YAML <includesHead>
+     * @return array
+     */
+    public function getIncludesHead() {
+        return $this->getNode('includesHead');
+    }
+
+    /**
+     * Devuelve un array con las variables WEB
+     * Nodo YAML <includesVarWeb>
+     * @return array
+     */
+    public function getVarweb() {
+
+        $vW = array();
+
+        $includes = $this->getNode('includesVarWeb');
+        if (is_array($includes)) {
+
+            foreach ($includes as $include) {
+                $yml = sfYaml::load($include);
+                $nodo = $yml['varWeb'];
+                foreach ($nodo as $key => $value) {
+                    $vW[$key] = $value;
+                }
+            }
+        }
+
+        return $vW;
     }
 
     /**
@@ -55,7 +85,12 @@ class Form {
      * @return string
      */
     public function getConection() {
-        return $this->getNode('conection');
+
+        $conection = $this->getNode('conection');
+        if ($conection == '') {
+            $conection = $_SESSION['project']['conection'];
+        }
+        return $conection;
     }
 
     /**
@@ -74,7 +109,7 @@ class Form {
      * Nodo YAML <table>
      * @return string
      */
-    public function getTable() {
+    public function getTable() {       
         return $this->getNode('table');
     }
 
@@ -134,7 +169,9 @@ class Form {
      * @return boolean
      */
     public function getLoginRequired() {
-        return $this->getNode('login_required');
+        $valor = strtoupper($this->getNode('login_required'));
+
+        return ( ($valor == 'YES') or ($valor == 'TRUE') );
     }
 
     /**
@@ -144,7 +181,9 @@ class Form {
      * @return boolean
      */
     public function getPermissionControl() {
-        return $this->getNode('permission_control');
+        $valor = strtoupper($this->getNode('permission_control'));
+
+        return ( ($valor == 'YES') or ($valor == 'TRUE') );
     }
 
     /**
@@ -154,7 +193,9 @@ class Form {
      * @return boolean
      */
     public function getFavouriteControl() {
-        return $this->getNode('favourite_control');
+        $valor = strtoupper($this->getNode('favourite_control'));
+
+        return ( ($valor == 'YES') or ($valor == 'TRUE') );
     }
 
     /**
@@ -168,10 +209,9 @@ class Form {
     }
 
     /**
-     * Devuelve el nombre de la columna por la que se ordena
-     * el listado
+     * Devuelve el array con los criterios de ordenación del listado
      * Nodo YAML: <order_by>
-     * @return string
+     * @return array
      */
     public function getListOrderBy() {
         return $this->getNode('order_by');
@@ -202,14 +242,15 @@ class Form {
      * @return string
      */
     public function getListColumns() {
+
         $columnas = '';
 
         if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value) {
-                if (strtoupper((string) $value['list']) == 'YES') {
+            foreach ($this->getNode('columns') as $key => $value) {
+                if ((strtoupper($value['list']) == 'YES') or ($value['list'] === true)) {
                     if ($columnas != '')
                         $columnas .= ", ";
-                    $columnas .= (string) $value['field'];
+                    $columnas .= (string) $key;
                 }
             }
         }
@@ -227,15 +268,15 @@ class Form {
         $titulos = array();
 
         if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value) {
-                if (strtoupper($value['list']) == 'YES') {
-                    $titulos[$value['field']] = array(
+            foreach ($this->getNode('columns') as $key => $value) {
+                if ((strtoupper($value['list']) == 'YES') or ($value['list'] === true)) {
+                    $titulos[$key] = array(
                         'title' => $value['title'],
                         'type' => $value['validator']['type'],
                         'length' => $value['validator']['length'],
                     );
                     if ($value['link']['route']) {
-                        $titulos[$value['field']]['link'] = $value['link'];
+                        $titulos[$key]['link'] = $value['link'];
                     }
                 }
             }
@@ -253,9 +294,9 @@ class Form {
         $columns = array();
 
         if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value)
-                if (strtoupper($value['filter']) == 'YES')
-                    $columns[$value['field']] = $value['title'];
+            foreach ($this->getAtributos($this->moduleName) as $key => $value)
+                if ((strtoupper($value['filter']) == 'YES') or ($value['filter'] === 1))
+                    $columns[$key] = $value['caption'];
         }
 
         return $columns;
@@ -269,39 +310,67 @@ class Form {
      */
     public function getTitleColumn($fieldName) {
 
-        $title = "";
+        $columns = $this->getNode('columns');
+        return $columns[$fieldName]['title'];
+    }
 
-        if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value)
-                if ($value['field'] == $fieldName) {
-                    $title = $value['title'];
-                    break;
-                }
-        }
+    /**
+     * Devuelve un array con los titulos de todas las columnas
+     *
+     * El índice del array es el field de la columna
+     *
+     * @return array Array con los titulo
+     */
+    public function getTitles() {
 
-        return $title;
+        $titles = array();
+
+        if ($this->getNode('columns'))
+            foreach ($this->getNode('columns') as $key => $value)
+                $titles[$key] = $value['title'];
+
+        return $titles;
+    }
+
+    /**
+     * Devuelve el valor por defecto de la columna
+     * Nodo <default>
+     *
+     * @param string $column El nombre de la columna
+     * @return string El valor por defecto
+     */
+    public function getDefaultValue($column) {
+
+        $columnas = $this->getNode('columns');
+        return $columnas[$column]['default'];
     }
 
     /**
      * Devuelve un array con los reglas de validación
      * El array tiene un elemento por cada campo a validar.
      * El indice del array es el nombre del campo.
+     * El array SOLO incluye las columnas NO que pueden ser NULAS
+     * También incluye el valor por defecto.
      *
      * Nodo YAML <columns><column><validator>
      * @return array
      */
     public function getRules() {
+
         $rules = array();
 
-        if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value) {
+        $columns = $this->getNode('columns');
+
+        if (is_array($columns)) {
+            foreach ($columns as $key => $value) {
                 if (strtoupper($value['validator']['nullable']) == 'NO') {
-                    $rules[$value['field']] = array(
+                    $rules[$key] = array(
                         'title' => $value['title'],
                         'type' => $value['validator']['type'],
                         'length' => $value['validator']['length'],
                         'minimo' => $value['validator']['min'],
                         'maximo' => $value['validator']['max'],
+                        'default' => $value['default'],
                         'message' => $value['validator']['message'],
                     );
                 }
@@ -309,6 +378,18 @@ class Form {
         }
 
         return $rules;
+    }
+
+    /**
+     * Si el formulario debe tener listado, se devuelve TRUE
+     * dependiendo del valor del nodo <feature_list>
+     *
+     * @return boolean TRUE si el formulario tiene listado
+     */
+    public function getTieneListado() {
+        $valor = strtoupper($this->getNode('feature_list'));
+
+        return ( ($valor == 'YES') or ($valor == 'TRUE') );
     }
 
     /**
@@ -335,7 +416,7 @@ class Form {
         $desplazamiento = 0;
 
         if ($this->getNode('columns')) {
-            foreach ($this->getNode('columns') as $value) {
+            foreach ($this->getNode('columns') as $key => $value) {
                 if ($value['aditional_filter']) {
                     $index = (integer) trim((string) $value['aditional_filter']['order']) + $desplazamiento;
                     $type = strtolower(trim((string) $value['aditional_filter']['type']));
@@ -349,7 +430,7 @@ class Form {
                     if ($operator == '')
                         $operator = '=';
 
-                    $filters[$index]['field'] = trim((string) $value['field']);
+                    $filters[$index]['field'] = trim((string) $key);
                     $filters[$index]['caption'] = trim((string) $value['aditional_filter']['caption']);
                     $filters[$index]['entity'] = trim((string) $value['aditional_filter']['entity']);
                     $filters[$index]['method'] = trim((string) $value['aditional_filter']['method']);
@@ -412,7 +493,7 @@ class Form {
         $formatos = array();
 
         if ($this->yaml['listados']) {
-            $perfilUsuario = $_SESSION['USER']['user']['IDPerfil'];
+            $perfilUsuario = $_SESSION['usuarioPortal']['IdPerfil'];
             foreach ($this->yaml['listados'] as $value) {
                 $perfiles = (string) $value['idPerfil'];
                 $arrayPerfiles = explode(',', $perfiles);
@@ -435,6 +516,65 @@ class Form {
      */
     public function getFormatoListado($idListado) {
         return $this->yaml['listados'][$idListado];
+    }
+
+    /**
+     * Devuelve un array con los atributos de cada columna del módulo $modulo
+     *
+     * Los atributos son: caption, visible, updatable, default, permission, help
+     *
+     * Los valores de los atributos se obtienen  de las variables de entorno del módulo,
+     * y si no existen, se cargan del config.yml correspondiente
+     *
+     * @param string $modulo El nombre del módulo
+     * @return array Array de atributos
+     */
+    public function getAtributos($modulo) {
+        
+        $atributos = array();
+
+        // PRIMERO LEO LOS ATRIBUTOS DE LAS COLUMNAS QUE ESTÁN EN CONFIG.YML
+        $columnasConfig = $this->getNode('columns');
+
+        // LUEGO LOS SUSTITUYO POR LOS ESPECIFICOS QUE ESTAN EN LAS VAR DE ENTORNO DE PROYECTO
+        // DE TAL MANERA QUE PREVALECEN LOS DEFINIDOS EN LAS VARIABLES DE ENTORNO, PERO
+        // SI NO EXISTIERA LA VARIABLE DE ENTORNO CORRESPONDIENTE ENTONCES PONGO LA DEL CONFIG.
+        $variables = new CpanVariables('Mod', 'Env', $modulo);
+
+        if (is_array($variables->getDatosYml())) {
+            $arrayColumnas = $variables->getNode('columns');
+            foreach ($arrayColumnas as $key => $value) {
+                $atributos[$key] = $value;
+
+                if (is_array($columnasConfig[$key])) {
+                    foreach ($columnasConfig[$key] as $keyConfig => $valueConfig) {
+                        if (!isset($atributos[$key][$keyConfig]))
+                            $atributos[$key][$keyConfig] = $valueConfig;
+                    }
+                }
+            }
+        } else {
+            // Aún no se han definido las variables, por lo tanto cargo los atributos
+            // en base al array de correspondencia de atributos predeterminados
+            foreach ($columnasConfig as $keyColumna => $valueColumna)
+                foreach (VariablesEnv::$varEnvMod as $keyVar => $keyColumnaConfig)
+                    $atributos[$keyColumna][$keyVar] = $valueColumna[$keyColumnaConfig];
+        }
+
+        unset($variables);
+
+        // Si el usuario es super pongo la visibilidad a TRUE
+        //if ($_SESSION['usuarioPortal']['Id'] == '1')
+        //    foreach ($atributos as $key => $value)
+        //        ++$atributos[$key]['visible'];
+                /**
+                if (!$atributos[$key]['visible']) {
+                    $atributos[$key]['visible'] = '1';
+                    $atributos[$key]['caption'] .= " (oculta)";
+                }
+                 */
+
+        return $atributos;
     }
 
 }

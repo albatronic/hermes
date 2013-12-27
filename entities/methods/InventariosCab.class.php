@@ -30,12 +30,10 @@ class InventariosCab extends InventariosCabEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "DELETE FROM {$this->_dataBaseName}.inventarios_cab WHERE `IDInventario`='{$this->IDInventario}' AND Cerrado='0'";
+            $query = "DELETE FROM {$this->_dataBaseName}.{$this->_tableName} WHERE `IDInventario`='{$this->IDInventario}' AND Cerrado='0'";
             if ($this->_em->query($query)) {
-                //Borrar líneas de inventario
-                $query = "DELETE FROM {$this->_dataBaseName}.inventarios_lineas where `IDInventario`='{$this->IDInventario}'";
-                if (!$this->_em->query($query))
-                    $this->_errores = $this->_em->getError();
+                $lineas = new InventariosLineas();
+                $lineas->queryDelete("`IDInventario`='{$this->IDInventario}'");
             } else
                 $this->_errores = $this->_em->getError();
             $this->_em->desConecta();
@@ -77,12 +75,15 @@ class InventariosCab extends InventariosCabEntity {
                     'Reservadas' => 0,
                     'Entrando' => 0,
                 );
+                /**
                 if ($valores['Reales']>=0)
                     $signo = "E";
                 else {
                     $signo = "S";
                     $valores['Reales'] = abs($valores['Reales']);
                 }
+                */
+                $signo = "E";
 
                 $mvtoAlmacen = new MvtosAlmacen();
                 $ok = $mvtoAlmacen->

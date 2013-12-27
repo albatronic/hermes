@@ -7,32 +7,32 @@
  */
 
 /**
- * @orm:Entity(zonas_transporte)
+ * @orm:Entity(ZonasTransporte)
  */
-class ZonasTransporteEntity extends Entity {
+class ZonasTransporteEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="zonas_transporte")
+     * @assert:NotBlank(groups="ZonasTransporte")
      */
     protected $IDZona;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="zonas_transporte")
+     * @assert:NotBlank(groups="ZonasTransporte")
      */
     protected $Zona = '';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'zonas_transporte';
+    protected $_tableName = 'ErpZonasTransporte';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -68,5 +68,5 @@ class ZonasTransporteEntity extends Entity {
 
 }
 
-// END class zonas_transporte
+// END class ZonasTransporte
 ?>

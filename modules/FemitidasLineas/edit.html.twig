@@ -6,7 +6,7 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-	<form name="manto" action="" method="POST">
+	<form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
 		<div class='Comandos'>
 						{% if values.permisos['A'] %}
                             <input type="submit" name="accion" value="Guardar" class="Comando"/>

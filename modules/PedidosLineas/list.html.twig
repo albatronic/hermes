@@ -31,7 +31,7 @@
                     <td align="right">{{objeto.UnidadesRecibidas}}</td>
                     <td>
                         {{objeto.IDArticulo.UMC}}
-                        {% if objeto.UnidadesRecibidas != 0%}
+                        {% if ( (objeto.UnidadesRecibidas != 0) and (objeto.IDArticulo.Inventario.IDTipo) and (objeto.IDEstado.IDTipo >= 2) ) %}                            
                             {{ macro.detalleRecepcionLinea(app.path,objeto) }}
                         {% endif %}
                     </td>

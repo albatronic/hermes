@@ -43,7 +43,8 @@ class Submenu extends SubmenuEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
 
         $em = new EntityManager("empresas");
         $link = $em->getDbLink();

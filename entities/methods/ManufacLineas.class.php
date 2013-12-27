@@ -117,7 +117,9 @@ class ManufacLineas extends ManufacLineasEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
+  
         if ($this->IDEstado != 0) {
             $this->_errores[] = "No se puede borrar la línea. Está en elaboración";
         }

@@ -6,23 +6,23 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" enctype="multipart/form-data" method="POST">    
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" enctype="multipart/form-data" method="POST">    
         <input name="controller" value="RecibosProveedores" type="hidden" />
         <input name="action" id="action" value="edit" type="hidden" />
-        <input name="accion" id="accion" value="" type="hidden" />  
+        <input name="accion" id="accion_{{values.controller}}" value="" type="hidden" />  
         <input name="RecibosProveedores[IDRecibo]" value="{{ values.datos.IDRecibo }}" type="hidden" />
 
         <div class='Comandos'>
             <div class="Titulo">
             <div style="float: left;">
-                {% if values.permisos['A'] %}
-                <input type="image" src="{{app.path}}/images/save_cmd.png" width="24px" onclick="getElementById('accion').value='Guardar';" alt="Guardar" title="Guardar" />
+                {% if values.permisos.permisosModulo['UP'] %}
+                <input type="image" src="{{app.path}}/images/save_cmd.png" width="24px" onclick="getElementById('accion_{{values.controller}}').value='Guardar';" alt="Guardar" title="Guardar" />
                 {% endif %}
-                {% if values.permisos['B'] %}
-                <input type="image" src="{{app.path}}/images/trash_cmd.png" width="24px" onclick="if (!confirm('¿Desea borrar el registro?')) {return false;} else {getElementById('accion').value='Borrar';}" alt="Borrar" title="Borrar" />
+                {% if values.permisos.permisosModulo['DE'] %}
+                <input type="image" src="{{app.path}}/images/trash_cmd.png" width="24px" onclick="if (!confirm('¿Desea borrar el registro?')) {return false;} else {getElementById('accion_{{values.controller}}').value='Borrar';}" alt="Borrar" title="Borrar" />
                 {% endif %}
-                {% if values.datos.getIDArqueo and values.permisosCajas['C'] %}
-                    <a href="{{app.path}}/CajaArqueos/Edit/{{values.datos.getIDArqueo}}" title="Ver apunte de caja">
+                {% if values.datos.getIDArqueo and values.permisosCajas['CO'] %}
+                    <a href="{{app.path}}/CajaArqueos/Edit/{{values.datos.PrimaryKeyMD5}}" title="Ver apunte de caja">
                         <img src="{{app.path}}/images/caja.png" width="24px"/>
                     </a>
                 {% endif %}                

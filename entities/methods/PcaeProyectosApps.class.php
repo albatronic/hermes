@@ -31,7 +31,7 @@ class PcaeProyectosApps extends PcaeProyectosAppsEntity {
 
             // Asignar permiso de acceso al usuario en curso
             $permiso = new PcaePermisos();
-            $permiso->setIdUsuario($_SESSION['USER']['user']['Id']);
+            $permiso->setIdUsuario($_SESSION['usuarioPortal']['Id']);
             $permiso->setIdEmpresa($idEmpresa);
             $permiso->setIdProyecto($idProyecto);
             $permiso->setIdApp($this->IdApp);
@@ -42,7 +42,7 @@ class PcaeProyectosApps extends PcaeProyectosAppsEntity {
             $rows = $usuario->cargaCondicion("IdUsuario", "IdEmpresa='{$idEmpresa}'");
             unset($usuario);
             foreach ($rows as $row)
-                if ($row['IdUsuario'] != $_SESSION['USER']['user']['Id']) {
+                if ($row['IdUsuario'] != $_SESSION['usuarioPortal']['Id']) {
                     $permiso = new PcaePermisos();
                     $permiso->setIdUsuario($row['IdUsuario']);
                     $permiso->setIdEmpresa($idEmpresa);
@@ -87,6 +87,7 @@ class PcaeProyectosApps extends PcaeProyectosAppsEntity {
      * Comprueba la unicidad de IdProyecto-IdApp
      */
     public function validaLogico() {
+        
         parent::validaLogico();
 
         if (!$this->Id) {

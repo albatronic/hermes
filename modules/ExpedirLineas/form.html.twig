@@ -28,7 +28,7 @@
             {% set linAnt = 0 %}
             {% set nLineas = 0 %}
             {% for key,objeto in values.listado.data %}
-            <form name="linea{{key}}" action="" method="POST">
+            <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="ExpedirLineas" type="hidden" />
                 <input name="action" value="edit" type="hidden" />
                 <input name="accion" id="accion{{key}}" value="" type="hidden" />
@@ -45,8 +45,8 @@
                             {{objeto.IDLineaEntidad.Unidades}} {{objeto.IDLineaEntidad.UnidadMedidaArticulo}}
                             ({{objeto.IDArticulo.convertUnit(objeto.UnidadMedida,'UMA',objeto.IDLineaEntidad.Unidades)}} {{objeto.IDLineaEntidad.IDArticulo.UMA}})
                         </div>
-                        {% if (objeto.FlagSinStock == '1') %}
-                        <div style="float: left; font-weight: bold; color: red;">Sin stock !!</div>
+                        {% if (objeto.FlagSinStock != '0') %}
+                            <div style="float: left; font-weight: bold; color: red;">Sin stock !!</div>
                         {% endif %}
                     </td>
                 </tr>
@@ -70,9 +70,9 @@
                             <select name="Expediciones[IDLote]" id="Expediciones_IDLote{{key}}" class="Select" style="width:150px;"
                                 {% if objeto.IDAlmacen.ControlUbicaciones.IDTipo == '1' %}
                                     {% if (not objeto.FlagSinStock) %}
-                                        onchange="DesplegableAjax('div_Ubicacion{{key}}','Expediciones_IDUbicacion{{key}}','Expediciones[IDUbicacion]','ubicacionesLote',this.value+'-'+'{{objeto.IDAlmacen.IDAlmacen}}');"
+                                        onchange="DesplegableAjax('Expediciones_IDUbicacion{{key}}','Expediciones_IDUbicacion{{key}}','Expediciones[IDUbicacion]','ubicacionesLote',this.value+'-'+'{{objeto.IDAlmacen.IDAlmacen}}');"
                                     {% else %}
-                                        onchange="DesplegableAjax('div_Ubicacion{{key}}','Expediciones_IDUbicacion{{key}}','Expediciones[IDUbicacion]','ubicacionesAlmacen','{{objeto.IDAlmacen.IDAlmacen}}');"
+                                        onchange="DesplegableAjax('Expediciones_IDUbicacion{{key}}','Expediciones_IDUbicacion{{key}}','Expediciones[IDUbicacion]','ubicacionesAlmacen','{{objeto.IDAlmacen.IDAlmacen}}');"
                                     {% endif %}
                                 {% endif %}
                             >
@@ -111,25 +111,22 @@
         </tbody>
     </table>
 
-<div class="FormManto" style="margin-top: 10px; text-align: center;">
-    <form name="Expedir" id="expedirForm" action="" method="POST">
+<div class="FormManto" id="formExpedir" style="margin-top: 10px; text-align: center;">
+    <form name="Expedir" id="expedirForm" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="ExpedirLineas" type="hidden" />
         <input name="action" id="action" value="Expedir" type="hidden" />        
         <input name="entidad" id="entidad" value="{{values.entidad}}" type="hidden" />
         <input name="idEntidad" id="idEntidad" value="{{values.idEntidad}}" type="hidden" />
         <div style="float: center;">
-        <input type="button" value="Expedir" class="Comando" 
-               onclick="
-                   valida({{nLineas}});
-                   $('#dialogoValidar').dialog('open');
-               "
-        />
+        <input id="botonExpedir" type="button" value="Expedir" class="Comando" />
         </div>
     </form>
 </div>
-
-<div id="dialogoValidar" title='Expedir el documento {{values.objetoEntidad.getNumeroDocumento}}'></div>
-    
+        
+<div id="dialogoValidar" title='Expedir el documento {{values.objetoEntidad.getNumeroDocumento}}'>
+    <div style="margin-top:15px;">¿ Desea realizar la expedición ?</div>
+</div>        
+        
 </div>
 {{ macro.foco('Expediciones_Kilos0') }}
 
@@ -150,32 +147,58 @@
                 mensaje += '<div style="margin-top:5px;">En la línea ' + linea + ' falta indicar las unidades</div>';
               }
         }
-        mensaje += '<div style="margin-top:15px;">¿ Desea realizar la expedición ?</div>';
-        $('#dialogoValidar').html(mensaje);      
+
+        return mensaje;
     }
     
-
+    
     $(function() {
         $( "#dialog:ui-dialog" ).dialog( "destroy" );  
        
+        $('#botonExpedir').click(
+            function(){
+                var mensaje = valida({{nLineas}});
+
+                if (mensaje.length > 0) {
+                    $('#notificacion').html(mensaje);
+                    $('#notificacion').dialog('open');
+                } else {
+                    $('#dialogoValidar').dialog('open');
+                }
+        }); 
+        
+        $( "#notificacion" ).dialog({                       
+            resizable: true,
+            modal: true,
+            buttons: {
+            Aceptar: function() { $(this).dialog( "close" ); }
+            },        
+            autoOpen: false,
+            dialogClass: "alert",        
+            width: 400,
+            height: 200,
+            position: ['center','center'],     
+            closeOnEscape: true
+        });
+        
         $( "#dialogoValidar" ).dialog({
-                        autoOpen: false,
-                        width: 330,
-			height:240,                        
-			resizable: true,
-			modal: true,
-			buttons: {
-				"Expedir": function() {
-                                    $('#action').val('Expedir');                                    
-                                    $('#entidad').val('{{values.entidad}}');
-                                    $('#idEntidad').val('{{values.idEntidad}}');
-                                    $('#expedirForm').submit();
-                                    $( this ).dialog( "close" );
-				},
-				"Cancelar": function() {
-                                    $( this ).dialog( "close" );
-				}
-			}
+            autoOpen: false,
+            width: 330,
+            height:240,                        
+            resizable: true,
+            modal: true,
+            buttons: {
+                    "Expedir": function() {
+                        $('#action').val('Expedir');                                    
+                        $('#entidad').val('{{values.entidad}}');
+                        $('#idEntidad').val('{{values.idEntidad}}');
+                        $('#expedirForm').submit();
+                        $( this ).dialog( "close" );
+                    },
+                    "Cancelar": function() {
+                        $( this ).dialog( "close" );
+                    }
+            }
         });
     });
 </script>    

@@ -47,7 +47,7 @@ class MvtosAlmacenInternosController extends Controller {
 
     public function IndexAction() {
 
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
         $this->values['almacenes'] = $usuario->getAlmacenes();
         unset($usuario);
 

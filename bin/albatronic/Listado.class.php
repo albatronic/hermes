@@ -70,7 +70,8 @@ class Listado {
         foreach ($this->filter['aditional'] as $key => $value) {
             if (($value['entity'] != '') and ($value['type'] == 'select')) {
                 $claseConId = explode(',', $value['entity']);
-                $objeto = new $claseConId[0]($claseConId[1]);
+                if (class_exists($claseConId[0]))
+                    $objeto = new $claseConId[0]($claseConId[1]);
                 $this->filter['aditional'][$key]['values'] = $objeto->{$value['method']}($value['params']);
                 //$this->filter['aditional'][$key]['values'][] = array('Id' => '', 'Value' => '** Todo **');
             }
@@ -415,10 +416,7 @@ class Listado {
         unset($em);
 
         $breakField = trim((string) $parametros['break_field']);
-        if ($breakField)
-            $breakField = explode(",", $breakField);
-        else
-            $breakField = array();
+        $breakField = ($breakField) ? explode(",", $breakField) : array();
 
         $breakPage = ( strtoupper(trim((string) $parametros['break_page'])) == 'YES' );
 
@@ -818,7 +816,7 @@ class Listado {
         $objPHPExcel->getActiveSheet()->setTitle($parametros['title']);
         $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A1', $parametros['title'])
-                ->setCellValue('A3', 'Generado por ' . $_SESSION['USER']['user']['Nombre'])
+                ->setCellValue('A3', 'Generado por ' . $_SESSION['usuarioPortal']['Nombre'])
                 ->setCellValue('A4', 'Fecha ' . date('d/m/Y H:i:s'));
         // Fila de titulos
         $columna = 'A';
@@ -986,7 +984,7 @@ class listadoPDF extends FPDF {
 
     //Cabecera de página
     function Header() {
-        $empresa = new Empresas($_SESSION['emp']);
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $sucursal = new Sucursales($_SESSION['suc']);
 
         $this->Image($empresa->getLogo(), 10, 8, 23);

@@ -17,7 +17,7 @@
                     {% set classFila = 'Par' %}
                 {% endif %}
             <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.IDEstado}}'" class='{{classFila}}'>
-                <td><a href="{{app.path}}/ArticulosEstados/edit/{{objeto.IDEstado}}" title="Editar...">{{objeto.Estado}}</a></td>
+                <td><a href="{{app.path}}/ArticulosEstados/edit/{{objeto.PrimaryKeyMD5}}" title="Editar...">{{objeto.Estado}}</a></td>
             </tr>
             {% endfor %}
             </tbody>

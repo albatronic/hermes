@@ -23,14 +23,14 @@
                 {% endif %}
             <tr class='{{classFila}}'>
                 <td>
-                    <a href="{{app.path}}/ClientesDentrega/edit/{{objeto.IDDirec}}/{{objeto.IDCliente.IDCliente}}" title="Editar ...">
+                    <a href="{{app.path}}/ClientesDentrega/edit/{{objeto.PrimaryKeyMD5}}/{{objeto.IDCliente.IDCliente}}" title="Editar ...">
                     <img src="{{app.path}}/images/botoneditar.png" width="16px" height="16px" />
                     <a>
                 </td>
                 <td>{{objeto.Direccion}}</td>
-                <td>{{objeto.Poblacion}}</td>
+                <td>{{objeto.IDPoblacion}}</td>
                 <td>{{objeto.IDProvincia}}</td>
-                <td>{{objeto.CodPostal}}</td>
+                <td>{{objeto.CodigoPostal}}</td>
             </tr>
             {% endfor %}
             </tbody>

@@ -13,7 +13,7 @@
 {{ macro.etiqueta('Descripción','Etiqueta',datos.Descripcion) }}
 <div class="Item">
     <div class="Etiqueta">Documento</div>
-    <p class="Literal"><a href="{{app.path}}/{{datos.getDocumento.getClassName}}/edit/{{datos.Documento}}" target="_blank" title="Ver Documento">{{datos.getNumeroDocumento}}</a></p>
+    <p class="Literal"><a href="{{app.path}}/{{datos.getDocumento.getClassName}}/edit/{{datos.Documento.PrimaryKeyMD5}}" target="_blank" title="Ver Documento">{{datos.getNumeroDocumento}}</a></p>
 </div>
 </div>
 

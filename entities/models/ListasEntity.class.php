@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(listas)
  */
-class ListasEntity extends Entity {
+class ListasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -61,12 +61,12 @@ class ListasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'listas';
+    protected $_tableName = 'ErpListas';
     /**
      * Nombre de la primaryKey
      * @var string

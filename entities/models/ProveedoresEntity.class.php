@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(proveedores)
  */
-class ProveedoresEntity extends Entity {
+class ProveedoresEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -18,116 +18,141 @@ class ProveedoresEntity extends Entity {
      * @assert:NotBlank(groups="proveedores")
      */
     protected $IDProveedor;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $RazonSocial;
+
     /**
      * @orm:Column(type="string")
      */
     protected $NombreComercial;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $Cif;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Direccion;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $IDPais = '73';
+
     /**
      * @orm:Column(type="string")
      */
-    protected $Poblacion;
+    protected $IDPoblacion = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $IDProvincia = '18';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $CodigoPostal = '0000000000';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Telefono;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Fax;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Movil;
+
     /**
      * @orm:Column(type="string")
      */
     protected $EMail;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Web;
+
     /**
      * @orm:Column(type="string")
      */
     protected $CContable = '0000000000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
-    protected $IDBanco = '0000';
+    protected $Banco = '0000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
-    protected $IDOficina = '0000';
+    protected $Oficina = '0000';
+
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $Digito = '00';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $Cuenta = '0000000000';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Observaciones = '';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $IDFP = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="proveedores")
      */
     protected $Iva = '1';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'proveedores';
+    protected $_tableName = 'ErpProveedores';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDProveedor';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -191,12 +216,14 @@ class ProveedoresEntity extends Entity {
         return $this->IDPais;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = trim($Poblacion);
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
     }
 
-    public function getPoblacion() {
-        return $this->Poblacion;
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setIDProvincia($IDProvincia) {
@@ -265,24 +292,24 @@ class ProveedoresEntity extends Entity {
         return $this->CContable;
     }
 
-    public function setIDBanco($IDBanco) {
-        $this->IDBanco = $IDBanco;
+    public function setBanco($Banco) {
+        $this->Banco = str_pad(trim($Banco), 4, "0");
     }
 
-    public function getIDBanco() {
-        return $this->IDBanco;
+    public function getBanco() {
+        return $this->Banco;
     }
 
-    public function setIDOficina($IDOficina) {
-        $this->IDOficina = $IDOficina;
+    public function setOficina($Oficina) {
+        $this->Oficina = str_pad(trim($Oficina), 4, "0");
     }
 
-    public function getIDOficina() {
-        return $this->IDOficina;
+    public function getOficina() {
+        return $this->Oficina;
     }
 
     public function setDigito($Digito) {
-        $this->Digito = $Digito;
+        $this->Digito = str_pad(trim($Digito), 2, "0");
     }
 
     public function getDigito() {
@@ -290,7 +317,7 @@ class ProveedoresEntity extends Entity {
     }
 
     public function setCuenta($Cuenta) {
-        $this->Cuenta = $Cuenta;
+        $this->Cuenta = str_pad(trim($Cuenta), 10, "0");
     }
 
     public function getCuenta() {

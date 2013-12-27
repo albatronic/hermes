@@ -7,215 +7,264 @@
  */
 
 /**
- * @orm:Entity(pedidos_cab)
+ * @orm:Entity(PedidosCab)
  */
-class PedidosCabEntity extends Entity {
+class PedidosCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDPedido;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDSucursal;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDAlmacen;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDAgente;
+
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
-    protected $SuPedido;
+    protected $SuPedido = '';
+
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
-    protected $Referencia;
+    protected $Referencia = '';
+
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Fecha;
+
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $FechaEntrega = '00/00/0000';
+
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $FechaEntrada = '00/00/0000';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDProveedor;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Importe = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Descuento = '0.00';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $BaseImponible1 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Iva1 = '0.00';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $CuotaIva1 = '0.00';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $Recargo1 = '0.00';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $CuotaRecargo1 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $BaseImponible2 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Iva2 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $CuotaIva2 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Recargo2 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $CuotaRecargo2 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $BaseImponible3 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Iva3 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $CuotaIva3 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Recargo3 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $CuotaRecargo3 = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $TotalBases = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $TotalIva = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $TotalRecargo = '0.00';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
+     */
+    protected $RecargoFinanciero = '0.00';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="PedidosCab")
+     */
+    protected $CuotaRecargoFinanciero = '0.00';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Total = '0.00';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Observaciones;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Incidencias;
-    /**
-     * @orm:Column(type="string")
-     */
-    protected $Clave;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDEstado = '0';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="albaranes_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDFactura = '0';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDFP = '0';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $IDAgencia;
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $Deposito = '0';
+
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="pedidos_cab")
+     * @assert:NotBlank(groups="PedidosCab")
      */
     protected $FlagFacturar = '0';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'pedidos_cab';
+    protected $_tableName = 'ErpPedidosCab';
+
     /**
      * Nombre de la primaryKey
      * @var string
@@ -488,6 +537,22 @@ class PedidosCabEntity extends Entity {
         return $this->TotalRecargo;
     }
 
+    public function setRecargoFinanciero($RecargoFinanciero) {
+        $this->RecargoFinanciero = $RecargoFinanciero;
+    }
+
+    public function getRecargoFinanciero() {
+        return $this->RecargoFinanciero;
+    }
+
+    public function setCuotaRecargoFinanciero($CuotaRecargoFinanciero) {
+        $this->CuotaRecargoFinanciero = $CuotaRecargoFinanciero;
+    }
+
+    public function getCuotaRecargoFinanciero() {
+        return $this->CuotaRecargoFinanciero;
+    }
+
     public function setTotal($Total) {
         $this->Total = $Total;
     }
@@ -510,14 +575,6 @@ class PedidosCabEntity extends Entity {
 
     public function getIncidencias() {
         return $this->Incidencias;
-    }
-
-    public function setClave($Clave) {
-        $this->Clave = trim($Clave);
-    }
-
-    public function getClave() {
-        return $this->Clave;
     }
 
     public function setIDEstado($IDEstado) {
@@ -579,7 +636,8 @@ class PedidosCabEntity extends Entity {
             $this->FlagFacturar = new ValoresSN($this->FlagFacturar);
         return $this->FlagFacturar;
     }
+
 }
 
-// END class pedidos_cab
+// END class PedidosCab
 ?>

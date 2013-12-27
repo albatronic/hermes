@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(recepciones)
  */
-class RecepcionesEntity extends Entity {
+class RecepcionesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -20,7 +20,7 @@ class RecepcionesEntity extends Entity {
     protected $IDLinea;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="expediciones")
+     * @assert:NotBlank(groups="recepciones")
      */
     protected $Entidad = '';
     /**
@@ -119,12 +119,12 @@ class RecepcionesEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'recepciones';
+    protected $_tableName = 'ErpRecepciones';
     /**
      * Nombre de la PrimaryKey
      * @var string

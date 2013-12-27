@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(empresas_almacenes)
  */
-class EmpresasAlmacenesEntity extends Entity {
+class EmpresasAlmacenesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -39,7 +39,7 @@ class EmpresasAlmacenesEntity extends Entity {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'empresas_almacenes';
+    protected $_tableName = 'ErpEmpresasAlmacenes';
     /**
      * Nombre de la primaryKey
      * @var string

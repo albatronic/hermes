@@ -26,7 +26,7 @@
                 {% else %}
                     {% set classFila = 'Par' %}
                 {% endif %}
-            <form name="linea{{puntero}}" action="" method="POST">
+            <form name="linea{{puntero}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="CajaLineas" type="hidden" />
                 <input name="action" id="action" value="edit" type="hidden" />
                 <input name="CajaLineas[IDArqueo]" value="{{ values.linkBy.value }}" type="hidden" />
@@ -47,7 +47,7 @@
                         </p>
                     </td>
                     <td><input name="CajaLineas[Importe]" value="{{objeto.Importe}}" type="text" style="width:60px;text-align:right;" /></td>
-                    <td>{{ macro.select(none,'Etiqueta','CajaLineas[IDFP]','CajaLineas_IDFP',none,objeto.IDFP.IDFP,objeto.IDFP.fetchAll('Descripcion'),'Select100')}}</td>
+                    <td>{{ macro.select({'visible':'1','updatable':'1'},'Etiqueta','CajaLineas[IDFP]','CajaLineas_IDFP',none,objeto.IDFP.IDFP,objeto.IDFP.fetchAll('Descripcion'),'Select100')}}</td>
                     <td colspan="3"></td>
                     <td align="center">
                         <input type="image" src="{{app.path}}/images/nuevo.png" onclick="getElementById('action').value='new';" alt="Nuevo" title="Crear Linea" />
@@ -55,7 +55,7 @@
                 {% else %}
                     <td>
                         {% if objeto.Entidad %}
-                            <a href="{{app.path}}/{{objeto.Entidad}}/edit/{{objeto.IDEntidad}}" title="Ver detalle..." target="_blank">
+                            <a href="{{app.path}}/{{objeto.Entidad}}/edit/{{objeto.getDocumento.PrimaryKeyMD5}}" title="Ver detalle..." target="_blank">
                                 {{objeto.Origen}}
                             </a>
                         {% else %}
@@ -65,7 +65,7 @@
                     <td>{{objeto.getHora}}</td>
                     <td><input name="CajaLineas[Concepto]" id="CajaLineas_Concepto{{puntero}}" value="{{objeto.Concepto}}" type="text" maxlength="255" style="width:343px;"  /></td>
                     <td><input name="CajaLineas[Importe]" value="{{objeto.Importe}}" type="text" style="width:60px;text-align:right;" /></td>
-                    <td>{{ macro.select(none,'Etiqueta','CajaLineas[IDFP]','CajaLineas_IDFP',none,objeto.IDFP.IDFP,objeto.IDFP.fetchAll('Descripcion'),'Select100')}}</td>
+                    <td>{{ macro.select({'visible':'1','updatable':'1'},'Etiqueta','CajaLineas[IDFP]','CajaLineas_IDFP',none,objeto.IDFP.IDFP,objeto.IDFP.fetchAll('Descripcion'),'Select100')}}</td>
                     <td align="right">{{objeto.Entregado}}</td>
                     <td align="right">{{objeto.Cambio}}</td>
                     <td>{{objeto.IDDatafono.Datafono}}</td>

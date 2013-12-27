@@ -8,7 +8,7 @@
 /**
  * @orm:Entity(tpvs)
  */
-class TpvsEntity extends Entity {
+class TpvsEntity extends EntityComunes {
 	/**
 	 * @orm:GeneratedValue
 	 * @orm:Id
@@ -69,12 +69,12 @@ class TpvsEntity extends Entity {
 	 * Nombre de la conexion a la BD
 	 * @var string
 	 */
-	protected $_conectionName = 'datos#';
+	protected $_conectionName = '';
 	/**
 	 * Nombre de la tabla física
 	 * @var string
 	 */
-	protected $_tableName = 'tpvs';
+	protected $_tableName = 'ErpTpvs';
 	/**
 	 * Nombre de la PrimaryKey
 	 * @var string

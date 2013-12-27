@@ -21,9 +21,15 @@ class RutasRepartoController extends Controller {
         parent::__construct($request);
     }
 
+    public function IndexAction() {
+        return parent::listAction();
+    }
+
     public function listAction() {
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $rutas = new RutasReparto();
+        $tabla = $rutas->getDataBaseName() . "." . $rutas->getTableName();
         $filtro = $tabla . ".IDSucursal='" . $_SESSION['suc'] . "'";
+        unset($rutas);
 
         return parent::listAction($filtro);
     }
@@ -34,7 +40,7 @@ class RutasRepartoController extends Controller {
      */
     public function listadoAction() {
 
-        if ($this->values['permisos']['L']) {
+        if ($this->values['permisos']['permisosModulo']['LI']) {
             $idRuta = $this->request['RutasReparto']['IDRuta'];
             $ruta = new RutasReparto($idRuta);
             $opciones = array('title' => 'Ruta de reparto ' . $ruta->getDescripcion());
@@ -72,7 +78,7 @@ class RutasRepartoController extends Controller {
                 $pdf->SetFont('Courier', '', 8);
                 $pdf->Cell(115, 4, $pdf->DecodificaTexto($datos->getIDDirec()->getNombre() . " - " . $datos->getIDDirec()->getIDCliente()->getNombreComercial(), 115), 0, 0);
                 $pdf->Cell(70, 4, $pdf->DecodificaTexto($datos->getIDDirec()->getDireccion(), 40), 0, 0);
-                $pdf->Cell(30, 4, $pdf->DecodificaTexto($datos->getIDDirec()->getPoblacion(), 17), 0, 0);
+                $pdf->Cell(30, 4, $pdf->DecodificaTexto($datos->getIDDirec()->getIDPoblacion(), 17), 0, 0);
                 $pdf->Cell(35, 4, $pdf->DecodificaTexto($datos->getIDDirec()->getTelefono() . " " . $datos->getIDDirec()->getHorario(), 30), 0, 0);
                 $pdf->Ln();
             }
@@ -98,9 +104,12 @@ class rutasPDF extends FPDF {
     //Cabecera de página
     function Header() {
 
-        $empresa = new Empresas($_SESSION['emp']);
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $sucursal = new Sucursales($_SESSION['suc']);
 
+        $logo = $empresa->getLogo();
+        if (file_exists($logo))
+            $this->Image($logo, 10, 8, 23);
         $this->Image($empresa->getLogo(), 10, 8, 23);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, $empresa->getRazonSocial(), 0, 1, "R");

@@ -7,20 +7,20 @@
  */
 
 /**
- * @orm:Entity(recibos_proveedores)
+ * @orm:Entity(RecibosProveedores)
  */
-class RecibosProveedoresEntity extends Entity {
+class RecibosProveedoresEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $IDRecibo;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Recibo;
     /**
@@ -30,47 +30,47 @@ class RecibosProveedoresEntity extends Entity {
     protected $IDSucursal;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $IDFactura;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $IDProveedor;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Fecha;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Vencimiento;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $CBanco = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Asiento = '0';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $Concepto = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $IDEstado = '0';
     /**
@@ -84,19 +84,19 @@ class RecibosProveedoresEntity extends Entity {
     protected $Remesar = '1';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="recibos_proveedores")
+     * @assert:NotBlank(groups="RecibosProveedores")
      */
     protected $CContable = '0000000000';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'recibos_proveedores';
+    protected $_tableName = 'ErpRecibosProveedores';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -248,5 +248,5 @@ class RecibosProveedoresEntity extends Entity {
 
 }
 
-// END class recibos_proveedores
+// END class RecibosProveedores
 ?>

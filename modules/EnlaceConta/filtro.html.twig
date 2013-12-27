@@ -1,11 +1,12 @@
 {# Template filtro.html.twig for EnlaceConta #}
 {# -------------------------------------------------------#}
-<div class='FormManto' style="float: left;">
-    <form name='filtro' id='filtro' action='' method='POST'>
+<div class='FormManto'>
+ 
+    <div class="Cuerpo" style="width:30%;padding:5px;">    
+    <form name='filtro' id='fromTrasvase' action='' method='POST'>   
 	<input name='controller' value='{{values.controller}}' type='hidden' />
 	<input name='action' value='Trasvase' type='hidden' />
 
-        <div class="Cuerpo">
             {% include "_global/FormErrores.html.twig" with {'errores': values.errores} %}
             
             {{ macro.select('Sucursal','Etiqueta','IDSucursal','IDSucursal',none,suc,user.getSucursales(''),'Select',none,none) }}
@@ -43,56 +44,63 @@
             {{ macro.fecha('Desde Fecha','Etiqueta','DesdeFecha','DesdeFecha',none,'10','CampoFecha') }}
             {{ macro.fecha('Hasta Fecha','Etiqueta','HastaFecha','HastaFecha',none,'10','CampoFecha') }}
 
-            <div id="boton" style="margin-top: 10px;">
-            <input name="accion" value="Trasvase" type="submit" class="Comando" style="width: 150px;"
-                onclick="loading('boton'); submit();"
-            />
+            <div id="divBoton" style="margin-top: 10px; text-align: center;">
+            <input id="botonTrasvase" value="Trasvase" type="button" class="Comando" style="width: 150px;"/>
             </div>
-        </div>
+    </form>                
+    </div>
         
-        <div style="clear: both;"></div>
+    <div class='Listado' style="float: right; padding: 5px; margin-left: 0px;">
 
-    </form>
+        {% if values.traspasos %}
+        <table width='100%'>
+            <tr class='Titulos'>
+                <td class='Item'>Día</td>
+                <td class='Item'>Hora</td>
+                <td class='Item'>Desde Fecha</td>
+                <td class='Item'>Hasta Fecha</td>
+                <td class='Item'>Emitidas</td>
+                <td class='Item'>Recibidas</td>
+                <td class='Item'>Cobros</td>
+                <td class='Item'>Pagos</td>
+                <td class='Item'>Asientos</td>
+                <td class='Item'>Subcuentas</td>
+                <td class='Item'>Archivos generados</td>
+                <td></td>
+            </tr>
+            {% for key,traspaso in values.traspasos %}
+            <tr>
+                <td class='Item'>{{traspaso.Dia}}</td>
+                <td class='Item'>{{traspaso.Hora}}</td>
+                <td class='Item'>{{traspaso.DesdeFecha}}</td>
+                <td class='Item'>{{traspaso.HastaFecha}}</td>
+                <td class='Item' align="right">{{traspaso.Emitidas}}</td>
+                <td class='Item' align="right">{{traspaso.Recibidas}}</td>
+                <td class='Item' align="right">{{traspaso.Cobros}}</td>
+                <td class='Item' align="right">{{traspaso.Pagos}}</td>
+                <td class='Item' align="right">{{traspaso.Asientos}}</td>
+                <td class='Item' align="right">{{traspaso.Subcuentas}}</td>
+                <td class='Item'>
+                    <p><a href="{{traspaso.ArchivoDiario}}" target="_blank">Diario</a></p>
+                    <p><a href="{{traspaso.ArchivoSubcuentas}}" target="_blank">Subcuentas</a></p>                    
+                </td>                
+                <td>
+                    <a href='{{app.path}}/{{values.controller}}/BorrarLog/{{key}}' title='Borrar Log ...'>
+                        <img src="{{app.path}}/images/botonborrar.png" width="16px" height="16px" />
+                    <a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+            
 </div>
-
-<div class='Listado' style="float: left; margin-left: 10px;">
-    {% if values.files %}
-    <ul>
-        <li><a href="{{values.files.diario}}" target="_blank">Diario</a></li>
-        <li><a href="{{values.files.subctas}}" target="_blank">Subcuentas</a></li>
-    </ul>
-    {% endif %}
-
-    {% if values.traspasos %}
-    <table width='100%'>
-        <tr class='Titulos'>
-            <td class='Item'>Día</td>
-            <td class='Item'>Hora</td>
-            <td class='Item'>Desde Fecha</td>
-            <td class='Item'>Hasta Fecha</td>
-            <td class='Item'>Emitidas</td>
-            <td class='Item'>Recibidas</td>
-            <td class='Item'>Cobros</td>
-            <td class='Item'>Pagos</td>
-            <td></td>
-        </tr>
-        {% for key,traspaso in values.traspasos %}
-        <tr>
-            <td class='Item'>{{traspaso.Dia}}</td>
-            <td class='Item'>{{traspaso.Hora}}</td>
-            <td class='Item'>{{traspaso.DesdeFecha}}</td>
-            <td class='Item'>{{traspaso.HastaFecha}}</td>
-            <td class='Item' align="right">{{traspaso.Emitidas}}</td>
-            <td class='Item' align="right">{{traspaso.Recibidas}}</td>
-            <td class='Item' align="right">{{traspaso.Cobros}}</td>
-            <td class='Item' align="right">{{traspaso.Pagos}}</td>
-            <td>
-                <a href='{{app.path}}/{{values.controller}}/BorrarLog/{{key}}' title='Borrar Log ...'>
-                    <img src="{{app.path}}/images/botonborrar.png" width="16px" height="16px" />
-                <a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-</div>
+<script>
+    $(function(){
+        $('#botonTrasvase').click(function(){
+            $('#divBoton').html('<img src="{{app.path}}/images/loadingAnimation.gif"/>');
+            $('#fromTrasvase').submit();
+        });
+    });
+</script>

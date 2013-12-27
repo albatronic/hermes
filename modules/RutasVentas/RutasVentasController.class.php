@@ -16,11 +16,18 @@ class RutasVentasController extends Controller {
     public function __construct($request) {
 
         $comercial = new Agentes();
-        $this->values['comerciales'] = $comercial->getComerciales();
+        $this->values['comerciales'] = $comercial->getComerciales('', '', false);
         $this->values['comerciales'][] = array('Id' => '', 'Value' => ':: Indique un comercial');
         unset($comercial);
 
         parent::__construct($request);
+    }
+
+    public function IndexAction() {
+        return array(
+            'template' => $this->entity . '/index.html.twig',
+            'values' => $this->values
+        );
     }
 
     /**
@@ -31,7 +38,7 @@ class RutasVentasController extends Controller {
     public function editAction() {
         if ($this->request['IDComercial'] != '') {
 
-            if ($this->values['permisos']['C']) {
+            if ($this->values['permisos']['permisosModulo']['CO']) {
                 $this->values['linkBy']['id'] = 'IDComercial';
                 $this->values['linkBy']['value'] = $this->request['IDComercial'];
 
@@ -39,9 +46,11 @@ class RutasVentasController extends Controller {
                 $this->values['dias'] = $dias->fetchAll();
 
                 $template = $this->entity . '/edit.html.twig';
-            } else
+            }
+            else
                 $template = "_global/forbiden.html.twig";
-        } else
+        }
+        else
             $template = $this->entity . '/index.html.twig';
 
         return array('template' => $template, 'values' => $this->values);
@@ -53,7 +62,7 @@ class RutasVentasController extends Controller {
      */
     public function listadoAction() {
 
-        if ($this->values['permisos']['L']) {
+        if ($this->values['permisos']['permisosModulo']['LI']) {
             $idComercial = $this->request['IDComercial'];
             $comercial = new Agentes($idComercial);
             $opciones = array('title' => 'Rutas de ventas del comercial ' . $comercial->getNombre());
@@ -72,7 +81,12 @@ class RutasVentasController extends Controller {
 
             $lis = new $this->entity();
             $rows = $lis->cargaCondicion("Id", "IDComercial='{$idComercial}'", "Dia,OrdenCliente,IDZona ASC");
+            $auxTotales = $lis->cargaCondicion("Dia as Id,count(Id) as Value", "(IDComercial='{$idComercial}') GROUP BY Dia", "Dia ASC");
             unset($lis);
+            foreach ($auxTotales as $totalDia)
+                $totales[$totalDia['Id']] = $totalDia['Value'];
+
+            $totClientes = 0;
 
             //CUERPO-------------------------------------------------------------------------
             $diaAnt = '';
@@ -81,9 +95,7 @@ class RutasVentasController extends Controller {
                 $datos = new $this->entity($value['Id']);
                 if ($diaAnt != $datos->getDia()) {
                     $pdf->SetFont('Courier', 'B', 10);
-                    $dia = new DiasSemana($datos->getDia());
-                    $pdf->Cell(0, 10, $pdf->DecodificaTexto($dia->getDescripcion()));
-                    unset($dia);
+                    $pdf->Cell(0, 10, $pdf->DecodificaTexto($datos->getDia()) . "({$totales[$datos->getDia()->getIDTipo()]})");
                     $pdf->Ln();
                     $pdf->SetFont('Courier', '', 8);
                 }
@@ -93,11 +105,16 @@ class RutasVentasController extends Controller {
                 $pdf->SetFont('Courier', '', 8);
                 $pdf->Cell(110, 4, $pdf->DecodificaTexto($datos->getIDCliente()->getRazonSocial() . " - " . $datos->getIDCliente()->getNombreComercial(), 110), 0, 0);
                 $pdf->Cell(80, 4, $pdf->DecodificaTexto($datos->getIDCliente()->getDireccion(), 45), 0, 0);
-                $pdf->Cell(20, 4, $pdf->DecodificaTexto($datos->getIDCliente()->getPoblacion(), 20), 0, 0);
+                $pdf->Cell(20, 4, $pdf->DecodificaTexto($datos->getIDCliente()->getIDPoblacion, 20), 0, 0);
                 $pdf->Cell(30, 4, trim($datos->getIDCliente()->getTelefono() . " " . $datos->getIDCliente()->getMovil()), 0, 0);
                 $pdf->Ln();
+                $totClientes += 1;
             }
             unset($datos);
+
+            $pdf->SetFont('Courier', 'B', 10);
+            $pdf->Ln();
+            $pdf->Cell(30, 4, "Total clientes " . $totClientes, 0, 0);
 
             $archivo = "docs/docs" . $_SESSION['emp'] . "/pdfs/" . md5(date('d-m-Y H:i:s')) . ".pdf";
             $pdf->Output($archivo, 'F');
@@ -106,6 +123,7 @@ class RutasVentasController extends Controller {
             $this->values['archivo'] = $archivo;
             return array('template' => '_global/listadoPdf.html.twig', 'values' => $this->values,);
         } else {
+            echo "adsfasdfads";
             return array('template' => '_global/forbiden.html.twig');
         }
     }
@@ -116,12 +134,12 @@ class RutasVentasController extends Controller {
      */
     public function HojaLlamadasAction() {
 
-        if ($this->values['permisos']['L']) {
+        if ($this->values['permisos']['permisosModulo']['LI']) {
             $idComercial = $this->request[2];
             $comercial = new Agentes($idComercial);
             $dia = $this->request[3];
             $dias = new DiasSemana($dia);
-            $opciones = array('title' => 'Hoja de llamadas para el ' .strtoupper($dias->getDescripcion()) . ' del comercial ' . strtoupper($comercial->getNombre()));
+            $opciones = array('title' => 'Hoja de llamadas para el ' . strtoupper($dias->getDescripcion()) . ' del comercial ' . strtoupper($comercial->getNombre()));
             unset($comercial);
             unset($dias);
 
@@ -144,24 +162,24 @@ class RutasVentasController extends Controller {
             $pdf->SetFont('Courier', '', 8);
             foreach ($rows as $value) {
                 $datos = new $this->entity($value['Id']);
-                
+
                 $pdf->Cell(10, 6, "", 0, 0);
                 $pdf->Cell(100, 6, $pdf->DecodificaTexto($datos->getIDCliente()->getRazonSocial() . " - " . $datos->getIDCliente()->getNombreComercial(), 59), 0, 0);
-                $pdf->Cell(20, 6, $pdf->DecodificaTexto($datos->getIDCliente()->getPoblacion(), 11), 0, 0);
+                $pdf->Cell(20, 6, $pdf->DecodificaTexto($datos->getIDCliente()->getIDPoblacion()->getMunicipio(), 11), 0, 0);
                 $pdf->Cell(45, 6, trim($datos->getIDCliente()->getTelefono() . " " . $datos->getIDCliente()->getMovil()), 0, 0);
-                $pdf->Cell(10, 6, $datos->getIDCliente()->getLimiteRiesgo(), 0, 0,"R");
+                $pdf->Cell(10, 6, $datos->getIDCliente()->getLimiteRiesgo(), 0, 0, "R");
                 $pdf->Ln();
-                
+
                 $dEntrega = new ClientesDentrega();
-                $direcciones = $dEntrega->cargaCondicion("IDDirec","IDCliente='{$datos->getIDCliente()->getIDCliente()}' and IDZona='{$datos->getIDZona()->getIDZona()}'");
+                $direcciones = $dEntrega->cargaCondicion("IDDirec", "IDCliente='{$datos->getIDCliente()->getIDCliente()}' and IDZona='{$datos->getIDZona()->getIDZona()}'");
                 foreach ($direcciones as $direccion) {
                     $dEntrega = new ClientesDentrega($direccion['IDDirec']);
-                    $pdf->Cell(15, 4, $dEntrega->getHorarioLlamadas(),0,0);
-                    $pdf->Cell(0, 4, $dEntrega->getDireccion(),0,1);
+                    $pdf->Cell(15, 4, $dEntrega->getHorarioLlamadas(), 0, 0);
+                    $pdf->Cell(0, 4, $dEntrega->getDireccion(), 0, 1);
                 }
                 unset($dEntrega);
-                
-                $pdf->Cell(0,3,  str_repeat("-",159),0,1);
+
+                $pdf->Cell(0, 3, str_repeat("-", 159), 0, 1);
             }
             unset($datos);
 
@@ -174,7 +192,8 @@ class RutasVentasController extends Controller {
         } else {
             return array('template' => '_global/forbiden.html.twig');
         }
-    }    
+    }
+
 }
 
 class RutasPDF extends FPDF {
@@ -182,9 +201,12 @@ class RutasPDF extends FPDF {
     //Cabecera de página
     function Header() {
 
-        $empresa = new Empresas($_SESSION['emp']);
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $sucursal = new Sucursales($_SESSION['suc']);
 
+        $logo = $empresa->getLogo();
+        if (file_exists($logo))
+            $this->Image($logo, 10, 8, 23);        
         $this->Image($empresa->getLogo(), 10, 8, 23);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, $empresa->getRazonSocial(), 0, 1, "R");
@@ -205,15 +227,18 @@ class RutasPDF extends FPDF {
     }
 
 }
+
 class HojaLlamadasPDF extends FPDF {
 
     //Cabecera de página
     function Header() {
 
-        $empresa = new Empresas($_SESSION['emp']);
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $sucursal = new Sucursales($_SESSION['suc']);
 
-        $this->Image($empresa->getLogo(), 10, 8, 23);
+        $logo = $empresa->getLogo();
+        if (file_exists($logo))
+            $this->Image($empresa->getLogo(), 10, 8, 23);
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(0, 5, $empresa->getRazonSocial(), 0, 1, "R");
         $this->SetFont('Arial', '', 8);
@@ -224,14 +249,15 @@ class HojaLlamadasPDF extends FPDF {
         $this->Ln(5);
         $this->SetFont('Courier', 'B', 8);
         //PINTAR LOS TITULOS DE LAS COLUMNAS
-        $this->Cell(10, 4, "Hora", 0, 0, "C");        
+        $this->Cell(10, 4, "Hora", 0, 0, "C");
         $this->Cell(100, 4, "Cliente", 0, 0, "C");
         $this->Cell(20, 4, "Poblacion", 0, 0, "C");
         $this->Cell(45, 4, "Telefonos", 0, 0, "C");
-        $this->Cell(10, 4, "Riesgo", 0, 0, "C"); 
+        $this->Cell(10, 4, "Riesgo", 0, 0, "C");
         $this->Cell(0, 4, "Comentarios", 0, 0, "C");
         $this->Ln();
     }
 
 }
+
 ?>

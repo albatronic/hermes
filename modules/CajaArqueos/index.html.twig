@@ -13,7 +13,7 @@
         </div>
 
 	{% block filtro %}
-        {% if values.permisos['C'] %}
+        {% if values.permisos.permisosModulo['CO'] %}
             {% include 'CajaArqueos/filtro.html.twig' with {'filter':values.listado.filter, 'alertas':values.alertas} %}
         {%endif%}
 	{% endblock %}

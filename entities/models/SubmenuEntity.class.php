@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(submenu)
  */
-class SubmenuEntity extends Entity {
+class SubmenuEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -52,12 +52,12 @@ class SubmenuEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'submenu';
+    protected $_tableName = 'ErpSubmenu';
     /**
      * Nombre de la primaryKey
      * @var string

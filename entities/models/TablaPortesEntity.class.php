@@ -7,47 +7,47 @@
  */
 
 /**
- * @orm:Entity(tabla_portes)
+ * @orm:Entity(TablaPortes)
  */
-class TablaPortesEntity extends Entity {
+class TablaPortesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tabla_portes")
+     * @assert:NotBlank(groups="TablaPortes")
      */
     protected $Id;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tabla_portes")
+     * @assert:NotBlank(groups="TablaPortes")
      */
     protected $IDZona;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tabla_portes")
+     * @assert:NotBlank(groups="TablaPortes")
      */
     protected $IDAgencia;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tabla_portes")
+     * @assert:NotBlank(groups="TablaPortes")
      */
     protected $Kilos;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tabla_portes")
+     * @assert:NotBlank(groups="TablaPortes")
      */
     protected $Importe;
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'tabla_portes';
+    protected $_tableName = 'ErpTablaPortes';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -103,5 +103,5 @@ class TablaPortesEntity extends Entity {
 
 }
 
-// END class tabla_portes
+// END class TablaPortes
 ?>

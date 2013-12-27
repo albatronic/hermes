@@ -29,8 +29,7 @@ class CajaArqueosController extends Controller {
 
         // Sucursales destino para el traspaso
         $sucursal = new Sucursales();
-        $sucursales = $sucursal->fetchAll($_SESSION['emp']);
-        unset($sucursal);
+        $sucursales = $sucursal->getSucursalesUsuario($_SESSION['usuarioPortal']['Id'],false);
         $this->values['sucursalesDestino'] = $sucursales;
 
         // Cerrar las eventuales cajas abiertas de dias anterios
@@ -106,7 +105,7 @@ class CajaArqueosController extends Controller {
                     $apunteSalida->setIDFP($idFormaPago);
                     $apunteSalida->setOrigen('6'); // Traspasos
                     $apunteSalida->setImporte(-1 * $importes['importeDestino']);
-                    $apunteSalida->setIDAgente($_SESSION['USER']['user']['id']);
+                    $apunteSalida->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $apunteSalida->create();
                     $this->_errores = $apunteSalida->getErrores();
 
@@ -118,7 +117,7 @@ class CajaArqueosController extends Controller {
                     $apunteEntrada->setIDFP($idFormaPago);
                     $apunteEntrada->setOrigen('6'); // Traspasos
                     $apunteEntrada->setImporte($importes['importeDestino']);
-                    $apunteEntrada->setIDAgente($_SESSION['USER']['user']['id']);
+                    $apunteEntrada->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $apunteEntrada->create();
                     $this->_errores = $apunteEntrada->getErrores();
                 }

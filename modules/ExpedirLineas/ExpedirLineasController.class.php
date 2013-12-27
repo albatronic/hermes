@@ -59,10 +59,16 @@ class ExpedirLineasController extends Controller {
         // Cargo las lineas del albarán que no están expedidas y cuyos artículos son inventariables.
         // Borro las eventuales líneas de expedición que no están expedidas.
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $lineas = new AlbaranesLineas();
+        $tablaLineas = $lineas->getDataBaseName().".".$lineas->getTableName();
+        $articulos = new Articulos();
+        $tablaArticulos = $articulos->getDataBaseName().".".$articulos->getTableName();
+        
+        $em = new EntityManager($lineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.albaranes_lineas l, {$em->getDataBase()}.articulos a
+                    from {$tablaLineas} l, {$tablaArticulos} a
                     where l.IDAlbaran = '{$idAlbaran}' and
                           l.IDEstado = '1' and
                           l.IDArticulo = a.IDArticulo and
@@ -70,9 +76,10 @@ class ExpedirLineasController extends Controller {
                     order by IDLinea ASC;";
             $em->query($query);
             $rows = $em->fetchResult();
-
-            $query = "delete from expediciones where Entidad='AlbaranesCab' and IDEntidad='{$idAlbaran}' and Expedida='0'";
-            $em->query($query);
+            
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='AlbaranesCab' and IDEntidad='{$idAlbaran}' and Expedida='0'");
+            unset($expediciones);
 
             $em->desConecta();
         }
@@ -93,10 +100,16 @@ class ExpedirLineasController extends Controller {
         // Cargo las lineas de la elaboración que no están expedidas y cuyos artículos son inventariables.
         // Borro las eventuales líneas de expedición que no están expedidas.
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $lineas = new ManufacLineas();
+        $tablaLineas = $lineas->getDataBaseName().".".$lineas->getTableName();
+        $articulos = new Articulos();
+        $tablaArticulos = $articulos->getDataBaseName().".".$articulos->getTableName();
+        
+        $em = new EntityManager($lineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.manufac_lineas l, {$em->getDataBase()}.articulos a
+                    from {$tablaLineas} l, {$tablaArticulos} a
                     where l.IDManufac = '{$idManufac}' and
                           l.IDEstado = '1' and
                           l.Tipo = '0' and
@@ -106,8 +119,9 @@ class ExpedirLineasController extends Controller {
             $em->query($query);
             $rows = $em->fetchResult();
 
-            $query = "delete from expediciones where Entidad='ManufacCab' and IDEntidad='{$idManufac}' and Expedida='0'";
-            $em->query($query);
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='ManufacCab' and IDEntidad='{$idManufac}' and Expedida='0'");
+            unset($expediciones);            
 
             $em->desConecta();
         }
@@ -128,10 +142,16 @@ class ExpedirLineasController extends Controller {
         // Cargo las lineas del traspaso que no están expedidas y cuyos artículos son inventariables.
         // Borro las eventuales líneas de expedición que no están expedidas.
         $rows = array();
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        
+        $lineas = new TraspasosLineas();
+        $tablaLineas = $lineas->getDataBaseName().".".$lineas->getTableName();
+        $articulos = new Articulos();
+        $tablaArticulos = $articulos->getDataBaseName().".".$articulos->getTableName();
+        
+        $em = new EntityManager($lineas->getConectionName());
         if ($em->getDbLink()) {
             $query = "select l.IDLinea
-                    from {$em->getDataBase()}.traspasos_lineas l, {$em->getDataBase()}.articulos a
+                    from {$tablaLineas} l, {$tablaArticulos} a
                     where l.IDTraspaso = '{$idTraspaso}' and
                           l.IDEstado = '1' and
                           l.Tipo = '0' and
@@ -140,9 +160,10 @@ class ExpedirLineasController extends Controller {
                     order by IDLinea ASC;";
             $em->query($query);
             $rows = $em->fetchResult();
-
-            $query = "delete from expediciones where Entidad='TraspasosCab' and IDEntidad='{$idTraspaso}' and Expedida='0'";
-            $em->query($query);
+            
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='TraspasosCab' and IDEntidad='{$idTraspaso}' and Expedida='0'");
+            unset($expediciones); 
 
             $em->desConecta();
         }
@@ -268,7 +289,7 @@ class ExpedirLineasController extends Controller {
 
         $controlTrazabilidad = ($linea->getIDArticulo()->getTrazabilidad()->getIDTipo() == '1');
         $controlUbicacion = ($linea->getIDAlmacen()->getControlUbicaciones()->getIDTipo() == '1');
-
+echo $linea->getIDArticulo()->getCodigo()," -",$controlTrazabilidad," -",$controlUbicacion,"<br/>";
         if ($controlUbicacion) {
             if ($controlTrazabilidad)
                 $this->preasignaLotesUbicaciones($entidad, $idEntidad, $linea, $idRepartidor);
@@ -310,10 +331,10 @@ class ExpedirLineasController extends Controller {
                 $lineaExpedicion->setIDEntidad($idEntidad);
                 $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
                 $lineaExpedicion->setIDAlmacen($idAlmacen);
-                $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+                $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
                 $lineaExpedicion->setIDRepartidor($idRepartidor);
                 $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
-                ($item['Reales'] > $unidadesAlmacen) ? $asignado = $unidadesAlmacen : $asignado = $item['Reales'];
+                $asignado = ($item['Reales'] > $unidadesAlmacen) ? $unidadesAlmacen : $item['Reales'];
                 $asignado = $articulo->convertUnit('UMA', $linea->getUnidadMedida(), $asignado);
                 $lineaExpedicion->setUnidades($asignado);
                 $lineaExpedicion->setUnidadMedida($linea->getUnidadMedida());
@@ -329,14 +350,18 @@ class ExpedirLineasController extends Controller {
                     break;
                 $unidades = $unidades - $asignado;
             }
-        } else if ($articulo->getBloqueoStock()->getIDTipo() == '0') {
-            // No hay stock, pero el artículo no bloquea stock; creo la linea de expedición a cero
+        } else {
+            // No hay stock, creo la línea de expedición a 0 y pongo el flagSinstock
+            // a 1 si el artículo no bloquea stock o
+            // a 2 si sí bloquea stock
+            // De esta forma el artículo se mostrará en el parte de expedición
+            // pero no se dejará expedir.
             $lineaExpedicion = new Expediciones();
             $lineaExpedicion->setEntidad($entidad);
             $lineaExpedicion->setIDEntidad($idEntidad);
             $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
             $lineaExpedicion->setIDAlmacen($idAlmacen);
-            $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+            $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
             $lineaExpedicion->setIDRepartidor($idRepartidor);
             $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
             $lineaExpedicion->setUnidades(0);
@@ -345,7 +370,10 @@ class ExpedirLineasController extends Controller {
             $lineaExpedicion->setIDUbicacion(0);
             $lineaExpedicion->setFlagTrazabilidad(1);
             $lineaExpedicion->setFlagUbicacion(1);
-            $lineaExpedicion->setFlagSinStock(1);
+            if ($articulo->getBloqueoStock()->getIDTipo() == '0')
+                $lineaExpedicion->setFlagSinStock(1);
+            else
+                $lineaExpedicion->setFlagSinStock(2);
             $lineaExpedicion->create();
         }
 
@@ -354,7 +382,7 @@ class ExpedirLineasController extends Controller {
     }
 
     /**
-     * Genera tantas líneas de expedición como lotes  sean necesarios
+     * Genera tantas líneas de expedición como lotes sean necesarios
      * para servir la cantidad indicada en la línea de albarán
      *
      * @param AlbaranesLineas $lineaAlbaran
@@ -363,9 +391,9 @@ class ExpedirLineasController extends Controller {
     private function preasignaLotes($entidad, $idEntidad, $linea, $idRepartidor='') {
 
         $idLineaEntidad = $linea->getPrimaryKeyValue();
-        $articulo = $lineaAlbaran->getIDArticulo();
-        $idAlmacen = $lineaAlbaran->getIDAlmacen()->getIDAlmacen();
-        $unidades = $lineaAlbaran->getUnidades();
+        $articulo = $linea->getIDArticulo();
+        $idAlmacen = $linea->getIDAlmacen()->getIDAlmacen();
+        $unidades = $linea->getUnidades();
 
         $lotes = $articulo->getLotesDisponibles($idAlmacen);
         $acumulado = 0;
@@ -380,10 +408,10 @@ class ExpedirLineasController extends Controller {
                 $lineaExpedicion->setIDEntidad($idEntidad);
                 $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
                 $lineaExpedicion->setIDAlmacen($idAlmacen);
-                $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+                $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
                 $lineaExpedicion->setIDRepartidor($idRepartidor);
                 $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
-                ($item['Reales'] > $unidadesAlmacen) ? $asignado = $unidadesAlmacen : $asignado = $item['Reales'];
+                $asignado = ($item['Reales'] > $unidadesAlmacen) ? $unidadesAlmacen : $item['Reales'];
                 $asignado = $articulo->convertUnit('UMA', $linea->getUnidadMedida(), $asignado);
                 $lineaExpedicion->setUnidades($asignado);
                 $lineaExpedicion->setUnidadMedida($linea->getUnidadMedida());
@@ -399,14 +427,18 @@ class ExpedirLineasController extends Controller {
                     break;
                 $unidades = $unidades - $asignado;
             }
-        } else if ($articulo->getBloqueoStock()->getIDTipo() == '0') {
-            // No hay stock, pero el artículo no bloquea stock; creo la linea de expedición a cero
+        } else {
+            // No hay stock, creo la línea de expedición a 0 y pongo el flagSinstock
+            // a 1 si el artículo no bloquea stock o
+            // a 2 si sí bloquea stock
+            // De esta forma el artículo se mostrará en el parte de expedición
+            // pero no se dejará expedir.
             $lineaExpedicion = new Expediciones();
             $lineaExpedicion->setEntidad($entidad);
             $lineaExpedicion->setIDEntidad($idEntidad);
             $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
             $lineaExpedicion->setIDAlmacen($idAlmacen);
-            $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+            $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
             $lineaExpedicion->setIDRepartidor($idRepartidor);
             $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
             $lineaExpedicion->setUnidades(0);
@@ -415,10 +447,12 @@ class ExpedirLineasController extends Controller {
             $lineaExpedicion->setIDUbicacion(0);
             $lineaExpedicion->setFlagTrazabilidad(1);
             $lineaExpedicion->setFlagUbicacion(0);
-            $lineaExpedicion->setFlagSinStock(1);
+            if ($articulo->getBloqueoStock()->getIDTipo() == '0')
+                $lineaExpedicion->setFlagSinStock(1);
+            else
+                $lineaExpedicion->setFlagSinStock(2);
             $lineaExpedicion->create();
         }
-
         unset($articulo);
         unset($lineaExpedicion);
     }
@@ -439,9 +473,9 @@ class ExpedirLineasController extends Controller {
     private function preasignaUbicaciones($entidad, $idEntidad, $linea, $idRepartidor='') {
 
         $idLineaEntidad = $linea->getPrimaryKeyValue();
-        $articulo = $lineaAlbaran->getIDArticulo();
-        $idAlmacen = $lineaAlbaran->getIDAlmacen()->getIDAlmacen();
-        $unidades = $lineaAlbaran->getUnidades();
+        $articulo = $linea->getIDArticulo();
+        $idAlmacen = $linea->getIDAlmacen()->getIDAlmacen();
+        $unidades = $linea->getUnidades();
 
         $ubicaciones = $articulo->getUbicaciones($idAlmacen, '', FALSE);
         $acumulado = 0;
@@ -456,10 +490,10 @@ class ExpedirLineasController extends Controller {
                 $lineaExpedicion->setIDEntidad($idEntidad);
                 $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
                 $lineaExpedicion->setIDAlmacen($idAlmacen);
-                $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+                $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
                 $lineaExpedicion->setIDRepartidor($idRepartidor);
                 $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
-                ($item['Reales'] > $unidadesAlmacen) ? $asignado = $unidadesAlmacen : $asignado = $item['Reales'];
+                $asignado = ($item['Reales'] > $unidadesAlmacen) ? $unidadesAlmacen : $item['Reales'];
                 $asignado = $articulo->convertUnit('UMA', $linea->getUnidadMedida(), $asignado);
                 $lineaExpedicion->setUnidades($asignado);
                 $lineaExpedicion->setUnidadMedida($linea->getUnidadMedida());
@@ -475,14 +509,18 @@ class ExpedirLineasController extends Controller {
                     break;
                 $unidades = $unidades - $asignado;
             }
-        } else if ($articulo->getBloqueoStock()->getIDTipo() == '0') {
-            // No hay stock, pero el artículo no bloquea stock; creo la linea de expedición a cero
+        } else {
+            // No hay stock, creo la línea de expedición a 0 y pongo el flagSinstock
+            // a 1 si el artículo no bloquea stock o
+            // a 2 si sí bloquea stock
+            // De esta forma el artículo se mostrará en el parte de expedición
+            // pero no se dejará expedir.
             $lineaExpedicion = new Expediciones();
             $lineaExpedicion->setEntidad($entidad);
             $lineaExpedicion->setIDEntidad($idEntidad);
             $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
             $lineaExpedicion->setIDAlmacen($idAlmacen);
-            $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+            $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
             $lineaExpedicion->setIDRepartidor($idRepartidor);
             $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
             $lineaExpedicion->setUnidades(0);
@@ -491,10 +529,12 @@ class ExpedirLineasController extends Controller {
             $lineaExpedicion->setIDUbicacion(0);
             $lineaExpedicion->setFlagTrazabilidad(0);
             $lineaExpedicion->setFlagUbicacion(1);
-            $lineaExpedicion->setFlagSinStock(1);
+            if ($articulo->getBloqueoStock()->getIDTipo() == '0')
+                $lineaExpedicion->setFlagSinStock(1);
+            else
+                $lineaExpedicion->setFlagSinStock(2);
             $lineaExpedicion->create();
         }
-
         unset($articulo);
         unset($lineaExpedicion);
     }
@@ -513,24 +553,25 @@ class ExpedirLineasController extends Controller {
      * @param <type> $idRepartidor
      */
     private function preasignaStock($entidad, $idEntidad, $linea, $idRepartidor='') {
-
+echo "asdfasdfasdfasdfasdf";
         $idLineaEntidad = $linea->getPrimaryKeyValue();
-        $articulo = $lineaAlbaran->getIDArticulo();
-        $idAlmacen = $lineaAlbaran->getIDAlmacen()->getIDAlmacen();
-        $unidades = $lineaAlbaran->getUnidades();
-        $unidadesAlmacen = $articulo->convertUnit($linea->getUnidadMedida(), 'UMA', $unidades);
+        $articulo = $linea->getIDArticulo();
+        $idAlmacen = $linea->getIDAlmacen()->getIDAlmacen();
+        $unidades = $linea->getUnidades();
+        $unidadMedidaOrigen = $linea->getUnidadMedida();
+        $unidadesAlmacen = $articulo->convertUnit($unidadMedidaOrigen, 'UMA', $unidades);
         $bloqueoStock = ( $articulo->getBloqueoStock()->getIDTipo() == '1');
 
         $exi = new Existencias();
         $existencias = $exi->getStock($articulo->getIDArticulo(), $idAlmacen);
-        unset($exit);
+        unset($exi);
 
         if ($existencias['RE'] >= $unidadesAlmacen) {
-            $asignado = $articulo->convertUnit('UMA', $linea->getUnidadMedida(), $unidadesAlmacen);
+            $asignado = $articulo->convertUnit('UMA', $unidadMedidaOrigen, $unidadesAlmacen);
             $stockInsuficiente = false;
         } else {
             $stockInsuficiente = true;
-            $asignado = $articulo->convertUnit('UMA', $linea->getUnidadMedida(), $existencias['RE']);
+            $asignado = $articulo->convertUnit('UMA', $unidadMedidaOrigen, $existencias['RE']);
         }
 
         if (($asignado <= 0) and (!$bloqueoStock))
@@ -541,17 +582,17 @@ class ExpedirLineasController extends Controller {
         $lineaExpedicion->setIDEntidad($idEntidad);
         $lineaExpedicion->setIDLineaEntidad($idLineaEntidad);
         $lineaExpedicion->setIDAlmacen($idAlmacen);
-        $lineaExpedicion->setIDAlmacenero($_SESSION['USER']['user']['id']);
+        $lineaExpedicion->setIDAlmacenero($_SESSION['usuarioPortal']['Id']);
         $lineaExpedicion->setIDRepartidor($idRepartidor);
         $lineaExpedicion->setIDArticulo($articulo->getIDArticulo());
         if ($existencias['RE'] > 0) {
-            ($existencias['RE'] > $unidadesAlmacen) ? $asignado = $unidadesAlmacen : $asignado = $existencias['RE'];
+            $asignado = ($existencias['RE'] > $unidadesAlmacen) ? $unidadesAlmacen : $existencias['RE'];
         } else {
             $asignado = 0;
         }
         $asignado = $articulo->convertUnit('UMA', $unidadMedidaOrigen, $asignado);
         $lineaExpedicion->setUnidades($asignado);
-        $lineaExpedicion->setUnidadMedida($linea->getUnidadMedida());
+        $lineaExpedicion->setUnidadMedida($unidadMedidaOrigen);
         $lineaExpedicion->setIDLote(0);
         $lineaExpedicion->setIDUbicacion(0);
         $lineaExpedicion->setFlagTrazabilidad(0);

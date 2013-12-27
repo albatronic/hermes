@@ -7,48 +7,90 @@
  * @copyright Informática ALBATRONIC, SL
  * @date 08-oct-2012 12:36:02
  */
-class TpvController extends Controller {
+include_once 'modules/AlbaranesCab/AlbaranesCabController.class.php';
 
-    public function NavegarAction($accion, $idAlbaran) {
+class TpvController extends AlbaranesCabController {
 
-        if ($this->values['permisos']['C']) {
-            switch ($accion) {
-                case '';
+    public function IndexAction() {
+
+        $albaran = new AlbaranesCab();
+        $albaran->setIDSucursal($_SESSION['suc']);
+        $this->values['albaran'] = $albaran;
+        unset($albaran);
+
+        return array(
+            'values' => $this->values,
+            'template' => 'Tpv/index.html.twig',
+        );
+    }
+
+    public function NavegarAction() {
+
+        if ($this->values['permisos']['permisosModulo']['CO']) {
+            $idAlbaran = $this->request['AlbaranesCab']['IDAlbaran'];
+            switch ($this->request['accion']) {
+                case 'nuevo':
+                    $albaran = new AlbaranesCab();
+                    $albaran->setIDSucursal($_SESSION['suc']);
+                    break;
+                case 'crear':
+                    $albaran = $this->guardar($this->request['AlbaranesCab']);
+                    break;
+                case 'buscar':
+                    $albaran = new AlbaranesCab($idAlbaran);
+                    break;
+                case 'guardar':
+                    $albaran = $this->guardar($this->request['AlbaranesCab']);
+                    break;
+                case 'borrar':
+                    $albaran = $this->borrar($this->request['AlbaranesCab']);
+                    break;
                 case 'U':
-                    $albaranes = new AlbaranesCab();
-                    $albaran = $albaranes->getLastObject();
-                    unset($albaranes);
+                    $albaran = $this->getUltimo();
                     break;
                 case 'P':
-                    $albaranes = new AlbaranesCab();
-                    $albaran = $albaranes->getFirstObject();
-                    unset($albaranes);
+                    $albaran = $this->getPrimero();
                     break;
                 case 'A':
-                    $albaranes = new AlbaranesCab();
-                    $rows = $albaranes->cargaCondicion("IDAlbaran","IDSucursal='{$_SESSION['emp']}' AND IDTpv='{$_SESSION['suc']}' AND IDAlbaran<'{$idAlbaran}'","IDAlbaran DESC LIMIT 1");
-                    $albaran = new AlbaranesCab($rows[0]['IDAlbaran']);
-                    unset($albaranes);
+                    $albaran = $this->getAnterior($idAlbaran);
                     break;
                 case 'S':
-                    $albaranes = new AlbaranesCab();
-                    $rows = $albaranes->cargaCondicion("IDAlbaran","IDSucursal='{$_SESSION['emp']}' AND IDTpv='{$_SESSION['suc']}' AND IDAlbaran>'{$idAlbaran}'","IDAlbaran ASC LIMIT 1");
-                    $albaran = new AlbaranesCab($rows[0]['IDAlbaran']);
-                    unset($albaranes);
+                    $albaran = $this->getSiguiente($idAlbaran);
                     break;
             }
 
-            $lineas = new AlbaranesLineas();
-            $rows = $lineas->cargaCondicion("IDLinea","IDAlbaran='{$albaran->getIDAlbaran()}'","IDLinea ASC");
-            unset($lineas);
+            /**
+              if ($albaran->getIDEstado()->getIDTipo() == '0') {
+              // Si el albaran está pte de confirmar, puedo modificar sus líneas y
+              // por lo tanto le añado un objeto linea vacío
+              $objetoNuevo = new AlbaranesLineas();
+              $objetoNuevo->setIDAlbaran($albaran->getIDAlbaran());
+              $lineas[] = $objetoNuevo;
+              unset($objetoNuevo);
+              }
+             */
+            $lin = new AlbaranesLineas();
+            $rows = $lin->cargaCondicion("IDLinea", "IDAlbaran='{$albaran->getIDAlbaran()}'", "IDLinea ASC");
+            unset($lin);
 
-            foreach ($rows as $linea)
+            foreach ($rows as $linea) {
                 $lineas[] = new AlbaranesLineas($linea['IDLinea']);
+            }
+
+            // Cargo los favoritos del tpv
+            $fav = new FavoritosTpv();
+            $this->values['favoritos'] = $fav->cargaCondicion("Id,IDArticulo,Descripcion","IDTpv='{$_SESSION['tpv']}'","SortOrder ASC");
+            unset($fav);
+            
+            // Cargo la categorias de productos
+            $cat = new Familias();
+            $this->values['categorias'] = $cat->getFamiliasTpv();
 
             $this->values['albaran'] = $albaran;
             $this->values['lineas'] = $lineas;
-
-            $template = "ticket.html.twig";
+            $template = "Tpv/index.html.twig";
+            unset($albaran);
+            unset($lineas);
         } else {
             $template = "_global/forbiden.html.twig";
         }
@@ -56,21 +98,73 @@ class TpvController extends Controller {
         return array('template' => $template, 'values' => $this->values);
     }
 
-    public function EditAction() {
-        
+    private function guardar(array $datos) {
+        $albaran = new AlbaranesCab();
+        $albaran->bind($datos);
+        if ($albaran->getIDAlbaran()) {
+            $albaran->save();
+        } else {
+            $albaran->create();
+        }
+        return $albaran;
     }
 
-    public function NewAction() {
+    private function borrar(array $datos) {
 
+        $albaran = new AlbaranesCab($datos['IDAlbaran']);
+
+        if ($albaran->getIDEstado()->getIDTipo() == 0) {
+            if ($albaran->erase())
+                $albaran = new AlbaranesCab();
+        }
+
+        return $albaran;
     }
 
-    public function ImprimirAction() {
+    private function getUltimo() {
 
+        $albaranes = new AlbaranesCab();
+        $filtro = "IDSucursal='{$_SESSION['suc']}'";
+        $rows = $albaranes->cargaCondicion("IDAlbaran", $filtro, "NumeroAlbaran DESC LIMIT 1");
+        unset($albaranes);
+
+        return new AlbaranesCab($rows[0]['IDAlbaran']);
+    }
+
+    private function getPrimero() {
+
+        $albaranes = new AlbaranesCab();
+        $filtro = "IDSucursal='{$_SESSION['suc']}'";
+        $rows = $albaranes->cargaCondicion("IDAlbaran", $filtro, "NumeroAlbaran ASC LIMIT 1");
+        unset($albaranes);
+
+        return new AlbaranesCab($rows[0]['IDAlbaran']);
+    }
+
+    private function getSiguiente($idAlbaran) {
+
+        $albaranes = new AlbaranesCab($idAlbaran);
+        $filtro = "IDSucursal='{$_SESSION['suc']}' AND NumeroAlbaran>'{$albaranes->getNumeroAlbaran()}'";
+        $rows = $albaranes->cargaCondicion("IDAlbaran", $filtro, "NumeroAlbaran ASC LIMIT 1");
+        unset($albaranes);
+
+        return new AlbaranesCab($rows[0]['IDAlbaran']);
+    }
+
+    private function getAnterior($idAlbaran) {
+
+        $albaranes = new AlbaranesCab($idAlbaran);
+        $filtro = "IDSucursal='{$_SESSION['suc']}' AND NumeroAlbaran<'{$albaranes->getNumeroAlbaran()}'";
+        $rows = $albaranes->cargaCondicion("IDAlbaran", $filtro, "NumeroAlbaran DESC LIMIT 1");
+        unset($albaranes);
+
+        return new AlbaranesCab($rows[0]['IDAlbaran']);
     }
 
     public function CerrarVentaAction() {
-
+        
     }
+
 }
 
 ?>

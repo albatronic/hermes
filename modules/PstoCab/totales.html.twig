@@ -1,4 +1,4 @@
-    <div class="TotalAlbaran">Total Presupuesto:&nbsp;{{datos.Total}} €</div>
+    <div class="TotalAlbaran" id="PstoCab_LiteralTotal">Total Presupuesto:&nbsp;{{macro.moneda(datos.Total)}}</div>
     <input name="PstoCab[Total]" value="{{datos.Total}}" type="hidden" />
 
     <table align="center" witdh="80%">
@@ -8,8 +8,8 @@
             <td class="TitulosTotales">Rec. Financiero</td>
         </tr>
         <tr>
-            <td align="center"><input name="PstoCab[Importe]" value="{{datos.Importe}}" class="CampoImporte" disabled /></td>
-            <td align="center"><input name="PstoCab[Descuento]" value="{{datos.Descuento}}" class="CampoImporte" /></td>
+            <td align="center"><input name="PstoCab[Importe]" id="PstoCab_Importe" value="{{datos.Importe}}" class="CampoImporte" disabled /></td>
+            <td align="center"><input name="PstoCab[Descuento]" id="PstoCab_Descuento" value="{{datos.Descuento}}" class="CampoImporte" /></td>
             <td align="center">
                 <input name="PstoCab[RecargoFinanciero]" value="{{datos.RecargoFinanciero}}" class="CampoImporte" disabled />
                 <input name="PstoCab[CuotaRecargoFinanciero]" value="{{datos.CuotaRecargoFinanciero}}" class="CampoImporte" disabled />

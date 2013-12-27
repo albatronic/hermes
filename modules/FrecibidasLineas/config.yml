@@ -128,7 +128,7 @@ FrecibidasLineas:
         max: null
         message: Valor Requerido
     - 
-      title: Descuento
+      title: Dcto
       field: Descuento
       filter: YES
       list: YES

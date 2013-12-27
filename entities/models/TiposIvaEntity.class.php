@@ -7,47 +7,47 @@
  */
 
 /**
- * @orm:Entity(tipos_iva)
+ * @orm:Entity(TiposIva)
  */
-class TiposIvaEntity extends Entity {
+class TiposIvaEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_iva")
+     * @assert:NotBlank(groups="TiposIva")
      */
     protected $IDIva;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="tipos_iva")
+     * @assert:NotBlank(groups="TiposIva")
      */
     protected $Tipo;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_iva")
+     * @assert:NotBlank(groups="TiposIva")
      */
     protected $Iva = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_iva")
+     * @assert:NotBlank(groups="TiposIva")
      */
     protected $Recargo = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_iva")
+     * @assert:NotBlank(groups="TiposIva")
      */
     protected $Retencion = '0.00';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'tipos_iva';
+    protected $_tableName = 'ErpTiposIva';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -106,5 +106,5 @@ class TiposIvaEntity extends Entity {
 
 }
 
-// END class tipos_iva
+// END class TiposIva
 ?>

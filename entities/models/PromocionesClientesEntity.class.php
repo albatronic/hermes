@@ -7,20 +7,20 @@
  */
 
 /**
- * @orm:Entity(promociones_clientes)
+ * @orm:Entity(PromocionesClientes)
  */
-class PromocionesClientesEntity extends Entity {
+class PromocionesClientesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="promociones_clientes")
+     * @assert:NotBlank(groups="PromocionesClientes")
      */
     protected $Id;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="promociones_clientes")
+     * @assert:NotBlank(groups="PromocionesClientes")
      */
     protected $IDPromocion = '0';
     /**
@@ -29,19 +29,19 @@ class PromocionesClientesEntity extends Entity {
     protected $IDGrupo;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="promociones_clientes")
+     * @assert:NotBlank(groups="PromocionesClientes")
      */
     protected $IDCliente;
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'promociones_clientes';
+    protected $_tableName = 'ErpPromocionesClientes';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -101,5 +101,5 @@ class PromocionesClientesEntity extends Entity {
 
 }
 
-// END class promociones_clientes
+// END class PromocionesClientes
 ?>

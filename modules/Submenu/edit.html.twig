@@ -11,7 +11,7 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="Submenu" type="hidden" />
         <input name="action" value="edit" type="hidden" />
         <input name="Submenu[IDOpcion]" value="{{values.linkBy.value}}" type="hidden" />

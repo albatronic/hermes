@@ -31,7 +31,7 @@ class CpanVariables extends CpanVariablesEntity {
      */
     public function __construct($ambito='', $tipo='', $nombre = '') {
 
-        if ($this->valida($ambito, $tipo, $nombre)) {
+        if ($this->carga($ambito, $tipo, $nombre)) {
 
             $this->_objeto = array(
                 'ambito' => $ambito,
@@ -223,7 +223,7 @@ class CpanVariables extends CpanVariablesEntity {
      *
      * @return boolean TRUE si el ambito y tipo son válidos
      */
-    public function valida($ambito, $tipo, $nombre) {
+    public function carga($ambito, $tipo, $nombre) {
 
         $ok = ( (in_array($ambito, $this->_ambitosDeVariables)) and (in_array($tipo, $this->_tiposDeVariables)) );
 
@@ -237,7 +237,7 @@ class CpanVariables extends CpanVariablesEntity {
 
                 case 'App':
                     $variable = "varApp_{$nombre}";
-                    $app = new CpanAplicaciones();
+                    $app = new Aplicaciones();
                     $app = $app->find('CodigoApp', $nombre);
                     $this->_titulo = 'Variables ' . $tipo . ' de la Aplicación "' . $app->getNombreApp() . '"';
                     unset($app);
@@ -247,7 +247,7 @@ class CpanVariables extends CpanVariablesEntity {
 
                 case 'Mod':
                     $variable = "varMod_{$nombre}";
-                    $modulo = new CpanModulos();
+                    $modulo = new Modulos();
                     $modulo = $modulo->find('NombreModulo', $nombre);
                     $this->_titulo = 'Variables ' . $tipo . ' del Módulo "' . $modulo->getTitulo() . '"';
                     unset($modulo);
@@ -257,7 +257,8 @@ class CpanVariables extends CpanVariablesEntity {
             }
 
             $variable .= "_{$tipo}";
-            $filtro = "IdProyectosApps='{$_SESSION['project']['Id']}' AND Variable='{$variable}'";
+            //$filtro = "IdProyectosApps='{$_SESSION['project']['Id']}' AND Variable='{$variable}'";
+            $filtro = "Variable='{$variable}'";
             $rows = $this->cargaCondicion('*', $filtro);
 
             if ($rows[0])

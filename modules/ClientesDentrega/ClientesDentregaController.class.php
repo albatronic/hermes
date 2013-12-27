@@ -27,7 +27,9 @@ class ClientesDentregaController extends Controller {
         if ($idCliente == '')
             $idCliente = $this->request[2];
 
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $direc = new ClientesDentrega();
+        $tabla = $direc->getDataBaseName() . "." . $direc->getTableName();
+        unset($direc);
         $filtro = $tabla . ".IDCliente='" . $idCliente . "'";
 
         $this->values['linkBy']['value'] = $idCliente;

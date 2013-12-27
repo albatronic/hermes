@@ -26,21 +26,30 @@ class ClientesDentrega extends ClientesDentregaEntity {
      * @param string $column Nombre de la columna a mostrar (opcional)
      * @return array Array con las direcciones de entrega
      */
-    public function fetchAll($idCliente, $column='') {
+    public function fetchAll($idCliente, $column = "CONCAT(d.Direccion,' ',d.CodigoPostal,' ',p.Municipio)") {
+        
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            if ($column == '') {
-                $column = "CONCAT(Direccion,' ',CodPostal,' ',Poblacion)";
-            }
-            $filtro = "WHERE (IDCliente='" . $idCliente . "') ";
-            $query = "SELECT IDDirec as Id,$column as Value FROM clientes_dentrega $filtro ORDER BY $column ASC;";
+            
+            $poblacion = new Municipios();
+
+            $query = "SELECT d.IDDirec as Id,{$column} as Value 
+                        FROM 
+                            {$this->_dataBaseName}.{$this->_tableName} as d,
+                            {$poblacion->getDataBaseName()}.{$poblacion->getTableName()} as p
+                        WHERE
+                        (d.IDCliente='{$idCliente}') AND (d.IDPoblacion=p.IDMunicipio)
+                        ORDER BY {$column} ASC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
             unset($this->_em);
+            unset($poblacion);
         }
+        
         $rows[] = array('Id' => '', Value => ':: Dirección de Entrega');
+
         return $rows;
     }
 

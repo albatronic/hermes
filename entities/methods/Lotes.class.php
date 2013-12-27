@@ -73,7 +73,7 @@ class Lotes extends LotesEntity {
         $mapas = new AlmacenesMapas();
         $mapasDataBase = $mapas->getDataBaseName();
         unset($mapas);
-        
+
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
@@ -114,13 +114,13 @@ class Lotes extends LotesEntity {
      * @return array Array de ubicaciones
      */
     public function getUbicacionesStock($idAlmacen) {
-        
+
         $ubicaciones = array();
 
         $mapas = new AlmacenesMapas();
         $mapasDataBase = $mapas->getDataBaseName();
         unset($mapas);
-        
+
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
@@ -142,6 +142,20 @@ class Lotes extends LotesEntity {
         }
 
         return $ubicaciones;
+    }
+
+    /**
+     * Devuelve true o false dependiende si tiene o no movimientos de almacén
+     * 
+     * @return boolean TRUE si el lote tiene mvtos de almacen
+     */
+    public function TieneMvtos() {
+        $mvtos = new MvtosAlmacen();
+        $filtro = "IDLote='{$this->getPrimaryKeyValue()}'";
+        $rows = $mvtos->cargaCondicion("Count(Id) as nLotes", $filtro);
+        unset($mvtos);
+
+        return ($rows[0]['nLotes'] > 0);
     }
 
 }

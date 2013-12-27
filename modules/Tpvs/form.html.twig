@@ -1,20 +1,23 @@
 {# TEMPLATE Tpvs/form.html.twig #}
 {# Muestra los campos editables de la entidad #}
 
+{% set atributos = values.atributos %}
+
 <div style="float:left; width: 50%">
 {% if datos.IDTpv %}
-    {{ macro.etiqueta('Sucursal','Etiqueta',datos.IDSucursal) }}
+    {{ macro.etiqueta(atributos.IDSucursal,'Etiqueta',datos.IDSucursal,'Tpvs_IDSucursal') }}
 {% else %}
-    {{ macro.select('Sucursal','Etiqueta','Tpvs[IDSucursal]','Tpvs_IDSucursal',none,datos.IDSucursal.IDSucursal,user.getSucursales(),'Select')}}
+    {{ macro.select(atributos.IDSucursal,'Etiqueta','Tpvs[IDSucursal]','Tpvs_IDSucursal',200,datos.IDSucursal.IDSucursal,user.getSucursales(),'Select')}}
 {% endif %}
-{{ macro.input('Nombre','Etiqueta','text','Tpvs[Nombre]','Tpvs_Nombre',datos.Nombre,'50','CampoTextoLargo') }}
-{{ macro.input('Apertura Cajón','Etiqueta','text','Tpvs[AperturaCajon]','Tpvs_AperturaCajon',datos.AperturaCajon,'50','CampoTextoLargo') }}
-{{ macro.select('Salto de Página','Etiqueta','Tpvs[SaltoPagina]','Tpvs_SaltoPagina',none,datos.SaltoPagina.SaltoPagina,datos.SaltoPagina.fetchAll('Tipo'),'Select')}}
-{{ macro.input('Estilo','Etiqueta','text','Tpvs[Estilo]','Tpvs_Estilo',datos.Estilo,'50','CampoTextoLargo') }}
-{{ macro.select('Datáfono1','Etiqueta','Tpvs[IDDataFono1]','Tpvs_IDDataFono1',none,datos.IDDataFono1.IDDataFono,datos.IDDataFono1.fetchAll('Datafono'),'Select')}}
-{{ macro.select('Datáfono2','Etiqueta','Tpvs[IDDataFono2]','Tpvs_IDDataFono2',none,datos.IDDataFono2.IDDataFono,datos.IDDataFono2.fetchAll('Datafono'),'Select')}}
-{{ macro.select('Datáfono3','Etiqueta','Tpvs[IDDataFono3]','Tpvs_IDDataFono3',none,datos.IDDataFono3.IDDataFono,datos.IDDataFono3.fetchAll('Datafono'),'Select')}}
-{{ macro.select('Datáfono4','Etiqueta','Tpvs[IDDataFono4]','Tpvs_IDDataFono4',none,datos.IDDataFono4.IDDataFono,datos.IDDataFono4.fetchAll('Datafono'),'Select')}}
+{{ macro.input(atributos.Nombre,'Etiqueta','text','Tpvs[Nombre]','Tpvs_Nombre',datos.Nombre,'50','CampoTextoLargo') }}
+{{ macro.input(atributos.AperturaCajon,'Etiqueta','text','Tpvs[AperturaCajon]','Tpvs_AperturaCajon',datos.AperturaCajon,'50','CampoTextoLargo') }}
+{{ macro.input(atributos.SaltoPagina,'Etiqueta','checkbox','Tpvs[SaltoPagina]','Tpvs_SaltoPagina',datos.SaltoPagina.IDTipo,'255','CampoTextoLargo','20')}}          
+{{ macro.input(atributos.Estilo,'Etiqueta','text','Tpvs[Estilo]','Tpvs_Estilo',datos.Estilo,'50','CampoTextoLargo') }}
+{{ macro.select(atributos.IDDataFono1,'Etiqueta','Tpvs[IDDataFono1]','Tpvs_IDDataFono1',150,datos.IDDataFono1.IDDataFono,datos.IDDataFono1.fetchAll('Datafono'),'Select')}}
+{{ macro.select(atributos.IDDataFono2,'Etiqueta','Tpvs[IDDataFono2]','Tpvs_IDDataFono2',150,datos.IDDataFono2.IDDataFono,datos.IDDataFono2.fetchAll('Datafono'),'Select')}}
+{{ macro.select(atributos.IDDataFono3,'Etiqueta','Tpvs[IDDataFono3]','Tpvs_IDDataFono3',150,datos.IDDataFono3.IDDataFono,datos.IDDataFono3.fetchAll('Datafono'),'Select')}}
+{{ macro.select(atributos.IDDataFono4,'Etiqueta','Tpvs[IDDataFono4]','Tpvs_IDDataFono4',150,datos.IDDataFono4.IDDataFono,datos.IDDataFono4.fetchAll('Datafono'),'Select')}}
+
 {{ macro.foco('Tpvs_Nombre') }}
 </div>
 

@@ -31,18 +31,26 @@ class RutasRepartoDetalleController extends Controller {
 
         $this->values['listado']['dia'] = $dia;
 
+        $cliente = new Clientes();
+        $zona = new Zonas();
+        $dentrega = new ClientesDentrega();
+        $ruta = new RutasRepartoDetalle();
+        
         // Busco las direcciones de entrega de la ruta indicada y sucursal actual
         // que aun no estén asignadas al día solicitado
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($cliente->getConectionName());
         if ($em->getDbLink()) {
             $query = "SELECT t1.IDDirec as Id, t1.Nombre as Value
-                        FROM clientes_dentrega as t1, clientes as t2, zonas as t3
+                        FROM 
+                            {$dentrega->getDataBaseName()}.{$dentrega->getTableName()} as t1, 
+                            {$cliente->getDataBaseName()}.{$cliente->getTableName()} as t2, 
+                            {$zona->getDataBaseName()}.{$zona->getTableName()} as t3
                         WHERE t1.IDCliente=t2.IDCliente
                         AND t2.IDSucursal='{$_SESSION['suc']}'
                         AND t3.IDSucursal='{$_SESSION['suc']}'
                         AND t1.IDZona=t3.IDZona
                         AND t1.IDDirec NOT IN
-                            (SELECT IDDirec FROM rutas_reparto_detalle
+                            (SELECT IDDirec FROM {$ruta->getDataBaseName()}.{$ruta->getTableName()}
                             WHERE IDRuta='{$idRuta}' AND Dia='{$dia}')
                         ORDER BY t1.Nombre ASC";
             $em->query($query);
@@ -56,15 +64,19 @@ class RutasRepartoDetalleController extends Controller {
 
         // Busco las zonas de las direcciones de entrega de la sucursal actual
         // que aun no estén asignadas al día solicitado
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($cliente->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT DISTINCT t1.IDZona as Id, t2.Zona as Value FROM clientes_dentrega as t1, zonas as t2, clientes as t3
+            $query = "SELECT DISTINCT t1.IDZona as Id, t2.Zona as Value 
+                        FROM 
+                            {$dentrega->getDataBaseName()}.{$dentrega->getTableName()} as t1, 
+                            {$zona->getDataBaseName()}.{$zona->getTableName()} as t2, 
+                            {$cliente->getDataBaseName()}.{$cliente->getTableName()} as t3
                         WHERE t1.IDZona=t2.IDZona
                         AND t1.IDCliente=t3.IDCliente
                         AND t3.IDSucursal='{$_SESSION['suc']}'
                         AND t2.IDSucursal='{$_SESSION['suc']}'
                         AND t1.IDDirec NOT IN
-                            (SELECT IDDirec FROM rutas_reparto_detalle
+                            (SELECT IDDirec FROM {$ruta->getDataBaseName()}.{$ruta->getTableName()}
                             WHERE IDRuta='{$idRuta}' AND Dia='{$dia}')
                         ORDER BY t2.Zona ASC";
             $em->query($query);
@@ -79,9 +91,13 @@ class RutasRepartoDetalleController extends Controller {
         // Lleno las direcciones asignadas al repartidor y día
         // ordenados por Orden de direccion de entrega y IDZona
         // -----------------------------------------------
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($cliente->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT t1.Id,t1.IDRepartidor FROM rutas_reparto_detalle as t1, clientes_dentrega as t2, zonas as t3
+            $query = "SELECT t1.Id,t1.IDRepartidor 
+                        FROM 
+                            {$ruta->getDataBaseName()}.{$ruta->getTableName()}  as t1, 
+                            {$dentrega->getDataBaseName()}.{$dentrega->getTableName()}  as t2, 
+                            {$zona->getDataBaseName()}.{$zona->getTableName()} as t3
                         WHERE t1.IDDirec=t2.IDDirec
                         AND t2.IDZona=t3.IDZona
                         AND t1.IDRuta='{$idRuta}'
@@ -92,6 +108,9 @@ class RutasRepartoDetalleController extends Controller {
             $em->desConecta();
         }
         unset($em);
+        unset($cliente);
+        unset($dentrega);
+        unset($zona);
 
         foreach ($rows as $row) {
             $lineas[] = new $this->entity($row['Id']);
@@ -118,14 +137,17 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function cambiarRepartidorAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $ruta = new RutasRepartoDetalle();
+            
+            $em = new EntityManager($ruta->getConectionName());
             if ($em->getDbLink()) {
-                $em->query("UPDATE rutas_reparto_detalle SET IDRepartidor='{$this->request['IDRepartidor']}' WHERE IDRuta='{$this->request['IDRuta']}' and Dia='{$this->request['dia']}'");
+                $em->query("UPDATE {$ruta->getDataBaseName()}.{$ruta->getTableName()} SET IDRepartidor='{$this->request['IDRepartidor']}' WHERE IDRuta='{$this->request['IDRuta']}' and Dia='{$this->request['dia']}'");
                 $em->desConecta();
             }
             unset($em);
+            unset($ruta);
 
             return $this->listAction($this->request['IDRuta'], $this->request['dia']);
         } else {
@@ -140,7 +162,7 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             switch ($this->request['accion']) {
                 case 'direccion': //CREAR NUEVO REGISTRO
@@ -190,7 +212,7 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function cambiarOrdenZonaAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $datos = new $this->entity($this->request['Id']);
             $rows = $datos->cargaCondicion("Id", "IDZona='{$datos->getIDZona()->getIDZona()}'");
             foreach ($rows as $row) {
@@ -210,7 +232,7 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function cambiarOrdenDirecAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $datos = new $this->entity($this->request['Id']);
             $datos->setOrdenDirec($this->request['OrdenDirec']);
             $datos->save();
@@ -225,15 +247,17 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function borrarZonaAction() {
-        if ($this->values['permisos']['B']) {
+        if ($this->values['permisos']['permisosModulo']['DE']) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $rutas = new RutasRepartoDetalle();
+            $em = new EntityManager($rutas->getConectionName());
             if ($em->getDbLink()) {
-                $query = "DELETE FROM rutas_reparto_detalle WHERE IDRuta='{$this->request['IDRuta']}' and IDZona='{$this->request['IDZona']}' and Dia='{$this->request['dia']}'";
+                $query = "DELETE FROM {$rutas->getDataBaseName()}.{$rutas->getTableName()} WHERE IDRuta='{$this->request['IDRuta']}' and IDZona='{$this->request['IDZona']}' and Dia='{$this->request['dia']}'";
                 $em->query($query);
                 $em->desConecta();
             }
             unset($em);
+            unset($rutas);
 
             return $this->listAction($this->request['IDRuta'], $this->request['dia']);
         } else {
@@ -246,7 +270,7 @@ class RutasRepartoDetalleController extends Controller {
      * @return <type>
      */
     public function borrarDireccionAction() {
-        if ($this->values['permisos']['B']) {
+        if ($this->values['permisos']['permisosModulo']['DE']) {
             $datos = new $this->entity($this->request['Id']);
             $datos->erase();
             return $this->listAction($this->request['IDRuta'], $this->request['dia']);

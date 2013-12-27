@@ -13,6 +13,10 @@ class TraspasosCabController extends Controller {
     protected $entity = "TraspasosCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+        
     /**
      * Marca el traspaso como Confirmado (estado 1)
      * Pone sus líneas como Reservadas (estado 1)
@@ -20,7 +24,7 @@ class TraspasosCabController extends Controller {
      * @return array Template y values
      */
     public function confirmarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             // Se puede confirmar si está en estado de PTE. CONFIRMAR (0)
             $datos = new TraspasosCab($this->request['TraspasosCab']['IDTraspaso']);
@@ -46,7 +50,7 @@ class TraspasosCabController extends Controller {
      * @return array Template y values
      */
     public function anularAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             // Se puede anular la confirmación si está en estado de CONFIRMADO (1)
             $datos = new TraspasosCab($this->request['TraspasosCab']['IDTraspaso']);
@@ -74,7 +78,7 @@ class TraspasosCabController extends Controller {
      * y en base a la política de recálculo de precios definida con el parámetro ACTU_PRECIOS
      */
     public function CotizarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $idTraspaso = $this->request['TraspasosCab']['IDTraspaso'];
             $datos = new TraspasosCab($idTraspaso);
@@ -116,7 +120,7 @@ class TraspasosCabController extends Controller {
      * @return array Template y values
      */
     public function duplicarAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             $datos = new TraspasosCab($this->request['TraspasosCab']['IDTraspaso']);
             $idTraspasoNuevo = $datos->duplica();
@@ -154,7 +158,7 @@ class TraspasosCabController extends Controller {
             $this->values['resultadoEnvio'] = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
             unset($envio);
         } else {
-            $usuario = new Agentes($_SESSION['USER']['user']['id']);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
             $datos = new TraspasosCab($this->request['TraspasosCab']['IDTraspaso']);
             $formatos = DocumentoPdf::getFormatos('ordenTraspaso');

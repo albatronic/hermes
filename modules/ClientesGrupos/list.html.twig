@@ -18,7 +18,7 @@
                     {% set classFila = 'Par' %}
                 {% endif %}
             <tr class="{{classFila}}">
-                <td><a href="{{app.path}}/ClientesGrupos/edit/{{objeto.IDGrupo}}" title="Editar...">{{objeto.Grupo}}</a></td>
+                <td><a href="{{app.path}}/ClientesGrupos/edit/{{objeto.PrimaryKeyMD5}}" title="Editar...">{{objeto.Grupo}}</a></td>
             </tr>
             {% endfor %}
             </tbody>

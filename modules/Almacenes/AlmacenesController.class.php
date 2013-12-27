@@ -13,6 +13,9 @@ class AlmacenesController extends Controller {
     protected $entity = "Almacenes";
     protected $parentEntity = "";
 
+    public function indexAction() {
+        return parent::ListAction();
+    }
 }
 
 ?>

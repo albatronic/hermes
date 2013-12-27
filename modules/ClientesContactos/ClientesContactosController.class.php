@@ -27,7 +27,10 @@ class ClientesContactosController extends Controller {
         if ($idCliente == '')
             $idCliente = $this->request[2];
 
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $direc = new ClientesContactos();
+        $tabla = $direc->getDataBaseName() . "." . $direc->getTableName();
+        unset($direc);        
+
         $filtro = $tabla . ".IDCliente='" . $this->request[2] . "'";
 
         $this->values['linkBy']['value'] = $idCliente;

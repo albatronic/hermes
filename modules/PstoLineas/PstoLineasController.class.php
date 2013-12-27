@@ -24,11 +24,15 @@ class PstoLineasController extends Controller {
             'id' => 'IDPsto',
             'value' => '',
         );
+        
+        // Cargar la configuracion del modulo (modules/moduloName/config.yml)
+        $this->form = new Form($this->entity);        
+        $this->values['atributos'] = $this->form->getAtributos($this->entity);            
     }
 
     public function listAction($idPsto='') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idPsto == '')
                 $idPsto = $this->request[2];
 
@@ -76,7 +80,8 @@ class PstoLineasController extends Controller {
      * @return array con el template y valores a renderizar
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
 
                 case 'POST': //CREAR NUEVO REGISTRO
@@ -88,7 +93,7 @@ class PstoLineasController extends Controller {
                     $datos = new $this->entity();
                     $datos->bind($this->request[$this->entity]);
 
-                    if ($datos->valida()) {
+                    if ($datos->valida(array())) {
                         $datos->create();
                         $this->values['alertas'] = $datos->getAlertas();
 
@@ -127,10 +132,10 @@ class PstoLineasController extends Controller {
 
         switch ($this->request['accion']) {
             case 'G': //GUARDAR DATOS
-                if ($this->values['permisos']['A']) {
+                if ($this->values['permisos']['permisosModulo']['UP']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
                     $datos->bind($this->request[$this->entity]);
-                    if ($datos->valida()) {
+                    if ($datos->valida(array())) {
                         $datos->save();
                         $this->values['errores'] = $datos->getErrores();
                         $this->values['alertas'] = $datos->getAlertas();
@@ -150,7 +155,7 @@ class PstoLineasController extends Controller {
                 break;
 
             case 'B': //BORRAR DATOS
-                if ($this->values['permisos']['B']) {
+                if ($this->values['permisos']['permisosModulo']['DE']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
 
                     if ($datos->erase()) {

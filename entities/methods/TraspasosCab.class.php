@@ -40,10 +40,10 @@ class TraspasosCab extends TraspasosCabEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "DELETE FROM traspasos_cab WHERE `IDTraspaso`='{$this->IDTraspaso}' AND IDEstado='0'";
+            $query = "DELETE FROM ErpTraspasosCab WHERE `IDTraspaso`='{$this->IDTraspaso}' AND IDEstado='0'";
             if ($this->_em->query($query)) {
                 //Borrar líneas de traspasos
-                $query = "DELETE FROM traspasos_lineas where `IDTraspaso`='{$this->IDTraspaso}'";
+                $query = "DELETE FROM ErpTraspasosLineas where `IDTraspaso`='{$this->IDTraspaso}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
             } else
@@ -65,7 +65,7 @@ class TraspasosCab extends TraspasosCabEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "SELECT IDTraspaso as Id,$column as Value FROM traspasos_cab ORDER BY $column ASC;";
+            $query = "SELECT IDTraspaso as Id,$column as Value FROM ErpTraspasosCab ORDER BY $column ASC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
@@ -87,9 +87,9 @@ class TraspasosCab extends TraspasosCabEntity {
         // Si no está confirmado
         if ($this->getIDEstado()->getIDTipo() == 0) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.traspasos_lineas as t1, articulos as t2
+                        FROM {$this->_dataBaseName}.ErpTraspasosLineas as t1, {$this->_dataBaseName}.ErpArticulos as t2
                         WHERE t1.IDTraspaso='{$this->IDTraspaso}'
                             AND t1.IDEstado='0'
                             AND t1.Tipo='0'
@@ -97,21 +97,19 @@ class TraspasosCab extends TraspasosCabEntity {
                             AND t2.Inventario='1'";
             $em->query($query);
             $rows = $em->fetchResult();
+            
             $em->desConecta();
 
-            // Quitar las reservas
+            // Hacer las reservas
             $exi = new Existencias();
             foreach ($rows as $row)
                 $exi->hazReserva($row['IDAlmacen'], $row['IDArticulo'], $row['Unidades'], $row['UnidadMedida']);
             unset($exi);
 
-
             // Marcar como Reservadas las líneas de la orden de traspaso de tipo 0 (salida)
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.traspasos_lineas set IDEstado='1' where IDTraspaso='{$this->IDTraspaso}' and IDEstado='0' and Tipo='0'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $lineas = new TraspasosLineas();
+            $lineas->queryUpdate(array("IDEstado" => 1),"IDTraspaso='{$this->IDTraspaso}' and IDEstado='0' and Tipo='0'");
+            unset($lineas);
 
             // Confirmar la cabecera de la orden de traspaso
             $this->setIDEstado(1);
@@ -131,9 +129,9 @@ class TraspasosCab extends TraspasosCabEntity {
         // Si está confirmado
         if ($this->getIDEstado()->getIDTipo() == 1) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.traspasos_lineas as t1, articulos as t2
+                        FROM {$this->_dataBaseName}.ErpTraspasosLineas as t1, ErpArticulos as t2
                         WHERE t1.IDTraspaso='{$this->IDTraspaso}'
                             AND t1.Tipo='0'
                             AND t1.IDEstado='1'
@@ -150,15 +148,14 @@ class TraspasosCab extends TraspasosCabEntity {
             unset($exi);
 
             // Poner en estado de PTE DE CONFIRMAR las líneas de la orden de traspaso de tipo 0 (salida)
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.traspasos_lineas set IDEstado='0' where IDTraspaso='{$this->IDTraspaso}' and IDEstado='1' and Tipo='0'";
-            $em->query($query);
+            $lineas = new TraspasosLineas();
+            $lineas->queryUpdate(array("IDEstado" => 0),"IDTraspaso='{$this->IDTraspaso}' and IDEstado='1' and Tipo='0'");
+            unset($lineas);
 
             // Borrar las eventuales lineas de expedicion
-            $query = "delete from {$em->getDataBase()}.expediciones where Entidad='TraspasosCab' and IDEntidad='{$this->IDTraspaso}'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='TraspasosCab' and IDEntidad='{$this->IDTraspaso}'");
+            unset($expediciones);
 
             // Anular la reserva en la cabecera de la orden de traspaso
             $this->setIDEstado(0);
@@ -247,10 +244,10 @@ class TraspasosCab extends TraspasosCabEntity {
         //por si se ha cambiado el almacen, siempre y cuando el estado de la linea sea 0
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "UPDATE {$this->_dataBaseName}.traspasos_lineas SET `IDAlmacen`='{$this->IDAlmacenOrigen}' WHERE `IDTraspaso` = '{$this->IDTraspaso}' and `Tipo` = '0' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenOrigen}'";
+            $query = "UPDATE {$this->_dataBaseName}.ErpTraspasosLineas SET `IDAlmacen`='{$this->IDAlmacenOrigen}' WHERE `IDTraspaso` = '{$this->IDTraspaso}' and `Tipo` = '0' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenOrigen}'";
             $this->_em->query($query);
 
-            $query = "UPDATE {$this->_dataBaseName}.traspasos_lineas SET `IDAlmacen`='{$this->IDAlmacenDestino}' WHERE `IDTraspaso` = '{$this->IDTraspaso}' and `Tipo` = '1' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenDestino}'";
+            $query = "UPDATE {$this->_dataBaseName}.ErpTraspasosLineas SET `IDAlmacen`='{$this->IDAlmacenDestino}' WHERE `IDTraspaso` = '{$this->IDTraspaso}' and `Tipo` = '1' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenDestino}'";
             $this->_em->query($query);
         }
         $this->_em->desConecta();
@@ -258,21 +255,23 @@ class TraspasosCab extends TraspasosCabEntity {
         //Calcular los totales
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "select sum(articulos.Peso*traspasos_lineas.Unidades) as Peso,
-                sum(articulos.volumen*traspasos_lineas.Unidades) as Volumen,
-                sum(Unidades) as Bultos,
-                sum(articulos.Pmc*traspasos_lineas.Unidades) as Costo
-                from articulos,traspasos_lineas
-                where (traspasos_lineas.IDArticulo=articulos.IDArticulo) and (articulos.Inventario='1') and (traspasos_lineas.IDTraspaso='{$this->IDTraspaso}')";
+            $query = "select sum(ErpArticulos.Peso*ErpTraspasosLineas.Unidades) as Peso,
+                sum(ErpArticulos.volumen*ErpTraspasosLineas.Unidades) as Volumen,
+                sum(ErpTraspasosLineas.Unidades) as Bultos,
+                sum(ErpArticulos.Pmc*ErpTraspasosLineas.Unidades) as Costo
+                from ErpArticulos,ErpTraspasosLineas
+                where (ErpTraspasosLineas.IDArticulo=ErpArticulos.IDArticulo) and (ErpArticulos.Inventario='1') and (ErpTraspasosLineas.IDTraspaso='{$this->IDTraspaso}')";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
             unset($this->_em);
 
-            $this->setPeso($row[0]['Peso']);
-            $this->setVolumen($row[0]['Volumen']);
-            $this->setBultos($row[0]['Bultos']);
-            $this->setTotalCosto($row[0]['Costo']);
+            $this->setPeso($rows[0]['Peso']);
+            $this->setVolumen($rows[0]['Volumen']);
+            $this->setBultos($rows[0]['Bultos']);
+            $this->setTotalCosto($rows[0]['Costo']);
+            $this->setTotalGastos($this->GastosTransporte+$this->GastosVarios);
+            
         }
     }
 
@@ -286,19 +285,10 @@ class TraspasosCab extends TraspasosCabEntity {
 
         $idOrigen = $this->IDTraspaso;
 
-        // Calcular el Numero de traspaso en base al contador
-        $contador = new Contadores($this->IDContador);
-        $this->setNumeroTraspaso($contador->asignaContador());
-        unset($contador);
-
         // Crear la cabecera del parte
         $destino = new TraspasosCab();
         $destino->setIDSucursal($this->IDSucursal);
         $destino->setIDContador($this->IDContador);
-        // Calcular el Numero de traspaso en base al contador
-        $contador = new Contadores($this->IDContador);
-        $destino->setNumeroTraspaso($contador->asignaContador());
-        unset($contador);
         $destino->setIDEstado(0);
         $destino->setFechaOrden(date('d-m-Y'));
         $destino->setFechaEntrada('00-00-0000');

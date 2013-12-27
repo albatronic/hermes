@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(clientes_dentrega)
  */
-class ClientesDentregaEntity extends Entity {
+class ClientesDentregaEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -43,13 +43,13 @@ class ClientesDentregaEntity extends Entity {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes_dentrega")
      */
-    protected $IDPais = '73';
+    protected $IDPais = '68';
 
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes_dentrega")
      */
-    protected $Poblacion;
+    protected $IDPoblacion;
 
     /**
      * @orm:Column(type="integer")
@@ -61,7 +61,7 @@ class ClientesDentregaEntity extends Entity {
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes_dentrega")
      */
-    protected $CodPostal = '0000000000';
+    protected $CodigoPostal = '0000000000';
 
     /**
      * @orm:Column(type="string")
@@ -121,13 +121,13 @@ class ClientesDentregaEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'clientes_dentrega';
+    protected $_tableName = 'ErpClientesDentrega';
 
     /**
      * Nombre de la primaryKey
@@ -192,12 +192,14 @@ class ClientesDentregaEntity extends Entity {
         return $this->IDPais;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = trim($Poblacion);
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
     }
 
-    public function getPoblacion() {
-        return $this->Poblacion;
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setIDProvincia($IDProvincia) {
@@ -210,12 +212,12 @@ class ClientesDentregaEntity extends Entity {
         return $this->IDProvincia;
     }
 
-    public function setCodPostal($CodPostal) {
-        $this->CodPostal = trim($CodPostal);
+    public function setCodigoPostal($CodigoPostal) {
+        $this->CodigoPostal = trim($CodigoPostal);
     }
 
-    public function getCodPostal() {
-        return $this->CodPostal;
+    public function getCodigoPostal() {
+        return $this->CodigoPostal;
     }
 
     public function setTelefono($Telefono) {

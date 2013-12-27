@@ -28,7 +28,7 @@ class Contadores extends ContadoresEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "select IDContador as Id, Serie as Value from {$this->_dataBaseName}.contadores where IDSucursal='{$idSucursal}' and IDTipo='{$idTipo}' order by Predefinido DESC;";
+            $query = "select IDContador as Id, Serie as Value from {$this->_dataBaseName}.{$this->_tableName} where IDSucursal='{$idSucursal}' and IDTipo='{$idTipo}' order by Predefinido DESC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
@@ -56,7 +56,7 @@ class Contadores extends ContadoresEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "select IDContador from {$this->_dataBaseName}.contadores where (IDSucursal='{$idSucursal}') and (IDTipo='{$idTipo}') and ({$filtroSerie});";
+            $query = "select IDContador from {$this->_dataBaseName}.{$this->_tableName} where (IDSucursal='{$idSucursal}') and (IDTipo='{$idTipo}') and ({$filtroSerie});";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();

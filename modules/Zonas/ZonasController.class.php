@@ -12,15 +12,23 @@ class ZonasController extends Controller {
 
     protected $entity = "Zonas";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+    
     public function listAction() {
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $zonas = new Zonas();
+        $tabla = $zonas->getDataBaseName() . "." . $zonas->getTableName();
+        unset($zonas);
         $filtro = $tabla . ".IDSucursal='" . $_SESSION['suc'] . "'";
 
         return parent::listAction($filtro);
     }
 
     public function listadoAction() {
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $zonas = new Zonas();
+        $tabla = $zonas->getDataBaseName() . "." . $zonas->getTableName();
+        unset($zonas);
         $filtro = $tabla . ".IDSucursal='" . $_SESSION['suc'] . "'";
 
         return parent::listadoAction($filtro);

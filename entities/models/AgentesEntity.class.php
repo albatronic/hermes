@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Agentes/Usuarios del sistema
+ * Usuarios del sistema
  * 
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
@@ -11,99 +11,74 @@
 /**
  * @orm:Entity(agentes)
  */
-class AgentesEntity extends Entity {
+class AgentesEntity extends EntityComunes {
 
     /**
-     * @orm:GeneratedValue
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="agentes")
+     * @orm GeneratedValue
+     * @orm IDAgente
+     * @var integer
+     * @assert NotBlank(groups="CpanUsuarios")
      */
     protected $IDAgente;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="agentes")
+     * @var entities\CpanPerfiles
+     * @assert NotBlank(groups="CpanUsuarios")
      */
-    protected $Login;
+    protected $IDPerfil;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="agentes")
+     * @var entities\CpanRoles
+     * @assert NotBlank(groups="CpanUsuarios")
      */
-    protected $Nombre;
+    protected $IDRol;
+
     /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="agentes")
+     * @var entities\CpanUsuariosTipos
+     * @assert NotBlank(groups="CpanUsuarios")
      */
-    protected $Password;
-    /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="agentes")
-     */
-    protected $Quien;
-    /**
-     * @orm:Column(type="integer")
-     */
-    protected $NLogin = '0';
-    /**
-     * @orm:Column(type="datetime")
-     */
-    protected $UltimoLogin;
-    /**
-     * @orm:Column(type="string")
-     */
-    protected $EMail;
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="agentes")
-     */
-    protected $Activo = '1';
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="agentes")
-     */
-    protected $IDPerfil = '0';
+    protected $IDTipo = 0;
+
     /**
      * @orm:Column(type="integer")
      */
-    protected $IDEmpresa = NULL;
+    protected $IDSucursal = 1;
+
     /**
      * @orm:Column(type="integer")
      */
-    protected $IDSucursal = NULL;
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="agentes")
-     */
-    protected $Rol = '0';
+    protected $IDAlmacen = 1;
+    
     /**
      * @orm:Column(type="integer")
      */
-    protected $IDAlmacen = NULL;
-    /**
-     * @orm:Column(type="string")
-     */
-    protected $Ips;
+    protected $Activo = 1;    
+
     /**
      * Para almacenar temporalmente la
      * repeticion de la password
      * @var string
      */
     protected $_repitePassword;
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'agentes';
+    protected $_tableName = 'ErpUsuarios';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDAgente';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -124,78 +99,15 @@ class AgentesEntity extends Entity {
     /**
      * GETTERS Y SETTERS
      */
+
     public function setIDAgente($IDAgente) {
         $this->IDAgente = $IDAgente;
     }
 
     public function getIDAgente() {
+        if (!($this->IDAgente instanceof PcaeUsuarios))
+            $this->IDAgente = new PcaeUsuarios($this->IDAgente);
         return $this->IDAgente;
-    }
-
-    public function setLogin($Login) {
-        $this->Login = $Login;
-    }
-
-    public function getLogin() {
-        return $this->Login;
-    }
-
-    public function setNombre($Nombre) {
-        $this->Nombre = $Nombre;
-    }
-
-    public function getNombre() {
-        return $this->Nombre;
-    }
-
-    public function setPassword($Password) {
-        $this->Password = $Password;
-    }
-
-    public function getPassword() {
-        return $this->Password;
-    }
-
-    public function setQuien($Quien) {
-        $this->Quien = $Quien;
-    }
-
-    public function getQuien() {
-        return $this->Quien;
-    }
-
-    public function setNLogin($NLogin) {
-        $this->NLogin = $NLogin;
-    }
-
-    public function getNLogin() {
-        return $this->NLogin;
-    }
-
-    public function setUltimoLogin($UltimoLogin) {
-        $this->UltimoLogin = $UltimoLogin;
-    }
-
-    public function getUltimoLogin() {
-        return $this->UltimoLogin;
-    }
-
-    public function setEMail($EMail) {
-        $this->EMail = trim($EMail);
-    }
-
-    public function getEMail() {
-        return $this->EMail;
-    }
-
-    public function setActivo($Activo) {
-        $this->Activo = $Activo;
-    }
-
-    public function getActivo() {
-        if (!($this->Activo instanceof ValoresSN))
-            $this->Activo = new ValoresSN($this->Activo);
-        return $this->Activo;
     }
 
     public function setIDPerfil($IDPerfil) {
@@ -208,14 +120,24 @@ class AgentesEntity extends Entity {
         return $this->IDPerfil;
     }
 
-    public function setIDEmpresa($IDEmpresa) {
-        $this->IDEmpresa = $IDEmpresa;
+    public function setIDRol($IDRol) {
+        $this->IDRol = $IDRol;
     }
 
-    public function getIDEmpresa() {
-        if (!($this->IDEmpresa instanceof Empresas))
-            $this->IDEmpresa = new Empresas($this->IDEmpresa);
-        return $this->IDEmpresa;
+    public function getIDRol() {
+        if (!($this->IDRol instanceof Roles))
+            $this->IDRol = new Roles($this->IDRol);
+        return $this->IDRol;
+    }
+
+    public function setIDTipo($IDTipo) {
+        $this->IDTipo = $IDTipo;
+    }
+
+    public function getIDTipo() {
+        if (!($this->IDTipo instanceof TiposUsuarios))
+            $this->IDTipo = new TiposUsuarios($this->IDTipo);
+        return $this->IDTipo;
     }
 
     public function setIDSucursal($IDSucursal) {
@@ -228,16 +150,6 @@ class AgentesEntity extends Entity {
         return $this->IDSucursal;
     }
 
-    public function setRol($Rol) {
-        $this->Rol = $Rol;
-    }
-
-    public function getRol() {
-        if (!($this->Rol instanceof Roles))
-            $this->Rol = new Roles($this->Rol);
-        return $this->Rol;
-    }
-
     public function setIDAlmacen($IDAlmacen) {
         $this->IDAlmacen = $IDAlmacen;
     }
@@ -248,13 +160,16 @@ class AgentesEntity extends Entity {
         return $this->IDAlmacen;
     }
 
-    public function setIps($Ips) {
-        $this->Ips = trim($Ips);
+    public function setActivo($Activo) {
+        $this->Activo = $Activo;
     }
 
-    public function getIps() {
-        return $this->Ips;
+    public function getActivo() {
+        if (!($this->Activo instanceof ValoresSN))
+            $this->Activo = new ValoresSN($this->Activo);
+        return $this->Activo;
     }
+
 }
 
 // END class agentes

@@ -22,7 +22,11 @@ class MvtosAlmacenController extends Controller {
         $this->values['tiposMvtos'] = $tiposMvtos;
         unset($tipoMvto);
     }
-
+    
+    public function IndexAction() {
+        return $this->listAction();
+    }
+    
     /**
      * Crea un registro nuevo
      *
@@ -33,7 +37,7 @@ class MvtosAlmacenController extends Controller {
      */
     public function newAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             switch ($this->request["METHOD"]) {
                 case 'GET': //MOSTRAR FORMULARIO VACIO
 

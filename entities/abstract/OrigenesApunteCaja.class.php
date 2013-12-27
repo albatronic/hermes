@@ -22,6 +22,7 @@ class OrigenesApunteCaja extends Tipos {
         array('Id' => '6', 'Value' => 'Traspasos'),
         array('Id' => '7', 'Value' => 'Contratos'),
         array('Id' => '8', 'Value' => 'Empeño'),
+        array('Id' => '9', 'Value' => 'Reserva'),
     );
 }
 ?>

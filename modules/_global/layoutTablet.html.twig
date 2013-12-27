@@ -2,39 +2,16 @@
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es-ES" lang="es-ES">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>.: {{ app.name }} {% block title %} {{ titulo }} {% endblock %}</title>
-        <link rel="shortcut icon" href="favicon.ico" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>.: {{ app.name }} {% block title %} {{ titulo }} {% endblock %}</title>
+    <link rel="shortcut icon" href="favicon.ico" />
 
-        <!-- Para que esté disponible el path de la app en todos los java scripts -->
-        <script type="text/javascript">var appPath = "{{app.path}}";</script>
+    <!-- Para que esté disponible el path de la app en todos los java scripts -->
+    <script type="text/javascript">var appPath = "{{app.path}}";</script>      
 
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/menuazulgris.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/contenedor.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/formularios.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/notificaciones.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/jquery.ui.all.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/jquery.autocompletar.css" />
-        <link type="text/css" rel="stylesheet" href="{{app.path}}/css/tablet/thickbox.css" media="screen" />
-
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery-1.7.1.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.bgiframe-2.1.2.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.core.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.widget.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="{{app.path}}/js/jquery/i18n/jquery.ui.datepicker-es.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.tabs.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.mouse.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.draggable.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.position.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.resizable.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.dialog.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.autocomplete.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/jquery/jquery.ui.accordion.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/script.js"></script>
-        <script type="text/javascript" src="{{app.path}}/js/thickbox.js"></script>
-
+    {% include "_global/css.html.twig" %}
+    {% include "_global/js.html.twig" %}
 </head>
 <body>
 
@@ -45,20 +22,21 @@
             <div id="Head">
             {% if emp %}
             <div id="headleft">
-                <a href="{{app.path}}/Index"><img src="{{app.path}}/docs/docs{{emp.IDEmpresa}}/images/logo.jpg" width="59" height="59" title="Inicio" alt="Logo Empresa"/></a>
+                <a href="{{app.path}}/Index"><img src="{{app.path}}/docs/docs{{emp.Id}}/images/logo.jpg" border="0px;" height="59" title="Inicio" alt="Logo Empresa"/></a>
             </div>
             {% endif %}
 
             <div id="headcenter">
-                <form name="empresa" action="" method="post">
+                <form name="empresa" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="Index" type="hidden" />
 		<input name="action" id="action1" value="" type="hidden" />
                 <div style="float:left;">
-                {{ macro.select('Empresa','Etiqueta','Empresa','Empresa',none,emp.IDEmpresa,user.Empresas,'Select',none,"getElementById('action1').value='Empresa'; submit();") }}
+                    <h4>{{emp.RazonSocial}}</h4>
+                {# macro.select('Empresa','Etiqueta','Empresa','Empresa',none,emp.IDEmpresa,user.Empresas,'Select',none,"getElementById('action1').value='Empresa'; submit();") #}
                 </div>
                 <div style="float:left;margin-left:20px;">
                 {% if emp %}
-                    {{ macro.select('Sucursal','Etiqueta','Sucursal','Sucursal',none,suc,user.Sucursales,'Select',none,"getElementById('action1').value='Sucursal'; submit();") }}
+                    {{ macro.select('Sucursal','Etiqueta','Sucursal','Sucursal',none,suc,user.Sucursales('',false),'Select',none,"getElementById('action1').value='Sucursal'; submit();") }}
                 {% endif %}
                 </div>
                 {% if tpv.IDTpv %}
@@ -70,9 +48,10 @@
             </div>
 
             <div id="headright">
-                <h4>{{user.Nombre}}</h4>
-                <p>Ver. {{emp.IDVersion.Descripcion}}</p>
-                <a href="/apps" class="logout">Salir</a>
+                <h4>{{user.NombreApellidos}}</h4>
+                <a href="{{app.urlParent}}/return">
+                    <img src="{{app.path}}/images/logout.png" alt="Cerrar Sesión" title="Cerrar Sesión">
+                </a>
             </div>
             </div>
         {% endblock %}
@@ -89,8 +68,10 @@
         {% endblock %}
     </div>
 
-    <div id="notificacion"></div>
-
+    <div id="notificacion" title="Mensaje"></div>
+    <div id="dialogoVarEnv" title="Propiedades del elemento"></div>
+    <div id="dialogOrdenar" title="Cambiar orden"></div>
+        
     <div id="Footer">
         <div id="footleft">
             <div class="debug">
@@ -101,7 +82,7 @@
         </div>
 
         <div id="footright">
-            &copy; Powered by ALBATRONIC, SL 2012
+            &copy; Powered by Albatronic, SL 2006-2013
         </div>
         <div style="clear:both;"></div>
     </div>

@@ -22,9 +22,9 @@ class InventariosLineas extends InventariosLineasEntity {
 
         if ($this->_flagAgrupa) {
             $this->IDLinea = $this->_idLineaNueva;
-            return parent::save ();
+            return parent::save();
         } else
-            return parent::create ();
+            return parent::create();
     }
 
     public function save() {
@@ -45,6 +45,8 @@ class InventariosLineas extends InventariosLineasEntity {
      * 2.- Agrupa con código de artículo, lote ubicación
      */
     public function validaLogico() {
+
+        parent::validaLogico();
 
         // Control Lote y Ubicación
         $articulo = new Articulos($this->IDArticulo);
@@ -82,7 +84,7 @@ class InventariosLineas extends InventariosLineasEntity {
             $this->_idLineaNueva = $rows[0]['IDLinea'];
             $this->Stock += $rows[0]['Stock'];
             $this->Cajas += $rows[0]['Cajas'];
-            $this->Kilos += $rows[0]['Kilos'];
+            $this->Pales += $rows[0]['Pales'];
 
             $this->_flagAgrupa = true;
         }

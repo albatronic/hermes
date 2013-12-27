@@ -14,7 +14,7 @@ ImportarFrecibidas:
   title: Importar Facturas Recibidas desde archivo externo
   id_video: null
   url_video: null
-  conection: 'datos<?php echo $_SESSION['emp'];?>'
+  conection: 
   entity: ImportarFrecibidas
   table:
   primarykey:

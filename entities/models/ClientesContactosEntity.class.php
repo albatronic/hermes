@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(clientes_contactos)
  */
-class ClientesContactosEntity extends Entity {
+class ClientesContactosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -54,12 +54,12 @@ class ClientesContactosEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'clientes_contactos';
+    protected $_tableName = 'ErpClientesContactos';
     /**
      * Nombre de la primaryKey
      * @var string

@@ -61,7 +61,7 @@ class EntityComunes extends Entity {
 
     /**
      * @orm Column(type="integer")
-     * @var entities\CpanUsuarios
+     * @var entities\Agentes
      */
     protected $CreatedBy = '0';
 
@@ -74,7 +74,7 @@ class EntityComunes extends Entity {
 
     /**
      * @orm Column(type="integer")
-     * @var entities\CpanUsuarios
+     * @var entities\Agentes
      */
     protected $ModifiedBy = '0';
 
@@ -93,7 +93,7 @@ class EntityComunes extends Entity {
 
     /**
      * @orm Column(type="integer")
-     * @var entities\CpanUsuarios
+     * @var entities\Agentes
      */
     protected $DeletedBy = '0';
 
@@ -102,6 +102,30 @@ class EntityComunes extends Entity {
      * @var datetime
      */
     protected $DeletedAt = '0000-00-00 00:00:00';
+
+    /**
+     * @orm Column(type="integer")
+     * @var entities\Agentes
+     */
+    protected $PrintedBy = '0';
+
+    /**
+     * @orm Column(type="datetime")
+     * @var datetime
+     */
+    protected $PrintedAt = '0000-00-00 00:00:00';
+
+    /**
+     * @orm Column(type="integer")
+     * @var entities\Agentes
+     */
+    protected $EmailedBy = '0';
+
+    /**
+     * @orm Column(type="datetime")
+     * @var datetime
+     */
+    protected $EmailedAt = '0000-00-00 00:00:00';
 
     /**
      * @orm Column(type="tinyint")
@@ -167,7 +191,7 @@ class EntityComunes extends Entity {
      * @orm Column(type="string")
      * @var entities\ValoresSN
      */
-    protected $UrlHeritable = '1';
+    protected $UrlHeritable = '0';
 
     /**
      * @orm Column(type="integer")
@@ -185,7 +209,7 @@ class EntityComunes extends Entity {
      * @orm Column(type="tinyint")
      * @var entities\ValoresSN
      */
-    protected $LockMetatagTitle = '';
+    protected $LockMetatagTitle = '1';
 
     /**
      * @orm Column(type="string")
@@ -460,11 +484,9 @@ class EntityComunes extends Entity {
     }
 
     public function getCreatedBy() {
-        if (!($this->CreatedBy instanceof CpanUsuarios)) {
-            $usuario = new CpanUsuarios();
-            $this->CreatedBy = $usuario->find("IdUsuario", $this->CreatedBy);
-            unset($usuario);
-        }
+        if (!($this->CreatedBy instanceof Agentes))
+            $this->CreatedBy = new Agentes($this->CreatedBy);
+
         return $this->CreatedBy;
     }
 
@@ -481,11 +503,8 @@ class EntityComunes extends Entity {
     }
 
     public function getModifiedBy() {
-        if (!($this->ModifiedBy instanceof CpanUsuarios)) {
-            $usuario = new CpanUsuarios();
-            $this->ModifiedBy = $usuario->find("IdUsuario", $this->ModifiedBy);
-            unset($usuario);
-        }
+        if (!($this->ModifiedBy instanceof Agentes))
+            $this->ModifiedBy = new Agentes($this->ModifiedBy);
         return $this->ModifiedBy;
     }
 
@@ -512,11 +531,9 @@ class EntityComunes extends Entity {
     }
 
     public function getDeletedBy() {
-        if (!($this->DeletedBy instanceof CpanUsuarios)) {
-            $usuario = new CpanUsuarios();
-            $this->DeletedBy = $usuario->find("IdUsuario", $this->DeletedBy);
-            unset($usuario);
-        }
+        if (!($this->DeletedBy instanceof Agentes))
+            $this->DeletedBy = new Agentes($this->DeletedBy);
+
         return $this->DeletedBy;
     }
 
@@ -526,6 +543,42 @@ class EntityComunes extends Entity {
 
     public function getDeletedAt() {
         return date_format(date_create($this->DeletedAt), 'd-m-Y H:i:s');
+    }
+
+    public function setPrintedBy($PrintedBy) {
+        $this->PrintedBy = $PrintedBy;
+    }
+
+    public function getPrintedBy() {
+        if (!($this->PrintedBy instanceof Agentes))
+            $this->PrintedBy = new Agentes($this->PrintedBy);
+        return $this->PrintedBy;
+    }
+
+    public function setPrintedAt($PrintedAt) {
+        $this->PrintedAt = $PrintedAt;
+    }
+
+    public function getPrintedAt() {
+        return date_format(date_create($this->PrintedAt), 'd-m-Y H:i:s');
+    }
+
+    public function setEmailedBy($EmailedBy) {
+        $this->EmailedBy = $EmailedBy;
+    }
+
+    public function getEmailedBy() {
+        if (!($this->EmailedBy instanceof Agentes))
+            $this->EmailedBy = new Agentes($this->EmailedBy);
+        return $this->EmailedBy;
+    }
+
+    public function setEmailedAt($EmailedAt) {
+        $this->EmailedAt = $EmailedAt;
+    }
+
+    public function getEmailedAt() {
+        return date_format(date_create($this->EmailedAt), 'd-m-Y H:i:s');
     }
 
     public function setPrivacy($Privacy) {
@@ -564,6 +617,9 @@ class EntityComunes extends Entity {
         if ($ActiveFrom == '0000-00-00 00:00:00')
             $ActiveFrom = $_SESSION['VARIABLES']['EnvPro']['activeFrom'];
 
+        if ($ActiveFrom == '')
+            $ActiveFrom = '0000-00-00 00:00:00';
+
         $date = new Fecha($ActiveFrom);
         $this->ActiveFrom = $date->getFechaTime();
         unset($date);
@@ -579,6 +635,9 @@ class EntityComunes extends Entity {
     public function setActiveTo($ActiveTo) {
         if ($ActiveTo == '0000-00-00 00:00:00')
             $ActiveTo = $_SESSION['VARIABLES']['EnvPro']['activeTo'];
+
+        if ($ActiveTo == '')
+            $ActiveTo = '0000-00-00 00:00:00';
 
         $date = new Fecha($ActiveTo);
         $this->ActiveTo = $date->getFechaTime();
@@ -958,8 +1017,10 @@ class EntityComunes extends Entity {
 
         $objetoPerfiles = $this->getAccessProfileList();
 
-        foreach ($cpanPerfiles as $key => $perfil) {
-            $cpanPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+        if (is_array($objetoPerfiles)) {
+            foreach ($cpanPerfiles as $key => $perfil) {
+                $cpanPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+            }
         }
 
         return $cpanPerfiles;
@@ -973,10 +1034,12 @@ class EntityComunes extends Entity {
 
         $objetoPerfiles = $this->getAccessProfileListWeb();
 
-        foreach ($webPerfiles as $key => $perfil) {
-            $webPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+        if (is_array($objetoPerfiles)) {
+            foreach ($webPerfiles as $key => $perfil) {
+                $webPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+            }
         }
-
+        
         return $webPerfiles;
     }
 

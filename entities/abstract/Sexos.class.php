@@ -14,7 +14,7 @@
 class Sexos extends Tipos {
 
     protected $tipos = array(
-        array('Id' => '0', 'Value' => ''),
+        array('Id' => '0', 'Value' => 'Empresa'),
         array('Id' => '1', 'Value' => 'Hombre'),
         array('Id' => '2', 'Value' => 'Mujer'),       
     );

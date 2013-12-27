@@ -14,6 +14,9 @@ class FabricantesController extends Controller {
     protected $entity = "Fabricantes";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
 }
 
 ?>

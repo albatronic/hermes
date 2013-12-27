@@ -14,7 +14,6 @@ class Agencias extends AgenciasEntity {
         return $this->getAgencia();
     }
 
-
     /**
      * Devuelve un array con las Zonas de transporte donde opera la agencia
      * en curso.
@@ -28,11 +27,19 @@ class Agencias extends AgenciasEntity {
 
         $rows = array();
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $zonas = new ZonasTransporte();
+        $tablaZonas = $zonas->getDataBaseName() . "." . $zonas->getTableName();
+        $portes = new TablaPortes();
+        $tablaPortes = $portes->getDataBaseName() . "." . $portes->getTableName();
+
+        $em = new EntityManager($zonas->getConectionName());
+
         if ($em->getDbLink()) {
             $query = "
                 SELECT DISTINCT tp.IDZona AS Id, zt.Zona AS Value
-                FROM tablas_portes as tp, zonas_transporte as zt
+                FROM 
+                  {$tablaPortes} as tp, 
+                  {$tablaZonas} as zt
                 WHERE
                   tp.IDAgencia='{$this->IDAgencia}' AND
                   tp.IDZona=zt.IDZona
@@ -43,7 +50,6 @@ class Agencias extends AgenciasEntity {
         }
 
         return $rows;
-
     }
 
     /**
@@ -60,6 +66,7 @@ class Agencias extends AgenciasEntity {
 
         return $rows;
     }
+
 }
 
 ?>

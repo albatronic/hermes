@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(formas_pago)
  */
-class FormasPagoEntity extends Entity {
+class FormasPagoEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -69,12 +69,12 @@ class FormasPagoEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'formas_pago';
+    protected $_tableName = 'ErpFormasPago';
     /**
      * Nombre de la primaryKey
      * @var string

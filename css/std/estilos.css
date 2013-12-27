@@ -6,16 +6,16 @@ H1.SaltoDePagina {
      PAGE-BREAK-AFTER: always
 }
 .CampoObligatorio{
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 8pt;
     background-color: #FFFF00;
 }
 .boxtitlewhite {
-	FONT-WEIGHT: bold;
-	FONT-SIZE: 11px;
-	COLOR: #FFFFFF;
-	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
-	background-color: #000099;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11px;
+    COLOR: #FFFFFF;
+    FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+    background-color: #000099;
 }
 .menu {
     FONT: 8pt Verdana, Arial, Helvetica, sans-serif;
@@ -43,15 +43,15 @@ H1.SaltoDePagina {
 
 }
 .letrapeq {
-	FONT: 7pt Verdana, Arial, Helvetica, sans-serif
+    FONT: 7pt Verdana, Arial, Helvetica, sans-serif
 }
 .general {
-	FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana, san-serif, monospace
+    FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana, san-serif, monospace
 }
 .cabecera {
-	FONT-SIZE: 9px;
- 	FONT-FAMILY: Tahoma;
-	color: #000000;
+    FONT-SIZE: 9px;
+    FONT-FAMILY: Tahoma;
+    color: #000000;
 }
 .arriba {
     background:#3E484F url(../../images/nav-bg.gif);border:1px solid #6B787F;
@@ -219,7 +219,7 @@ A.busca {
 	FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: #cccccc; FONT-FAMILY: verdana, san-serif, monospace; TEXT-ALIGN: center; TEXT-DECORATION: none
 }
 .cajasombraoliva {
-	BORDER-RIGHT: #42701a 3px solid;
+    BORDER-RIGHT: #42701a 3px solid;
     BORDER-TOP: #42701a 1px solid;
     BORDER-LEFT: #42701a 1px solid;
     BORDER-BOTTOM: #42701a 3px solid;
@@ -230,7 +230,7 @@ A.busca {
     TEXT-DECORATION: none
 }
 .cajasombraocre {
-	BORDER-RIGHT: #FF9966 3px solid;
+    BORDER-RIGHT: #FF9966 3px solid;
     BORDER-TOP: #FF9966 1px solid;
     BORDER-LEFT: #FF9966 1px solid;
     BORDER-BOTTOM: #FF9966 3px solid;
@@ -241,10 +241,10 @@ A.busca {
     TEXT-DECORATION: none
 }
 .tabla {
-	BORDER-RIGHT: #fcd95e 1px solid;
-	BORDER-TOP: #fcd95e 1px solid;
-	BORDER-LEFT: #fcd95e 1px solid;
-	BORDER-BOTTOM: #fcd95e 1px solid
+    BORDER-RIGHT: #fcd95e 1px solid;
+    BORDER-TOP: #fcd95e 1px solid;
+    BORDER-LEFT: #fcd95e 1px solid;
+    BORDER-BOTTOM: #fcd95e 1px solid;
 }
 .tablatitu {
 	BORDER-RIGHT: #fcf09b 1px solid; BORDER-TOP: #fcf09b 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 8pt; BORDER-LEFT: #fcf09b 1px solid; COLOR: #606090; BORDER-BOTTOM: #fcf09b 1px solid; FONT-FAMILY: arial, san-serif, monospace; BACKGROUND-COLOR: #fcd95e; TEXT-ALIGN: center
@@ -657,6 +657,3 @@ td.footerfooter {
     clear:left;
 }
 
-#rengloncolor{
-    float: left;
-}

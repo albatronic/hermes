@@ -41,6 +41,7 @@ class Menu {
      * @var <type>
      */
     private $idPerfil;
+
     /**
      * Array con dos dimensiones con las opciones y subopciones de menu
      */
@@ -56,15 +57,31 @@ class Menu {
      * Si no se indica el perfil de usuario, se muestran todas las posibles
      * en caso contrario se muestran sólo las asignadas a dicho perfil
      */
-    public function getOpciones($idPerfil='') {
+    public function getOpciones($idPerfil = '') {
 
-        $em = new EntityManager("empresas");
+        $apps = new Aplicaciones();
+        $tablaApps = $apps->getDataBaseName() . "." . $apps->getTableName();
+        unset($apps);
+        
+        $permisos = new Permisos();
+        $tablaPermisos = $permisos->getDataBaseName().".".$permisos->getTableName();
+        $conexion = $permisos->getConectionName();
+        unset($permisos);
+
+        $modulos = new Modulos();
+        $tablaModulos = $modulos->getDataBaseName().".".$modulos->getTableName();
+        unset($modulos);
+        
+        $em = new EntityManager($conexion);
 
         if (is_resource($em->getDbLink())) {
             if ($idPerfil != '')
-                $query = "select DISTINCT t1.IDOpcion as Id,t2.Titulo as Value from permisos as t1, menu as t2 where (t1.IDPerfil='" . $this->idPerfil . "' and t1.IDOpcion=t2.IDOpcion) order by t2.Orden";
+                $query = "select DISTINCT t1.NombreModulo as Id,t2.Titulo as Value 
+                    from {$tablaPermisos} as t1, {$tablaModulos} as t2 
+                    where (t1.IDPerfil='{$idPerfil}' and t1.NombreModulo=t2.NombreModulo and Nivel='0') 
+                    order by t2.SortOrder";
             else
-                $query = "select IDOpcion as Id,Titulo as Value from menu order by Orden";
+                $query = "select CodigoApp as Id,NombreApp as Value from {$tablaApps} order by SortOrder";
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -84,15 +101,29 @@ class Menu {
      * Si no se indica el perfil de usuario, se muestran todas las posibles
      * en caso contrario se muestran sólo las asignadas a dicho perfil
      */
-    public function getSubopciones($idOpcion, $idPerfil='') {
+    public function getSubopciones($codigoApp, $idPerfil = '') {
 
-        $em = new EntityManager("empresas");
+        $modulos = new Modulos();
+        $tablaModulos = $modulos->getDataBaseName().".".$modulos->getTableName();
+        unset($modulos);
+
+        $permisos = new Permisos();
+        $tablaPermisos = $permisos->getDataBaseName().".".$permisos->getTableName();
+        $conexion = $permisos->getConectionName();
+        unset($permisos);
+        
+        $em = new EntityManager($conexion);
 
         if (is_resource($em->getDbLink())) {
             if ($idPerfil != '')
-                $query = "select t1.*, t2.Id as IDSubopcion,t2.IDOpcion,t2.Titulo as Value from permisos as t1,submenu as t2 where (t1.IDPerfil='" . $idPerfil . "' and t1.IDOpcion='" . $idOpcion . "' and t1.IDSubopcion<>0 and t1.IDOpcion=t2.IDOpcion and t1.IDSubopcion=t2.Id) order by t2.Orden;";
+                $query = "select DISTINCT t1.NombreModulo as Id,t2.Titulo as Value, t1.Funcionalidades 
+                    from {$tablaPermisos} as t1, {$tablaModulos} as t2 
+                    where (t1.IDPerfil='{$idPerfil}' and t1.NombreModulo=t2.NombreModulo and Nivel='1' and CodigoApp='{$codigoApp}') 
+                    order by t2.SortOrder";                
+                //$query = "select t1.*, t2.Id as IDSubopcion,t2.IDOpcion,t2.Titulo as Value from {$tablaPermisos} as t1,{$tablaModulos} as t2 where (t1.IDPerfil='" . $idPerfil . "' and t1.IDOpcion='" . $idOpcion . "' and t1.IDSubopcion<>0 and t1.IDOpcion=t2.IDOpcion and t1.IDSubopcion=t2.Id) order by t2.Orden;";
             else
-                $query = "select Id, Titulo as Value from submenu where (IDOpcion='" . $idOpcion . "') order by Orden;";
+                $query = "select NombreModulo as Id, Titulo as Value from {$tablaModulos} where (CodigoApp='{$codigoApp}' and Nivel='1') order by SortOrder;";
+
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -120,15 +151,15 @@ class Menu {
      * según el perfil indicado
      */
     private function creaArray() {
-        $em = new EntityManager("empresas");
+        $em = new EntityManager($_SESSION['project']['conection']);
         $dblink = $em->getDbLink();
 
         if (is_resource($dblink)) {
-            $query = "select DISTINCT t1.IDOpcion,t2.Script,t2.Titulo from permisos as t1, menu as t2 where (t1.IDPerfil='" . $this->idPerfil . "' and t1.IDOpcion=t2.IDOpcion) order by t2.Orden";
+            $query = "select DISTINCT t1.IDOpcion,t2.Script,t2.Titulo from ErpPermisos as t1, ErpMenu as t2 where (t1.IDPerfil='" . $this->idPerfil . "' and t1.IDOpcion=t2.IDOpcion) order by t2.Orden";
             $em->query($query);
             $rows = $em->fetchResult();
             foreach ($rows as $row) {
-                $query = "select t2.* from permisos as t1,submenu as t2 where (t1.IDPerfil='" . $this->idPerfil . "' and t1.IDOpcion='" . $row['IDOpcion'] . "' and t1.IDSubopcion<>0 and t1.IDOpcion=t2.IDOpcion and t1.IDSubopcion=t2.Id) order by t2.Orden;";
+                $query = "select t2.* from ErpPermisos as t1,ErpSubmenu as t2 where (t1.IDPerfil='" . $this->idPerfil . "' and t1.IDOpcion='" . $row['IDOpcion'] . "' and t1.IDSubopcion<>0 and t1.IDOpcion=t2.IDOpcion and t1.IDSubopcion=t2.Id) order by t2.Orden;";
                 $em->query($query);
                 $rows1 = $em->fetchResult();
                 foreach ($rows1 as $row1) {

@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(provincias)
  */
-class ProvinciasEntity extends Entity {
+class ProvinciasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -18,35 +18,48 @@ class ProvinciasEntity extends Entity {
      * @assert:NotBlank(groups="provincias")
      */
     protected $IDProvincia;
+
+    /**
+     * @orm:Column(type="")
+     * @assert:NotBlank(groups="provincias")
+     */
+    protected $IDPais;
+
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="provincias")
      */
     protected $Codigo;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="provincias")
      */
     protected $Provincia = '';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $IDZona = '0';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'provincias';
+    protected $_tableName = 'ErpProvincias';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDProvincia';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -67,6 +80,16 @@ class ProvinciasEntity extends Entity {
 
     public function getIDProvincia() {
         return $this->IDProvincia;
+    }
+
+    public function setIDPais($IDPais) {
+        $this->IDPais = $IDPais;
+    }
+
+    public function getIDPais() {
+        if (!($this->IDPais instanceof Paises))
+            $this->IDPais = new Paises($this->IDPais);
+        return $this->IDPais;
     }
 
     public function setCodigo($Codigo) {

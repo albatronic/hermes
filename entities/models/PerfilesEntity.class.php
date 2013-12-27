@@ -1,98 +1,76 @@
 <?php
-
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @since 12.06.2011 19:20:36
+ * @date 08.09.2012 13:51:04
  */
 
 /**
- * @orm:Entity(perfiles)
+ * @orm:Entity(ErpPerfiles)
  */
-class PerfilesEntity extends Entity {
+class PerfilesEntity extends EntityComunes {
+	/**
+	 * @orm GeneratedValue
+	 * @orm Id
+	 * @var integer
+	 * @assert NotBlank(groups="ErpPerfiles")
+	 */
+	protected $IDPerfil;
+	/**
+	 * @var string
+	 * @assert NotBlank(groups="ErpPerfiles")
+	 */
+	protected $Perfil;
+	/**
+	 * Nombre de la conexion a la BD
+	 * @var string
+	 */
+	protected $_conectionName = '';
+	/**
+	 * Nombre de la tabla física
+	 * @var string
+	 */
+	protected $_tableName = 'ErpPerfiles';
+	/**
+	 * Nombre de la PrimaryKey
+	 * @var string
+	 */
+	protected $_primaryKeyName = 'IDPerfil';
+	/**
+	 * Relacion de entidades que dependen de esta
+	 * @var string
+	 */
+	protected $_parentEntities = array(
+			array('SourceColumn' => 'IDPerfil', 'ParentEntity' => 'Permisos', 'ParentColumn' => 'IdPerfil'),
+			array('SourceColumn' => 'IDPerfil', 'ParentEntity' => 'Agentes', 'ParentColumn' => 'IdPerfil'),
+		);
+	/**
+	 * Relacion de entidades de las que esta depende
+	 * @var string
+	 */
+	protected $_childEntities = array(
+			'ValoresSN',
+			'ValoresPrivacy',
+			'ValoresDchaIzq',
+			'ValoresChangeFreq',
+		);
+	/**
+	 * GETTERS Y SETTERS
+	 */
+	public function setIDPerfil($IDPerfil){
+		$this->IDPerfil = $IDPerfil;
+	}
+	public function getIDPerfil(){
+		return $this->IDPerfil;
+	}
 
-    /**
-     * @orm:GeneratedValue
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="perfiles")
-     */
-    protected $IDPerfil;
-    /**
-     * @orm:Column(type="string")
-     * @assert:NotBlank(groups="perfiles")
-     */
-    protected $Perfil;
-    /**
-     * @orm:Column(type="string")
-     */
-    protected $Descripcion;
-    /**
-     * @orm:Column(type="")
-     * @assert:NotBlank(groups="perfiles")
-     */
-    protected $Administrador = '0';
-    /**
-     * Nombre de la conexion a la DB
-     * @var string
-     */
-    protected $_conectionName = 'empresas';
-    /**
-     * Nombre de la tabla física
-     * @var string
-     */
-    protected $_tableName = 'perfiles';
-    /**
-     * Nombre de la primaryKey
-     * @var string
-     */
-    protected $_primaryKeyName = 'IDPerfil';
-    /**
-     * Relacion de entidades que dependen de esta
-     * @var array
-     */
-    protected $_parentEntities = array(
-        array('SourceColumn' => 'IDPerfil', 'ParentEntity' => 'Permisos', 'ParentColumn' => 'IDPerfil'),
-    );
+	public function setPerfil($Perfil){
+		$this->Perfil = trim($Perfil);
+	}
+	public function getPerfil(){
+		return $this->Perfil;
+	}
 
-    /**
-     * GETTERS Y SETTERS
-     */
-    public function setIDPerfil($IDPerfil) {
-        $this->IDPerfil = $IDPerfil;
-    }
+} // END class ErpPerfiles
 
-    public function getIDPerfil() {
-        return $this->IDPerfil;
-    }
-
-    public function setPerfil($Perfil) {
-        $this->Perfil = trim($Perfil);
-    }
-
-    public function getPerfil() {
-        return $this->Perfil;
-    }
-
-    public function setDescripcion($Descripcion) {
-        $this->Descripcion = trim($Descripcion);
-    }
-
-    public function getDescripcion() {
-        return $this->Descripcion;
-    }
-
-    public function setAdministrador($Administrador) {
-        $this->Administrador = $Administrador;
-    }
-
-    public function getAdministrador() {
-        if (!($this->Administrador instanceof ValoresSN))
-            $this->Administrador = new ValoresSN($this->Administrador);
-        return $this->Administrador;
-    }
-
-}
-
-// END class perfiles
 ?>

@@ -1,6 +1,8 @@
 {# TEMPLATE TraspasosCab/form.html.twig #}
 {# Muestra los campos editables de la entidad #}
 
+{% set atributos = values.atributos %}
+
 {% if not datos.IDTraspaso %}
     {% set sucursalDefecto = suc %}
 {% else %}
@@ -11,7 +13,7 @@
 {% if datos.IDEstado.IDTipo == '0' %}
     <div style="float: left; width: 49%">
     {% if datos.IDTraspaso %}
-    {{ macro.etiqueta('Sucursal','Etiqueta',datos.IDSucursal.Nombre) }}
+    {{ macro.etiqueta(atributos.IDSucursal,'Etiqueta',datos.IDSucursal.Nombre) }}
     {% else %}
     <div class="Item" id="div_TraspasosCab_IDSucursal">
         <div class="Etiqueta">Sucursal</div>
@@ -25,32 +27,31 @@
     </div>
     {% endif %}
     {% if not datos.IDTraspaso %}
-    {{ macro.select('Serie','Etiqueta','TraspasosCab[IDContador]','TraspasosCab_IDContador',none,datos.IDContador.IDContador,datos.IDContador.fetchAll(sucursalDefecto,3),'Select') }}
+    {{ macro.select(atributos.IDContador,'Etiqueta','TraspasosCab[IDContador]','TraspasosCab_IDContador',40,datos.IDContador.IDContador,datos.IDContador.fetchAll(sucursalDefecto,3),'Select') }}
     {% endif %}
-
-        {{ macro.fecha('Fecha Orden','Etiqueta','TraspasosCab[FechaOrden]','TraspasosCab_FechaOrden',datos.FechaOrden,'10','CampoFecha') }}
-        {{ macro.fecha('Fecha Salida','Etiqueta','TraspasosCab[FechaSalida]','TraspasosCab_FechaSalida',datos.FechaSalida,'10','CampoFecha','disabled') }}
-        {{ macro.fecha('Fecha Entrada','Etiqueta','TraspasosCab[FechaEntrada]','TraspasosCab_FechaEntrada',datos.FechaEntrada,'10','CampoFecha','disabled') }}
+        {{ macro.fecha(atributos.FechaOrden,'Etiqueta','TraspasosCab[FechaOrden]','TraspasosCab_FechaOrden',datos.FechaOrden,'10','CampoFecha') }}
+        {{ macro.fecha(atributos.FechaSalida,'Etiqueta','TraspasosCab[FechaSalida]','TraspasosCab_FechaSalida',datos.FechaSalida,'10','CampoFecha','disabled') }}
+        {{ macro.fecha(atributos.FechaEntrada,'Etiqueta','TraspasosCab[FechaEntrada]','TraspasosCab_FechaEntrada',datos.FechaEntrada,'10','CampoFecha','disabled') }}
     </div>
     <div style="float: right; width: 49%">
-        {{ macro.select('Almacén Origen','Etiqueta','TraspasosCab[IDAlmacenOrigen]','TraspasosCab_IDAlmacenOrigen',none,datos.IDAlmacenOrigen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
-        {{ macro.select('Almacén Destino','Etiqueta','TraspasosCab[IDAlmacenDestino]','TraspasosCab_IDAlmacenDestino',none,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
-        {{ macro.textarea('Motivo','Etiqueta','TraspasosCab[Descripcion]','TraspasosCab_Descripcion',datos.Descripcion,none,none,'TextArea')}}
+        {{ macro.select(atributos.IDAlmacenOrigen,'Etiqueta','TraspasosCab[IDAlmacenOrigen]','TraspasosCab_IDAlmacenOrigen',200,datos.IDAlmacenOrigen.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
+        {{ macro.select(atributos.IDAlmacenDestino,'Etiqueta','TraspasosCab[IDAlmacenDestino]','TraspasosCab_IDAlmacenDestino',200,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
+        {{ macro.textarea(atributos.Descripcion,'Etiqueta','TraspasosCab[Descripcion]','TraspasosCab_Descripcion',datos.Descripcion,none,none,'TextArea')}}
     </div>
 {% else %}
     <div style="float: left; width: 49%">
-        {{ macro.etiqueta('Fecha Orden','Etiqueta',datos.FechaOrden ) }}
-        {{ macro.etiqueta('Fecha Salida','Etiqueta',datos.FechaSalida ) }}
-        {{ macro.etiqueta('Fecha Entrada','Etiqueta',datos.FechaEntrada ) }}
+        {{ macro.etiqueta(atributos.FechaOrden,'Etiqueta',datos.FechaOrden ) }}
+        {{ macro.etiqueta(atributos.FechaSalida,'Etiqueta',datos.FechaSalida ) }}
+        {{ macro.etiqueta(atributos.FechaEntrada,'Etiqueta',datos.FechaEntrada ) }}
     </div>
     <div style="float: right; width: 49%">
-        {{ macro.etiqueta('Almacén Origen','Etiqueta',datos.IDAlmacenOrigen.Nombre ) }}
+        {{ macro.etiqueta(atributos.IDAlmacenOrigen,'Etiqueta',datos.IDAlmacenOrigen.Nombre ) }}
         {% if datos.IDEstado.IDTipo == '1' %}
-            {{ macro.select('Almacén Destino','Etiqueta','TraspasosCab[IDAlmacenDestino]','TraspasosCab_IDAlmacenDestino',none,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
+            {{ macro.select(atributos.IDAlmacenDestino,'Etiqueta','TraspasosCab[IDAlmacenDestino]','TraspasosCab_IDAlmacenDestino',none,datos.IDAlmacenDestino.IDAlmacen,user.getAlmacenes(emp.IDEmpresa),'Select') }}
         {% else %}
-            {{ macro.etiqueta('Almacén Destino','Etiqueta',datos.IDAlmacenDestino.Nombre ) }}
+            {{ macro.etiqueta(atributos.IDAlmacenDestino,'Etiqueta',datos.IDAlmacenDestino.Nombre ) }}
         {% endif %}
-        {{ macro.textarea('Motivo','Etiqueta','TraspasosCab[Descripcion]','TraspasosCab_Descripcion',datos.Descripcion,none,none,'TextArea')}}
+        {{ macro.textarea(atributos.Descripcion,'Etiqueta','TraspasosCab[Descripcion]','TraspasosCab_Descripcion',datos.Descripcion,none,none,'TextArea')}}
     </div>
 {% endif %}
 </div>
@@ -89,31 +90,23 @@
         {% if (user.Rol.IDTipo == 0) or (user.rol.IDTipo == 9) %}
         <div id="tabs-3" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
             <div style="width: 30%;float:left; margin-right: 5px;">
-            {{ macro.input('U.M.A. Origen','Etiqueta','text','TraspasosCab[KilosOrigen]','TraspasosCab_KilosOrigen',datos.KilosOrigen,'10','CampoImporte','disabled') }}
-            {{ macro.input('U.M.A. Obtenidos (1)','Etiqueta','text','TraspasosCab[KilosDestino]','TraspasosCab_KilosDestino',datos.KilosDestino,'10','CampoImporte','disabled') }}
+            {{ macro.input('Unidades','Etiqueta','text','TraspasosCab[Bultos]','TraspasosCab_Bultos',datos.Bultos,'10','CampoImporte','disabled') }}
+            {{ macro.input('Peso','Etiqueta','text','TraspasosCab[Peso]','TraspasosCab_Peso',datos.Peso,'10','CampoImporte','disabled') }}
+            {{ macro.input('Volumen','Etiqueta','text','TraspasosCab[Volumen]','TraspasosCab_Volumen',datos.Volumen,'10','CampoImporte','disabled') }}
+            {{ macro.input('Costo (1)(pmc)','Etiqueta','text','TraspasosCab[TotalCosto]','TraspasosCab_TotalCosto',datos.TotalCosto,'10','CampoImporte','disabled') }}
             </div>
 
             <div style="width: 33%;float:left; margin-right: 5px;">
-            {{ macro.input('Coste Origen','Etiqueta','text','TraspasosCab[ImporteOrigen]','TraspasosCab_ImporteOrigen',datos.ImporteOrigen,'10','CampoImporte','disabled') }}
-            {{ macro.input('Coste Elaboración','Etiqueta','text','TraspasosCab[ImporteDestino]','TraspasosCab_ImporteDestino',datos.ImporteDestino,'10','CampoImporte','disabled') }}
             {{ macro.input('Gastos Transporte','Etiqueta','text','TraspasosCab[GastosTransporte]','TraspasosCab_GastosTransporte',datos.GastosTransporte,'10','CampoImporte') }}
             {{ macro.input('Gastos Varios','Etiqueta','text','TraspasosCab[GastosVarios]','TraspasosCab_GastosVarios',datos.GastosVarios,'10','CampoImporte') }}
-            {{ macro.input('Total Coste (2)','Etiqueta','text','TraspasosCab[TotalCoste]','TraspasosCab_TotalCoste',datos.TotalCoste,'10','CampoImporte','disabled') }}
+            {{ macro.input('Total Gastos (2)','Etiqueta','text','TraspasosCab[TotalGastos]','TraspasosCab_TotalGastos',datos.TotalGastos,'10','CampoImporte','disabled') }}
             </div>
 
             <div style="width: 33%;float:left; margin-right: 5px; text-align: center;">
-                {% set costePorUMA = 0 %}
-                {% if datos.KilosDestino != 0%} {% set costePorUMA = datos.TotalCoste/datos.KilosDestino %} {% endif %}
-                {{ macro.input('Coste U.M.A. (2)/(1)','Etiqueta','text',none,none,costePorUMA|number_format(3,'.',','),10,'CampoImporte', 'disabled' ) }}
-                <p style="margin-top: 5px; font-size: 11px;text-align: left;">
-                    Una vez recepcionado el producto obtenido de la elaboración, es necesario actualizar los precios para que el sistema maneje los nuevos precios de costo de los productos obtenidos.
+                {{ macro.input('Total coste (1)+(2)','Etiqueta','text',none,none,(datos.TotalCosto+datos.TotalGastos)|number_format(2,'.',','),10,'CampoImporte', 'disabled' ) }}
+                <p style="margin-top: 15px; font-size: 11px;text-align: left;">
+                    El costo del traspaso (1) se calcula en base al precio medio de costo de los productos traspasados
                 </p>
-                <p style="margin-top: 5px; font-size: 11px;text-align: left;">
-                    Los precios se recalcularán segun la política establecida con el parámetro "ACTU_PRECIOS"
-                </p>
-                {% if datos.IDEstado.IDTipo == 3 %}
-                <input value="Actualizar Precios" type="submit" onclick="$('#action').val('Cotizar');" class="Comando" style="margin-top: 10px; width: 150px;" />
-                {% endif %}
             </div>
             <div style="clear:both;"></div>
         </div>

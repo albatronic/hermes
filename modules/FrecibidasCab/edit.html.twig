@@ -6,10 +6,10 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" enctype="multipart/form-data" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" enctype="multipart/form-data" method="POST">
         <input name="controller" value="FrecibidasCab" type="hidden" />
         <input name="action" id="action" value="edit" type="hidden" />
-        <input name="accion" id="accion" value="" type="hidden" />
+        <input name="accion" id="accion_{{values.controller}}" value="" type="hidden" />
         <input name="FrecibidasCab[IDFactura]" value="{{ values.datos.IDFactura }}" type="hidden" />
         <input name="FrecibidasCab[IDContador]" value="{{ values.datos.IDContador }}" type="hidden" />
         <div class='Comandos'>
@@ -17,11 +17,11 @@
                 Factura: {{values.datos.NumeroFactura}}
 
                 {% if values.datos.IDFactura and values.datos.Asiento == '0' %}
-                {% if values.permisos['A'] %}
-                <input type="image" src="{{app.path}}/images/save_cmd.png" width="24px" onclick="getElementById('accion').value='Guardar';" alt="Guardar" title="Guardar" />
+                {% if values.permisos.permisosModulo['UP'] %}
+                <input type="image" src="{{app.path}}/images/save_cmd.png" width="24px" onclick="getElementById('accion_{{values.controller}}').value='Guardar';" alt="Guardar" title="Guardar" />
                 {% endif %}
-                {% if values.permisos['B'] %}
-                <input type="image" src="{{app.path}}/images/trash_cmd.png" width="24px" onclick="if (!confirm('¿Desea borrar la factura {{values.datos.NumeroFactura}}?')) {return false;} else {getElementById('accion').value='Borrar';}" alt="Borrar" title="Borrar Factura" />
+                {% if values.permisos.permisosModulo['DE'] %}
+                <input type="image" src="{{app.path}}/images/trash_cmd.png" width="24px" onclick="if (!confirm('¿Desea borrar la factura {{values.datos.NumeroFactura}}?')) {return false;} else {getElementById('accion_{{values.controller}}').value='Borrar';}" alt="Borrar" title="Borrar Factura" />
                 {% endif %}
                 {% endif %}
 

@@ -27,12 +27,10 @@ class FrecibidasCab extends FrecibidasCabEntity {
             if ($this->borraVctos()) {
                 if ($this->borraLineas()) {
                     // Actualiza la cabecera del pedido
-                    $this->conecta();
-                    if (is_resource($this->_dbLink)) {
-                        $query = "UPDATE pedidos_cab SET IDFactura='0', IDEstado='2' WHERE IDFactura='{$this->IDFactura}'";
-                        if (!$this->_em->query($query))
-                            $this->_errores[] = $this->_em->getError();
-                    }
+                    $pedidos = new PedidosCab();
+                    $pedidos->queryUpdate(array("IDFactura" => 0, "IDEstado" => 2), "IDFactura='{$this->IDFactura}'");
+                    unset($pedidos);
+
                     // Borrar la cabecera de la factura
                     parent::erase();
                 }
@@ -50,7 +48,7 @@ class FrecibidasCab extends FrecibidasCabEntity {
      * @param integer $idEstado El estado de los recibos
      * @return array Objetos recibos de la factura
      */
-    public function getRecibos($idEstado='') {
+    public function getRecibos($idEstado = '') {
         $recibos = array();
 
         $filtro = "IDFactura='{$this->IDFactura}'";
@@ -74,7 +72,7 @@ class FrecibidasCab extends FrecibidasCabEntity {
      * @param integer $idEstado El estado de los recibos (opcional)
      * @return real La suma de los importes de los recibos
      */
-    public function getSumaRecibos($idEstado='') {
+    public function getSumaRecibos($idEstado = '') {
 
         $suma = 0.0;
 
@@ -102,80 +100,78 @@ class FrecibidasCab extends FrecibidasCabEntity {
             $pordcto = round(100 * ($this->getDescuento() / $this->getImporte()), 2);
 
         //Calcular los totales, desglosados por tipo de iva.
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select sum(importe) as Bruto from {$this->_dataBaseName}.frecibidas_lineas where (IDFactura='{$this->IDFactura}')";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $bruto = $rows[0]['Bruto'];
+        $lineas = new FrecibidasLineas();
+        $rows = $lineas->cargaCondicion("sum(importe) as Bruto", "IDFactura='{$this->IDFactura}'");
+        $bruto = $rows[0]['Bruto'];
 
-            $query = "select Iva, sum(Importe) as Importe from {$this->_dataBaseName}.frecibidas_lineas where (IDFactura='{$this->IDFactura}') group by Iva order by Iva";
-            $this->_em->query($query);
-            $rows = $this->_em->fetchResult();
-            $totbases = 0;
-            $totiva = 0;
-            $bases = array();
+        $rows = $lineas->cargaCondicion("Iva, sum(Importe) as Importe", "IDFactura='{$this->IDFactura}' group by Iva order by Iva");
+        $totbases = 0;
+        $totiva = 0;
+        $bases = array();
 
-            foreach ($rows as $key => $row) {
-                $importe = $row['Importe'] * (1 - $pordcto / 100);
-                $cuotaiva = round($importe * $row['Iva'] / 100, 2);
-                $cuotarecargo = round($importe * $row['Recargo'] / 100, 2);
-                $totbases += $importe;
-                $totiva += $cuotaiva;
-                $totrec += $cuotarecargo;
+        foreach ($rows as $key => $row) {
+            $importe = $row['Importe'] * (1 - $pordcto / 100);
+            $cuotaiva = round($importe * $row['Iva'] / 100, 2);
+            $cuotarecargo = round($importe * $row['Recargo'] / 100, 2);
+            $totbases += $importe;
+            $totiva += $cuotaiva;
+            $totrec += $cuotarecargo;
 
-                $bases[$key] = array(
-                    'b' => $importe,
-                    'i' => $row['Iva'],
-                    'ci' => $cuotaiva,
-                    'r' => $row['Recargo'],
-                    'cr' => $cuotarecargo
-                );
-            }
-
-            $subtotal = $totbases + $totiva + $totrec;
-
-            // Calcular el recargo financiero según la forma de pago
-            $formaPago = new FormasPago($this->IDFP);
-            $recFinanciero = $formaPago->getRecargoFinanciero();
-            $cuotaRecFinanciero = $subtotal * $recFinanciero / 100;
-            unset($formaPago);
-
-            $total = $subtotal + $cuotaRecFinanciero;
-
-            $this->setImporte($bruto);
-            $this->setBaseImponible1($bases[0]['b']);
-            $this->setIva1($bases[0]['i']);
-            $this->setCuotaIva1($bases[0]['ci']);
-            $this->setRecargo1($bases[0]['r']);
-            $this->setCuotaRecargo1($bases[0]['cr']);
-            $this->setBaseImponible2($bases[1]['b']);
-            $this->setIva2($bases[1]['i']);
-            $this->setCuotaIva2($bases[1]['ci']);
-            $this->setRecargo2($bases[1]['r']);
-            $this->setCuotaRecargo2($bases[1]['cr']);
-            $this->setBaseImponible3($bases[2]['b']);
-            $this->setIva3($bases[2]['i']);
-            $this->setCuotaIva3($bases[2]['ci']);
-            $this->setRecargo3($bases[2]['r']);
-            $this->setCuotaRecargo3($bases[2]['cr']);
-            $this->setTotalBases($totbases);
-            $this->setTotalIva($totiva);
-            $this->setTotalRecargo($totrec);
-            $this->setRecargoFinanciero($recFinanciero);
-            $this->setCuotaRecargoFinanciero($cuotaRecFinanciero);
-            $this->setTotal($total);
-
-            $this->save();
+            $bases[$key] = array(
+                'b' => $importe,
+                'i' => $row['Iva'],
+                'ci' => $cuotaiva,
+                'r' => $row['Recargo'],
+                'cr' => $cuotarecargo
+            );
         }
+
+        $subtotal = $totbases + $totiva + $totrec;
+
+        // Calcular el recargo financiero según la forma de pago
+        $formaPago = new FormasPago($this->IDFP);
+        $recFinanciero = $formaPago->getRecargoFinanciero();
+        $cuotaRecFinanciero = $subtotal * $recFinanciero / 100;
+        unset($formaPago);
+
+        $total = $subtotal + $cuotaRecFinanciero;
+
+        $this->setImporte($bruto);
+        $this->setBaseImponible1($bases[0]['b']);
+        $this->setIva1($bases[0]['i']);
+        $this->setCuotaIva1($bases[0]['ci']);
+        $this->setRecargo1($bases[0]['r']);
+        $this->setCuotaRecargo1($bases[0]['cr']);
+        $this->setBaseImponible2($bases[1]['b']);
+        $this->setIva2($bases[1]['i']);
+        $this->setCuotaIva2($bases[1]['ci']);
+        $this->setRecargo2($bases[1]['r']);
+        $this->setCuotaRecargo2($bases[1]['cr']);
+        $this->setBaseImponible3($bases[2]['b']);
+        $this->setIva3($bases[2]['i']);
+        $this->setCuotaIva3($bases[2]['ci']);
+        $this->setRecargo3($bases[2]['r']);
+        $this->setCuotaRecargo3($bases[2]['cr']);
+        $this->setTotalBases($totbases);
+        $this->setTotalIva($totiva);
+        $this->setTotalRecargo($totrec);
+        $this->setRecargoFinanciero($recFinanciero);
+        $this->setCuotaRecargoFinanciero($cuotaRecFinanciero);
+        $this->setTotal($total);
+
+        $this->save();
     }
 
     /**
      * Crea los recibos de la factura en curso en base a la forma de pago.
      * Si el n. de vctos de la forma de pago es 0, no se crea ningún vencimiento.
+     * 
+     * Antes de crearlos, borro los posibles que hubiese
      */
     public function creaVctos() {
 
+        $this->borraVctos();
+        
         if ($this->Total == 0)
             return;
 
@@ -187,7 +183,7 @@ class FrecibidasCab extends FrecibidasCabEntity {
         if ($tieneiva)
             $asiento = 0;
         else
-            $asiento=999999;
+            $asiento = 999999;
 
         $formaPago = $factura->getIDFP();
         $nvctos = $formaPago->getNumeroVctos();
@@ -246,17 +242,11 @@ class FrecibidasCab extends FrecibidasCabEntity {
      * @return boolean
      */
     public function borraVctos() {
-        $ok = false;
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "delete from recibos_proveedores where IDFactura='{$this->IDFactura}' and Asiento='0'";
-            if (!$this->_em->query($query))
-                $this->_errores[] = $this->_em->getError();
-            else
-                $ok = true;
-            $this->_em->desConecta();
-        }
+        $recibos = new RecibosProveedores();
+        $recibos->queryDelete("IDFactura='{$this->IDFactura}' and Asiento='0'");
+        $ok = (count($recibos->getErrores()) == 0);
+        unset($recibos);
 
         return $ok;
     }
@@ -280,7 +270,7 @@ class FrecibidasCab extends FrecibidasCabEntity {
             $lineaPedido = new PedidosLineas($row['IDLineaPedido']);
             $lineaPedido->setIDEstado(2);
             $lineaPedido->save();
-            
+
             // Borrar linea de factura recibida
             $lineaFactura = new FrecibidasLineas($row['IDLinea']);
             $lineaFactura->erase();

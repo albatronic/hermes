@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(albaranes_cab)
  */
-class AlbaranesCabEntity extends Entity {
+class AlbaranesCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -233,6 +233,12 @@ class AlbaranesCabEntity extends Entity {
     protected $IDFactura = '0';
 
     /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="albaranes_cab")
+     */
+    protected $IDPsto = '0';
+
+    /**
      * @orm:Column(type="string")
      */
     protected $Observaciones;
@@ -272,11 +278,6 @@ class AlbaranesCabEntity extends Entity {
     protected $IDAgencia = '1';
 
     /**
-     * @orm:Column(type="string")
-     */
-    protected $Clave = '';
-
-    /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="albaranes_cab")
      */
@@ -305,22 +306,18 @@ class AlbaranesCabEntity extends Entity {
      * @assert:NotBlank(groups="albaranes_cab")
      */
     protected $IDRepartidor = '0';
-    protected $PrintedAt = '0000-00-00 00:00:00';
-    protected $PrintedBy = '0';
-    protected $EmailedAt = '0000-00-00 00:00:00';
-    protected $EmailedBy = '0';
 
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'albaranes_cab';
+    protected $_tableName = 'ErpAlbaranesCab';
 
     /**
      * Nombre de la primaryKey
@@ -404,14 +401,14 @@ class AlbaranesCabEntity extends Entity {
     }
 
     public function getFecha() {
-        $date = new Fecha($this->Fecha);
+        $date = new Fecha($this->Fecha,false);
         $ddmmaaaa = $date->getddmmaaaa();
         unset($date);
         return $ddmmaaaa;
     }
 
     public function setFechaEntrega($FechaEntrega) {
-        $date = new Fecha($FechaEntrega);
+        $date = new Fecha($FechaEntrega,false);
         $this->FechaEntrega = $date->getFecha();
         unset($date);
     }
@@ -647,6 +644,16 @@ class AlbaranesCabEntity extends Entity {
         return $this->IDFactura;
     }
 
+    public function setIDPsto($IDPsto) {
+        $this->IDPsto = $IDPsto;
+    }
+
+    public function getIDPsto() {
+        if (!$this->IDPsto instanceof PstoCab)
+            $this->IDPsto = new PstoCab($this->IDPsto);
+        return $this->IDPsto;
+    }
+
     public function setObservaciones($Observaciones) {
         $this->Observaciones = trim($Observaciones);
     }
@@ -705,14 +712,6 @@ class AlbaranesCabEntity extends Entity {
         return $this->IDAgencia;
     }
 
-    public function setClave($Clave) {
-        $this->Clave = trim($Clave);
-    }
-
-    public function getClave() {
-        return $this->Clave;
-    }
-
     public function setFlagFacturar($FlagFacturar) {
         $this->FlagFacturar = $FlagFacturar;
     }
@@ -761,42 +760,6 @@ class AlbaranesCabEntity extends Entity {
         if (!($this->IDRepartidor instanceof Agentes))
             $this->IDRepartidor = new Agentes($this->IDRepartidor);
         return $this->IDRepartidor;
-    }
-
-    public function setPrintedBy($PrintedBy) {
-        $this->PrintedBy = $PrintedBy;
-    }
-
-    public function getPrintedBy() {
-        if (!($this->PrintedBy instanceof Agentes))
-            $this->PrintedBy = new Agentes($this->PrintedBy);
-        return $this->PrintedBy;
-    }
-
-    public function setPrintedAt($PrintedAt) {
-        $this->PrintedAt = $PrintedAt;
-    }
-
-    public function getPrintedAt() {
-        return $this->PrintedAt;
-    }
-
-    public function setEmailedBy($EmailedBy) {
-        $this->EmailedBy = $EmailedBy;
-    }
-
-    public function getEmailedBy() {
-        if (!($this->EmailedBy instanceof Agentes))
-            $this->EmailedBy = new Agentes($this->EmailedBy);
-        return $this->EmailedBy;
-    }
-
-    public function setEmailedAt($EmailedAt) {
-        $this->EmailedAt = $EmailedAt;
-    }
-
-    public function getEmailedAt() {
-        return $this->EmailedAt;
     }
 
 }

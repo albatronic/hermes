@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(subfamilias)
  */
-class SubfamiliasEntity extends Entity {
+class SubfamiliasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -37,12 +37,12 @@ class SubfamiliasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'subfamilias';
+    protected $_tableName = 'ErpSubfamilias';
     /**
      * Nombre de la primaryKey
      * @var string

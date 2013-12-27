@@ -23,7 +23,7 @@ class TablaPortesController extends Controller {
         $this->form = new Form($this->entity);
 
         $this->permisos = new ControlAcceso();
-        $this->values['permisos'] = $this->permisos->getPermisos();
+        $this->values['permisos'] = $this->permisos->getPermisos($this->parentEntity);
         $this->values['request'] = $this->request;
         $this->values['linkBy'] = array(
             'id' => 'IDAgencia',
@@ -31,53 +31,9 @@ class TablaPortesController extends Controller {
         );
     }
 
-    /**
-     * Crea un registro nuevo
-     *
-     * Siempre viene por POST
-     * Si viene por POST crea un registro
-     *
-     * @return array con el template y valores a renderizar
-     */
-    public function newAction() {
-        if ($this->values['permisos']['I']) {
-            switch ($this->request["METHOD"]) {
-
-                case 'POST': //CREAR NUEVO REGISTRO
-                    //COGER EL LINK A LA ENTIDAD PADRE
-                    if ($this->values['linkBy']['id'] != '') {
-                        $this->values['linkBy']['value'] = $this->request[$this->entity][$this->values['linkBy']['id']];
-                    }
-
-                    $datos = new $this->entity();
-                    $datos->bind($this->request[$this->entity]);
-
-                    if ($datos->valida($this->form->getRules())) {
-                        $datos->create();
-                        $this->values['alertas'] = $datos->getAlertas();
-                        $this->values['errores'] = $datos->getErrores();
-
-                        //Recargo el objeto para refrescar las propiedas que
-                        //hayan podido ser objeto de algun calculo durante el proceso
-                        //de guardado.
-                        $datos = new $this->entity($datos->getPrimaryKeyValue());
-                        $this->values['datos'] = $datos;
-                    } else {
-                        $this->values['datos'] = $datos;
-                        $this->values['errores'] = $datos->getErrores();
-                    }
-                    unset($datos);
-                    return $this->listAction($this->values['linkBy']['value']);
-                    break;
-            }
-        } else {
-            return array('template' => '_global/forbiden.html.twig');
-        }
-    }
-
     public function listAction($idAgencia = '') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idAgencia == '')
                 $idAgencia = $this->request[2];
 
@@ -86,7 +42,7 @@ class TablaPortesController extends Controller {
             $tramos = new TramosKilos();
 
 
-            $this->values['linkBy']['value'] = $idAgencia;
+            $this->values['idAgencia'] = $idAgencia;
             $this->values['tablaPortes'] = $agencias->getTablaPortes();
             $this->values['zonasTransporte'] = $zonas->fetchAll('Zona',false);
             $this->values['tramosKilos'] = $tramos->fetchAll(false);

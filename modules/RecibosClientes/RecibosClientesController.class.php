@@ -17,9 +17,11 @@ class RecibosClientesController extends Controller {
 
         $formasPago = new FormasPago();
         $this->values['formasPago'] = $formasPago;
+        $this->values['estadosRecibos'] = new EstadosRecibos();
 
         $acceso = new ControlAcceso('CajaArqueos');
-        $this->values['permisosCajas'] = $acceso->getPermisos();
+        $permisos = $acceso->getPermisos();
+        $this->values['permisosCajas'] = $permisos['permisosModulo'];
         unset($acceso);
 
         parent::__construct($request);
@@ -34,27 +36,49 @@ class RecibosClientesController extends Controller {
      */
     public function listAction($aditionalFilter = '') {
 
-        $dataBase = $this->form->getDataBaseName();
+        $clientes = new Clientes();
+        $recibos = new RecibosClientes();
 
         $idComercial = $this->request['filter']['valuesSelected']['5'];
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
 
             if ($idComercial) {
                 $this->listado->makeQuery($aditionalFilter);
-                $this->listado->arrayQuery['FROM'] = str_replace(", {$dataBase}.clientes", "", $this->listado->arrayQuery['FROM']);
-                $this->listado->arrayQuery['FROM']  .= ", {$dataBase}.clientes";
-                $this->listado->arrayQuery['WHERE'] .= "AND {$dataBase}.recibos_clientes.IDCliente={$dataBase}.clientes.IDCliente ";
-                $this->listado->arrayQuery['WHERE'] .= "AND {$dataBase}.clientes.IDComercial='{$idComercial}'";
+                $this->listado->arrayQuery['FROM'] = str_replace(", {$clientes->getDataBaseName()}.{$clientes->getTableName()}", "", $this->listado->arrayQuery['FROM']);
+                $this->listado->arrayQuery['FROM'] .= ", {$clientes->getDataBaseName()}.{$clientes->getTableName()}";
+                $this->listado->arrayQuery['WHERE'] .= " AND {$recibos->getDataBaseName()}.{$recibos->getTableName()}.IDCliente={$clientes->getDataBaseName()}.{$clientes->getTableName()}.IDCliente ";
+                $this->listado->arrayQuery['WHERE'] .= "AND {$clientes->getDataBaseName()}.{$clientes->getTableName()}.IDComercial='{$idComercial}'";
                 $this->listado->buildQuery();
             }
 
             $this->values['listado'] = $this->listado->getAll($aditionalFilter);
             $this->values['filtroRemesa'] = ($this->values['listado']['filter']['valuesSelected'][11]);
+
+            // Obtener total recibos y total a remesar
+            $em = new EntityManager($recibos->getConectionName());
+            if ($em->getDbLink()) {
+                $query = "select sum(Importe) as Importe from {$this->listado->arrayQuery['FROM']} where {$this->listado->arrayQuery['WHERE']}";
+                $em->query($query);
+                $total = $em->fetchResult();
+
+                $query1 = "select sum(Importe) as Importe from {$this->listado->arrayQuery['FROM']} where {$this->listado->arrayQuery['WHERE']} and Remesar='1'";
+                $em->query($query1);
+                $remesa = $em->fetchResult();
+                $em->desConecta();
+            }
+            unset($em);
+
+            $this->values['listado']['importeRecibos'] = $total[0]['Importe'];
+            $this->values['listado']['importeRemesa'] = $remesa[0]['Importe'];
+
             $template = $this->entity . '/list.html.twig';
         } else {
             $template = "_global/forbiden.html.twig";
         }
+
+        unset($clientes);
+        unset($recibos);
 
         return array('template' => $template, 'values' => $this->values);
     }
@@ -68,7 +92,7 @@ class RecibosClientesController extends Controller {
      */
     public function guardarAction() {
 
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $arrayFacturas = array();
 
             foreach ($this->request['RecibosClientes'] as $recibo) {
@@ -92,14 +116,15 @@ class RecibosClientesController extends Controller {
                 $factura = new FemitidasCab($idFactura);
                 $totalFactura = $factura->getTotal();
                 $sumaRecibos = $factura->getSumaRecibos();
-                if ($totalFactura != $sumaRecibos)
-                    $this->values['errores'][] = "Descuadre en factura " . $factura->getNumeroFactura() . " -> Total Factura: " . $totalFactura . " Suma Recibos " . $sumaRecibos;
+                if ($totalFactura != $sumaRecibos) {
+                    $diferencia = $totalFactura - $sumaRecibos;
+                    $this->values['errores'][] = "Descuadre en factura {$factura->getNumeroFactura()} -> Total Factura: {$totalFactura} Suma Recibos {$sumaRecibos}. Diferencia {$diferencia}";
+                }
             }
             unset($factura);
 
             return $this->listAction();
-        }
-        else {
+        } else {
             return array('template' => '_global/forbiden.html.twig');
         }
     }
@@ -113,12 +138,13 @@ class RecibosClientesController extends Controller {
      */
     public function DesdoblarAction() {
 
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
             if ($this->request['idReciboDesdoblar']) {
                 $recibo = new RecibosClientes($this->request['idReciboDesdoblar']);
                 $reciboNuevo = $recibo;
                 $reciboNuevo->setIDRecibo('');
                 $reciboNuevo->setRecibo('9999');
+                $reciboNuevo->setPrimaryKeyMD5('');
                 $reciboNuevo->create();
                 unset($recibo);
                 unset($reciboNuevo);
@@ -138,7 +164,8 @@ class RecibosClientesController extends Controller {
      * @return array
      */
     public function CobrarAction() {
-        if ($this->values['permisos']['A']) {
+
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $formaPago = new FormasPago($this->request['idFP']);
             $anotarEnCaja = ($formaPago->getAnotarEnCaja()->getIDTipo() == '1');
@@ -153,6 +180,8 @@ class RecibosClientesController extends Controller {
                 if (($objeto->save()) and ($anotarEnCaja)) {
                     $caja->anotaEnCaja($objeto, $this->request['idFP']);
                 }
+                else
+                    print_r($objeto->getErrores());
             }
             unset($objeto);
             unset($formaPago);
@@ -162,6 +191,33 @@ class RecibosClientesController extends Controller {
         } else {
             return array('template' => '_global/forbiden.html.twig');
         }
+    }
+
+    public function RemesarAction() {
+
+        $remesa = $this->request['remesa'];
+
+        // Construir el filtro
+        $filtro = "(r.Vencimiento>='{$remesa['desdeFecha']}') and (r.Vencimiento<='{$remesa['hastaFecha']}')";
+
+        foreach ($this->request['filter']['valuesSelected'] as $key => $value)
+            if (($value != '') and (!in_array($key, array('6', '7', '8', '9')))) {
+                if ($key == '3')
+                    $filtro .= " and c.RazonSocial like '{$value}'";
+                else if ($key == '4')
+                    $filtro .= " and c.NombreComercial like '{$value}'";
+                else
+                    $filtro .= " and (r.{$this->request['filter']['columnsSelected'][$key]}='{$value}')";
+            }
+
+        $ficheroRemesa = Cuaderno19::makeRemesa($remesa, $filtro);
+        
+        if ($ficheroRemesa)
+            $this->values['alertas'][] = "Se ha generado la remesa {$ficheroRemesa}";
+        else
+            $this->values['alertas'][] = "No se ha generado la remesa";
+        
+        return $this->IndexAction();
     }
 
 }

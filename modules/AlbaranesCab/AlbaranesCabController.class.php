@@ -13,17 +13,29 @@ class AlbaranesCabController extends Controller {
     protected $entity = "AlbaranesCab";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+
     /**
      * Generar el listado de albaranes apoyándose en el método padre
      * Si el usuario es comercial muestra solo los
      * suyos, si no es comercial muestra todos.
      * @return array
      */
-    public function listAction() {
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
-        if ($usuario->getEsComercial())
+    public function listAction($aditionalFilter = '') {
+
+        $filtro = "";
+
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
+
+        if ($usuario->getEsComercial()) {
+            $albaran = new AlbaranesCab();
+            $tabla = $albaran->getDataBaseName() . "." . $albaran->getTableName();
+            unset($albaran);
             $filtro = $tabla . ".IDComercial='" . $usuario->getIDAgente() . "'";
+        }
+
         return parent::listAction($filtro);
     }
 
@@ -34,7 +46,7 @@ class AlbaranesCabController extends Controller {
      * @return array Template y values
      */
     public function confirmarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             // Se puede confirmar si está en estado de elaboración (0)
             $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
@@ -61,7 +73,7 @@ class AlbaranesCabController extends Controller {
      * @return array Template y values
      */
     public function anularAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
             if ($datos->getIDEstado()->getIDTipo() == '1') {
@@ -86,7 +98,7 @@ class AlbaranesCabController extends Controller {
      * @return array Template y values
      */
     public function facturarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
 
@@ -119,7 +131,7 @@ class AlbaranesCabController extends Controller {
      * @return array Template y values
      */
     public function duplicarAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
             $idAlbaranNuevo = $datos->duplica();
@@ -149,12 +161,14 @@ class AlbaranesCabController extends Controller {
                 $para = $this->request['Para'];
                 $de = $this->request['De'];
                 $deNombre = $this->request['DeNombre'];
+                $conCopia = $this->request['Cc'];
+                $conCopiaOculta = $this->request['Cco'];
                 $asunto = $this->request['Asunto'];
                 $mensaje = $this->request['Mensaje'];
                 $adjuntos = array($this->request['Adjunto'],);
 
                 $envio = new Mail();
-                $ok = $envio->send($para, $de, $deNombre, $asunto, $mensaje, $adjuntos);
+                $ok = $envio->send($para, $de, $deNombre, $conCopia, $conCopiaOculta, $asunto, $mensaje, $adjuntos);
                 if ($ok) {
                     $entidad = new $this->entity($this->request['AlbaranesCab']['IDAlbaran']);
                     $entidad->auditaEmail();
@@ -168,17 +182,18 @@ class AlbaranesCabController extends Controller {
 
             case 'CambioFormato':
                 $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
-                $formatos = DocumentoPdf::getFormatos('albaranes');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('albaranes', array('0' => $datos->getIDAlbaran()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDAlbaran()), $formato);
                 $this->values['email'] = array(
                     'Para' => $this->request['Para'],
                     'De' => $this->request['De'],
                     'DeNombre' => $this->request['DeNombre'],
                     'Cc' => $this->request['Cc'],
+                    'Cco' => $this->request['Cco'],
                     'Asunto' => $this->request['Asunto'],
                     'Formatos' => $formatos,
                     'Formato' => $formato,
@@ -189,17 +204,17 @@ class AlbaranesCabController extends Controller {
 
             case '':
                 $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
-                $formatos = DocumentoPdf::getFormatos('albaranes');
+                $formatos = DocumentoPdf::getFormatos($this->entity);
                 $formato = $this->request['Formato'];
                 if ($formato == '')
                     $formato = 0;
 
-                $this->values['archivo'] = $this->generaPdf('albaranes', array('0' => $datos->getIDAlbaran()), $formato);
+                $this->values['archivo'] = $this->generaPdf($this->entity, array('0' => $datos->getIDAlbaran()), $formato);
                 $this->values['email'] = array(
                     'Para' => $datos->getIDCliente()->getEMail(),
-                    'De' => $datos->getIDComercial()->getEMail(),
+                    'De' => $_SESSION['usuarioPortal']['email'], //$datos->getIDComercial()->getIDAgente()->getEMail(),
                     'DeNombre' => $datos->getIDComercial()->getNombre(),
-                    'Cc' => '',
+                    'Cco' => $_SESSION['usuarioPortal']['email'],
                     'Asunto' => 'Albaran n. ' . $datos->getNumeroAlbaran(),
                     'Formatos' => $formatos,
                     'Formato' => $formato,

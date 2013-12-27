@@ -8,8 +8,8 @@
         {% include '_global/TituloGenerico.html.twig' with {'controller':  values.controller, 'linkValue': values.linkBy.value} %}
 
 	{% block filtro %}
-            {% if values.permisos['C'] %}
-		{% include 'Almacenes/filtro.html.twig' with {'filter':values.listado.filter} %}
+            {% if values.permisos.permisosModulo['CO'] %}
+                {% include 'Almacenes/filtro.html.twig' with {'filter':values.listado.filter} %}
             {% endif %}
 	{% endblock %}
 

@@ -18,6 +18,8 @@ class PromocionesClientes extends PromocionesClientesEntity {
      * Validacion lógica
      */
     protected function validaLogico() {
+        
+        parent::validaLogico();        
 
         if ($this->IDGrupo != '')
             $this->IDCliente = NULL;

@@ -19,7 +19,7 @@
 
         <tbody class="Cuerpo">
             {% for key,objeto in values.listado.data %}
-            <form name="linea{{key}}" action="" method="POST">
+            <form name="linea{{key}}" action="" method="POST" enctype="multipart/form-data">
                 <input name="controller" value="FrecibidasLineas" type="hidden" />
                 <input name="action" id="action" value="edit" type="hidden" />
                 <input name="accion" id="accion{{key}}" value="" type="hidden" />
@@ -35,7 +35,7 @@
                     <td align="right">{{objeto.Unidades}}</td>
                     <td>
                         {{objeto.IDArticulo.UMC.UnidadMedida}}
-                        {% if objeto.Unidades != 0%}
+                        {% if ( (objeto.Unidades != 0) and (objeto.IDArticulo.Inventario.IDTipo) ) %}                            
                             {{ macro.detalleRecepcionlinea(app.path,objeto.IDLineaPedido) }}
                         {% endif %}
                     </td>
@@ -44,7 +44,7 @@
                     <td align="right">{{objeto.Iva}}</td>
                     <td align="right">{{objeto.Importe}}</td>
                     <td align="right">
-                        <a href="{{app.path}}/PedidosCab/edit/{{objeto.IDPedido}}" target="_blank" title="Ver Pedido...">{{objeto.IDPedido}}</a>
+                        <a href="{{app.path}}/PedidosCab/edit/{{objeto.IDPedido.PrimaryKeyMD5}}" target="_blank" title="Ver Pedido...">{{objeto.IDPedido}}</a>
                     </td>
                     <td align="center">
                         <input type="image" src="{{app.path}}/images/botonsave.png" onclick="getElementById('accion{{key}}').value='G';" alt="Guardar" title="Guardar Linea" />

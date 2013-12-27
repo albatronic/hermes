@@ -13,27 +13,30 @@ class LotesController extends Controller {
     protected $entity = "Lotes";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+
     /**
      * Descatalogar los lotes (poner no vigentes) que no tengan existencias
      * entre todos los almacenes de la empresa
      */
     public function DescatalogarAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $lote = new Lotes();
-            $dbLotes = $lote->getDataBaseName();
+            $tablaLotes = $lote->getDataBaseName() . "." . $lote->getTableName();
             $existencias = new Existencias();
-            $dbExistencias = $existencias->getDataBaseName();
-            unset($lote);
+            $tablaExistencias = $existencias->getDataBaseName() . "." . $existencias->getTableName();
             unset($existencias);
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($lote->getConectionName());
             if ($em->getDbLink()) {
                 $query = "
-                UPDATE {$dbLotes}.lotes SET Vigente='0'
+                UPDATE {$tablaLotes} SET Vigente='0'
                 WHERE IDLote not in (
                     SELECT IDLote
-                    FROM {$dbExistencias}.existencias e
+                    FROM {$tablaExistencias} e
                     WHERE (
                         IDLote>0 AND
                         (
@@ -48,7 +51,8 @@ class LotesController extends Controller {
                 $em->query($query);
                 $em->desConecta();
             }
-
+            unset($lote);
+            
             return $this->indexAction();
         } else {
             return array('template' => '_global/forbiden.html.twig');
@@ -60,18 +64,11 @@ class LotesController extends Controller {
      */
     public function CatalogarAction() {
 
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             $lote = new Lotes();
-            $dbLotes = $lote->getDataBaseName();
+            $lote->queryUpdate(array("Vigente" => 1));
             unset($lote);
-
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            if ($em->getDbLink()) {
-                $query = "UPDATE {$dbLotes}.lotes SET Vigente='1';";
-                $em->query($query);
-                $em->desConecta();
-            }
 
             return $this->indexAction();
         } else {

@@ -28,7 +28,7 @@ class FrecibidasLineasController extends Controller {
 
     public function listAction($idFactura='') {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
             if ($idFactura == '')
                 $idFactura = $this->request[2];
 
@@ -69,7 +69,7 @@ class FrecibidasLineasController extends Controller {
 
         switch ($this->request['accion']) {
             case 'G': //GUARDAR DATOS
-                if ($this->values['permisos']['A']) {
+                if ($this->values['permisos']['permisosModulo']['UP']) {
                     $datos = new $this->entity($this->request[$this->entity]['IDLinea']);
                     $datos->bind($this->request[$this->entity]);
                     if ($datos->valida(array())) {

@@ -1,0 +1,11 @@
+# VARIABLES DE ENTORNO ESPECIFICAS DEL MODULO ErpBancos
+#
+# Module: ErpBancos
+# author Sergio Pérez <sergio.perez@albatronic.com>
+# copyright ARTICO ESTUDIO, SL
+# date 01-04-2013 16:52:12
+#
+# ejemplo:
+#
+# nombreVariable: el texto del caption
+---

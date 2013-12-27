@@ -1,0 +1,9 @@
+# Artículos favoritos para cada TPV
+ErpFavoritosTpv:
+  comment: Articulos favoritos para cada TPV
+  columns:
+    IDTpv:       { type: bigint(11), notnull: true, index: index }
+    IDArticulo:  { type: bigint(11), notnull: true }
+    Descripcion: { type: varchar(255), notnull: true }
+    <?php include '../Erp/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+  relations:

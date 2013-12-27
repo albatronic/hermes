@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(permisos)
  */
-class PermisosEntity extends Entity {
+class PermisosEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -22,31 +22,25 @@ class PermisosEntity extends Entity {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="permisos")
      */
-    protected $IDPerfil;
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="permisos")
-     */
-    protected $IDOpcion = '0';
-    /**
-     * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="permisos")
-     */
-    protected $IDSubopcion = '0';
+    protected $IdPerfil;
     /**
      * @orm:Column(type="string")
      */
-    protected $Permisos = '111111';
+    protected $NombreModulo;
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Funcionalidades;
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'permisos';
+    protected $_tableName = 'ErpPermisos';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -64,40 +58,28 @@ class PermisosEntity extends Entity {
         return $this->Id;
     }
 
-    public function setIDPerfil($IDPerfil) {
-        $this->IDPerfil = $IDPerfil;
+    public function setIdPerfil($IdPerfil) {
+        $this->IdPerfil = $IdPerfil;
     }
 
-    public function getIDPerfil() {
-        return $this->IDPerfil;
+    public function getIdPerfil() {
+        return $this->IdPerfil;
     }
 
-    public function setIDOpcion($IDOpcion) {
-        $this->IDOpcion = $IDOpcion;
+    public function setNombreModulo($NombreModulo) {
+        $this->NombreModulo = $NombreModulo;
     }
 
-    public function getIDOpcion() {
-        if (!($this->IDOpcion instanceof Menu))
-            $this->IDOpcion = new Menu($this->IDOpcion);
-        return $this->IDOpcion;
+    public function getNombreModulo() {
+        return $this->NombreModulo;
     }
 
-    public function setIDSubopcion($IDSubopcion) {
-        $this->IDSubopcion = $IDSubopcion;
+    public function setFuncionalidades($Funcionalidades) {
+        $this->Funcionalidades = $Funcionalidades;
     }
 
-    public function getIDSubopcion() {
-        if (!($this->IDSubopcion instanceof Submenu))
-            $this->IDSubopcion = new Submenu($this->IDSubopcion);
-        return $this->IDSubopcion;
-    }
-
-    public function setPermisos($Permisos) {
-        $this->Permisos = $Permisos;
-    }
-
-    public function getPermisos() {
-        return $this->Permisos;
+    public function getFuncionalidades() {
+        return $this->Funcionalidades;
     }
 
 }

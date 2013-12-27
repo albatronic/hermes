@@ -6,6 +6,49 @@ config:
   audit_mode: true
   # CONTROL DE ACCESO POR IP
   ip_control: true
+  
+  # INFORMACION PARA SEO
+  meta:
+    author: 'Informática Albatronic, SL'
+    revisitAfter: 10
+    
+  # SEMILLA PARA CONSTRUIR CLAVES MD5
+  semillaMD5: pablo
+  
+  # SERVICIO PARA CONTROL DE VISITAS  
+  visitas:
+    activo: false
+    ws: http://api.ip-adress.com/?u=1062c309c5c054edc08fe578ef8f0dd94720c0&h=
+    frecuenciaHorasBorrado: 5
+  
+  # FIRMAS DE LA WEB
+  signatures:
+    links: 'www.albatronic.com'
+    services:
+      'es': 'Diseño web,Venta Online,Posicionamiento web'
+      'en': 'Web design,eCommerce,SEO'
+      'fr': ''
+    locations: 'Granada,Madrid,Malaga'
+
+  # LONGITUD MÁXIMA PARA LAS URLS Y NOMBRES AMIGABLES
+  maxLengthUrlsFriendly: 50
+  # NUMERO MAXIMO DE PAGINAS
+  numMaxPages: 100
+  # NUMERO MAXIMO DE DOCUMENTOS
+  numMaxDocuments: 0
+  # NUMERO MAXIMO DE IMAGENES EN LA GALERIA
+  numMaxGalery: 0
+  # NUMERO MAXIMO DE VIDEOS
+  numMaxVideos: 0
+  # NUMERO MAXIMO DE AUDIOS
+  numMaxAudios: 0
+  # TIPOS DE ARCHIVOS PERMITIDOS PARA UPLOAD
+  allowTypes: 'jpg,png,gif,pdf,docx,mp3,avi,pps'
+  # MODULOS QUE TIENEN GESTION DE ETIQUETAS (lista separada por comas)
+  modulosConEtiquetas: 'GconContenidos'
+  # BLOQUEAR ROBOTS DE BUSQUEDA
+  blockRobots: false
+  
   # FORMATOS DE EXPORTACION DE INFORMACION
   export_types:
     - xls
@@ -14,49 +57,38 @@ config:
     - Yaml
   # ENTORNO DE LA APLICACION
   app:
-    name: ERP Albatronic
-    url: http://localhost
-    path: /Erp
+    name: Hermes Erp
+    url: http://localhost/Hermes
+    path: /Hermes
     framework: bin/albatronic/
-    urlParent: http://localhost/Pcae    
+    urlParent: http://localhost/Pcae  
+   
   # CONEXIONES A LAS BASES DE DATOS
   conections:
-    empresas:
+    pcae:
+      title: Portal Cloud Albatronic
+      description:
+      folder: /Pcae
       dbEngine: mysql
       host: localhost
       user: root
       password: albatronic
-      database: interpra_ppuemp
-    datos001:
-      dbEngine: mysql
-      host: localhost
-      user: root
-      password: albatronic
-      database: interpra_ppuerp001
-    datos002:
-      dbEngine: mysql
-      host: localhost
-      user: root
-      password: albatronic
-      database: interpra_ppuerp002
-    datos003:
-      dbEngine: mysql
-      host: localhost
-      user: root
-      password: albatronic
-      database: interpra_ppuerp003
+      database: albatro_pacs
   # MOTOR DE ENVIO DE CORREOS
   mailer:
-    plugin_dir: bin/PHPMailer_5.2.1/
-    plugin_file: class.phpmailer.php
+    #plugin_dir: bin/PHPMailer_5.2.1/
+    #plugin_file: class.phpmailer.php
+    plugin_dir: bin/Swift-5.0.0/lib/
+    plugin_file: swift_required.php
     motor: PHPMailer
     socket: smtp
-    host: mail.interpral.com
+    host: mail.albatronic.com
+    port: 25
     smtp_auth: true
-    user_name: info@interpral.com
+    user_name: info@albatronic.com
     password: i1234o
-    from: info@interpral.com
-    from_name: INTERPRAL
+    from: info@albatronic.com
+    from_name: ALBATRONIC
     timeout: 30
   # MOTOR PARA DOCUMENTOS EXCEL
   excel: bin/PHPExcel/PHPExcel.php

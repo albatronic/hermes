@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(noticias)
  */
-class NoticiasEntity extends Entity {
+class NoticiasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -42,12 +42,12 @@ class NoticiasEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'noticias';
+    protected $_tableName = 'ErpNoticias';
     /**
      * Nombre de la primaryKey
      * @var string

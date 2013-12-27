@@ -9,9 +9,9 @@
  */
 
 /**
- * @orm:Entity(almacenes_mapas)
+ * @orm:Entity(ErpAlmacenesMapas)
  */
-class AlmacenesMapasEntity extends Entity {
+class AlmacenesMapasEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -65,12 +65,12 @@ class AlmacenesMapasEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'almacenes_mapas';
+    protected $_tableName = 'ErpAlmacenesMapas';
     /**
      * Nombre de la PrimaryKey
      * @var string

@@ -9,7 +9,7 @@ listados:
   -
     title: Presupuestos
     order_by: >
-      psto_cab.Fecha ASC
+      ErpPstoCab.Fecha ASC
     break_field: null
     idPerfil: null
     orientation: P

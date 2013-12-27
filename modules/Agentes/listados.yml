@@ -8,7 +8,7 @@
 listados:
   - 
     title: Usuarios del Sistema
-    order_by: Nombre ASC
+    order_by: IDAgente ASC
     break_field: null
     idPerfil: null
     orientation: L
@@ -18,45 +18,18 @@ listados:
     body_font: Courier, ,8
     columns:
       - 
-        title: Login
-        field: Login
-        length: 10
-        align: L
-        type: string
-        total: NO
-        formula: null
-        format: null
-      - 
         title: Nombre
         field: Nombre
-        length: 30
+        length: 35
         align: L
         type: string
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: NLogin
-        field: NLogin
-        length: 4
-        align: R
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: Ult. Login
-        field: UltimoLogin
-        length: 10
-        align: R
-        type: date
         total: NO
         formula: null
         format: null
       - 
         title: EMail
         field: EMail
-        length: 30
+        length: 35
         align: L
         type: string
         total: NO
@@ -73,8 +46,8 @@ listados:
         format: null
       - 
         title: Rol
-        field: Rol
-        length: 10
+        field: IDRol
+        length: 15
         align: L
         type: integer
         total: NO
@@ -83,16 +56,7 @@ listados:
       - 
         title: Perfil
         field: IDPerfil
-        length: 10
-        align: L
-        type: integer
-        total: NO
-        formula: null
-        format: null
-      - 
-        title: Empresa
-        field: IDEmpresa
-        length: 20
+        length: 15
         align: L
         type: integer
         total: NO
@@ -101,7 +65,7 @@ listados:
       - 
         title: Sucursal
         field: IDSucursal
-        length: 15
+        length: 25
         align: L
         type: integer
         total: NO
@@ -110,7 +74,7 @@ listados:
       - 
         title: Almacen
         field: IDAlmacen
-        length: 10
+        length: 25
         align: L
         type: integer
         total: NO

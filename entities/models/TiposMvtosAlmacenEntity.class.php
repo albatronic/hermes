@@ -7,47 +7,47 @@
  */
 
 /**
- * @orm:Entity(tipos_mvtos_almacen)
+ * @orm:Entity(TiposMvtosAlmacen)
  */
-class TiposMvtosAlmacenEntity extends Entity {
+class TiposMvtosAlmacenEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="tipos_mvtos_almacen")
+     * @assert:NotBlank(groups="TiposMvtosAlmacen")
      */
     protected $Id;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="tipos_mvtos_almacen")
+     * @assert:NotBlank(groups="TiposMvtosAlmacen")
      */
     protected $Descripcion;
     /**
      * @orm:Column(type="")
-     * @assert:NotBlank(groups="tipos_mvtos_almacen")
+     * @assert:NotBlank(groups="TiposMvtosAlmacen")
      */
     protected $Signo = 'E';
     /**
      * @orm:Column(type="")
-     * @assert:NotBlank(groups="tipos_mvtos_almacen")
+     * @assert:NotBlank(groups="TiposMvtosAlmacen")
      */
     protected $Uso = 'A';
     /**
      * @orm:Column(type="")
-     * @assert:NotBlank(groups="tipos_mvtos_almacen")
+     * @assert:NotBlank(groups="TiposMvtosAlmacen")
      */
     protected $TipoDocumento = '';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'empresas';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'tipos_mvtos_almacen';
+    protected $_tableName = 'ErpTiposMvtosAlmacen';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -110,5 +110,5 @@ class TiposMvtosAlmacenEntity extends Entity {
 
 }
 
-// END class tipos_mvtos_almacen
+// END class TiposMvtosAlmacen
 ?>

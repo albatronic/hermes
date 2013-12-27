@@ -8,11 +8,14 @@
 
  * Extiende a la clase controller
  */
-
 class PaisesController extends Controller {
 
     protected $entity = "Paises";
     protected $parentEntity = "";
+
+    public function indexAction() {
+        return $this->listAction();
+    }
 
 }
 

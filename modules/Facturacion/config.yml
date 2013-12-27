@@ -10,7 +10,7 @@ Facturacion:
   permission_control: YES
   help_file: help.html.twig
   title: Facturación
-  conection: 'datos<?php echo $_SESSION['emp'];?>'
+  conection: ''
   entity: AlbaranesCab
   table: albaranes_cab
   primarykey: IDAlbaran

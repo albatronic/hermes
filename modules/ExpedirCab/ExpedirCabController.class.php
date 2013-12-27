@@ -21,7 +21,7 @@ class ExpedirCabController extends Controller {
         unset($dia);
 
         // Orígenes de expedición dependiendo del rol
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
         if ($usuario->getEsRepartidor()) {
             $this->values['tipos'] = array(
                 array('Id' => 'AlbaranesCab', 'Value' => 'Albaranes de Venta'),
@@ -64,7 +64,7 @@ class ExpedirCabController extends Controller {
      */
     public function listAction($idAlmacen = "", $idTipo = "") {
 
-        if ($this->values['permisos']['C']) {
+        if ($this->values['permisos']['permisosModulo']['CO']) {
 
             if ($idAlmacen != "")
                 $this->request['idAlmacen'] = $idAlmacen;
@@ -106,7 +106,7 @@ class ExpedirCabController extends Controller {
      */
     public function CambiaRepartidorAction() {
 
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
 
             switch ($this->request['idTipo']) {
                 case 'AlbaranesCab':
@@ -204,11 +204,16 @@ class ExpedirCabController extends Controller {
         unset($dia);
         unset($ruta);
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $albaran = new AlbaranesCab();
+        $ruta = new RutasRepartoDetalle();
+        
+        $em = new EntityManager($albaran->getConectionName());
 
         if ($em->getDbLink()) {
             $query = "SELECT a.IDAlbaran
-                            FROM albaranes_cab as a, rutas_reparto_detalle as r
+                            FROM 
+                                {$albaran->getDataBaseName()}.{$albaran->getTableName()} as a, 
+                                {$ruta->getDataBaseName()}.{$ruta->getTableName()} as r
                             WHERE a.Fecha>'{$fechaDesde}'
                             AND a.IDEstado='{$idEstado}'
                             AND a.IDAlmacen='{$idAlmacen}'
@@ -222,6 +227,8 @@ class ExpedirCabController extends Controller {
             $rows = $em->fetchResult();
             $em->desConecta();
         }
+        unset($albaran);
+        unset($ruta);
 
         $pdf = new listadoOrdenRepartoPDF("L", 'mm', "A4", $opciones);
         $pdf->SetTopMargin(15);
@@ -246,7 +253,7 @@ class ExpedirCabController extends Controller {
             $pdf->Cell(50, 4, $albaran->getIDComercial()->getNombre(), 0, 0, "L");
             $pdf->Ln();
             $pdf->Cell(30, 4, "", 0, 0, "C");
-            $pdf->Cell(150, 4, $albaran->getIDDirec()->getDireccion() . " - " . $albaran->getIDDirec()->getPoblacion(), 0, 0, "L");
+            $pdf->Cell(150, 4, $albaran->getIDDirec()->getDireccion() . " - " . $albaran->getIDDirec()->getIDPoblacion, 0, 0, "L");
             $pdf->Ln();
             $pdf->Ln();
             $pdf->Line($pdf->GetX(),$pdf->GetY(),290,$pdf->GetY());
@@ -284,11 +291,16 @@ class ExpedirCabController extends Controller {
         $fechaDesde = $fecha->sumaDias(-1 * $idPeriodo);
         unset($fecha);
 
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $albaran = new AlbaranesCab();
+        $ruta = new RutasRepartoDetalle();
+        
+        $em = new EntityManager($albaran->getConectionName());
 
         if ($em->getDbLink()) {
             $query = "SELECT DISTINCT a.IDAlbaran
-                            FROM albaranes_cab as a, rutas_reparto_detalle as r
+                            FROM 
+                                {$albaran->getDataBaseName()}.{$albaran->getTableName()} as a, 
+                                {$ruta->getDataBaseName()}.{$ruta->getTableName()} as r
                             WHERE a.Fecha>'{$fechaDesde}'
                             AND a.IDEstado='{$idEstado}'
                             AND a.IDAlmacen='{$idAlmacen}'
@@ -361,7 +373,7 @@ class listadoOrdenRepartoPDF extends FPDF {
 
     //Cabecera de página
     function Header() {
-        $empresa = new Empresas($_SESSION['emp']);
+        $empresa = new PcaeEmpresas($_SESSION['emp']);
         $sucursal = new Sucursales($_SESSION['suc']);
 
         $this->Image($empresa->getLogo(), 10, 8, 23);

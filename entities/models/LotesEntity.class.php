@@ -9,7 +9,7 @@
 /**
  * @orm:Entity(lotes)
  */
-class LotesEntity extends Entity {
+class LotesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -53,13 +53,13 @@ class LotesEntity extends Entity {
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
 
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'lotes';
+    protected $_tableName = 'ErpLotes';
 
     /**
      * Nombre de la primaryKey

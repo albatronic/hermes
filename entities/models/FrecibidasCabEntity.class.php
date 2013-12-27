@@ -9,15 +9,15 @@
  */
 
 /**
- * @orm:Entity(frecibidas_cab)
+ * @orm:Entity(FrecibidasCab)
  */
-class FrecibidasCabEntity extends Entity {
+class FrecibidasCabEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
      * @orm:Id
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $IDFactura;
     /**
@@ -32,37 +32,37 @@ class FrecibidasCabEntity extends Entity {
     protected $IDSucursal;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $NumeroFactura;
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $SuFactura='';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
-    protected $Referencia='';
+    protected $Referencia;
     /**
      * @orm:Column(type="date")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Fecha = '0000-00-00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $IDProveedor;
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Importe = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Descuento = '0.00';
     /**
@@ -87,92 +87,92 @@ class FrecibidasCabEntity extends Entity {
     protected $CuotaRecargo1 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $BaseImponible2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Iva2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuotaIva2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Recargo2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuotaRecargo2 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $BaseImponible3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Iva3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuotaIva3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Recargo3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuotaRecargo3 = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $TotalBases = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $TotalIva = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $TotalRecargo = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $RecargoFinanciero = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuotaRecargoFinanciero = '0.00';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Total = '0.00';
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $CuentaCompras = '';
     /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $Asiento = '0';
     /**
@@ -180,24 +180,20 @@ class FrecibidasCabEntity extends Entity {
      */
     protected $Observaciones;
     /**
-     * @orm:Column(type="string")
-     */
-    protected $Clave;
-    /**
      * @orm:Column(type="integer")
-     * @assert:NotBlank(groups="frecibidas_cab")
+     * @assert:NotBlank(groups="FrecibidasCab")
      */
     protected $IDFP = '0';
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'frecibidas_cab';
+    protected $_tableName = 'ErpFrecibidasCab';
     /**
      * Nombre de la primaryKey
      * @var string
@@ -490,14 +486,6 @@ class FrecibidasCabEntity extends Entity {
         return $this->Observaciones;
     }
 
-    public function setClave($Clave) {
-        $this->Clave = trim($Clave);
-    }
-
-    public function getClave() {
-        return $this->Clave;
-    }
-
     public function setIDFP($IDFP) {
         $this->IDFP = $IDFP;
     }
@@ -510,5 +498,5 @@ class FrecibidasCabEntity extends Entity {
 
 }
 
-// END class frecibidas_cab
+// END class FrecibidasCab
 ?>

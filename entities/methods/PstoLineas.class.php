@@ -77,7 +77,10 @@ class PstoLineas extends PstoLineasEntity {
 
         // Si existe el articulo ...
         if (count($this->_errores) == 0) {
-
+            $aviso = $articulo->getAvisosPresupuestos();
+            if ($aviso)
+                $this->_alertas[] = $aviso;
+            
             // Si es version CRISTAL, comprueba multiplos y calcula medidas
             if ($_SESSION['ver'] == 1)
                 $this->checkMultiplos($articulo);
@@ -114,9 +117,9 @@ class PstoLineas extends PstoLineasEntity {
                 // indicado por el usuario si tiene permiso dependiendo de si su rol está
                 // incluido en el parámetro ROLCP
                 $this->IDPromocion = 0;
-                if (($this->Precio == '') or (!$_SESSION['USER']['user']['cambioPrecios']))
+                if (($this->Precio == '') or (!$_SESSION['usuarioPortal']['cambioPrecios']))
                     $this->setPrecio($precios['Tarifa']['Precio']);
-                if (($this->Descuento == '') or (!$_SESSION['USER']['user']['cambioPrecios']))
+                if (($this->Descuento == '') or (!$_SESSION['usuarioPortal']['cambioPrecios']))
                     $this->setDescuento($precios['Tarifa']['Descuento']);
             }
 
@@ -130,7 +133,7 @@ class PstoLineas extends PstoLineasEntity {
             // Poner el mismo almacen y comercial de la cabecera del albarán
             $this->setIDAlmacen($psto->getIDAlmacen()->getIDAlmacen());
             $this->setIDComercial($psto->getIDComercial()->getIDAgente());
-            $this->setIDAgente($_SESSION['USER']['user']['id']);
+            $this->setIDAgente($_SESSION['usuarioPortal']['Id']);
 
             // Si el cliente no está sujeto a Iva, pongo a 0 el iva y el recargo
             if ($psto->getIDCliente()->getIva()->getIDTipo() == '0') {
@@ -181,7 +184,9 @@ class PstoLineas extends PstoLineasEntity {
      * @return boolean
      */
     public function validaBorrado() {
-        unset($this->_errores);
+
+        parent::validaBorrado();
+  
         if ($this->IDEstado != 0) {
             $this->_errores[] = "No se puede borrar la línea. Está confirmada";
         }

@@ -69,9 +69,9 @@ class ManufacCab extends ManufacCabEntity {
         // Si no está confirmado
         if ($this->getIDEstado()->getIDTipo() == 0) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.manufac_lineas as t1, articulos as t2
+                        FROM {$this->_dataBaseName}.ErpManufacLineas as t1, ErpArticulos as t2
                         WHERE t1.IDManufac='{$this->IDManufac}'
                             AND t1.IDEstado='0'
                             AND t1.Tipo='0'
@@ -87,11 +87,9 @@ class ManufacCab extends ManufacCabEntity {
             unset($exi);
 
             // Marcar como Reservadas las líneas del parte de elaboración de tipo 0 (salida)
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.manufac_lineas set IDEstado='1' where IDManufac='{$this->IDManufac}' and IDEstado='0' and Tipo='0'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $lineas = new ManufacLineas();
+            $lineas->queryUpdate(array("IDEstado" => '1'),"IDManufac='{$this->IDManufac}' and IDEstado='0' and Tipo='0'");
+            unset($lineas);
 
             // Confirmar la cabecera del parte de elaboración
             $this->setIDEstado(1);
@@ -111,9 +109,9 @@ class ManufacCab extends ManufacCabEntity {
         // Si está confirmado
         if ($this->getIDEstado()->getIDTipo() == 1) {
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $em = new EntityManager($this->getConectionName());
             $query = "SELECT t1.IDArticulo, t1.IDAlmacen, t1.Unidades, t1.UnidadMedida
-                        FROM {$this->_dataBaseName}.manufac_lineas as t1, articulos as t2
+                        FROM {$this->_dataBaseName}.ErpManufacLineas as t1, ErpArticulos as t2
                         WHERE t1.IDManufac='{$this->IDManufac}'
                             AND t1.Tipo='0'
                             AND t1.IDEstado='1'
@@ -130,15 +128,14 @@ class ManufacCab extends ManufacCabEntity {
             unset($exi);
 
             // Poner en estado de PTE DE CONFIRMAR las líneas del parte de elaboración de tipo 0 (salida)
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "update {$this->_dataBaseName}.manufac_lineas set IDEstado='0' where IDManufac='{$this->IDManufac}' and IDEstado='1' and Tipo='0'";
-            $em->query($query);
+            $lineas = new ManufacLineas();
+            $lineas->queryUpdate(array("IDEstado" => '0'),"IDManufac='{$this->IDManufac}' and IDEstado='1' and Tipo='0'");
+            unset($lineas);
 
             // Borrar las eventuales lineas de expedicion
-            $query = "delete from {$em->getDataBase()}.expediciones where Entidad='ManufacCab' and IDEntidad='{$this->IDManufac}'";
-            $em->query($query);
-            $em->desConecta();
-            unset($em);
+            $expediciones = new Expediciones();
+            $expediciones->queryDelete("Entidad='ManufacCab' and IDEntidad='{$this->IDManufac}'");
+            unset($expediciones);
 
             // Anular la reserva en la cabecera del parte de elaboración
             $this->setIDEstado(0);
@@ -224,20 +221,15 @@ class ManufacCab extends ManufacCabEntity {
 
         //Fuerzo el almacen de las líneas de elaboración al de la cabecera del parte de elaboración
         //por si se ha cambiado el almacen, siempre y cuando el estado de la linea sea 0
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "UPDATE {$this->_dataBaseName}.manufac_lineas SET `IDAlmacen`='{$this->IDAlmacenOrigen}' WHERE `IDManufac` = '{$this->IDManufac}' and `Tipo` = '0' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenOrigen}'";
-            $this->_em->query($query);
-
-            $query = "UPDATE {$this->_dataBaseName}.manufac_lineas SET `IDAlmacen`='{$this->IDAlmacenDestino}' WHERE `IDManufac` = '{$this->IDManufac}' and `Tipo` = '1' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenDestino}'";
-            $this->_em->query($query);
-        }
-        $this->_em->desConecta();
+        $lineas = new ManufacLineas();
+        $lineas->queryUpdate(array("IDAlmacen" => $this->IDAlmacenOrigen),"`IDManufac` = '{$this->IDManufac}' and `Tipo` = '0' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenOrigen}'");
+        $lineas->queryUpdate(array("IDAlmacen" => $this->IDAlmacenDestino),"`IDManufac` = '{$this->IDManufac}' and `Tipo` = '1' and `IDEstado` = '0' and IDAlmacen <> '{$this->IDAlmacenDestino}'");
+        unset($lineas);
 
         //Calcular los totales
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "select sum(Unidades) as Unidades, sum(Importe) as Importe from {$this->_dataBaseName}.manufac_lineas where (IDManufac='{$this->IDManufac}') group by Tipo order by Tipo";
+            $query = "select sum(Unidades) as Unidades, sum(Importe) as Importe from {$this->_dataBaseName}.ErpManufacLineas where (IDManufac='{$this->IDManufac}') group by Tipo order by Tipo";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
 

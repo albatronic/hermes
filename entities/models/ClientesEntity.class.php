@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(clientes)
  */
-class ClientesEntity extends Entity {
+class ClientesEntity extends EntityComunes {
 
     /**
      * @orm:GeneratedValue
@@ -20,192 +20,251 @@ class ClientesEntity extends Entity {
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDCliente;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
     protected $RazonSocial = '';
+
     /**
      * @orm:Column(type="string")
      */
     protected $NombreComercial;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
     protected $Cif;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Direccion;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
-    protected $IDPais = '73';
-    /**
-     * @orm:Column(type="string")
-     */
-    protected $Poblacion;
+    protected $IDPais = '68';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDProvincia = '18';
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $IDPoblacion = '0';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
     protected $CodigoPostal = '0000000000';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Telefono;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Fax;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Movil;
+
     /**
      * @orm:Column(type="string")
      */
     protected $EMail;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Web;
+
     /**
      * @orm:Column(type="string")
      */
     protected $CContable = '0000000000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
-    protected $IDBanco = '0000';
+    protected $Banco = '0000';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
-    protected $IDOficina = '0000';
+    protected $Oficina = '0000';
+
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="clientes")
      */
     protected $Digito = '00';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="clientes")
      */
     protected $Cuenta = '0000000000';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDTipo = '0';
+
     /**
      * @orm:Column(type="integer")
      */
     protected $IDGrupo = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDFP = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $DiaDePago = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $RecargoEqu = '0';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $Sexo = '1';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $Tratamiento = '1';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Observaciones = '';
+
     /**
      * @orm:Column(type="string")
      */
     protected $Avisos = '';
+
     /**
      * @orm:Column(type="")
      * @assert:NotBlank(groups="clientes")
      */
     protected $Vigente = '1';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDComercial = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDTarifa = '0';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $LimiteRiesgo = '0.00';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $FechaNacimiento = '0000-00-00';
+
+    /**
+     * @orm:Column(type="string")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $Login = null;
+
     /**
      * @orm:Column(type="string")
      */
     protected $Password;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $Iva = '1';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $FechaRiesgo = '0000-00-00';
+
     /**
      * @orm:Column(type="string")
      */
     protected $CodigoRiesgo;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDSucursal = '1';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $IDZona;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="clientes")
      */
     protected $FacturacionAgrupada = '1';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'clientes';
+    protected $_tableName = 'ErpClientes';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDCliente';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -219,14 +278,15 @@ class ClientesEntity extends Entity {
         array('SourceColumn' => 'IDCliente', 'ParentEntity' => 'ClientesDentrega', 'ParentColumn' => 'IDCliente'),
         array('SourceColumn' => 'IDCliente', 'ParentEntity' => 'RecibosClientes', 'ParentColumn' => 'IDCliente'),
         array('SourceColumn' => 'IDCliente', 'ParentEntity' => 'RutasVentas', 'ParentColumn' => 'IDCliente'),
+        array('SourceColumn' => 'IDCliente', 'ParentEntity' => 'Articulos', 'ParentColumn' => 'IDCliente'),
     );
+
     /**
      * Relacion de entidades de las que depende esta
      * @var array
      */
     protected $_childEntities = array(
     );
-
 
     /**
      * GETTERS Y SETTERS
@@ -281,12 +341,14 @@ class ClientesEntity extends Entity {
         return $this->IDPais;
     }
 
-    public function setPoblacion($Poblacion) {
-        $this->Poblacion = trim($Poblacion);
+    public function setIDPoblacion($IDPoblacion) {
+        $this->IDPoblacion = $IDPoblacion;
     }
 
-    public function getPoblacion() {
-        return $this->Poblacion;
+    public function getIDPoblacion() {
+        if (!($this->IDPoblacion instanceof Municipios))
+            $this->IDPoblacion = new Municipios($this->IDPoblacion);
+        return $this->IDPoblacion;
     }
 
     public function setIDProvincia($IDProvincia) {
@@ -355,24 +417,24 @@ class ClientesEntity extends Entity {
         return $this->CContable;
     }
 
-    public function setIDBanco($IDBanco) {
-        $this->IDBanco = $IDBanco;
+    public function setBanco($Banco) {
+        $this->Banco = str_pad(trim($Banco), 4, "0");
     }
 
-    public function getIDBanco() {
-        return $this->IDBanco;
+    public function getBanco() {
+        return $this->Banco;
     }
 
-    public function setIDOficina($IDOficina) {
-        $this->IDOficina = $IDOficina;
+    public function setOficina($Oficina) {
+        $this->Oficina = str_pad(trim($Oficina), 4, "0");
     }
 
-    public function getIDOficina() {
-        return $this->IDOficina;
+    public function getOficina() {
+        return $this->Oficina;
     }
 
     public function setDigito($Digito) {
-        $this->Digito = $Digito;
+        $this->Digito = str_pad(trim($Digito), 2, "0");
     }
 
     public function getDigito() {
@@ -380,7 +442,7 @@ class ClientesEntity extends Entity {
     }
 
     public function setCuenta($Cuenta) {
-        $this->Cuenta = $Cuenta;
+        $this->Cuenta = str_pad(trim($Cuenta), 10, "0");
     }
 
     public function getCuenta() {
@@ -433,6 +495,26 @@ class ClientesEntity extends Entity {
         if (!($this->RecargoEqu instanceof ValoresSN))
             $this->RecargoEqu = new ValoresSN($this->RecargoEqu);
         return $this->RecargoEqu;
+    }
+
+    public function setSexo($Sexo) {
+        $this->Sexo = $Sexo;
+    }
+
+    public function getSexo() {
+        if (!($this->Sexo instanceof Sexos))
+            $this->Sexo = new Sexos($this->Sexo);
+        return $this->Sexo;
+    }
+
+    public function setTratamiento($Tratamiento) {
+        $this->Tratamiento = $Tratamiento;
+    }
+
+    public function getTratamiento() {
+        if (!($this->Tratamiento instanceof Tratamientos))
+            $this->Tratamiento = new Tratamientos($this->Tratamiento);
+        return $this->Tratamiento;
     }
 
     public function setObservaciones($Observaciones) {
@@ -502,8 +584,16 @@ class ClientesEntity extends Entity {
         return $ddmmaaaa;
     }
 
+    public function setLogin($Login) {
+        $this->Login = trim($Login);
+    }
+
+    public function getLogin() {
+        return $this->Login;
+    }
+
     public function setPassword($Password) {
-        $this->Password = $Password;
+        $this->Password = trim($Password);
     }
 
     public function getPassword() {
@@ -570,6 +660,7 @@ class ClientesEntity extends Entity {
             $this->FacturacionAgrupada = new ValoresSN($this->FacturacionAgrupada);
         return $this->FacturacionAgrupada;
     }
+
 }
 
 // END class clientes

@@ -14,6 +14,9 @@ class ZonasTransporteController extends Controller {
     protected $entity = "ZonasTransporte";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
 }
 
 ?>

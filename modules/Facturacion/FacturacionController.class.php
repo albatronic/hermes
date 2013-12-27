@@ -15,26 +15,28 @@ class FacturacionController extends Controller {
 
     public function __construct($request) {
 
-        $usuario = new Agentes($_SESSION['USER']['user']['id']);
+        $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
         $this->values['sucursales'] = $usuario->getSucursales();
 
         $this->values['filtro'] = $this->request['filtro'];
         if ($this->values['filtro']['desdeFecha'] == '')
-            $this->values['filtro']['desdeFecha'] = '01/01/' . date('Y');
+            $this->values['filtro']['desdeFecha'] = '01-01-' . date('Y');
         if ($this->values['filtro']['hastaFecha'] == '')
-            $this->values['filtro']['hastaFecha'] = '31/12/' . date('Y');
+            $this->values['filtro']['hastaFecha'] = '31-12-' . date('Y');
+
+        $this->values['hoy'] = date('d-m-Y');
 
         parent::__construct($request);
     }
 
-    public function listAction() {
+    public function listAction($aditionalFilter = '') {
 
         $filtro = $this->request['filtro'];
 
         $totales = array('albaranesSeleccionados' => 0, 'facturable' => 0, 'seleccion' => 0);
 
         $albaran = new AlbaranesCab();
-        $rows = $albaran->getPendientesFacturar($filtro['idSucursal'],$filtro['idCliente'], $filtro['desdeFecha'], $filtro['hastaFecha']);
+        $rows = $albaran->getPendientesFacturar($filtro['idSucursal'], $filtro['idCliente'], $filtro['desdeFecha'], $filtro['hastaFecha']);
         unset($albaran);
         foreach ($rows as $row) {
             $albaran = new AlbaranesCab($row['IDAlbaran']);
@@ -107,7 +109,12 @@ class FacturacionController extends Controller {
                 $rows = $albaran->cargaCondicion("IDAlbaran", $filter, "FechaEntrega ASC");
                 foreach ($rows as $row) {
                     $albaran = new AlbaranesCab($row['IDAlbaran']);
-                    $facturados[] = $albaran->facturar(new Contadores($this->request['idContador']), $this->request['fecha']);
+                    $idFactura = $albaran->facturar(new Contadores($this->request['idContador']), $this->request['fecha']);
+                    if (count($albaran->getErrores()) != 0) {
+                        $this->values['errores'] = $albaran->getErrores();
+                        break;
+                    } else
+                        $facturados[] = $idFactura;
                 }
                 unset($albaran);
                 break;
@@ -117,13 +124,17 @@ class FacturacionController extends Controller {
                 $filter = "c.IDFactura='0' and c.IDEstado='2' and c.IDCliente='{$filtro['idCliente']}' and c.FechaEntrega>='{$desdeFecha}' and c.FechaEntrega<'{$hastaFecha}' and c.FlagFacturar='1'";
 
                 //COMPRUEBO QUE NO HAYA MAS DE TRES TIPOS DE IVA ENTRE TODOS LOS ALBARANES A FACTURAR
-                $em = new EntityManager("datos" . $_SESSION['emp']);
+                $albaran = new AlbaranesCab();
+                $albaranTabla = $albaran->getDataBaseName() . "." . $albaran->getTableName();
+                $lineas = new AlbaranesLineas();
+                $lineasTabla = $lineas->getDataBaseName() . "." . $lineas->getTableName();
+                $em = new EntityManager($albaran->getConectionName());
                 if (!$em->getDbLink()) {
                     $this->values['errores'] = $em->getError();
                     return $this->listAction();
                 }
 
-                $query = "select l.Iva from {$em->getDataBase()}.albaranes_lineas as l, {$em->getDataBase()}.albaranes_cab as c
+                $query = "select l.Iva from {$lineasTabla} as l, {$albaranTabla} as c
                         where {$filter} and c.IDAlbaran=l.IDAlbaran
                         group by l.Iva";
                 $em->query($query);
@@ -146,12 +157,12 @@ class FacturacionController extends Controller {
                 unset($cliente);
 
                 $query = ($agruparDireccionEntrega) ?
-                    "select c.IDFP,c.IDComercial, sum(c.Total) as Total from albaranes_cab c where $filter GROUP BY c.IDFP, c.IDComercial;" :
-                    "select c.IDFP,c.IDComercial, c.IDDirec, sum(c.Total) as Total from albaranes_cab c where $filter GROUP BY c.IDFP, c.IDComercial, c.IDDirec;";
+                        "select c.IDFP,c.IDComercial, sum(c.Importe) as Importe, sum(Descuento) as Descuento from {$albaranTabla} c where $filter GROUP BY c.IDFP, c.IDComercial;" :
+                        "select c.IDFP,c.IDComercial, c.IDDirec, sum(c.Importe) as Importe, sum(Descuento) as Descuento from {$albaranTabla} c where $filter GROUP BY c.IDFP, c.IDComercial, c.IDDirec;";
                 unset($cliente);
 
                 //AGRUPO LOS ALBARANES POR FORMA DE PAGO, COMERCIAL Y (si procede) DIRECCION DE ENTREGA.
-                $em = new EntityManager("datos" . $_SESSION['emp']);
+                $em = new EntityManager($albaran->getConectionName());
                 $em->query($query);
                 $rows = $em->fetchResult();
                 $em->desConecta();
@@ -161,12 +172,13 @@ class FacturacionController extends Controller {
                     $factura->setIDSucursal($filtro['idSucursal']);
                     $factura->setIDContador($this->request['idContador']);
                     $factura->setNumeroFactura($numeroFactura);
-                    $factura->setIDAgente($_SESSION['USER']['user']['id']);
+                    $factura->setIDAgente($_SESSION['usuarioPortal']['Id']);
                     $factura->setIDComercial($row['IDComercial']);
                     $factura->setFecha($this->request['fecha']);
                     $factura->setIDCliente($filtro['idCliente']);
                     $factura->setCuentaVentas($ctaVentas);
-                    $factura->setClave(md5($numeroFactura));
+                    $factura->setDescuento($row['Descuento']);
+                    $factura->setImporte($row['Importe']);
                     $factura->setIDFP($row['IDFP']);
 
                     $idFactura = $factura->create();
@@ -176,10 +188,10 @@ class FacturacionController extends Controller {
                     if ($idFactura != 0) {
                         // Crear las lineas de factura
                         // No incluyo las lineas de albaran cuyas unidades sean 0
-                        $em = new EntityManager("datos" . $_SESSION['emp']);
-                        $query =  ($agruparDireccionEntrega) ?
-                            "select l.* from albaranes_lineas l, albaranes_cab c where (c.IDAlbaran=l.IDAlbaran) and (c.IDFP='{$row['IDFP']}') and (l.Unidades<>0) and {$filter}" :
-                            "select l.* from albaranes_lineas l, albaranes_cab c where (c.IDAlbaran=l.IDAlbaran) and (c.IDFP='{$row['IDFP']}') and (c.IDDirec='{$row['IDDirec']}') and (l.Unidades<>0) and {$filter}";
+                        $em = new EntityManager($albaran->getConectionName());
+                        $query = ($agruparDireccionEntrega) ?
+                                "select l.* from {$lineasTabla} l, {$albaranTabla} c where (c.IDAlbaran=l.IDAlbaran) and (c.IDFP='{$row['IDFP']}') and (l.Unidades<>0) and {$filter}" :
+                                "select l.* from {$lineasTabla} l, {$albaranTabla} c where (c.IDAlbaran=l.IDAlbaran) and (c.IDFP='{$row['IDFP']}') and (c.IDDirec='{$row['IDDirec']}') and (l.Unidades<>0) and {$filter}";
                         $em->query($query);
                         $lineas = $em->fetchResult();
                         $em->desConecta();
@@ -202,7 +214,7 @@ class FacturacionController extends Controller {
                             $linFactura->setComisionAgente($linea['ComisionAgente']);
                             $linFactura->setComisionMontador($linea['ComisionMontador']);
                             $linFactura->setComisionar($linea['Comisionar']);
-                            $linFactura->setIDAgente($_SESSION['USER']['user']['id']);
+                            $linFactura->setIDAgente($_SESSION['usuarioPortal']['Id']);
                             $linFactura->setIDComercial($linea['IDComercial']);
                             $linFactura->setIDPromocion($linea['IDPromocion']);
                             $linFactura->setAltoAl($linea['AltoAl']);
@@ -217,7 +229,8 @@ class FacturacionController extends Controller {
                                 $lineaAlbaran = new AlbaranesLineas($linea['IDLinea']);
                                 $lineaAlbaran->setIDEstado(3);
                                 $lineaAlbaran->save();
-                            }
+                            } else
+                                print_r($linFactura->getErrores());
                             unset($linFactura);
                         }
 
@@ -231,10 +244,10 @@ class FacturacionController extends Controller {
                         $factura->anotaEnCaja();
 
                         // Actualiza las cabecera del grupo de albaranes
-                        $em = new EntityManager("datos" . $_SESSION['emp']);
-                        $query =  ($agruparDireccionEntrega) ?
-                            "update albaranes_cab c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and ({$filter})" :
-                            "update albaranes_cab c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and (c.IDDirec='{$row['IDDirec']}') and ({$filter})";
+                        $em = new EntityManager($albaran->getConectionName());
+                        $query = ($agruparDireccionEntrega) ?
+                                "update {$albaranTabla} c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and ({$filter})" :
+                                "update {$albaranTabla} c set c.IDFactura='{$idFactura}', c.IDEstado='3' where (c.IDFP='{$row['IDFP']}') and (c.IDDirec='{$row['IDDirec']}') and ({$filter})";
                         $em->query($query);
                         $em->desConecta();
 
@@ -246,9 +259,14 @@ class FacturacionController extends Controller {
                 break;
         }
 
-
         if (($this->request['imprimir'] == 'on') and (count($facturados) > 0)) {
             $this->values['archivo'] = $this->generaPdf('FemitidasCab', $facturados);
+        }
+
+        if (count($facturados) > 0) {
+            $this->values['alertas'][] = "Se han generado las siguientes facturas:";
+            foreach ($facturados as $item)
+                $this->values['alertas'][] = $item;
         }
 
         return $this->listAction();

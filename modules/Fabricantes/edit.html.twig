@@ -6,9 +6,9 @@
 
 {% block mantenimiento %}
 <div class="FormManto">
-    <form name="manto" action="" method="POST">
+    <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="Fabricantes" type="hidden" />
-        <input name="action" value="edit" type="hidden" />
+        <input name="action" id="action_{{values.controller}}" value="edit" type="hidden" />
         <input name="Fabricantes[IDFabricante]" value="{{ values.datos.IDFabricante }}" type="hidden" />
         {% include "_global/comandosSaveDelete.html.twig" %}
 

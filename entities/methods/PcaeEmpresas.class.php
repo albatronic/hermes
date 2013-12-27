@@ -1,77 +1,60 @@
 <?php
 
 /**
- * @author Sergio Perez <sergio.perez@albatronic.com>
- * @copyright INFORMATICA ALBATRONIC SL
- * @date 16.10.2012 23:18:51
- */
-
-/**
- * @orm:Entity(PcaeEmpresas)
+ * Description of Empresas
+ *
+ * @author Sergio Pérez <sergio.perez@albatronic.com>
+ * @copyright Informática ALBATRONIC, SL
+ * @since 04-nov-2011
+ *
  */
 class PcaeEmpresas extends PcaeEmpresasEntity {
 
+    /**
+     * Devuelve la Razon Social
+     * @return string
+     */
     public function __toString() {
-        return $this->getId();
+        return $this->getRazonSocial();
     }
 
     /**
-     * Devuelve un array de objetos \PcaeUsuarios que están
-     * vinculados a las empresa en curso
+     * Devuelve el nombre del fichero jpg que contiene el logo
+     * de la empresa. Con la ruta relativa desde el sitio web.
+     * Si no existe devuelve el logo generico (images/logo.jpg)
      *
-     * @return array Array de objetos \PcaeUsuarios
+     * @return string Ruta completa al logo de la empresa
      */
-    public function getUsuarios() {
+    public function getLogo() {
+        $logo = "docs/docs" . $_SESSION['emp'] . "/images/logo.jpg";
+        if (!file_exists($logo))
+            $logo = "images/logo.jpg";
 
-        $usuarios = array();
-
-        $empUsu = new PcaeEmpresasUsuarios();
-        $rows = $empUsu->cargaCondicion("IdUsuario", "IdEmpresa='{$this->Id}'");
-        unset($empUsu);
-
-        foreach ($rows as $row)
-            $usuarios[] = new PcaeUsuarios($row['IdUsuario']);
-
-        return $usuarios;
+        return $logo;
     }
 
     /**
-     * Devuelve un array de objetos \PcaeProyectos asociados
-     * a la empresa en curso.
-     * 
-     * @return array Array de objetos \PcaeProyectos
+     * Devuelve un array con todas las empresas
+     *
+     * Cada elemento tiene la primarykey y el valor de $column
      */
-    public function getProyectos() {
+    public function fetchAll($column = 'RazonSocial', $default = true) {
+        $this->conecta();
 
-        $proyectos = array();
-
-        $pro = new PcaeProyectos();
-        $rows = $pro->cargaCondicion("Id", "IdEmpresa='{$this->Id}'");
-        unset($pro);
-
-        foreach ($rows as $row)
-            $proyectos[] = new PcaeProyectos($row['Id']);
-
-        return $proyectos;
-    }
-
-    /**
-     * Al crear una empresa, le asigno el usuario SUPER
-     */
-    public function create() {
-        $IdEmpresa = parent::create();
-        
-        if ($IdEmpresa) {
-            $empUsu = new PcaeEmpresasUsuarios();
-            $empUsu->setIdEmpresa($IdEmpresa);
-            $empUsu->setIdUsuario(1);
-            $empUsu->setIdPerfil(1);
-            $empUsu->create();
-            unset($empUsu);
+        if (is_resource($this->_dbLink)) {
+            $query = "SELECT IDEmpresa as Id, $column as Value from {$this->getTableName()} order by $column ASC;";
+            $this->_em->query($query);
+            $rows = $this->_em->fetchResult();
+            $this->_em->desConecta();
+            unset($this->_em);
         }
         
-        return $IdEmpresa;
+        if ($default == TRUE)
+            $rows[] = array('Id' => '', Value => ':: Todas');
+
+        return $rows;
     }
+
 }
 
 ?>

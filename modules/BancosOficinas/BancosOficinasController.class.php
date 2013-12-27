@@ -24,7 +24,11 @@ class BancosOficinasController extends Controller {
         if ($idBanco == '')
             $idBanco = $this->request[2];
 
-        $tabla = $this->form->getDataBaseName() . "." . $this->form->getTable();
+        $oficinas = new BancosOficinas();
+        
+        $tabla = $oficinas->getDataBaseName() . "." . $oficinas->getTableName();
+        unset($oficinas);
+        
         $filtro = $tabla . ".IDBanco='" . $this->request[2] . "'";
 
         $this->values['linkBy']['value'] = $idBanco;

@@ -8,6 +8,9 @@
         {% for title in listado.titles %}
             <td class='Item'>{{ title.title }}</td>
 	{% endfor%}
+        {% if mostrarPublicar == '1' %}
+            <td class='Item'>Publicar</td>
+        {% endif %}
     </tr>
 
     <tbody class='Cuerpo'>
@@ -17,9 +20,9 @@
         {% else %}
             {% set classFila = 'Par' %}
         {% endif %}
-        <tr onclick="location.href='{{app.path}}/{{controller}}/edit/{{objeto.getPrimaryKeyValue()}}'" class='{{classFila}}'>
+        <tr {#onclick="location.href='{{app.path}}/{{controller}}/edit/{{objeto.getPrimaryKeyMD5()}}'"#} class='{{classFila}}'>
             <td>
-                <a href='{{app.path}}/{{controller}}/Edit/{{objeto.getPrimaryKeyValue()}}' title='Editar ...'>
+                <a href='{{app.path}}/{{controller}}/Edit/{{objeto.getPrimaryKeyMD5()}}' title='Editar ...'>
                     <img src="{{app.path}}/images/botoneditar.png" width="16px" height="16px" />
                 <a>
             </td>
@@ -39,6 +42,12 @@
             {% endif%}
             </td>
             {% endfor %}
+            
+            {% if mostrarPublicar == '1' %}
+                <td class='Item' align="center">
+                    {{ macro.actualizaColumna(controller,objeto.getPrimaryKeyValue,'Publish',objeto.Publish.IDTipo,'Publicar/Despublicar')}}  
+                </td>
+            {% endif %}            
 	</tr>
 	{% else %}
 	<tr><td colspan='8'>No hay información que cumpla esos criterios</td></tr>

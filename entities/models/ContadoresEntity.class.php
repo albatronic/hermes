@@ -11,7 +11,7 @@
 /**
  * @orm:Entity(contadores)
  */
-class ContadoresEntity extends Entity {
+class ContadoresEntity extends EntityComunes {
 
     /**
      * @orm:Id
@@ -51,12 +51,12 @@ class ContadoresEntity extends Entity {
      * Nombre de la conexion a la BD
      * @var string
      */
-    protected $_conectionName = 'datos#';
+    protected $_conectionName = '';
     /**
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'contadores';
+    protected $_tableName = 'ErpContadores';
     /**
      * Nombre de la PrimaryKey
      * @var string

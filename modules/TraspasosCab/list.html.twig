@@ -21,14 +21,19 @@
 
             <tbody class="Cuerpo">
             {% for key,objeto in values.listado.data %}
-            <tr class="ItemListado">
+                {% if (key is even) %}
+                    {% set classFila = 'Impar' %}
+                {% else %}
+                    {% set classFila = 'Par' %}
+                {% endif %}
+            <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.PrimaryKeyMD5}}'" class='{{classFila}}' style="cursor: pointer;">
                 <td>
-                    <a href='{{app.path}}/TraspasosCab/Edit/{{objeto.IDTraspaso}}' title='Editar ...'>
+                    <a href='{{app.path}}/TraspasosCab/Edit/{{objeto.PrimaryKeyMD5}}' title='Editar ...'>
                         <img src="{{app.path}}/images/botoneditar.png" width="16px" height="16px" />
                     </a>
                 </td>
                 <td align="left">
-                    <a href='{{app.path}}/TraspasosCab/Edit/{{objeto.IDTraspaso}}' title='Editar ...'>{{objeto.NumeroTraspaso}}</a>
+                    <a href='{{app.path}}/TraspasosCab/Edit/{{objeto.PrimaryKeyMD5}}' title='Editar ...'>{{objeto.NumeroTraspaso}}</a>
                 </td>
                 <td>{{objeto.IDAlmacenOrigen.Nombre|slice(0,20)}}</td>
                 <td>{{objeto.IDAlmacenDestino.Nombre|slice(0,20)}}</td>

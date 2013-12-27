@@ -17,10 +17,10 @@ class Zonas extends ZonasEntity {
     /**
      * Fuerzo la sucursal a la actual
      */
-    protected function load() {
+    protected function load($showDeleted = FALSE) {
         $this->setIDSucursal($_SESSION['suc']);
 
-        parent::load();
+        parent::load($showDeleted);
     }
 
     /**
@@ -32,7 +32,7 @@ class Zonas extends ZonasEntity {
      * @param string $column
      * @return string
      */
-    public function fetchAll($idSucursal='', $column='Zona') {
+    public function fetchAll($idSucursal = '', $column = 'Zona', $defecto = true) {
         $this->conecta();
 
         if ($idSucursal == '')
@@ -46,7 +46,8 @@ class Zonas extends ZonasEntity {
             $this->_em->desConecta();
             unset($this->_em);
         }
-        $rows[] = array('Id' => '', Value => ':: Indique un Valor');
+        if ($defecto)
+            $rows[] = array('Id' => '', Value => ':: Indique un Valor');
         return $rows;
     }
 

@@ -30,17 +30,15 @@ class FemitidasCab extends FemitidasCabEntity {
             if ($this->borraVctos()) {
                 if ($this->borraLineas()) {
                     // Actualiza la cabecera del albaran
-                    $this->conecta();
-                    if (is_resource($this->_dbLink)) {
-                        $query = "UPDATE albaranes_cab SET IDFactura='0', IDEstado='2' WHERE IDFactura='{$this->IDFactura}'";
-                        if (!$this->_em->query($query))
-                            $this->_errores[] = $this->_em->getError();
-                    }
+                    $albaranes = new AlbaranesCab();
+                    $albaranes->queryUpdate(array("IDFactura" => 0, "IDEstado" => 2), "IDFactura='{$this->IDFactura}'");
+                    unset($albaranes);
                     // Borrar la cabecera de la factura
                     parent::erase();
                 }
             }
-        } else
+        }
+        else
             $this->_errores[] = "No se puede borrar. Está traspasada a contabilidad";
 
         return (count($this->_errores) == 0);
@@ -53,7 +51,7 @@ class FemitidasCab extends FemitidasCabEntity {
      * @param integer $idEstado El estado de los recibos (opcional)
      * @return array Objetos recibos de la factura
      */
-    public function getRecibos($idEstado='') {
+    public function getRecibos($idEstado = '') {
         $recibos = array();
 
         $filtro = "IDFactura='{$this->IDFactura}'";
@@ -77,7 +75,7 @@ class FemitidasCab extends FemitidasCabEntity {
      * @param integer $idEstado El estado de los recibos (opcional)
      * @return real La suma de los importes de los recibos
      */
-    public function getSumaRecibos($idEstado='') {
+    public function getSumaRecibos($idEstado = '') {
 
         $suma = 0.0;
 
@@ -86,9 +84,9 @@ class FemitidasCab extends FemitidasCabEntity {
             $filtro .= " AND IDEstado='{$idEstado}'";
 
         $recibo = new RecibosClientes();
-        $rows = $recibo->cargaCondicion("Sum(Importe) as Suma",$filtro);
+        $rows = $recibo->cargaCondicion("Sum(Importe) as Suma", $filtro);
         $suma = $rows[0]['Suma'];
-        
+
         return $suma;
     }
 
@@ -103,23 +101,17 @@ class FemitidasCab extends FemitidasCabEntity {
         //de cliente se aplique indebidamente
         $cliente = new Clientes($this->IDCliente);
         if ($cliente->getIva()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "UPDATE {$this->_dataBaseName}.femitidas_lineas SET `Iva`='0', `Recargo`='0' WHERE `IDFactura`= '{$this->IDFactura}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new FemitidasLineas();
+            $lineas->queryUpdate(array("Iva" => 0, "Recargo" => 0), "`IDFactura`= '{$this->IDFactura}'");
+            unset($lineas);
         }
         //Si el cliente no está sujeto a recargo de equivalencia
         //lo pongo a cero en las líneas para evitar que por cambio
         //de cliente se aplique indebidamente
         elseif ($cliente->getRecargoEqu()->getIDTipo() == '0') {
-            $this->conecta();
-            if (is_resource($this->_dbLink)) {
-                $query = "update femitidas_lineas set `Recargo`='0' where `IDFactura` = '{$this->IDFactura}'";
-                $this->_em->query($query);
-            }
-            $this->_em->desConecta();
+            $lineas = new FemitidasLineas();
+            $lineas->queryUpdate(array("Recargo" => 0), "`IDFactura`= '{$this->IDFactura}'");
+            unset($lineas);
         }
         unset($cliente);
 
@@ -132,12 +124,19 @@ class FemitidasCab extends FemitidasCabEntity {
         //Calcular los totales, desglosados por tipo de iva.
         $this->conecta();
         if (is_resource($this->_dbLink)) {
-            $query = "select sum(importe) as Bruto,sum(ImporteCosto) as Costo from {$this->_dataBaseName}.femitidas_lineas where (IDFactura='" . $this->IDFactura . "')";
+            $lineas = new FemitidasLineas();
+            $tableLineas = "{$lineas->getDataBaseName()}.{$lineas->getTableName()}";
+            $articulos = new Articulos();
+            $tableArticulos = "{$articulos->getDataBaseName()}.{$articulos->getTableName()}";
+            unset($lineas);
+            unset($articulos);
+
+            $query = "select sum(Importe) as Bruto,sum(ImporteCosto) as Costo from {$tableLineas} where (IDFactura='" . $this->getIDFactura() . "')";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $bruto = $rows[0]['Bruto'];
 
-            $query = "select Iva,Recargo, sum(Importe) as Importe from {$this->_dataBaseName}.femitidas_lineas where (IDFactura='" . $this->IDFactura . "') group by Iva,Recargo order by Iva";
+            $query = "select Iva,Recargo, sum(Importe) as Importe from {$tableLineas} where (IDFactura='" . $this->getIDFactura() . "') group by Iva,Recargo order by Iva";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $totbases = 0;
@@ -181,13 +180,14 @@ class FemitidasCab extends FemitidasCabEntity {
                     $columna = "MtsAl";
                     break;
             }
-            $em = new EntityManager("datos" . $_SESSION['emp']);
-            $query = "select sum(articulos.Peso*femitidas_lineas.{$columna}) as Peso,
-                        sum(articulos.Volumen*femitidas_lineas.{$columna}) as Volumen,
-                        sum(Unidades) as Bultos from articulos,femitidas_lineas
-                      where (femitidas_lineas.IDArticulo=articulos.IDArticulo)
-                        and (articulos.Inventario='1')
-                        and (femitidas_lineas.IDFactura='{$this->IDFactura}')";
+            $em = new EntityManager($this->getConectionName());
+            $query = "select sum(a.Peso*l.{$columna}) as Peso,
+                        sum(aVolumen*l.{$columna}) as Volumen,
+                        sum(Unidades) as Bultos 
+                      from {$tableArticulos} as a,{$tableLineas} as l
+                      where (l.IDArticulo=a.IDArticulo)
+                        and (a.Inventario='1')
+                        and (l.IDFactura='{$this->IDFactura}')";
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -239,7 +239,7 @@ class FemitidasCab extends FemitidasCabEntity {
         if ($tieneiva)
             $asiento = 0;
         else
-            $asiento=999999;
+            $asiento = 999999;
 
         $formaPago = $factura->getIDFP();
         $nvctos = $formaPago->getNumeroVctos();
@@ -281,6 +281,7 @@ class FemitidasCab extends FemitidasCabEntity {
                 $recibo->setIDSucursal($factura->getIDSucursal()->getIDSucursal());
                 $recibo->setIDFactura($factura->getIDFactura());
                 $recibo->setIDCliente($factura->getIDCliente()->getIDCliente());
+                $recibo->setIDComercial($factura->getIDComercial()->getIDAgente());
                 $recibo->setFecha($factura->getFecha());
                 $recibo->setVencimiento($fVcto);
                 $recibo->setImporte($importeRecibo);
@@ -288,7 +289,11 @@ class FemitidasCab extends FemitidasCabEntity {
                 $recibo->setConcepto("Cobro Factura");
                 $recibo->setAsiento($asiento);
                 $recibo->setIDEstado($formaPago->getEstadoRecibo()->getIDTipo());
-                $recibo->setIDRemesa('');
+                // Si el recibo se crea cobrado, se pone la fecha de vencimiento en la remesa
+                if ($formaPago->getEstadoRecibo()->getIDTipo() == '6')
+                    $recibo->setIDRemesa(str_replace("-", "", $fVcto));
+                else
+                    $recibo->setIDRemesa('');
                 $recibo->setRemesar(1);
                 $recibo->setCContable($formaPago->getCContable());
                 $recibo->create();
@@ -309,17 +314,11 @@ class FemitidasCab extends FemitidasCabEntity {
      * @return boolean
      */
     public function borraVctos() {
-        $ok = false;
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "delete from recibos_clientes where IDFactura='{$this->IDFactura}' and Asiento='0'";
-            if (!$this->_em->query($query))
-                $this->_errores[] = $this->_em->getError();
-            else
-                $ok = true;
-            $this->_em->desConecta();
-        }
+        $recibos = new RecibosClientes();
+        $recibos->queryDelete("IDFactura='{$this->IDFactura}' and Asiento='0'");
+        $ok = (count($recibos->getErrores()) == 0);
+        unset($recibos);
 
         return $ok;
     }
@@ -353,13 +352,12 @@ class FemitidasCab extends FemitidasCabEntity {
      * Realiza el apunte de caja si procede según la forma de pago
      */
     public function anotaEnCaja() {
-
         if ($this->getIDFP()->getAnotarEnCaja()->getIDTipo() == '1') {
             $arqueo = new CajaArqueos();
             $arqueo->anotaEnCaja($this);
         }
     }
-    
+
     /**
      * Calcula el beneficio de una factura
      *
@@ -375,31 +373,23 @@ class FemitidasCab extends FemitidasCabEntity {
      * @param integer Id de la factura
      * @return array
      */
-    public function getBeneficio($idFactura='') {
+    public function getBeneficio($idFactura = '') {
         if ($idFactura == '')
             $idFactura = $this->getIDFactura();
 
-        $beneficio = array();
+        $lineas = new FemitidasLineas();
+        $rows = $lineas->cargaCondicion("sum(ImporteCosto) as Costo", "IDFactura='{$idFactura}'");
+        unset($lineas);
 
-        $this->conecta();
-        if (is_resource($this->_dbLink)) {
-            $query = "select sum(ImporteCosto) as Costo from {$this->_dataBaseName}.femitidas_lineas where IDFactura='{$idFactura}';";
-            if ($this->_em->query($query)) {
-                $rows = $this->_em->fetchResult();
-                $beneficio = $rows[0];
-            } else {
-                $this->_errores[] = $this->_em->getError();
-            }
-            $this->_em->desConecta();
-        } else {
-            $this->_errores[] = $this->_em->getError();
-        }
-
-        $beneficio['Venta'] = $this->TotalBases;
-        $beneficio['Beneficio'] = $beneficio['Venta'] - $beneficio['Costo'];
+        $beneficio = array(
+            'Venta' => $this->TotalBases,
+            'Costo' => $rows[0]['Costo'],
+            'Beneficio' => $this->TotalBases - $rows[0]['Costo'],
+        );
 
         return $beneficio;
-    }    
+    }
+
 }
 
 ?>

@@ -33,51 +33,56 @@ class RutasVentasClientesController extends Controller {
 
         // Busco los clientes del comercial indicado y sucursal actual
         // que aun no estén asignados al día solicitado
-        $em = new EntityManager("datos" . $_SESSION['emp']);
-        if ($em->getDbLink()) {
-            $query = "SELECT IDCliente as Id, RazonSocial as Value FROM clientes
-                        WHERE IDComercial='{$idComercial}'
+        $cliente = new Clientes();
+        $rutasVentas = new RutasVentas();
+        
+        $filtro = "IDComercial='{$idComercial}'
                         AND IDSucursal='{$_SESSION['suc']}'
                         AND IDCliente NOT IN
-                            (SELECT IDCliente FROM rutas_ventas
-                            WHERE IDComercial='{$idComercial}' AND Dia='{$dia}')
-                        ORDER BY RazonSocial ASC";
-            $em->query($query);
-            $rows = $em->fetchResult();
-            $em->desConecta();
-        }
-        unset($em);
+                            (SELECT IDCliente FROM {$rutasVentas->getDataBaseName()}.{$rutasVentas->getTableName()}
+                            WHERE IDComercial='{$idComercial}' AND Dia='{$dia}')";
+        $clientes = $cliente->cargaCondicion(
+                "IDCliente as Id, RazonSocial as Value",
+                $filtro,
+                "RazonSocial ASC");
 
-        $this->values['listado']['clientes'] = $rows;
+        $this->values['listado']['clientes'] = $clientes;
         array_unshift($this->values['listado']['clientes'], array('Id' => '', 'Value' => ':: Indique un cliente'));
 
         // Busco las zonas de los clientes del comercial indicado y sucursal actual
         // que aun no estén asignados al día solicitado
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $zona = new Zonas();
+        $em = new EntityManager($cliente->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT DISTINCT t1.IDZona as Id, t2.Zona as Value FROM clientes as t1, zonas as t2
+            $query = "SELECT DISTINCT t1.IDZona as Id, t2.Zona as Value 
+                        FROM 
+                            {$cliente->getDataBaseName()}.{$cliente->getTableName()} as t1, 
+                            {$zona->getDataBaseName()}.{$zona->getTableName()} as t2
                         WHERE t1.IDZona=t2.IDZona
                         AND t1.IDComercial='{$idComercial}'
                         AND t1.IDSucursal='{$_SESSION['suc']}'
                         AND t1.IDCliente NOT IN
-                            (SELECT IDCliente FROM rutas_ventas
+                            (SELECT IDCliente FROM {$rutasVentas->getDataBaseName()}.{$rutasVentas->getTableName()}
                             WHERE IDComercial='{$idComercial}' AND Dia='{$dia}')
                         ORDER BY t2.Zona ASC";
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
         }
-        unset($em);
 
+        
         $this->values['listado']['zonas'] = $rows;
         array_unshift($this->values['listado']['zonas'], array('Id' => '', 'Value' => ':: Indique una Zona'));
         //-----------------------------------------------
         // Lleno los clientes asignados al comercial y día
         // ordenados por Zona
         // -----------------------------------------------
-        $em = new EntityManager("datos" . $_SESSION['emp']);
+        $em = new EntityManager($cliente->getConectionName());
         if ($em->getDbLink()) {
-            $query = "SELECT t1.Id FROM rutas_ventas as t1, clientes as t2
+            $query = "SELECT t1.Id 
+                        FROM 
+                            {$rutasVentas->getDataBaseName()}.{$rutasVentas->getTableName()} as t1,
+                            {$cliente->getDataBaseName()}.{$cliente->getTableName()} as t2
                         WHERE t1.IDCliente=t2.IDCliente
                         AND t2.IDSucursal='{$_SESSION['suc']}'
                         AND t1.IDComercial='{$idComercial}'
@@ -88,7 +93,11 @@ class RutasVentasClientesController extends Controller {
             $em->desConecta();
         }
         unset($em);
-
+        unset($em);
+        unset($cliente);
+        unset($zona);
+        unset($rutasVentas);
+        
         foreach ($rows as $row) {
             $lineas[] = new $this->parentEntity($row['Id']);
         }
@@ -113,7 +122,7 @@ class RutasVentasClientesController extends Controller {
      * @return <type>
      */
     public function newAction() {
-        if ($this->values['permisos']['I']) {
+        if ($this->values['permisos']['permisosModulo']['IN']) {
 
             switch ($this->request['accion']) {
                 case 'cliente': //AÑADIR UN CLIENTE NUEVO
@@ -160,7 +169,7 @@ class RutasVentasClientesController extends Controller {
      * @return <type>
      */
     public function cambiarOrdenZonaAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $datos = new $this->parentEntity($this->request['Id']);
             $rows = $datos->cargaCondicion("Id", "IDZona='{$datos->getIDZona()->getIDZona()}'");
             foreach ($rows as $row) {
@@ -180,7 +189,7 @@ class RutasVentasClientesController extends Controller {
      * @return <type>
      */
     public function cambiarOrdenClienteAction() {
-        if ($this->values['permisos']['A']) {
+        if ($this->values['permisos']['permisosModulo']['UP']) {
             $datos = new $this->parentEntity($this->request['Id']);
             $datos->setOrdenCliente($this->request['OrdenCliente']);
             $datos->save();
@@ -195,15 +204,17 @@ class RutasVentasClientesController extends Controller {
      * @return <type>
      */
     public function borrarZonaAction() {
-        if ($this->values['permisos']['B']) {
+        if ($this->values['permisos']['permisosModulo']['DE']) {
             $datos = new $this->parentEntity($this->request['Id']);
 
-            $em = new EntityManager("datos" . $_SESSION['emp']);
+            $rutasVentas = new RutasVentas();
+            $em = new EntityManager($rutasVentas->getConectionName());
             if ($em->getDbLink()) {
-                $em->query("DELETE FROM rutas_ventas WHERE IDZona='{$datos->getIDZona()->getIDZona()}' and IDComercial='{$this->request['IDComercial']}' and Dia='{$this->request['dia']}'");
+                $em->query("DELETE FROM {$rutasVentas->getDataBaseName()}.{$rutasVentas->getTableName()} WHERE IDZona='{$datos->getIDZona()->getIDZona()}' and IDComercial='{$this->request['IDComercial']}' and Dia='{$this->request['dia']}'");
                 $em->desConecta();
             }
             unset($em);
+            unset($rutasVentas);
 
             return $this->listAction($this->request['IDComercial'], $this->request['dia']);
         } else {
@@ -216,7 +227,7 @@ class RutasVentasClientesController extends Controller {
      * @return <type>
      */
     public function borrarClienteAction() {
-        if ($this->values['permisos']['B']) {
+        if ($this->values['permisos']['permisosModulo']['DE']) {
             $datos = new $this->parentEntity($this->request['Id']);
             $datos->erase();
             return $this->listAction($this->request['IDComercial'], $this->request['dia']);

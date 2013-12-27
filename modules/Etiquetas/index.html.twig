@@ -5,12 +5,16 @@
 {% block title parent() ~ " - " ~ values.titulo %}
 
 {% block content %}
-        {% include '_global/TituloGenerico.html.twig' with {'controller':  values.controller, 'linkValue': values.linkBy.value} %}
+	<div class='Titulo'>{{ values.titulo }}
+	{% block navegador %}
+	{% endblock %}
+        {% include '_global/comandosHelp.html.twig' with {'controller':values.controller} %}
+        </div>
 
 	{% block filtro %}
-        {% if values.permisos['I'] %}
+            {% if values.permisos.permisosModulo['CO'] %}
 		{% include 'Etiquetas/filtro.html.twig' with {'filter':values.listado.filter} %}
-        {%endif%}
+            {% endif %}
 	{% endblock %}
 
         <div id="div_listado">
@@ -18,6 +22,4 @@
 	{% endblock %}
         </div>
 
-	{% block mantenimiento %}
-	{% endblock %}
 {% endblock %}
