@@ -44,19 +44,19 @@ spl_autoload_register(array('Autoloader', 'loadClass'));
 $parametros = $_REQUEST['parametros'];
 $accion = $parametros['accion'];
 $datos = $parametros['datos'];
+$pvpConIva = $parametros['pvpConIva'];
 
 
 switch ($accion) {
-    case 'crear':
-        // El precio viene con iva, calculo la base
-        $articulo = new Articulos($datos['IDArticulo']);
-        $iva = $articulo->getIDIva()->getIva();
-        $precioSinIva = $datos['Precio']*100/(100+$iva);
-        $datos['Precio'] = $precioSinIva;        
-        unset($articulo);
+    case 'crear':     
+        if ($pvpConIva == '1') {
+            // El precio viene con iva, calculo la base
+            $datos['Precio'] = $datos['Precio'] * 100 / (100 + $datos['Iva']);
+        }
 
         $linea = new AlbaranesLineas();
-        $linea->bind($datos);$linea->setIva("21");$linea->setRecargo("0");
+        $linea->bind($datos);
+        $linea->setRecargo("0");
         if ($linea->valida(array())) {
             $id = $linea->create();
             if (!$id) {
@@ -67,7 +67,7 @@ switch ($accion) {
             }
         }
         break;
-        
+
     case 'borrar':
         $linea = new AlbaranesLineas($datos['IDLinea']);
         if (!$linea->erase()) {
@@ -77,15 +77,13 @@ switch ($accion) {
             $alertas = $linea->getAlertas();
         }
         break;
-        
+
     case 'guardar':
-        // El precio viene con iva, calculo la base
-        $articulo = new Articulos($datos['IDArticulo']);
-        $iva = $articulo->getIDIva()->getIva();
-        $precioSinIva = $datos['Precio']*100/(100+$iva);
-        $datos['Precio'] = $precioSinIva;
-        unset($articulo); 
-        
+        if ($pvpConIva == '1') {
+            // El precio viene con iva, calculo la base
+            $datos['Precio'] = $datos['Precio'] * 100 / (100 + $datos['Iva']);
+        }        
+
         $linea = new AlbaranesLineas($datos['IDLinea']);
         $linea->bind($datos);
         if ($linea->valida(array())) {
@@ -97,14 +95,14 @@ switch ($accion) {
             }
         }
         break;
-        
+
     case 'cierre':
         include_once '../modules/ExpedirLineas/ExpedirLineasController.class.php';
-        
+
         $albaran = new AlbaranesCab($datos['IDAlbaran']);
         $albaran->confirma();
         $expedir = new ExpedirLineasController();
-        $expedir->cargaLineasAlbaran($datos['IDAlbaran'],0);
+        $expedir->cargaLineasAlbaran($datos['IDAlbaran'], 0);
         //$albaran->expide();
         break;
 }

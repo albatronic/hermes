@@ -24,7 +24,7 @@
             <a href="#general">{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Sección{%endif%}</a>
             {{ macro.publicar(atributos.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}
         </li>     
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li>
             <a href="#fieldsComunes">Más detalles...</a>
         </li>        
@@ -46,7 +46,7 @@
         {{ macro.radio(atributos.ModoMostrarContenidos,'EtiquetaMedia',values.controller ~ '[ModoMostrarContenidos]',values.controller ~ '_ModoMostrarContenidos',datos.ModoMostrarContenidos.IDTipo,datos.ModoMostrarContenidos.fetchAll(Descripcion,0),'chzn-radio','22')}}
         {{ macro.select(atributos.CriterioOrdenContenidosHijos,'EtiquetaMedia',values.controller ~ '[CriterioOrdenContenidosHijos]',values.controller ~ '_CriterioOrdenContenidosHijos',200,datos.CriterioOrdenContenidosHijos.IDTipo,datos.CriterioOrdenContenidosHijos.fetchAll(none,0),'chzn-select')}}
         {% include '_global/metaDatos.html.twig' %}         
-        {% if values.varEnvMod.especificas.numMenus > 0  or user.IdPerfil.Id == 1 %}
+        {% if values.varEnvMod.especificas.numMenus > 0  or user.IDPerfil.IDPerfil == 1 %}
             {# 
                 Solapas de MOSTRAR EN MENU N 
 

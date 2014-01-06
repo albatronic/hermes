@@ -14,7 +14,7 @@
             <li><a href="#tabs-3" onclick="cargaContactos('tabs-3');">Contactos</a></li>
             <li><a href="#tabs-4">Varios</a></li>
             <li><a href="#tabs-5" onclick="cargaVencimientos('tabs-5');">Vencimientos</a></li>
-            {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+            {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
             <li>
                 <a href="#fieldsComunes" onclick='$( "#solapaActiva" ).val("fieldsComunes");'>Más detalles...</a>
             </li>        

@@ -4,7 +4,7 @@
       title="Ver/Ocultar servicios de esta familia" 
       onclick="switchDisplay('familiasDe_{{familias.id}}');">
     {{familias.titulo}} ({{ familias.nServicios}})
-    <a href="{{app.path}}/{{values.controller}}/de/ServFamilias/IdFamilia/{{key}}" alt="Añadir servicio" title="Añadir servicio"><img src="{{app.path}}/images/detalle.png"/></a>        
+    <a href="{{app.path}}/{{values.controller}}/de/ServFamilias/IdFamilia/{{key}}" alt="Añadir servicio" title="Añadir servicio de {{familias.titulo}}"><img src="{{app.path}}/images/detalle.png"/></a>        
 </span>
 
 <div id='familiasDe_{{familias.id}}' style="display: none;">

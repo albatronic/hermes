@@ -674,7 +674,7 @@ ServFamilias:
       #aditional_filter: { order: 25, caption: CodigoAppAsociada, entity: CpanAplicaciones, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: YES, type: string, length: '15', min: null, max: null, message: 'Valor Requerido' }
     IdAlbumExterno:
-      title: IdAlbumExterno
+      title: 'Álbum asociado'
       filter: NO
       list: NO
       visible: true
@@ -685,7 +685,7 @@ ServFamilias:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IdSliderAsociado:
-      title: IdSliderAsociado
+      title: 'Slider asociado'
       filter: NO
       list: NO
       visible: true
@@ -696,7 +696,7 @@ ServFamilias:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IdSeccionEnlaces:
-      title: IdSeccionEnlaces
+      title: 'Sección de enlaces asociada'
       filter: NO
       list: NO
       visible: true
@@ -707,7 +707,7 @@ ServFamilias:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IdSeccionVideos:
-      title: IdSeccionVideos
+      title: 'Sección de vídeos asociada'
       filter: NO
       list: NO
       visible: true

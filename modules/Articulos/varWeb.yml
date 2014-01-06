@@ -33,6 +33,17 @@ NumArticulosListado:
     - {'Id':'0','Value':'Todos'}
   default: '8'
   
+NumArticulosRelacionados:
+  caption: Número de artículos relacionados a mostrar
+  values:
+    - {'Id':'0','Value':'0'} 
+    - {'Id':'2','Value':'2'} 
+    - {'Id':'3','Value':'3'} 
+    - {'Id':'4','Value':'4'} 
+    - {'Id':'5','Value':'5'}
+    - {'Id':'10','Value':'10'}
+  default: '0'
+  
 censurarArticulos:
   caption: ¿Censurar productos subidos por los usuarios?
   values:
@@ -49,6 +60,13 @@ notificarCreacionArticulo:
   
 notificarModificacionArticulo:
   caption: ¿Notificar al webmaster cuando se modifica un artículo?
+  values:
+    - {'Id':'0','Value':'No'} 
+    - {'Id':'1','Value':'Sí'}
+  default: '0'   
+  
+permitirComentariosWeb:
+  caption: ¿Permitir que se hagan comentarios en la web?
   values:
     - {'Id':'0','Value':'No'} 
     - {'Id':'1','Value':'Sí'}

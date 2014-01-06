@@ -255,16 +255,7 @@ class EntityManager {
         $limit = ($limit != '') ? "LIMIT {$limit}" : "";
 
         // Condición de vigencia
-        $ahora = date("Y-m-d H:i:s");
-        $filtro = "({$tp}.Deleted='0') AND ({$tp}.Publish='1') AND ({$tp}.ActiveFrom<='{$ahora}') AND ( ({$tp}.ActiveTo>='{$ahora}') or ({$tp}.ActiveTo='0000-00-00 00:00:00') )";
-
-        // Condición de privacidad
-        if (!$_SESSION['usuarioWeb']['Id']) {
-            $filtro .= " AND ( ({$tp}.Privacy='0') OR ({$tp}.Privacy='2') )";
-        } else {
-            $idPerfil = $_SESSION['usuarioWeb']['IdPerfil'];
-            $filtro .= " AND ( ({$tp}.Privacy='2') OR ({$tp}.Privacy='1') OR LOCATE('{$idPerfil}',{$tp}.AccessProfileListWeb) )";
-        }
+        $filtro = "({$tp}.Deleted='0')";
 
         if ($where != '') {
             $filtro .= " AND {$where}";

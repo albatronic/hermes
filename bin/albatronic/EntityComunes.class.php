@@ -1019,7 +1019,9 @@ class EntityComunes extends Entity {
 
         if (is_array($objetoPerfiles)) {
             foreach ($cpanPerfiles as $key => $perfil) {
-                $cpanPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+                if (is_array($objetoPerfiles['perfiles'])) {
+                    $cpanPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
+                }
             }
         }
 
@@ -1039,7 +1041,7 @@ class EntityComunes extends Entity {
                 $webPerfiles[$key]['Valor'] = array_search($perfil['Id'], $objetoPerfiles['perfiles']);
             }
         }
-        
+
         return $webPerfiles;
     }
 

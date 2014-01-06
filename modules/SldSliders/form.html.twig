@@ -3,7 +3,7 @@
   Document : modules\SldSliders\fields.html.twig
 
   author: Sergio Pérez <sergio.perez@albatronic.com>
-  copyright: INFORMATICA ALBATRONIC SL∫
+  copyright: INFORMATICA ALBATRONIC SL
   date 10.12.2012 17:38:34
 #}
 {% set atributos = values.atributos %}
@@ -19,7 +19,7 @@
             {{ macro.publicar(values.varEnvMod.columns.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}
         </li>
            
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li>
             <a href="#fieldsComunes">Más detalles...</a>
         </li>        
@@ -65,6 +65,7 @@
         {# macro.input(atributos.Entidad,'Etiqueta','text',values.controller ~ '[Entidad]',values.controller ~ '_Entidad',datos.Entidad,'255','CampoTextoLargo','7') #}
         {# macro.input(atributos.IdEntidad,'Etiqueta','text',values.controller ~ '[IdEntidad]',values.controller ~ '_IdEntidad',datos.IdEntidad,'11','CampoImporte','8') #}
         {% if datos.primaryKeyMD5 %}
+            <div style="clear:both;"></div>
             {{ macro.labelPopup('Click aquí para Enlazar con...', app.path ~ '/'  ~ values.controller ~ '/enlazar/' ~ datos.primaryKeyMD5,datos.objetoEnlazado,600) }}
         {% endif %}
             

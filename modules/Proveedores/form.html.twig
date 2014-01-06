@@ -15,7 +15,7 @@
             <a href="#vctos" onclick='cargaVencimientos("vctos");'>Vencimientos</a>
         </li>
         {% endif %}
-        {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfil == '1') and (datos.PrimaryKeyValue ) %}            
+        {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfilPerfil == '1') and (datos.PrimaryKeyValue ) %}            
         <li><a href="#divDocs" id="docs">Docs ({{datos.getNumberOfDocuments('document')}})</a></li>
         {% endif %}  
     </ul>
@@ -48,7 +48,7 @@
     {% if datos.PrimaryKeyValue %}
         <div id="vctos"></div>
 
-        {% if values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfil == '1' %}              
+        {% if values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfilPerfil == '1' %}              
         <div id="divDocs"></div>
         {% endif %}
     {% endif %}    

@@ -35,7 +35,7 @@
         {% if datos.PrimaryKeyValue and datos.BelongsTo.PrimaryKeyValue == 0 %}
         <li><a href="#divCombinaciones" id="combinaciones">Combinaciones</a></li>  
         {% endif %}          
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li>
             <a href="#fieldsComunes">Más detalles...</a>
         </li>        
@@ -88,9 +88,6 @@
         </div>
             
         <div style="float: left; width: 47%;">
-        {% if values.varEnvPro.shop.url %}
-            <a href="{{values.varEnvPro.shop.url}}{{datos.UrlFriendly}}" target="_blank">Ver página</a>
-        {% endif %}
         {% include '_global/metaDatos.html.twig' %}
                 
         {% if (datos.PrimaryKeyValue > 0) %}

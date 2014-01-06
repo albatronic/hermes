@@ -10,7 +10,10 @@
 include_once 'modules/AlbaranesCab/AlbaranesCabController.class.php';
 
 class TpvController extends AlbaranesCabController {
-
+    
+    protected $entity = "Tpv";
+    protected $parentEntity = "";
+    
     public function IndexAction() {
 
         $albaran = new AlbaranesCab();
@@ -81,10 +84,6 @@ class TpvController extends AlbaranesCabController {
             $fav = new FavoritosTpv();
             $this->values['favoritos'] = $fav->cargaCondicion("Id,IDArticulo,Descripcion","IDTpv='{$_SESSION['tpv']}'","SortOrder ASC");
             unset($fav);
-            
-            // Cargo la categorias de productos
-            $cat = new Familias();
-            $this->values['categorias'] = $cat->getFamiliasTpv();
 
             $this->values['albaran'] = $albaran;
             $this->values['lineas'] = $lineas;

@@ -14,7 +14,7 @@ class ServFamiliasController extends Controller {
     protected $parentEntity = "";
 
     public function IndexAction() {
-        return parent::newAction();
+        return parent::listAction();
     }
 
 }

@@ -13,6 +13,7 @@
                 <td class='Item'>Familia</td>
                 <td class='Item'>Publicar Web</td>
                 <td class='Item'>Mostrar en Portada Web</td>
+                <td class='Item'>Mostrar en Tpv</td>
             </tr>
 
             <tbody class='Cuerpo'>
@@ -34,6 +35,9 @@
                 </td>
                 <td class='Item' align="center">
                     {{ macro.actualizaColumna(values.controller,objeto.getPrimaryKeyValue,'MostrarPortada',objeto.MostrarPortada.IDTipo,'Mostrar en la portada de la web')}}  
+                </td>
+                <td class='Item' align="center">
+                    {{ macro.actualizaColumna(values.controller,objeto.getPrimaryKeyValue,'MostrarEnTpv',objeto.MostrarEnTpv.IDTipo,'Mostrar en el tpv')}}  
                 </td>
             </tr>
             {% else %}

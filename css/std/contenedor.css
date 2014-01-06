@@ -462,3 +462,14 @@ A.navabajo:HOVER{
     -moz-border-radius: 7px;
     -webkit-border-radius: 7px;     
 }
+
+.listaOrdenh3 {
+    text-align: center;
+    padding: 10px;
+}
+.listaOrdenli {
+    padding: 3px;
+    cursor: pointer;
+    border: 1px solid white;
+    font-size: 12px;
+}

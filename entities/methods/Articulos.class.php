@@ -87,7 +87,7 @@ class Articulos extends ArticulosEntity {
             $reglasNuevas = $reglas->getReglasArticulo($this->IDArticulo);
             $diferenciaReglas1 = array_diff($reglasAntes, $reglasNuevas);
             $diferenciaReglas2 = array_diff($reglasNuevas, $reglasAntes);
-            
+
             if ((count($diferenciaReglas1) + count($diferenciaReglas2)) > 0) {
 
                 // Borro los eventuales ordenes que existieran para el artículo
@@ -102,7 +102,7 @@ class Articulos extends ArticulosEntity {
                     unset($reglas);
                 }
             }
-            
+
             // Borro el eventual escandallo
             if ($this->AllowsChildren == '0') {
                 $escan = new ArticulosEscandallos();
@@ -313,13 +313,15 @@ class Articulos extends ArticulosEntity {
 
     /**
      * Recibe un objeto AlbaranCab o PstoCab y devuelve un array
-     * con cinco elementos:
+     * con siete elementos:
      *
      *  [Promocion] -> El objeto promocion (si hay)
      *  [Promo][Precio] -> El precio de la promocion
      *  [Promo][Descuento] -> El descuento de la promocion
+     *  [Promo][PrecioConImpuestos] -> El precio de la promocion con Impuestos
      *  [Tarifa][Precio] -> El precio de la tarifa
      *  [Tarifa][Descuento] -> El descuento de la tarifa
+     *  [Tarifa][PrecioConImpuestos] -> El de la tarifa con impuestos
      *
      * Para ello consulta promociones vigentes para el artículo, cliente
      * y si no hay, aplica la tarifa asociada al cliente.
@@ -343,7 +345,8 @@ class Articulos extends ArticulosEntity {
             $precios['Tarifa']['Precio'] = $this->getPrecioCosto() * ( 1 + $tarifa->getValor() / 100 );
             $precios['Tarifa']['Descuento'] = 0;
         }
-
+        $precios['Tarifa']['PrecioConImpuestos'] = $precios['Tarifa']['Precio'] * (1 + $this->getIDIva()->getIva() / 100);
+        
         // -------------------------------------------------------------------------
         //  Buscar promociones. En caso de haber promo para artículo y para familia,
         //  prevalecen los promos a nivel de artículo sobre
@@ -418,6 +421,7 @@ class Articulos extends ArticulosEntity {
                     $precios['Promo']['Descuento'] = 0;
                     break;
             }
+            $precios['Promo']['PrecioConImpuestos'] = $precios['Promo']['Precio'] * (1 + $this->getIDIva()->getIva() / 100);
         }
 
         unset($promocion);
@@ -582,8 +586,7 @@ class Articulos extends ArticulosEntity {
         if ($todas) {
             $habituales[] = array('Id' => '0', 'Value' => ':: Resto de Ubicaciones ::');
             $ubicaciones = array_merge($habituales, $mapa->fetchAll($idAlmacen, $filtroUbicacion));
-        }
-        else
+        } else
             $ubicaciones = $habituales;
 
         unset($mapa);
@@ -890,11 +893,9 @@ class Articulos extends ArticulosEntity {
                 $tiene = $this->IDCategoria->TienePropiedades();
                 if ($tiene)
                     $tiene = 1;
-            }
-            else
+            } else
                 $tiene = 2;
-        }
-        else
+        } else
             $tiene = 3;
 
         return $tiene;
@@ -996,20 +997,22 @@ class Articulos extends ArticulosEntity {
      */
     public function getTops($nTop = 20) {
 
-        if ($nTop<=0) $nTop = 20;
-        
+        if ($nTop <= 0)
+            $nTop = 20;
+
         $lineasAlbaranes = new AlbaranesLineas();
-        $rows = $lineasAlbaranes->cargaCondicion("IDArticulo,sum(Unidades)","1 group by IDArticulo","sum(Unidades) DESC limit {$nTop}");
+        $rows = $lineasAlbaranes->cargaCondicion("IDArticulo,sum(Unidades)", "1 group by IDArticulo", "sum(Unidades) DESC limit {$nTop}");
         unset($lineasAlbaranes);
 
         $array = array();
-        
+
         foreach ($rows as $row) {
             $array[] = new Articulos($row['IDArticulo']);
         }
-        
+
         return $array;
     }
+
 }
 
 ?>

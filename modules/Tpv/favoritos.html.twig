@@ -13,7 +13,7 @@
             {% for favorito in values.favoritos %}
                 <li id="favorito{{favorito.Id}}" title="{{favorito.Descripcion}}">     
                     <img id="borrar{{favorito.IDArticulo}}" src="{{app.path}}/images/botonborrar.png" onclick="favoritosRemove('{{favorito.Id}}');">
-                    <span onclick="addTicket('{{favorito.IDArticulo}}');">               
+                    <span onclick="addTicket('favorito{{favorito.Id}}','{{favorito.IDArticulo}}');">               
                         {{favorito.Descripcion|slice(0,20)}}
                     </span>    
                 </li>
@@ -26,6 +26,7 @@
 <script>
 $(function(){
     $('#favoritos').sortable({
+        cursor: "move",        
         update: function(event,ui){
             
             // Crea un array con el nuevo orden.
@@ -52,11 +53,18 @@ $(function(){
     /**
      * Añade el articulo idArticulo al ticket
      * 
+     * @param string idDiv El div del favorito
      * @param integer idArticulo
      * @returns void
      */
-    function addTicket(idArticulo){
-        buscaArticulo('IDArticulo',idArticulo,'');        
+    function addTicket(idDiv,idArticulo){
+        
+        var html = $('#'+idDiv).html();
+        $('#'+idDiv).html("<img src='"+appPath+"/images/loading.gif'>");
+
+        buscaArticulo('IDArticulo',idArticulo,'');
+        
+        $('#'+idDiv).html(html);        
     }
    
    /**
@@ -117,7 +125,7 @@ $(function(){
                     // Añadir la linea creada
                     var html = "<li id=\"favorito"+datos.idCreado+"\" title=\""+descripcion+"\">" +
                     "<img id=\"borrar"+idArticulo+"\" src=\""+appPath+"/images/botonborrar.png\" onclick=\"favoritosRemove('"+datos.idCreado+"');\"> " +
-                    "<span onclick=\"addTicket('"+idArticulo+"');\">"+descripcion.substring(0,20)+"</span>" +
+                    "<span onclick=\"addTicket('favorito"+datos.idCreado+"','"+idArticulo+"');\">"+descripcion.substring(0,20)+"</span>" +
                     "</li>";
                     $('#favoritos').append(html);
 

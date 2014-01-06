@@ -18,7 +18,7 @@
             <li><a href="#envio">Envío</a></li>
             <li><a href="#observaciones">{% if datos.Observaciones %}<b>{% endif %}Observaciones{% if datos.Observaciones %}</b>{% endif %}</a></li>
             <li><a href="#notas">{% if datos.NotasInternas %}<b>{% endif %}Notas{% if datos.NotasInternas %}</b>{% endif %}</a></li>
-            {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfil == '1') and (datos.PrimaryKeyValue ) %}            
+            {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfilPerfil == '1') and (datos.PrimaryKeyValue ) %}            
             <li><a href="#divDocs" id="docs">Documentos adjuntos ({{datos.getNumberOfDocuments('document')}})</a></li>
             {% endif %}
         {% endif %}
@@ -130,7 +130,7 @@
     <div id="notas">
         {{ macro.textarea(atributos.NotasInternas,'Etiqueta','AlbaranesCab[NotasInternas]','AlbaranesCab_NotasInternas',datos.NotasInternas,none,none,'TextArea')}}
     </div>
-    {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfil == '1') and (datos.PrimaryKeyValue ) %}               
+    {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfilPerfil == '1') and (datos.PrimaryKeyValue ) %}               
     <div id="divDocs"></div>
     {% endif %}
     {% endif %}

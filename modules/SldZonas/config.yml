@@ -6,7 +6,7 @@ SldZonas:
     toEntity: ''
     toColumn: ''
   translatable: true    
-  showCommonFields: true
+  showCommonFields: false
   numMaxRecords: ''
   numberOfImages: '0'
   withGalery: '0'

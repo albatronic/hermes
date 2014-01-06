@@ -205,8 +205,9 @@ class CpanDocs extends CpanDocsEntity {
         $filtro = "(Idioma='{$_SESSION['idiomas']['actual']}') AND (Entity='{$entidad}') AND (IdEntity='{$idEntidad}') AND (Type LIKE '{$tipo}') AND ({$criterio})";
         $rows = $this->cargaCondicion('Id', $filtro, $orderCriteria);
 
-        foreach ($rows as $row)
+        foreach ($rows as $row) {
             $arrayDocs[] = new CpanDocs($row['Id']);
+        }
 
         return $arrayDocs;
     }
@@ -244,7 +245,7 @@ class CpanDocs extends CpanDocsEntity {
         $this->Name = str_replace($aux['extension'], "", $this->Name);
         $this->Name = Textos::limpia($this->Name) . ".{$extension}";
         $this->Extension = $extension;
-        
+
         $tipos = new TiposDocs($this->Type);
         $tipo = $tipos->getTipo();
         unset($tipos);
@@ -273,8 +274,8 @@ class CpanDocs extends CpanDocsEntity {
         }
 
         unset($doc);
-        
-        $subcarpeta = substr($this->Name,0,3);
+
+        $subcarpeta = substr($this->Name, 0, 3);
         $this->PathName = "docs/{$this->Entity}/{$subcarpeta}/{$this->Name}";
 
     }
@@ -412,15 +413,15 @@ class CpanDocs extends CpanDocsEntity {
                 // Tratamiento de la imagen antes de subirla
                 list($ancho, $alto) = getimagesize($this->_ArrayDoc['tmp_name']);
 
-                if (($this->_ArrayDoc['maxWidth']>0) and ($ancho > $this->_ArrayDoc['maxWidth']))
+                if (($this->_ArrayDoc['maxWidth'] > 0) and ($ancho > $this->_ArrayDoc['maxWidth']))
                     $ancho = $this->_ArrayDoc['maxWidth'];
-                if (($this->_ArrayDoc['maxHeight']>0) and ($alto > $this->_ArrayDoc['maxHeight']))
+                if (($this->_ArrayDoc['maxHeight'] > 0) and ($alto > $this->_ArrayDoc['maxHeight']))
                     $alto = $this->_ArrayDoc['maxHeight'];
 
                 $img = new Gd();
                 $img->loadImage($this->_ArrayDoc['tmp_name']);
                 //$img->crop($ancho, $alto,$this->_ArrayDoc['modoRecortar']);
-                $img->crop($this->_ArrayDoc['maxWidth'], $this->_ArrayDoc['maxHeight'],$this->_ArrayDoc['modoRecortar']);
+                $img->crop($this->_ArrayDoc['maxWidth'], $this->_ArrayDoc['maxHeight'], $this->_ArrayDoc['modoRecortar']);
                 $imagenRecortada = "tmp/" . md5($this->_ArrayDoc['tmp_name']);
                 $ok = $img->save($imagenRecortada);
                 unset($img);
@@ -444,10 +445,9 @@ class CpanDocs extends CpanDocsEntity {
                 $ok = $ftp->upLoad($carpetaDestino, $archivoSubir, $this->Name);
                 $this->_errores = $ftp->getErrores();
                 $ftp->close();
-            } else { echo "error ftp";
+            } else {
+                echo "error ftp";
                 $this->_errores[] = "Fallo al conectar vía FTP";
-                foreach ($_SESSION['project']['ftp'] as $item)
-                    $this->_errores[] = $item;
             }
 
             unset($ftp);

@@ -8,17 +8,19 @@
 #}
 {% set atributos = values.atributos %}
 <div id="tabs">
+    <input name="solapaActiva" id="solapaActiva" value="{{ values.solapaActiva }}" type="hidden" />      
     <ul>
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'arbol'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#arbol" onclick='$( "#solapaActiva" ).val("arbol");'>Árbol de Banners</a>
+        <li>
+            <a href="#arbol">Árbol de Banners</a>
         </li>
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'general'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#general" onclick='$( "#solapaActiva" ).val("general");'>{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Banner{%endif%}</a>
-            {{ macro.publicar(atributos.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}            
+        <li>
+            <a href="#general">{%if datos.Titulo%}<b>{{macro.recortaTexto(datos.Titulo,40)}}</b>{%else%}Banner{%endif%}</a>
+            {{ macro.publicar(values.varEnvMod.columns.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}
         </li>
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'fieldsComunes'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#fieldsComunes" onclick='$( "#solapaActiva" ).val("fieldsComunes");'>Más detalles...</a>
+           
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
+        <li>
+            <a href="#fieldsComunes">Más detalles...</a>
         </li>        
         {% endif %}
     </ul>
@@ -30,24 +32,21 @@
                 <ul>                  
                     {% for banner in zona.banners %}
                         <li style="margin-left: 30px;">
+                            {% if zona.nBanners > 1%}
+                                {{ macro.ordenarPopup(values.controller,'IdZona',keyZona) }}                                                      
+                            {% endif %}                              
                             {% if values.varEnvMod.columns.Publish.visible == '1' %}
                                 {{ macro.actualizaColumna(values.controller,banner.Id,'Publish',banner.Publish.IDTipo,'Publicar/Despublicar')}}
                             {% endif %}
-                            <a href="{{app.path}}/{{values.controller}}/edit/{{banner.primaryKeyMD5}}">{{banner.Titulo}} ({{banner.IdTipo.Descripcion}})</a>
+                            <a href="{{app.path}}/{{values.controller}}/edit/{{banner.primaryKeyMD5}}" onclick="$('#solapaActiva').val('1');">{{banner.Titulo}} ({{banner.IdTipo.Descripcion}})</a>
                         </li>
-                    {% endfor %}
-                        
-                    {% if zona.nBanners > 1%}
-                        <li style="margin-left: 30px;">
-                            {{ macro.ordenarPopup(values.controller,'IdZona',keyZona) }}                            
-                        </li>                        
-                    {% endif %}                          
+                    {% endfor %}                          
                 </ul>
             {% endfor %}
         </ul>
     </div>
         
-    <div id="general" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+    <div id="general">
         {{ macro.select(atributos.IdZona,'Etiqueta',values.controller ~ '[IdZona]',values.controller ~ '_IdZona',200,datos.IdZona.Id,datos.IdZona.fetchAll('Titulo',0),'chzn-select')}}
         {{ macro.input(atributos.Titulo,'Etiqueta','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','2') }}
         {{ macro.input(atributos.Subtitulo,'Etiqueta','text',values.controller ~ '[Subtitulo]',values.controller ~ '_Subtitulo',datos.Subtitulo,'255','CampoTextoLargo','3') }}
@@ -58,10 +57,22 @@
         {# macro.input(atributos.Entidad,'Etiqueta','text',values.controller ~ '[Entidad]',values.controller ~ '_Entidad',datos.Entidad,'255','CampoTextoLargo','7') #}
         {# macro.input(atributos.IdEntidad,'Etiqueta','text',values.controller ~ '[IdEntidad]',values.controller ~ '_IdEntidad',datos.IdEntidad,'11','CampoImporte','8') #}
         {% if datos.primaryKeyMD5 %}
-            {{ macro.labelPopup('Enlazar con...', app.path ~ '/'  ~ values.controller ~ '/enlazar/' ~ datos.primaryKeyMD5,datos.ObjetoEnlazado,datos.getUrlEnlace,600) }}
+            <div style="clear:both;"></div>
+            {{ macro.labelPopup('Click aquí para Enlazar con...', app.path ~ '/'  ~ values.controller ~ '/enlazar/' ~ datos.primaryKeyMD5,datos.objetoEnlazado,600) }}
         {% endif %}
     </div>      
             
     {% include '_global/fieldsComunes.html.twig' %}        
 </div>
+<script>
+
+    $(function(){
+
+        if ($('#solapaActiva').val() === '0') {
+            $('#solapaActiva').val('1');
+        }
+        $("#tabs").tabs({ active: $('#solapaActiva').val() });        
+    });
+    
+</script> 
 {{ macro.foco(values.controller ~ '_IdZona') }}

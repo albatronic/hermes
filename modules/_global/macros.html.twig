@@ -70,7 +70,7 @@
 {% macro ordenarPopup(controller,columna,key,columnaMostrar) %}
 {% if permisosModulo['MO'] %}
 <a href="javascript:;" onclick="popUpOrdenar('{{controller}}','{{columna}}','{{key}}','{{columnaMostrar|default('Titulo')}}');">
-    <img src="{{appPath}}/images/boton-ordenar.png" alt="Ordenar" title="Ordenar"/>
+    <img src="{{appPath}}/images/boton-ordenar.png" width="18px;" alt="Ordenar" title="Ordenar"/>
 </a>
 {% endif %}
 {% endmacro%}

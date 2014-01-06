@@ -48,8 +48,8 @@
             <div>
                 <p>
                 {% if user.IDPerfil.IDPerfil == 1 %}
-                    {{ macro.input(atributos[datos.primaryKeyName],'EtiquetaMedia','text',values.controller ~ '['~datos.primaryKeyName~']',values.controller ~ '_' ~ datos.primaryKeyName,datos.primaryKeyValue,none,none,110,'disabled') }}                    
-                    {{ macro.input(atributos.PrimaryKeyMD5,'EtiquetaMedia','text',values.controller ~ '[PrimaryKeyMD5]',values.controller ~ '_PrimaryKeyMD5',datos.PrimaryKeyMD5,'100','CampoTextoLargo',none,'disabled') }}
+                    {{ macro.input(atributos[datos.primaryKeyName],'EtiquetaMedia','text',values.controller ~ '['~datos.primaryKeyName~']',values.controller ~ '_' ~ datos.primaryKeyName,datos.primaryKeyValue,110,none,'disabled') }}                    
+                    {{ macro.input(atributos.PrimaryKeyMD5,'EtiquetaMedia','text',values.controller ~ '[PrimaryKeyMD5]',values.controller ~ '_PrimaryKeyMD5',datos.PrimaryKeyMD5,'100','CampoTextoLargo','disabled') }}
                     {{ macro.input(atributos.IsDefault,'EtiquetaMedia','checkbox',values.controller ~ '[IsDefault]',values.controller ~ '_IsDefault',datos.IsDefault.IDTipo,'255','CampoTextoLargo','12') }}
                     {{ macro.input(atributos.IsSuper,'EtiquetaMedia','checkbox',values.controller ~ '[IsSuper]',values.controller ~ '_IsSuper',datos.IsSuper.IDTipo,'255','CampoTextoLargo','12') }}
                 {% endif %}
@@ -60,7 +60,7 @@
                 {{ macro.selectGroup(atributos.IdAlbumExterno,'EtiquetaMedia',values.controller ~ '[IdAlbumExterno]',values.controller ~ '_IdAlbumExterno',300,datos.IdAlbumExterno.Id,datos.IdAlbumExterno.fetchAll('',1),'Select') }}
                 {{ macro.selectGroup(atributos.IdSliderAsociado,'EtiquetaMedia',values.controller ~ '[IdSliderAsociado]',values.controller ~ '_IdSliderAsociado',300,datos.IdSliderAsociado.Id,datos.IdSliderAsociado.fetchAll('',1),'Select') }}
                 {{ macro.select(atributos.IdSeccionEnlaces,'EtiquetaMedia',values.controller ~ '[IdSeccionEnlaces]',values.controller ~ '_IdSeccionEnlaces',300,datos.IdValueSeccionEnlaces.Id,datos.IdSeccionEnlaces.fetchAll('Titulo',1),'Select') }}
-                {{ macro.select(atributos.IdSeccionVideos,'EtiquetaMedia',values.controller ~ '[IdSeccionVideos]',values.controller ~ '_IdSeccionVideos',300,datos.IdSeccionVideos.Id,datos.IdSeccionVideos.fetchAll('Titulo',1),'Select') }}
+                {# macro.select(atributos.IdSeccionVideos,'EtiquetaMedia',values.controller ~ '[IdSeccionVideos]',values.controller ~ '_IdSeccionVideos',300,datos.IdSeccionVideos.Id,datos.IdSeccionVideos.fetchAll('Titulo',1),'Select') #}
                 {{ macro.textarea(atributos.Observations,'EtiquetaMedia',values.controller ~ '[Observations]',values.controller ~ '_Observations',datos.Observations,none,none,'textarea',100)}}                
                 </p>
             </div>

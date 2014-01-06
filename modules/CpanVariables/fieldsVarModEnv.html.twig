@@ -273,17 +273,29 @@
     {# VARIABLES DE ENTORNO ESPECIFICAS AL MODULO EN CURSO nombreModulo/varEnv.yml #}
     <div id="tabs-especificas">
         {% for nombre,atributos in values.datos.especificas %}
-            {{ macro.input(
-                {'caption':'[especificas]['~nombre~'] '~atributos.caption,'visible':'1','updatable':'1','varEnv':'0'},
-                'EtiquetaLarga',
-                'text',
-                'datos[especificas]['~nombre~']',
-                'datos_especificas_'~nombre,
-                atributos.value,
-                '50',
-                'CampoTextoMedio'
-                )
-            }}
+            {% if atributos.values|length>0 %}
+                {{ macro.select(
+                    {'caption':'[especificas]['~nombre~'] '~atributos.caption,'visible':'1','updatable':'1','varEnv':'0'},
+                    'EtiquetaLarga',
+                    'datos[especificas]['~nombre~']',
+                    'datos_especificas_'~nombre,200,
+                    atributos.value,
+                    atributos.values,
+                    'chzn-select')
+                }}
+            {% else %}
+                {{ macro.input(
+                    {'caption':'[especificas]['~nombre~'] '~atributos.caption,'visible':'1','updatable':'1','varEnv':'0'},
+                    'EtiquetaLarga',
+                    'text',
+                    'datos[especificas]['~nombre~']',
+                    'datos_especificas_'~nombre,
+                    atributos.value,
+                    '50',
+                    'CampoTextoMedio'
+                    )
+                }}
+            {% endif %}
         {% endfor %}
     </div>
 

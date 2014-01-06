@@ -57,7 +57,7 @@ class Familias extends FamiliasEntity {
      * @return array
      */
     public function getFamiliasTpv($idPadre = 0) {
-        return $this->cargaCondicion("IDFamilia as Id,Familia as Value","BelongsTo='{$idPadre}' and MostrarEnTpv='1'","OrdenTpv ASC");
+        return $this->cargaCondicion("IDFamilia as Id,Familia as Value", "BelongsTo='{$idPadre}' and MostrarEnTpv='1'", "OrdenTpv ASC");
     }
 
     /**
@@ -140,39 +140,65 @@ class Familias extends FamiliasEntity {
      * 
      * - Id: El id del articulo
      * - Value: La descripcion del articulo
+     * - Pvp: Precio de venta SIN impuestos
+     * - PvpConImpuestos: Precio de venta CON impuestos
      * - PrimaryKeyMD5: la primarykey MD5
      * - Publish: TRUE/FALSE
      * - estaRelacionado: El id de la eventual relacion
      * 
      * @param integer $idFamilia El id de la familia
+     * @param array $optArticulos Array de opciones de articulos
      * @param string $idEntidadRelacionada La entidad con la que existe una posible relación
      * @param integer $idEntidadRelacionada El id de entidad con la que existe una posible relación
      * @return array Array Id, Value de articulos
      */
-    public function getArticulos($idFamilia = '', $entidadRelacionada = '', $idEntidadRelacionada = '') {
+    public function getArticulos($idFamilia = '', $optArticulos = array(), $entidadRelacionada = '', $idEntidadRelacionada = '') {
 
-        if ($idFamilia == '')
-            $idFamilia = $this->Id;
-
-        $articulo = new ErpArticulos();
-        $articulos = $articulo->cargaCondicion('IDArticulo as Id,Descripcion as Value,PrimaryKeyMD5,Publish', "IDFamilia='{$idFamilia}'", "SortOrder ASC");
-        unset($articulo);
-
-        if ($entidadRelacionada) {
-            foreach ($articulos as $key => $articulo) {
-                $relacion = new CpanRelaciones();
-                $articulos[$key]['estaRelacionado'] = $relacion->getIdRelacion('ErpArticulos', $articulo['Id'], $entidadRelacionada, $idEntidadRelacionada);
-            }
-            unset($relacion);
+        if ($idFamilia == '') {
+            $idFamilia = $this->IDFamilia;
         }
+
+        $articulos = array();
+
+        $em = new EntityManager($_SESSION['project']['conection']);
+        if ($em->getDbLink()) {
+            $select = "select a.IDArticulo as Id,a.Descripcion as Value,a.Pvp,a.Pvp*(1+i.Iva/100) as PvpConImpuestos,i.Iva,a.PrimaryKeyMD5,a.Publish from ErpArticulos a left join ErpTiposIva i on a.IDIva=i.IDIva";
+            $where = "a.IDCategoria='{$idFamilia}' or a.IDFamilia='{$idFamilia}' or a.IDSubfamilia='{$idFamilia}'";
+            $articulos = $em->getResult("a", $select, $where);
+
+            if ($entidadRelacionada) {
+                foreach ($articulos as $key => $articulo) {
+                    $relacion = new CpanRelaciones();
+                    $articulos[$key]['estaRelacionado'] = $relacion->getIdRelacion('ErpArticulos', $articulo['Id'], $entidadRelacionada, $idEntidadRelacionada);
+                }
+                unset($relacion);
+            }
+
+            if ($optArticulos['conImagenes']) {
+
+                foreach ($articulos as $key => $item) {
+                    $articulo = new Articulos($item['Id']);
+                    $objetosImagen = $articulo->getDocuments();
+                    if (count($objetosImagen)) {
+                        foreach ($objetosImagen as $imagen) {
+                            $articulos[$key]['imagenes'][] = $imagen->getPathName();
+                        }
+                    } else {
+                        $articulos[$key]['imagenes'] = array();
+                    }
+                }
+                unset($articulo);
+            }
+        }
+
         return $articulos;
     }
 
     /**
-     * Devuelve un array con el árbol de secciones y contenidos
+     * Devuelve un array con el árbol de N jerarquías de categorias, familias, subfamilias, etc.
      * 
-     * Si se indica valor para el parámetro $idContenidoRelacionado, en el array
-     * de contenidos se incluirá un elemento booleano que indica si cada contenido
+     * Si se indican los parámetros $entidadRelacionada e $idEntidadRelacionada, en el array
+     * 'estaRelacionado' se incluirá un elemento booleano que indica si cada elemento
      * está relacionado con el contenido cuyo valor es el parámetro.
      * 
      * El índice del array contiene el valor de la primaryKeyMD5 de cada sección y la estructura es:
@@ -187,23 +213,25 @@ class Familias extends FamiliasEntity {
      * - nArticulos => el número de artículos que posee la familia
      * - articulos => array de artículos de la familia
      * 
-     * @param boolean $conArticulos
-     * @param string $entidadRelacionada
-     * @param integer $idEntidadRelacionada 
+     * @param array $optArticulos. Opciones de mostrar articulos
+     * @param string $entidadRelacionada. Por defecto nada
+     * @param integer $idEntidadRelacionada. Por defecto nada
+     * @param string $aditionalFilter Filtro adicional. Por defecto ninguno
+     * @param string $sortOrder Criterio de orden. Por defecto SortOrder ASC 
      * @return array Array de familias y articulos
      */
-    public function getArbolHijos($conArticulos = false, $entidadRelacionada = '', $idEntidadRelacionada = '') {
+    public function getArbolHijos($optArticulos = array('conArticulos' => false), $entidadRelacionada = '', $idEntidadRelacionada = '', $aditionalFilter = '1', $sortOrder = 'SortOrder ASC') {
 
         $arbol = array();
 
         $objeto = new $this();
-        $rows = $objeto->cargaCondicion("IDFamilia as Id,PrimaryKeyMD5,NivelJerarquico,Publish,BelongsTo", "BelongsTo='0'", "SortOrder ASC");
+        $rows = $objeto->cargaCondicion("IDFamilia as Id,PrimaryKeyMD5,NivelJerarquico,Publish,BelongsTo", "(BelongsTo='{$this->BelongsTo}') and ({$aditionalFilter})", $sortOrder);
         unset($objeto);
 
         foreach ($rows as $row) {
             $objeto = new $this($row['Id']);
-            $arrayArticulos = ($conArticulos) ? $this->getArticulos($row['Id'], $entidadRelacionada, $idEntidadRelacionada) : array();
-            $arrayHijos = $objeto->getHijos('', $conArticulos, $entidadRelacionada, $idEntidadRelacionada);
+            $arrayArticulos = ($optArticulos["conArticulos"]) ? $this->getArticulos($row['Id'], $optArticulos, $entidadRelacionada, $idEntidadRelacionada) : array();
+            $arrayHijos = $objeto->getHijos('', $optArticulos, $entidadRelacionada, $idEntidadRelacionada, $aditionalFilter, $sortOrder);
 
             $arbol[$row['PrimaryKeyMD5']] = array(
                 'id' => $row['Id'],
@@ -238,12 +266,13 @@ class Familias extends FamiliasEntity {
      * @param integer $idPadre El id de la entidad padre
      * @return array
      */
-    public function getHijos($idPadre = '', $conArticulos = FALSE, $entidadRelacionada = '', $idEntidadRelacionada = '') {
+    public function getHijos($idPadre = '', $optArticulos = array('conArticulos' => false), $entidadRelacionada = '', $idEntidadRelacionada = '', $aditionalFilter = '1', $sortOrder = "SortOrder ASC") {
 
-        if ($idPadre == '')
+        if ($idPadre == '') {
             $idPadre = $this->getPrimaryKeyValue();
+        }
 
-        $this->getChildrens($idPadre, $conArticulos, $entidadRelacionada, $idEntidadRelacionada);
+        $this->getChildrens($idPadre, $optArticulos, $entidadRelacionada, $idEntidadRelacionada, $aditionalFilter, $sortOrder);
         return $this->_hijos[$idPadre];
     }
 
@@ -252,17 +281,18 @@ class Familias extends FamiliasEntity {
      * de la entidad cuyo id es $idPadre
      *
      * @param integer $idPadre El id de la entidad padre
+     * @param array $optArticulos Array de opciones de articulos
      * @return array Array con los objetos hijos
      */
-    private function getChildrens($idPadre, $conArticulos, $entidadRelacionada, $idEntidadRelacionada) {
+    private function getChildrens($idPadre, $optArticulos, $entidadRelacionada, $idEntidadRelacionada, $aditionalFilter = '1', $sortOrder = "SortOrder ASC") {
 
         // Obtener todos los hijos del padre actual
-        $hijos = $this->cargaCondicion('IDFamilia as Id,PrimaryKeyMD5,NivelJerarquico,Publish,BelongsTo', "BelongsTo='{$idPadre}'", "SortOrder ASC");
+        $hijos = $this->cargaCondicion('IDFamilia as Id,PrimaryKeyMD5,NivelJerarquico,Publish,BelongsTo', "(BelongsTo='{$idPadre}') and ({$aditionalFilter})", $sortOrder);
 
         foreach ($hijos as $hijo) {
             $aux = new $this($hijo['Id']);
-            $arrayArticulos = ($conArticulos) ? $this->getArticulos($hijo['Id']) : array();
-            $arrayHijos = $this->getChildrens($hijo['Id'], $conArticulos, $entidadRelacionada, $idEntidadRelacionada);
+            $arrayArticulos = ($optArticulos["conArticulos"]) ? $this->getArticulos($hijo['Id'], $optArticulos, $entidadRelacionada, $idEntidadRelacionada) : array();
+            $arrayHijos = $this->getChildrens($hijo['Id'], $optArticulos, $entidadRelacionada, $idEntidadRelacionada);
             $this->_hijos[$idPadre][$hijo['PrimaryKeyMD5']] = array(
                 'id' => $hijo['Id'],
                 'titulo' => $aux->__toString(),

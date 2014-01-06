@@ -11,7 +11,7 @@
             <li><a href="#divDetalle" id="detalle">Detalle</a></li>
             <li><a href="#observaciones">{% if datos.Observaciones %}<b>{% endif %}Observaciones{% if datos.Observaciones %}</b>{% endif %}</a></li>
             <li><a href="#incidencias">{% if datos.NotasInternas %}<b>{% endif %}Notas{% if datos.NotasInternas %}</b>{% endif %}</a></li>
-            {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfil == '1') %}            
+            {% if (values.varEnvMod.withDocuments == '1' or user.IDPerfil.IDPerfilPerfil == '1') %}            
             <li><a href="#divDocs" id="docs">Documentos adjuntos ({{datos.getNumberOfDocuments('document')}})</a></li>
             {% endif %}
         {% endif %}

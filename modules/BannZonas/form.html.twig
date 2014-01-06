@@ -14,7 +14,7 @@
         <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'general'%}  ui-tabs-selected ui-state-active{%endif%}">
             <a href="#general">{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Zona{%endif%}</a>
         </li>
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'fieldsComunes'%}  ui-tabs-selected ui-state-active{%endif%}">
             <a href="#fieldsComunes" onclick='$( "#solapaActiva" ).val("fieldsComunes");'>Más detalles...</a>
         </li>        
@@ -22,9 +22,9 @@
     </ul>
                 
     <div id="general">
-        {{ macro.input(atributos.Titulo,'Etiqueta','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}
-        {{ macro.input(atributos.NumeroMaximoBanners,'Etiqueta','text',values.controller ~ '[NumeroMaximoBanners]',values.controller ~ '_NumeroMaximoBanners',datos.NumeroMaximoBanners,'4','CampoUnidades','2') }}
-        {{ macro.input(atributos.NumeroPosicionesBanners,'Etiqueta','text',values.controller ~ '[NumeroPosicionesBanners]',values.controller ~ '_NumeroPosicionesBanners',datos.NumeroPosicionesBanners,'4','CampoUnidades','2') }}
+        {{ macro.input(atributos.Titulo,'EtiquetaMedia','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}
+        {{ macro.input(atributos.NumeroMaximoBanners,'EtiquetaMedia','text',values.controller ~ '[NumeroMaximoBanners]',values.controller ~ '_NumeroMaximoBanners',datos.NumeroMaximoBanners,'4','CampoUnidades','2') }}
+        {{ macro.input(atributos.NumeroPosicionesBanners,'EtiquetaMedia','text',values.controller ~ '[NumeroPosicionesBanners]',values.controller ~ '_NumeroPosicionesBanners',datos.NumeroPosicionesBanners,'4','CampoUnidades','2') }}
     </div>
         
     {% include '_global/fieldsComunes.html.twig' %}        

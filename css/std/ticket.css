@@ -59,6 +59,8 @@
 }
 .ticketCuerpo {
     width: 679px;
+    height: 250px;
+    overflow: scroll;
     float: left;    
     margin-top: 10px;
     margin-left: 5px;
@@ -72,8 +74,33 @@
 #acordeonAside {
     float: left;
     width: 160px;
-    padding: 3px;    
+    padding: 3px; 
+    height: 395px;
+    overflow: scroll;
 }
+
+#ticketArticulos {
+    width: 679px;
+    height: 110px;
+    overflow: scroll;
+    float: left;    
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 12px; 
+    text-align: center;
+    padding: 5px;
+    background-color: whitesmoke;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;    
+}
+
+.frameArticulos {
+    float:left;
+    width:100px;
+    height:105px;
+    padding: 5px;
+}
+
 /* FAVORITOS */
 .ticketFavoritos {
     float: left;
@@ -95,11 +122,9 @@
 }
 
 .ticketFavoritos .addFavorito { 
-
     margin-bottom: 5px;
     padding: 0px 0px 0px 3px !important;
     background: white !important;
-
 }
 .borrar {
 
@@ -131,6 +156,9 @@
     text-align: center;    
 }
 
+.ticketLinea {
+    height: 25px;
+}
 .ticketTituloCorto {
     float: left;
     margin-left: 10px;
@@ -163,8 +191,9 @@
 }
 .botoneraLinea {
     float: left;
-    margin-left: 20px;
-    width: 60px;
+    margin-left: 10px;
+    width: 70px;
+    text-align: center;
 }
 .ticketPie{
     float: left;

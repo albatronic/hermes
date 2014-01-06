@@ -10,22 +10,17 @@
 {% set atributos = values.atributos %}
 
 <div id="tabs">
-    <ul>
-        <li class="ui-state-default ui-corner-top"><a href="#arbol">Árbol de Familias</a></li>        
+    <ul>       
         <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'general'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#general" onclick='$( "#solapaActiva" ).val("general");'>{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Familia{%endif%}</a>
+            <a href="#general">{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Familia{%endif%}</a>
             {{ macro.publicar(atributos.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}
         </li>     
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'fieldsComunes'%}  ui-tabs-selected ui-state-active{%endif%}">
             <a href="#fieldsComunes" onclick='$( "#solapaActiva" ).val("fieldsComunes");'>Más detalles...</a>
         </li>        
         {% endif %}                      
     </ul>
-
-    <div id="arbol">
-        {% include values.controller ~ '/arbol.html.twig' with {'arbol': datos.getArbolHijos, 'subtemplate':'arbolEditar.html.twig'} %}        
-    </div>
         
     <div id="general">
         {{ macro.input(atributos.Titulo,'Etiqueta','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}

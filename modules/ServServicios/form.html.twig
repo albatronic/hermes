@@ -9,39 +9,53 @@
 {% set atributos = values.atributos %}
 
 <div id="tabs">
+    <input name="solapaActiva" id="solapaActiva" value="{{ values.solapaActiva }}" type="hidden" />        
     <ul>
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'arbol'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#arbol" onclick='$( "#solapaActiva" ).val("arbol");'>Árbol de Servicios</a>
+        <li>
+            <a href="#arbol">Árbol de Servicios</a>
         </li>
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'general'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#general" onclick='$( "#solapaActiva" ).val("general");'>{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Servicio{%endif%}</a>
+        <li>
+            <a href="#general">{%if datos.Titulo%}<b>{{datos.Titulo|slice(0,40)}}</b> ...{%else%}Servicio{%endif%}</a>
             {{ macro.publicar(atributos.Publish,values.controller ~ '[Publish]',values.controller ~ '_Publish',datos.Publish.IDTipo) }}            
         </li>
-        {% if values.varEnvMod.showCommonFields == '1'  or user.IdPerfil.Id == '1' %}
-        <li class="ui-state-default ui-corner-top{%if values.solapaActiva == 'fieldsComunes'%}  ui-tabs-selected ui-state-active{%endif%}">
-            <a href="#fieldsComunes" onclick='$( "#solapaActiva" ).val("fieldsComunes");'>Más detalles...</a>
+        {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
+        <li>
+            <a href="#fieldsComunes">Más detalles...</a>
         </li>        
         {% endif %}
     </ul>
 
-    <div id="arbol">        
+    <div id="arbol">     
         {% include values.controller ~ '/arbol.html.twig' with {'arbol': values.datos.getArbolHijos, 'subtemplate':'arbolEditar.html.twig'} %}
     </div>
         
-    <div id="general" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-        {{ macro.select(atributos.IdFamilia,'Etiqueta',values.controller ~ '[IdFamilia]',values.controller ~ '_IdFamilia',none,datos.IdFamilia.Id,datos.IdFamilia.fetchAll('Titulo'),'chzn-select','1')}}
-        {{ macro.input(atributos.Titulo,'Etiqueta','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','2') }}
-        {{ macro.input(atributos.Subtitulo,'Etiqueta','text',values.controller ~ '[Subtitulo]',values.controller ~ '_Subtitulo',datos.Subtitulo,'255','CampoTextoLargo','3') }}
-        {{ macro.input(atributos.ResumenBreve,'Etiqueta','text',values.controller ~ '[ResumenBreve]',values.controller ~ '_ResumenBreve',datos.ResumenBreve,'255','CampoTextoLargo','4') }}
-        {{ macro.textarea(atributos.Resumen,'Etiqueta',values.controller ~ '[Resumen]',values.controller ~ '_Resumen',datos.Resumen,none,none,'textarea','5')}}
-        {{ macro.input(atributos.MostrarPortada,'Etiqueta','checkbox',values.controller ~ '[MostrarPortada]',values.controller ~ '_MostrarPortada',datos.MostrarPortada.IDTipo,'255','CampoTextoLargo','6') }}
-        {# macro.input(atributos.MostrarPortadaOrden,'Etiqueta','text',values.controller ~ '[MostrarPortadaOrden]',values.controller ~ '_MostrarPortadaOrden',datos.MostrarPortadaOrden,'11','CampoImporte','7') #}
-        {{ macro.input(atributos.MostrarEnListado,'Etiqueta','checkbox',values.controller ~ '[MostrarEnListado]',values.controller ~ '_MostrarEnListado',datos.MostrarEnListado.IDTipo,'255','CampoTextoLargo','8') }}
-        {# macro.input(atributos.MostrarEnListadoOrden,'Etiqueta','text',values.controller ~ '[MostrarEnListadoOrden]',values.controller ~ '_MostrarEnListadoOrden',datos.MostrarEnListadoOrden,'11','CampoImporte','9') #}
-        {{ macro.input(atributos.TieneDesarrollo,'Etiqueta','checkbox',values.controller ~ '[TieneDesarrollo]',values.controller ~ '_TieneDesarrollo',datos.TieneDesarrollo.IDTipo,'255','CampoTextoLargo','10') }}
-        {{ macro.input(atributos.MuestraEjemplos,'Etiqueta','checkbox',values.controller ~ '[MuestraEjemplos]',values.controller ~ '_MuestraEjemplos',datos.MuestraEjemplos.IDTipo,'255','CampoTextoLargo','11') }}
+    <div id="general">
+        {{ macro.select(atributos.IdFamilia,'EtiquetaMedia',values.controller ~ '[IdFamilia]',values.controller ~ '_IdFamilia',200,datos.IdFamilia.Id,datos.IdFamilia.fetchAll('Titulo'),'chzn-select')}}
+        {{ macro.input(atributos.Titulo,'EtiquetaMedia','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','2') }}
+        {{ macro.input(atributos.Subtitulo,'EtiquetaMedia','text',values.controller ~ '[Subtitulo]',values.controller ~ '_Subtitulo',datos.Subtitulo,'255','CampoTextoLargo','3') }}
+        {{ macro.input(atributos.ResumenBreve,'EtiquetaMedia','text',values.controller ~ '[ResumenBreve]',values.controller ~ '_ResumenBreve',datos.ResumenBreve,'255','CampoTextoLargo','4') }}
+        {{ macro.textarea(atributos.Resumen,'EtiquetaMedia',values.controller ~ '[Resumen]',values.controller ~ '_Resumen',datos.Resumen,none,none,'textarea','5')}}
+        {{ macro.input(atributos.MostrarPortada,'EtiquetaMedia','checkbox',values.controller ~ '[MostrarPortada]',values.controller ~ '_MostrarPortada',datos.MostrarPortada.IDTipo,'255','CampoTextoLargo','6') }}
+        {# macro.input(atributos.MostrarPortadaOrden,'EtiquetaMedia','text',values.controller ~ '[MostrarPortadaOrden]',values.controller ~ '_MostrarPortadaOrden',datos.MostrarPortadaOrden,'11','CampoImporte','7') #}
+        {{ macro.input(atributos.MostrarEnListado,'EtiquetaMedia','checkbox',values.controller ~ '[MostrarEnListado]',values.controller ~ '_MostrarEnListado',datos.MostrarEnListado.IDTipo,'255','CampoTextoLargo','8') }}
+        {# macro.input(atributos.MostrarEnListadoOrden,'EtiquetaMedia','text',values.controller ~ '[MostrarEnListadoOrden]',values.controller ~ '_MostrarEnListadoOrden',datos.MostrarEnListadoOrden,'11','CampoImporte','9') #}
+        {{ macro.input(atributos.TieneDesarrollo,'EtiquetaMedia','checkbox',values.controller ~ '[TieneDesarrollo]',values.controller ~ '_TieneDesarrollo',datos.TieneDesarrollo.IDTipo,'255','CampoTextoLargo','10') }}
+        {{ macro.input(atributos.MuestraEjemplos,'EtiquetaMedia','checkbox',values.controller ~ '[MuestraEjemplos]',values.controller ~ '_MuestraEjemplos',datos.MuestraEjemplos.IDTipo,'255','CampoTextoLargo','11') }}
+
+        {% include '_global/metaDatos.html.twig' %}         
     </div>      
             
     {% include '_global/fieldsComunes.html.twig' %}        
 </div>
+<script>
+
+    $(function(){
+
+        if ($('#solapaActiva').val() === '0') {
+            $('#solapaActiva').val('1');
+        }
+        $("#tabs").tabs({ active: $('#solapaActiva').val() });        
+    });
+    
+</script> 
 {{ macro.foco(values.controller ~ '_IdFamilia') }}

@@ -722,7 +722,7 @@ SldSliders:
       #aditional_filter: { order: 27, caption: CodigoAppAsociada, entity: CpanAplicaciones, method: fetchAll, params: NombreApp, type: select, operator: '=', event: null }
       validator: { nullable: yes, type: string, length: '15', min: null, max: null, message: 'Valor Requerido' }
     IdAlbumExterno:
-      title: IdAlbumExterno
+      title: 'Álbum asociado'
       filter: NO
       list: NO
       visible: true
@@ -733,7 +733,29 @@ SldSliders:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IdSliderAsociado:
-      title: IdSliderAsociado
+      title: 'Slider asociado'
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
+    IdSeccionEnlaces:
+      title: 'Sección de enlaces asociada'
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
+    IdSeccionVideos:
+      title: 'Sección de vídeos asociada'
       filter: NO
       list: NO
       visible: true

@@ -49,7 +49,7 @@ class FormasPagoEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="formas_pago")
      */
-    protected $AnotarEnCaja = '1';
+    protected $AnotarEnCaja = '0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="formas_pago")
@@ -65,6 +65,11 @@ class FormasPagoEntity extends EntityComunes {
      * @assert:NotBlank(groups="formas_pago")
      */
     protected $DescuentoFinanciero = '0.00';
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="formas_pago")
+     */
+    protected $Web = '0';    
     /**
      * Nombre de la conexion a la DB
      * @var string
@@ -181,6 +186,15 @@ class FormasPagoEntity extends EntityComunes {
         return $this->DescuentoFinanciero;
     }
 
+    public function setWeb($Web) {
+        $this->Web = $Web;
+    }
+
+    public function getWeb() {
+        if (!($this->Web instanceof ValoresSN))
+            $this->Web = new ValoresSN($this->Web);
+        return $this->Web;
+    }
 }
 
 // END class formas_pago

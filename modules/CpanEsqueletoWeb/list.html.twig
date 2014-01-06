@@ -15,12 +15,12 @@
 <table class="Listado">
     <tr class='Titulos'>
         {% if values.atributos.Controller.visible == '1' or user.IdPerfil.Id == '1' %}
-        <td class='Item'>Controlador</td>
+        <td class='Item'>Página</td>
         {% endif %}
         <td class='Item'>Zona</td>
         <td class='Item'>Estado</td>
         <td class='Item'>Marca</td>        
-        <td class='Item'>Categoria</td>  
+        <td class='Item'>Categoría</td>  
         <td class='Item'>Familia</td>  
         <td class='Item'>Subfamilia</td> 
         <td class='Item'>N. Items</td> 
@@ -37,7 +37,15 @@
             <input name="accion" id="accion{{key}}" value="" type="hidden" />
             <input name="{{values.controller}}[Id]" value="{{zona.Id}}" type="hidden" />
 
-            <td><input name="{{values.controller}}[Controller]" value="{{zona.Controller}}" type="{% if values.atributos.Controller.visible == '1' or user.IdPerfil.Id == '1' %}text{%else%}hidden{%endif%}" style="width: 90px;"/></td>
+            {% if values.atributos.Controller.visible == '1' or user.IdPerfil.Id == '1' %}
+            <td>
+                <select name="{{values.controller}}[Controller]" style="width: 110px;"/>
+                    {% for controller in values.controllers %}
+                        <option value="{{controller.Controller}}" {%if controller.Controller==zona.Controller%} SELECTED{%endif%}>{{controller.Controller}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            {% endif %}
             <td><input name="{{values.controller}}[Zona]" value="{{zona.Zona}}" type="text" style="width: 20px;"/></td>
             <td>
                 <select name="{{values.controller}}[IDEstado]" style="width:90px;">

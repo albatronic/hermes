@@ -1006,6 +1006,22 @@ class Entity {
         return $tiene;
     }
 
+
+    /**
+     * Devuelve un array de objetos relacionados
+     * con la entidad/idEntidad en curso
+     * 
+     * @return array
+     */
+    public function getObjetosRelacionados() {
+        
+        $relaciones = new CpanRelaciones();
+        $objetos = $relaciones->getObjetosRelacionados($this->getClassName(), $this->getPrimaryKeyValue());
+        unset($relaciones); 
+        
+        return $objetos;
+    }
+    
     /**
      * Devuelve un array cuyo índice es el nombre de la propiedad
      * y el valor es el valor de dicha propiedad

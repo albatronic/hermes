@@ -888,7 +888,7 @@ GconContenidos:
       #aditional_filter: { order: 38, caption: CodigoAppAsociada, entity: CpanAplicaciones, method: fetchAll, params: NombreApp, type: select, operator: '=', event: null }
       validator: { nullable: YES, type: string, length: '15', min: null, max: null, message: 'Valor Requerido' }
     IdAlbumExterno:
-      title: 'Álbum externo'
+      title: 'Álbum asociado'
       filter: NO
       list: NO
       visible: true

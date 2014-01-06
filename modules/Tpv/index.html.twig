@@ -16,6 +16,7 @@
         <!-- CUERPO DEL TICKET -->
         {% include 'Tpv/aside.html.twig' %}
         {% include 'Tpv/cuerpo.html.twig' %}
+        {% include 'Tpv/articulos.html.twig' %}
         <!-- PIE DEL TICKET -->
         {% include 'Tpv/pie.html.twig'%}    
     {% endif%}
@@ -36,7 +37,8 @@ $(function() {
         if (!confirm('¿Desea borrar el ticket {{albaran.NumeroAlbaran}}?')) {
             return false;
         } else {
-            $('#accion').val('borrar');$('#formCabecera').submit();
+            $('#accion').val('borrar');
+            $('#formCabecera').submit();
         }  
     });
     $('#botonCrearLinea').click(function(){

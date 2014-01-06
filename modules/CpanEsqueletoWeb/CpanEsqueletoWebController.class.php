@@ -13,6 +13,16 @@ class CpanEsqueletoWebController extends Controller {
     protected $entity = "CpanEsqueletoWeb";
     protected $parentEntity = "";
 
+    public function __construct($request) {
+        parent::__construct($request);
+    
+        $urls = new CpanUrlAmigables();
+        $rows = $urls->cargaCondicion("distinct Controller","1","Controller ASC");
+        $this->values['controllers'] = $rows;
+        unset($urls);
+        
+    }
+    
     public function IndexAction() {
         return $this->listAction();
     }
@@ -34,8 +44,9 @@ class CpanEsqueletoWebController extends Controller {
                     $datos = new $this->entity();
                     $datos->bind($this->request[$this->entity]);
 
-                    if ($datos->valida($this->form->getRules()))
+                    if ($datos->valida($this->form->getRules())) {
                         $datos->create();
+                    }
 
                     $this->values['alertas'] = $datos->getAlertas();
                     $this->values['errores'] = $datos->getErrores();

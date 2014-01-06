@@ -63,6 +63,7 @@ $articulo = new Articulos();
 $rows = $articulo->cargaCondicion("IDArticulo",$filtro);
 $articulo = new Articulos($rows[0]['IDArticulo']);
 $array = $articulo->iterator();
+$array['Iva'] = $articulo->getIDIva()->getIva();
 $array['PvpConImpuestos'] = $articulo->getPrecioVentaConImpuestos();
 unset($articulo);
 
