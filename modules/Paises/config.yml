@@ -136,6 +136,7 @@ Paises:
         min: null
         max: null
         message: Valor Requerido
+      aditional_filter: { order: 1, caption: Moneda, entity: Monedas, method: fetchAll, params: Moneda, type: select, operator: '=', event: null }        
     IDZonaHoraria: 
       title: Zona Horaria
       filter: NO
@@ -150,6 +151,7 @@ Paises:
         min: null
         max: null
         message: Valor Requerido
+      aditional_filter: { order: 2, caption: Zona Horaria, entity: ZonasHorarias, method: fetchAll, params: Zona, type: select, operator: '=', event: null }        
     Latitud: 
       title: Latitud
       filter: NO

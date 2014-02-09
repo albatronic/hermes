@@ -78,7 +78,6 @@ Lotes:
       title: F. Caducidad z-a
       criteria: FechaCaducidad DESC
   search_default: IDLote
-  search_default: IDLote
   referenced_entities:
     - ErpArticulos
     - ValoresSN

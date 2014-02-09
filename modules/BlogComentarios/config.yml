@@ -88,7 +88,7 @@ BlogComentarios:
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
     Entidad:
-      title: Entidad
+      title: Tipo Entidad
       filter: YES
       list: YES
       visible: true
@@ -97,9 +97,10 @@ BlogComentarios:
       help: null
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
+      aditional_filter: { order: 1, caption: Tipo entidad, entity: BlogComentarios, method: fetchAllAditional, params: Entidad, type: select, operator: '=', event: null }      
       validator: { nullable: NO, type: string, length: '50', min: null, max: null, message: 'Valor Requerido' }
     IdEntidad:
-      title: IdEntidad
+      title: Entidad
       filter: NO
       list: NO
       visible: true
@@ -111,7 +112,7 @@ BlogComentarios:
       '#aditional_filter': { order: 1, caption: IdEntidad, entity: GconContenidos, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IpAddress:
-      title: IpAddress
+      title: Dirección IP
       filter: YES
       list: NO
       visible: true
@@ -134,7 +135,7 @@ BlogComentarios:
       '#aditional_filter': { order: 2, caption: IdUsuario, entity: CpanUsuarios, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     Nombre:
-      title: Usuario
+      title: Nombre
       filter: YES
       list: NO
       visible: true
@@ -156,7 +157,7 @@ BlogComentarios:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: string, length: '100', min: null, max: null, message: 'Valor Requerido' }
     TiempoUnix:
-      title: TiempoUnix
+      title: Fecha
       filter: YES
       list: NO
       visible: true

@@ -13,7 +13,7 @@ class PedidosCabController extends Controller {
     protected $entity = "PedidosCab";
     protected $parentEntity = "";
 
-    public function indexAction() {
+    public function IndexAction() {
         return $this->listAction();
     }
 

@@ -224,17 +224,42 @@ class Archivo {
      * @param string $extension La extensión del archivo
      * @return string El nombre de archivo con el path completo
      */
-    static function getTemporalFileName($subcarpeta='pdfs',$extension='pdf') {
+    static function getTemporalFileName($subcarpeta = 'pdfs', $extension = 'pdf') {
+
         $fileName = md5($_SESSION['usuarioPortal']['iu'] . date('d-m-Y H:i:s'));
         $prefijoCarpeta = substr($fileName, 0, 2);
         $path = "docs/docs" . $_SESSION['emp'] . "/{$subcarpeta}/" . $prefijoCarpeta;
         $archivo = "{$path}/{$fileName}.{$extension}";
-        if (!is_dir($path))
-            $ok = mkdir($path);
-        if (!is_dir($path))
-            $archivo = '';
+
+        if (!is_dir($path)) {
+            self::creaCarpeta($path);
+            if (!is_dir($path)) {
+                $archivo = '';
+            }
+        }
 
         return $archivo;
+    }
+
+    /**
+     * Crear de format recursiva las carpetas indicadas en $path
+     * 
+     * @param string $path
+     */
+    static function creaCarpeta($path) {
+
+        $carpetas = explode("/", $path);
+
+        foreach ($carpetas as $key => $carpeta) {
+            $ruta = "";
+            for ($i = 0; $i <= $key; $i++) {
+                $ruta .= $carpetas[$i] . "/";
+            }
+            
+            if (!is_dir($ruta)) {
+                mkdir($ruta);
+            }
+        }
     }
 
     /**
@@ -252,7 +277,7 @@ class Archivo {
         array_shift($carpetas);
         return $carpetas;
     }
-    
+
     /**
      * Sube un archivo al servidor
      *

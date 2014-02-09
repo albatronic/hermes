@@ -71,3 +71,17 @@ permitirComentariosWeb:
     - {'Id':'0','Value':'No'} 
     - {'Id':'1','Value':'Sí'}
   default: '0'   
+  
+censurarComentarios:
+  caption: ¿Censurar comentarios?
+  values:
+    - {'Id':'0','Value':'No, se publican directamente'} 
+    - {'Id':'1','Value':'Sí, los publica el web master'}
+  default: '1' 
+   
+notificarComentarioArticulo:
+  caption: ¿Notificar al webmaster cuando se hace un comentario al artículo?
+  values:
+    - {'Id':'0','Value':'No'} 
+    - {'Id':'1','Value':'Sí'}
+  default: '1'   

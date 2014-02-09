@@ -829,3 +829,71 @@ function documentos(entidad, id, idDiv) {
 
     jQuery('#'+idDiv).load(url, parametros); 
 }
+
+
+function isEmail(email)
+{
+	var posArroba = email.indexOf('@',0);
+	
+	if (posArroba <= 0)
+		return false;
+
+	var posPunto = email.indexOf('.',posArroba);
+		
+	if (posPunto == -1)
+		return false;
+		
+	if (posPunto+1 == email.length)
+		return false;
+	// Despues del punto solo puede haber: a-z 0-9 . _-
+	if (!contieneCaracteresPermitidos(email.substr(posPunto+1), "._-"))
+		return false;
+
+	return true;
+}
+
+function isAlfanumerico(valor)
+{
+	var longi = valor.length;
+	var c;
+	valor = valor.toLowerCase();
+	
+	if (longi>0) {
+		c = valor.charAt(0);
+		if (!(c >= 'a' && c <= 'z')) {
+			return false;
+		}
+	}
+	
+	for (var i = 1; i < longi; i++)
+	{
+		c = valor.charAt(i);
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || c=='_' || c=='.')
+			continue;
+		else 
+			return false;
+	}
+	return true;
+}
+
+function contieneCaracteresPermitidos(valor, caracteresValidos)
+{
+	var longi = valor.length;
+	var c;
+	valor = valor.toLowerCase();
+	
+	for (var i = 0; i < longi; i++)
+	{
+		c = valor.charAt(i);
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')) {
+			continue;
+		} else {
+			for (var j=0; j<caracteresValidos.length; j++) {
+				if (caracteresValidos.indexOf(c)==-1) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}

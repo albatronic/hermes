@@ -29,6 +29,17 @@ NumArticulosListado:
     - {'Id':'32','Value':'32'}
   default: '8'
   
+NumArticulosRelacionados:
+  caption: Número de artículos relacionados a mostrar
+  values:
+    - {'Id':'0','Value':'0'} 
+    - {'Id':'2','Value':'2'} 
+    - {'Id':'3','Value':'3'} 
+    - {'Id':'4','Value':'4'} 
+    - {'Id':'5','Value':'5'}
+    - {'Id':'10','Value':'10'}
+  default: '0'
+  
 censurarArticulos:
   caption: ¿Censurar productos subidos por los usuarios?
   values:
@@ -55,4 +66,18 @@ permitirComentariosWeb:
   values:
     - {'Id':'0','Value':'No'} 
     - {'Id':'1','Value':'Sí'}
-  default: '0'   
+  default: '0' 
+  
+censurarComentarios:
+  caption: ¿Censurar comentarios?
+  values:
+    - {'Id':'0','Value':'No, se publican directamente'} 
+    - {'Id':'1','Value':'Sí, los publica el web master'}
+  default: '1' 
+   
+notificarComentarioArticulo:
+  caption: ¿Notificar al webmaster cuando se hace un comentario al artículo?
+  values:
+    - {'Id':'0','Value':'No'} 
+    - {'Id':'1','Value':'Sí'}
+  default: '1'    

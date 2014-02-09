@@ -1,26 +1,16 @@
 <?php
-
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @date 18.10.2012 00:21:37
+ * @date 02.02.2014 01:19:34
  */
 
 /**
- * @orm:Entity(CommMunicipios)
+ * @orm:Entity(ErpMunicipios)
  */
 class Municipios extends MunicipiosEntity {
-
-    public function __toString() {
-        return $this->Municipio;
-    }
-
-    public function fetchAll($column = '', $default = TRUE) {
-        if ($column == '')
-            $column = 'Municipio';
-        return parent::fetchAll($column, $default);
-    }
-
+	public function __toString() {
+		return $this->getIDMunicipio();
+	}
 }
-
 ?>

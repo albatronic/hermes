@@ -1,4 +1,4 @@
-{# Template new.html.twig for Contadores #}
+{# Template new.html.twig for EmailBox #}
 {# -------------------------------------------------------#}
 {# CREAR UN REGISTRO NUEVO                                #}
 {# -------------------------------------------------------#}
@@ -11,7 +11,7 @@
     <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" method="POST" enctype="multipart/form-data">
         <input name="controller" value="{{ values.controller }}" type="hidden" />
         <input name="action" id="action" value="new" type="hidden" />
-        <input name="{{ values.controller }}[IDContador]" value="{{ values.datos.IDContador }}" type="hidden" />
+        <input name="{{ values.controller }}[Id]" value="{{ values.datos.Id }}" type="hidden" />
 		{% include '_global/comandosCreate.html.twig' %}
         <div class="Cuerpo">
             {% include '_global/FormErrores.html.twig' with {'errores': values.errores} %}

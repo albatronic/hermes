@@ -42,11 +42,17 @@ ErpTiposVenta:
   1: { IDVenta: 1, TipoVenta: Estándar }
   
 ErpUnidadesMedida:
-  1: { Id: 1, UnidadMedida: Unidad }
+  - { Id: 1, UnidadMedida: Unidad }
+  - { Id: 2, UnidadMedida: Kgrs }
+  - { Id: 3, UnidadMedida: Caja }
+  - { Id: 4, UnidadMedida: Bolsa }
+  - { Id: 5, UnidadMedida: Litro }
   
 ErpFormasPago:
-  1: { IDFP: 1, Descripcion: Contado, AnotarEnCaja: 1, EstadoRecibo: 6 }
-  2: { IDFP: 2, Descripcion: Recibo a la vista, AnotarEnCaja: 0, EstadoRecibo: 0}  
+  - { IDFP: 1, Descripcion: Contado, AnotarEnCaja: 1, EstadoRecibo: 6 }
+  - { IDFP: 2, Descripcion: 'Recibo a la vista', AnotarEnCaja: 0, EstadoRecibo: 0}  
+  - { IDFP: 3, Descripcion: 'Recibo 30 días F/F', NumeroVctos: 1, DiaPrimerVcto: 30, AnotarEnCaja: 0, EstadoRecibo: 0}  
+  - { IDFP: 4, Descripcion: 'Recibos 30,60 días F/F', NumeroVctos: 2, DiaPrimerVcto: 30, DiasIntervalo: 30, AnotarEnCaja: 0, EstadoRecibo: 0}  
   
 ErpClientesTipos:
   1: { IDTipo: 1, Tipo: Estándar }
@@ -104,11 +110,13 @@ ErpFabricantes:
 ErpFamilias:
   1 : { Familia: Genérica, Publish: 1 }
   
-<?php include '../Erp/entities/schema/fixturesBancosOficinas.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesIdiomas.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesMonedas.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesMunicipiosSpain.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesPaises.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesProvinciasSpain.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesZonasHorarias.yml'; echoln('');?>  
-<?php include '../Erp/entities/schema/fixturesAppCpan.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesBancosOficinas.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesCnae.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesIdiomas.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesMonedas.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesMunicipiosSpain.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesPaises.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesProvinciasSpain.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesZonasHorarias.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/fixturesAppCpan.yml'; echoln('');?>  
+<?php include '../Hermes/entities/schema/modulosErp.yml'; echoln('');?>  

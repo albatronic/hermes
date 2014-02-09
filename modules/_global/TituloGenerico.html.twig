@@ -14,7 +14,7 @@
         
         <div style="float: left; margin-left: 10px;">
             {% if (varEnvMod.translatable == 1)%}
-            <img src="{{app.path}}/lang/{{idiomas.disponibles[idiomas.actual]}}.gif"/>
+            <img src="{{app.path}}/lang/{{idiomas.disponibles[idiomas.actual]}}.gif" alt="{{idiomas.disponibles[idiomas.actual]}}" title="{{idiomas.disponibles[idiomas.actual]}}"/>
             {% endif %}
             {{ values.titulo }}
         </div>
@@ -36,13 +36,13 @@
         
             {# BANDERAS DE IDIOMAS #}
             {% if ((varEnvMod.translatable == 1) and (idiomas.disponibles|length > 1) )%}
-
+                [
                 {% for key,idioma in idiomas.disponibles %}
                     {% if key != idiomas.actual %}
-                        <a href="{{app.path}}/{{values.controller}}/lang/{{key}}/{{values.datos.getPrimaryKeyMD5}}"><img src="{{app.path}}/lang/{{idioma}}.gif"/></a>
+                        <a href="{{app.path}}/{{values.controller}}/lang/{{key}}/{{values.datos.getPrimaryKeyMD5}}"><img src="{{app.path}}/lang/{{idioma}}.gif" alt="{{idioma}}" title="{{idioma}}"/></a>
                     {% endif %}
                 {% endfor%}
-
+                ]
             {% endif %}
      
             {# AYUDA #}

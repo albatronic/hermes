@@ -119,6 +119,10 @@ class Listado {
         return $this->query;
     }
 
+    public function getArrayQuery() {
+        return $this->arrayQuery;
+    }
+    
     public function buildQuery() {
         $this->setQuery("
                 SELECT {$this->arrayQuery['SELECT']}
@@ -276,7 +280,7 @@ class Listado {
         $this->filter['records'] = $em->numRows();
         $this->filter['pages'] = floor($this->filter['records'] / $this->filter['recordsPerPage']);
         if (($this->filter['records'] % $this->filter['recordsPerPage']) > 0)
-            $this->filter['pages']++;
+            $this->filter['pages'] ++;
         $offset = ($this->filter['page'] - 1) * $this->filter['recordsPerPage'];
 
         $rows = $em->fetchResultLimit($this->filter['recordsPerPage'], $offset);
@@ -377,15 +381,12 @@ class Listado {
 
         // CREAR EL DOCUMENTO
         $pdf = new ListadoPDF(
-                        $orientation,
-                        $unit,
-                        $format,
-                        array(
-                            'title' => $parametros['title'],
-                            'titleFont' => $bodyFont,
-                            'columns' => $parametros['columns'],
-                            'leyendaFiltro' => $leyendaFiltro,
-                        )
+                $orientation, $unit, $format, array(
+            'title' => $parametros['title'],
+            'titleFont' => $bodyFont,
+            'columns' => $parametros['columns'],
+            'leyendaFiltro' => $leyendaFiltro,
+                )
         );
         $pdf->SetTopMargin($margenes[0]);
         $pdf->SetRightMargin($margenes[1]);

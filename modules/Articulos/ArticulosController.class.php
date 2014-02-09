@@ -20,6 +20,8 @@ class ArticulosController extends Controller {
     /**
      * Importa artículos desde fichero externo csv según
      * el formato de facturaplus
+     * 
+     * NOTA IMPORTANTE: SE HAN DE IMPORTAR LAS FAMILIAS ANTES.
      */
     public function ImportarAction() {
 
@@ -30,6 +32,8 @@ class ArticulosController extends Controller {
 
         if ($archivo->open("r")) {
             set_time_limit(0);
+            // Me salto la primera línea de cabecera
+            $linea = $archivo->readLine();            
             while (($linea = $archivo->readLine()) !== FALSE) {//print_r($linea);
                 $fam = new Familias();
                 $fam = $fam->find('Observations', trim($linea[2]));

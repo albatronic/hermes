@@ -1,17 +1,18 @@
 <?php
 
 /*
- * TRAVASA LA INFORMACION DE LA BASE DE DATOS DE AEROPRINT AL ERP
+ * TRAVASA LA INFORMACION DE LA BASE DE DATOS ANTIGUA (ppuerpxxx)
+ * A LA NUEVA GESTIONADA POR HERMES
  *
- * @author sergio
+ * @author Informática ALBATRONIC, SL <sergio.perez@albatronic.com>
  */
 
 class UpdateController {
 
     //protected $dbOrigen = "aeroprint_gestion001";
     //protected $dbDestino = "albatro_aeroprint";
-    protected $dbOrigen = "aeroprint_gestion002";
-    protected $dbDestino = "albatro_marcos";
+    protected $dbOrigen = "albatro_ppuerp006";
+    protected $dbDestino = "albatro_carroceriasgranada";
     //protected $dbOrigen = "aeroprint_gestion003";
     //protected $dbDestino = "albatro_gastosaeroprint";  
     //protected $dbOrigen = "aeroprint_gestion004";
@@ -22,33 +23,32 @@ class UpdateController {
      * @var array
      */
     protected $agentes = array(
-        '1' => '3',
-        '2' => '2',
-        '5' => '4',
-        '6' => '3',
-        '7' => '5',
-        '8' => '6',
+        '0' => '8',
+        '8' => '8',
+        '14' => '14',
     );
-    
     protected $correspondenciaIva = array(
-        '0' => '0',
-        '4' => '4',
-        '16' => '16',
-        '18' => '21',
+        '0.00' => 0,
+        '4.00' => 4,
+        '16.00' => 16,
+        '18.00' => 21,
+        '21.00' => 21,
     );
 
     public function IndexAction() {
 
         set_time_limit(0);
 
-        $_SESSION['idiomas']['actual'] = 99;
+        $_SESSION['idiomas']['actual'] = -1;
 
+        $this->Agencias();
         $this->FormasPago();
         $this->Clientes();
         $this->ClientesTipos();
         $this->ClientesGrupos();
         $this->Fabricantes();
         $this->Familias();
+        $this->Subfamilias();
         $this->Proveedores();
         $this->Articulos();
         $this->PstoCab();
@@ -63,6 +63,162 @@ class UpdateController {
         $this->PedidosLineas();
         $this->RecibosClientes();
         $this->RecibosProveedores();
+        $this->Existencias();
+        $this->Inventarios();
+    }
+
+    public function Inventarios() {
+
+        $nItems = 0;
+        $nErrores = 0;
+
+        $dbLink = mysql_connect("localhost", "root", "albatronic");
+
+        $query = "TRUNCATE {$this->dbDestino}.ErpInventariosCab";
+        mysql_query($query);
+        $query = "TRUNCATE {$this->dbDestino}.ErpInventariosLineas";
+        mysql_query($query);
+
+        $query = "select distinct IDSucursal,DATE_FORMAT(Fecha,'%Y-%m-%d') as FInventario, Cerrado FROM {$this->dbOrigen}.inventarios order by DATE_FORMAT(Fecha,'%Y-%m-%d') asc";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $i = new InventariosCab();
+            $i->setIDAlmacen($row['IDSucursal']);
+            $i->setFecha($row['FInventario']);
+            $i->setCerrado($row['Cerrado']);
+
+            $id = $i->create();
+            if (!$id) {
+                $errores[] = $i->getErrores();
+                $nErrores++;
+            } else {
+                $i->setIDInventario($id);
+                $i->setPrimaryKeyMD5(md5($id));
+                $i->save();
+                $nItems++;
+
+                $this->LineasInventario($row['FInventario'], $id, $dbLink);
+            }
+        }
+
+        echo "Inventarios cabeceras {$nItems}<br/>";
+        if (count($errores)) {
+            echo "<pre>";
+            print_r($errores);
+            echo "</pre>";
+        }
+    }
+
+    private function LineasInventario($fecha, $id, $dbLink) {
+
+        $query = "select i.*,a.IDArticulo as id,a.Descripcion from {$this->dbOrigen}.inventarios i LEFT JOIN {$this->dbDestino}.ErpArticulos a on i.IDArticulo=a.Codigo WHERE DATE_FORMAT(Fecha,'%Y-%m-%d')='{$fecha}' and a.IDArticulo>0";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $l = new InventariosLineas();
+            $l->setIDInventario($id);
+            $l->setIDArticulo($row['id']);
+            $l->setIDLote(0);
+            $l->setIDUbicacion(0);
+            $l->setDescripcion($row['Descripcion']);
+            $l->setStock($row['Stock']);
+            $pk = $l->create();
+            if (!$id) {
+                $errores[] = $l->getErrores();
+                $nErrores++;
+            } else {
+                $l->setIDLinea($pk);
+                $l->setPrimaryKeyMD5(md5($pk));
+                $l->save();
+                $nItems++;
+            }
+        }
+        print_r($errores);
+    }
+
+    public function Agencias() {
+
+        $nItems = 0;
+        $nErrores = 0;
+
+        $dbLink = mysql_connect("localhost", "root", "albatronic");
+
+        $query = "TRUNCATE {$this->dbDestino}.ErpAgencias";
+        mysql_query($query);
+
+        $query = "select * from {$this->dbOrigen}.agencias";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+            $a = new Agencias();
+            $a->setIDAgencia($row['IDAgencia']);
+            $a->setAgencia($row['Agencia']);
+            $a->setTelefono($row['Telefono']);
+            $a->setFax($row['Fax']);
+            $a->setWeb($row['Web']);
+            $a->setEmail($row['Email']);
+            $a->setPrimaryKeyMD5(md5($row['IDAgencia']));
+            $id = $a->create();
+            if (!$id) {
+                $arrores[] = $a->getErrores();
+                $nErrores++;
+            } else {
+
+                $nItems++;
+            }
+        }
+
+        echo "Agencias de transporte {$nItems}<br/>";
+        if (count($errores)) {
+            echo "<pre>";
+            print_r($errores);
+            echo "</pre>";
+        }
+    }
+
+    public function Existencias() {
+
+        $nItems = 0;
+        $nErrores = 0;
+
+        $dbLink = mysql_connect("localhost", "root", "albatronic");
+
+        $query = "TRUNCATE {$this->dbDestino}.ErpExistencias";
+        mysql_query($query);
+
+        $query = "select e.*,a.IDArticulo as id from {$this->dbOrigen}.existencias e left join {$this->dbDestino}.ErpArticulos a on e.IDArticulo=a.Codigo";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+            $e = new Existencias();
+            $e->setIDAlmacen($row['IDSucursal']);
+            $e->setIDArticulo($row['id']);
+            $e->setReales($row['Reales']);
+            $e->setReservadas($row['Reservadas']);
+            $e->setEntrando($row['Entrando']);
+            $e->setMaximo($row['Maximo']);
+            $e->setMinimo($row['Minimo']);
+
+            $id = $e->create();
+            if (!$id) {
+                $errores[] = $e->getErrores();
+                $nErrores++;
+            } else {
+                $e->setPrimaryKeyMD5(md5($id));
+                $e->save();
+                $nItems++;
+            }
+        }
+
+        echo "Existencias {$nItems}<br/>";
+        if (count($errores)) {
+            echo "<pre>";
+            print_r($errores);
+            echo "</pre>";
+        }
     }
 
     public function RecibosProveedores() {
@@ -76,7 +232,7 @@ class UpdateController {
         mysql_query($query);
 
         // Correspondencia entre número de factura e id de factura
-        $query = "SELECT r.NumeroFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.recibos_proveedores AS r, {$this->dbOrigen}.frecibidas_cab AS f WHERE r.NumeroFactura = f.NumeroFactura";
+        $query = "SELECT r.NumeroFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.recibos_proveedores AS r LEFT JOIN {$this->dbOrigen}.frecibidas_cab AS f ON r.NumeroFactura = f.NumeroFactura";
         $result = mysql_query($query, $dbLink);
         while ($row1 = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row1['Numero']] = $row1['Id'];
@@ -112,7 +268,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Recibos proveedores creados {$nItems}<br/>";
         if (count($errores)) {
@@ -133,7 +289,7 @@ class UpdateController {
         mysql_query($query);
 
         // Correspondencia entre número de factura e id de factura
-        $query = "SELECT r.NumeroFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.recibos_clientes AS r, {$this->dbOrigen}.femitidas_cab AS f WHERE r.NumeroFactura = f.NumeroFactura";
+        $query = "SELECT r.NumeroFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.recibos_clientes AS r LEFT JOIN {$this->dbOrigen}.femitidas_cab AS f ON r.NumeroFactura = f.NumeroFactura";
         $result = mysql_query($query, $dbLink);
         while ($row1 = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row1['Numero']] = $row1['Id'];
@@ -148,6 +304,7 @@ class UpdateController {
             $c->setIDSucursal(1);
             $c->setIDFactura($correspondencia[$row['NumeroFactura']]);
             $c->setIDCliente($row['IDCliente']);
+            $c->setIDComercial(8);
             $c->setFecha($row['Fecha']);
             $c->setVencimiento($row['Vencimiento']);
             $c->setImporte($row['Importe']);
@@ -169,7 +326,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Recibos clientes creados {$nItems}<br/>";
         if (count($errores)) {
@@ -208,23 +365,35 @@ class UpdateController {
             $c->setIDProveedor($row['IDProveedor']);
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible']);
-            $c->setIva1($row['Iva']);
-            $c->setCuotaIva1($row['CuotaIva']);
-            $c->setRecargo1($row['Recargo']);
-            $c->setCuotaRecargo1($row['CuotaRecargo']);
-            $c->setTotalBases($row['BaseImponible']);
-            $c->setTotalIva($row['CuotaIva']);
-            $c->setTotalRecargo($row['CuotaRecargo']);
+            $c->setBaseImponible1($row['BaseImponible1']);
+            $c->setIva1($row['Iva1']);
+            $c->setCuotaIva1($row['CuotaIva1']);
+            $c->setRecargo1($row['Recargo1']);
+            $c->setCuotaRecargo1($row['CuotaRecargo1']);
+            $c->setBaseImponible2($row['BaseImponible2']);
+            $c->setIva2($row['Iva2']);
+            $c->setCuotaIva2($row['CuotaIva2']);
+            $c->setRecargo2($row['Recargo2']);
+            $c->setCuotaRecargo2($row['CuotaRecargo2']);
+            $c->setBaseImponible3($row['BaseImponible3']);
+            $c->setIva3($row['Iva3']);
+            $c->setCuotaIva3($row['CuotaIva3']);
+            $c->setRecargo3($row['Recargo3']);
+            $c->setCuotaRecargo3($row['CuotaRecargo3']);
+            $c->setTotalBases($row['TotalBases']);
+            $c->setTotalIva($row['TotalIva']);
+            $c->setTotalRecargo($row['TotalRecargo']);
             $c->setTotal($row['Total']);
             $c->setObservaciones($row['Observaciones']);
             $c->setIDFP($row['IDFP']);
             $c->setIDAgencia(1);
             if ($row['Recepcionado'] == 'S') {
                 $c->setIDEstado(2);
-                $c->setIDFactura($correspondencia[$row['IDPedido']]);
-            } else
+                $c->setIDFactura(isset($correspondencia[$row['IDPedido']]) ? $correspondencia[$row['IDPedido']] : 0);
+            } else {
                 $c->setIDEstado(0);
+                $c->setIDFactura(0);
+            }
             $c->setPrimaryKeyMD5(md5($row['IDPedido']));
 
             if (!$c->create()) {
@@ -234,7 +403,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Pedidos creados {$nItems}<br/>";
         if (count($errores)) {
@@ -268,14 +437,24 @@ class UpdateController {
             $c->setIDProveedor($row['IDProveedor']);
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible']);
-            $c->setIva1($row['Iva']);
-            $c->setCuotaIva1($row['CuotaIva']);
-            $c->setRecargo1($row['Recargo']);
-            $c->setCuotaRecargo1($row['CuotaRecargo']);
-            $c->setTotalBases($row['BaseImponible']);
-            $c->setTotalIva($row['CuotaIva']);
-            $c->setTotalRecargo($row['CuotaRecargo']);
+            $c->setBaseImponible1($row['BaseImponible1']);
+            $c->setIva1($row['Iva1']);
+            $c->setCuotaIva1($row['CuotaIva1']);
+            $c->setRecargo1($row['Recargo1']);
+            $c->setCuotaRecargo1($row['CuotaRecargo1']);
+            $c->setBaseImponible2($row['BaseImponible2']);
+            $c->setIva2($row['Iva2']);
+            $c->setCuotaIva2($row['CuotaIva2']);
+            $c->setRecargo2($row['Recargo2']);
+            $c->setCuotaRecargo2($row['CuotaRecargo2']);
+            $c->setBaseImponible3($row['BaseImponible3']);
+            $c->setIva3($row['Iva3']);
+            $c->setCuotaIva3($row['CuotaIva3']);
+            $c->setRecargo3($row['Recargo3']);
+            $c->setCuotaRecargo3($row['CuotaRecargo3']);
+            $c->setTotalBases($row['TotalBases']);
+            $c->setTotalIva($row['TotalIva']);
+            $c->setTotalRecargo($row['TotalRecargo']);
             $c->setTotal($row['Total']);
             $c->setCuentaCompras($row['CuentaCompras']);
             $c->setObservaciones($row['Observaciones']);
@@ -289,7 +468,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Facturas recibidas creadas {$nItems}<br/>";
         if (count($errores)) {
@@ -314,7 +493,7 @@ class UpdateController {
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row['Codigo']] = $row['IDArticulo'];
 
-        $query = "select c.Fecha, l.* from {$this->dbOrigen}.frecibidas_cab as c,{$this->dbOrigen}.frecibidas_lineas as l where c.IDFactura=l.IDFactura";
+        $query = "select c.Fecha, l.* from {$this->dbOrigen}.frecibidas_cab as c LEFT JOIN {$this->dbOrigen}.frecibidas_lineas as l ON c.IDFactura=l.IDFactura where l.IDFactura>0";
         $result = mysql_query($query, $dbLink);
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -343,7 +522,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Líneas Factura recibidas creadas {$nItems}<br/>";
         if (count($errores)) {
@@ -368,7 +547,7 @@ class UpdateController {
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row['Codigo']] = $row['IDArticulo'];
 
-        $query = "select c.Fecha, l.* from {$this->dbOrigen}.pedidos_cab as c, {$this->dbOrigen}.pedidos_lineas as l where c.IDPedido=l.IDPedido";
+        $query = "select c.Fecha, l.* from {$this->dbOrigen}.pedidos_cab as c LEFT JOIN {$this->dbOrigen}.pedidos_lineas as l ON c.IDPedido=l.IDPedido where l.IDPedido>0";
         $result = mysql_query($query, $dbLink);
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -398,7 +577,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Líneas de Pedido creadas {$nItems}<br/>";
         if (count($errores)) {
@@ -433,14 +612,24 @@ class UpdateController {
             $c->setIDCliente($row['IDCliente']);
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible']);
-            $c->setIva1($row['Iva']);
-            $c->setCuotaIva1($row['CuotaIva']);
-            $c->setRecargo1($row['Recargo']);
-            $c->setCuotaRecargo1($row['CuotaRecargo']);
-            $c->setTotalBases($row['BaseImponible']);
-            $c->setTotalIva($row['CuotaIva']);
-            $c->setTotalRecargo($row['CuotaRecargo']);
+            $c->setBaseImponible1($row['BaseImponible1']);
+            $c->setIva1($row['Iva1']);
+            $c->setCuotaIva1($row['CuotaIva1']);
+            $c->setRecargo1($row['Recargo1']);
+            $c->setCuotaRecargo1($row['CuotaRecargo1']);
+            $c->setBaseImponible2($row['BaseImponible2']);
+            $c->setIva2($row['Iva2']);
+            $c->setCuotaIva2($row['CuotaIva2']);
+            $c->setRecargo2($row['Recargo2']);
+            $c->setCuotaRecargo2($row['CuotaRecargo2']);
+            $c->setBaseImponible3($row['BaseImponible3']);
+            $c->setIva3($row['Iva3']);
+            $c->setCuotaIva3($row['CuotaIva3']);
+            $c->setRecargo3($row['Recargo3']);
+            $c->setCuotaRecargo3($row['CuotaRecargo3']);
+            $c->setTotalBases($row['TotalBases']);
+            $c->setTotalIva($row['TotalIva']);
+            $c->setTotalRecargo($row['TotalRecargo']);
             $c->setTotal($row['Total']);
             $c->setCuentaVentas($row['CuentaVentas']);
             $c->setObservaciones($row['Observaciones']);
@@ -459,7 +648,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Facturas emitidas creadas {$nItems}<br/>";
         if (count($errores)) {
@@ -484,7 +673,7 @@ class UpdateController {
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row['Codigo']] = $row['IDArticulo'];
 
-        $query = "select c.Fecha, l.* from {$this->dbOrigen}.femitidas_cab as c, {$this->dbOrigen}.femitidas_lineas as l where c.IDFactura=l.IDFactura";
+        $query = "select c.Fecha, l.* from {$this->dbOrigen}.femitidas_cab as c LEFT JOIN {$this->dbOrigen}.femitidas_lineas as l ON c.IDFactura=l.IDFactura where l.IDFactura>0";
         $result = mysql_query($query, $dbLink);
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -515,9 +704,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Líneas Factura emitidas creadas {$nItems}<br/>";
+        echo "Líneas Factura emitidas {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -542,10 +731,15 @@ class UpdateController {
 
             $row = $this->utf($row);
 
+            $f = new Familias();
+            $f = $f->find("Observations", $row['IDSubfamilia']);
+            $idFamilia = $f->getIDFamilia();
+
             $c = new Articulos();
             $c->setCodigo($row['IDArticulo']);
             $c->setDescripcion($row['Descripcion']);
             $c->setIDCategoria($row['IDFamilia']);
+            $c->setIDFamilia($idFamilia ? $idFamilia : 0);
             $c->setIDFabricante($row['IDFabricante']);
             $c->setPvd($row['Pvd']);
             $c->setPvp($row['Pvp']);
@@ -570,7 +764,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Artículos {$nItems}<br/>";
         if (count($errores)) {
@@ -609,7 +803,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Clientes Grupos  {$nItems}<br/>";
         if (count($errores)) {
@@ -648,7 +842,7 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Clientes Tipos  {$nItems}<br/>";
         if (count($errores)) {
@@ -717,9 +911,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Proveedores creados {$nItems}<br/>";
+        echo "Proveedores {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -747,18 +941,76 @@ class UpdateController {
             $c = new Familias();
             $c->setIDFamilia($row['IDFamilia']);
             $c->setFamilia($row['Familia']);
+            $c->setInventario(($row['Inventario'] == 'S') ? 1 : 0 );
+            $c->setTrazabilidad(($row['ConNumeroSerie'] == 'S') ? 1 : 0 );
+            $c->setMargenWeb($row['MargenWeb']);
+            $c->setMargenMinimo($row['Minimo']);
+            $c->setMostrarEnTpv(($row['Ticket'] == 'S') ? 1 : 0 );
+            $c->setPublish(($row['PublicarWeb'] == 'S') ? 1 : 0 );
             $c->setPrimaryKeyMD5(md5($row['IDFamilia']));
 
-            if (!$c->create()) {
+            if ($c->create() == NULL) {
                 $errores[] = $c->getErrores();
                 $nErrores++;
             } else
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
         echo "Familias  {$nItems}<br/>";
+        if (count($errores)) {
+            echo "<pre>";
+            print_r($errores);
+            echo "</pre>";
+        }
+    }
+
+    public function Subfamilias() {
+
+        $nItems = 0;
+        $nErrores = 0;
+
+        $dbLink = mysql_connect("localhost", "root", "albatronic");
+
+        //$query = "TRUNCATE {$this->dbDestino}.ErpFamilias";
+        //mysql_query($query);
+
+        $query = "select * from {$this->dbOrigen}.subfamilias";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+            $row = $this->utf($row);
+
+            $f = new Familias($row['IDFamilia']);
+
+            $c = new Familias();
+            $c->setFamilia($row['Subfamilia']);
+            $c->setInventario($f->getInventario()->getIDTipo());
+            $c->setTrazabilidad($f->getTrazabilidad()->getIDTipo());
+            $c->setMargenWeb($f->getMargenWeb());
+            $c->setMargenMinimo($f->getMargenMinimo());
+            $c->setMostrarEnTpv($f->getMostrarEnTpv()->getIDTipo());
+            $c->setPublish(($row['PublicarWeb'] == 'S') ? 1 : 0 );
+            $c->setBelongsTo($f->getIDFamilia());
+            $c->setObservations($row['IDSubfamilia']);
+
+            $id = $c->create();
+            if ($id == NULL) {
+                $errores[] = $c->getErrores();
+                $nErrores++;
+            } else {
+                $c->setIDFamilia($id);
+                $c->setPrimaryKeyMD5(md5($id));
+                $c->save();
+                $nItems++;
+            }
+        }
+
+        //mysql_close($dbLink);
+
+        echo "Subfamilias  {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -791,16 +1043,16 @@ class UpdateController {
             $c->setEmail($row['EMail']);
             $c->setPrimaryKeyMD5(md5($row['IDFabricante']));
 
-            if (!$c->create()) {
+            if ($c->create() == NULL) {
                 $errores[] = $c->getErrores();
                 $nErrores++;
             } else
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Fabricantes  {$nItems}<br/>";
+        echo "Fabricantes {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -833,16 +1085,16 @@ class UpdateController {
             $c->setDiasIntervalo($row['DiasIntervalo']);
             $c->setPrimaryKeyMD5(md5($row['IDFP']));
 
-            if (!$c->create()) {
+            if ($c->create() == NULL) {
                 $errores[] = $c->getErrores();
                 $nErrores++;
             } else
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Formas de pago  {$nItems}<br/>";
+        echo "Formas de pago {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -888,7 +1140,7 @@ class UpdateController {
                 $c->setIDPoblacion($poblacion[0]['IDMunicipio']);
             } else {
                 $c->setIDProvincia($row['IDProvincia']);
-                $$row['Avisos'] = $row['Poblacion'];
+                $row['Avisos'] = $row['Poblacion'];
             }
             $c->setCodigoPostal($row['CodigoPostal']);
             $c->setTelefono($row['Telefono']);
@@ -925,9 +1177,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Clientes creados {$nItems}<br/>";
+        echo "Clientes {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -964,14 +1216,24 @@ class UpdateController {
 
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible']);
-            $c->setIva1($row['Iva']);
-            $c->setCuotaIva1($row['CuotaIva']);
-            $c->setRecargo1($row['Recargo']);
-            $c->setCuotaRecargo1($row['CuotaRecargo']);
-            $c->setTotalBases($row['BaseImponible']);
-            $c->setTotalIva($row['CuotaIva']);
-            $c->setTotalRecargo($row['CuotaRecargo']);
+            $c->setBaseImponible1($row['BaseImponible1']);
+            $c->setIva1($row['Iva1']);
+            $c->setCuotaIva1($row['CuotaIva1']);
+            $c->setRecargo1($row['Recargo1']);
+            $c->setCuotaRecargo1($row['CuotaRecargo1']);
+            $c->setBaseImponible2($row['BaseImponible2']);
+            $c->setIva2($row['Iva2']);
+            $c->setCuotaIva2($row['CuotaIva2']);
+            $c->setRecargo2($row['Recargo2']);
+            $c->setCuotaRecargo2($row['CuotaRecargo2']);
+            $c->setBaseImponible3($row['BaseImponible3']);
+            $c->setIva3($row['Iva3']);
+            $c->setCuotaIva3($row['CuotaIva3']);
+            $c->setRecargo3($row['Recargo3']);
+            $c->setCuotaRecargo3($row['CuotaRecargo3']);
+            $c->setTotalBases($row['TotalBases']);
+            $c->setTotalIva($row['TotalIva']);
+            $c->setTotalRecargo($row['TotalRecargo']);
             $c->setTotal($row['Total']);
             $c->setIDEstado($row['Estado']);
             $c->setObservaciones($row['Observaciones']);
@@ -986,9 +1248,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Presupuestos creados {$nItems}<br/>";
+        echo "Presupuestos {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -1011,7 +1273,7 @@ class UpdateController {
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row['Codigo']] = $row['IDArticulo'];
 
-        $query = "select l.*, c.Estado, c.Fecha from {$this->dbOrigen}.psto_lineas as l, {$this->dbOrigen}.psto_cab as c where l.IDPsto=c.IDPsto";
+        $query = "select l.*, c.Estado, c.Fecha from {$this->dbOrigen}.psto_lineas as l LEFT JOIN {$this->dbOrigen}.psto_cab as c ON l.IDPsto=c.IDPsto where c.IDPsto>0";
         $result = mysql_query($query, $dbLink);
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -1044,9 +1306,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Líneas Presupuestos creadas {$nItems}<br/>";
+        echo "Líneas Presupuestos {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -1065,7 +1327,7 @@ class UpdateController {
         mysql_query($query);
 
         // Correspondencia entre número de factura e id de factura
-        $query = "SELECT a.IDFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.albaranes_cab AS a, {$this->dbOrigen}.femitidas_cab AS f WHERE a.IDFactura = f.NumeroFactura ORDER BY IDAlbaran";
+        $query = "SELECT a.IDFactura as Numero, f.IDFactura as Id FROM {$this->dbOrigen}.albaranes_cab AS a LEFT JOIN {$this->dbOrigen}.femitidas_cab AS f ON a.IDFactura = f.NumeroFactura ORDER BY IDAlbaran";
         $result = mysql_query($query, $dbLink);
         while ($row1 = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row1['Numero']] = $row1['Id'];
@@ -1090,14 +1352,24 @@ class UpdateController {
 
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible']);
-            $c->setIva1($row['Iva']);
-            $c->setCuotaIva1($row['CuotaIva']);
-            $c->setRecargo1($row['Recargo']);
-            $c->setCuotaRecargo1($row['CuotaRecargo']);
-            $c->setTotalBases($row['BaseImponible']);
-            $c->setTotalIva($row['CuotaIva']);
-            $c->setTotalRecargo($row['CuotaRecargo']);
+            $c->setBaseImponible1($row['BaseImponible1']);
+            $c->setIva1($row['Iva1']);
+            $c->setCuotaIva1($row['CuotaIva1']);
+            $c->setRecargo1($row['Recargo1']);
+            $c->setCuotaRecargo1($row['CuotaRecargo1']);
+            $c->setBaseImponible2($row['BaseImponible2']);
+            $c->setIva2($row['Iva2']);
+            $c->setCuotaIva2($row['CuotaIva2']);
+            $c->setRecargo2($row['Recargo2']);
+            $c->setCuotaRecargo2($row['CuotaRecargo2']);
+            $c->setBaseImponible3($row['BaseImponible3']);
+            $c->setIva3($row['Iva3']);
+            $c->setCuotaIva3($row['CuotaIva3']);
+            $c->setRecargo3($row['Recargo3']);
+            $c->setCuotaRecargo3($row['CuotaRecargo3']);
+            $c->setTotalBases($row['TotalBases']);
+            $c->setTotalIva($row['TotalIva']);
+            $c->setTotalRecargo($row['TotalRecargo']);
             $c->setTotal($row['Total']);
             if ($row['Expedido'] == 0)
                 $c->setIDEstado(0);
@@ -1127,9 +1399,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Albaranes creados {$nItems}<br/>";
+        echo "Albaranes {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -1152,7 +1424,7 @@ class UpdateController {
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
             $correspondencia[$row['Codigo']] = $row['IDArticulo'];
 
-        $query = "select l.*, c.IDAgente, c.Expedido, c.IDFactura, c.Fecha from {$this->dbOrigen}.albaranes_lineas as l, {$this->dbOrigen}.albaranes_cab as c where l.IDAlbaran=c.IDAlbaran";
+        $query = "select l.*, c.IDAgente, c.Expedido, c.IDFactura, c.Fecha from {$this->dbOrigen}.albaranes_lineas as l LEFT JOIN {$this->dbOrigen}.albaranes_cab as c ON l.IDAlbaran=c.IDAlbaran where c.IDAlbaran>0";
         $result = mysql_query($query, $dbLink);
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -1191,9 +1463,9 @@ class UpdateController {
                 $nItems++;
         }
 
-        mysql_close($dbLink);
+        //mysql_close($dbLink);
 
-        echo "Líneas Albaranes creadas {$nItems}<br/>";
+        echo "Líneas Albaranes {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);

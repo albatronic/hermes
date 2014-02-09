@@ -27,6 +27,7 @@
         <li class="ui-state-default ui-corner-top"><a href="#tabs-firmas">Firmas [signatures]</a></li>
         <li class="ui-state-default ui-corner-top"><a href="#tabs-contenidosFijos">Contenidos fijos [staticContents]</a></li>        
         <li class="ui-state-default ui-corner-top"><a href="#tabs-erp">Erp [erp]</a></li>        
+        <li class="ui-state-default ui-corner-top"><a href="#tabs-shop">Shop [shop]</a></li>        
     </ul>
 
     <div id="tabs-global" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
@@ -98,6 +99,11 @@
         {{ macro.input({'caption':'[alertaMargen] Alertar cuando el margen sea inferior a ...%','visible':'1','varEnv':'0'},'EtiquetaLarga','text','datos[erp][alertaMargen]','datos_erp_alertaMargen',values.datos.erp.alertaMargen,'255','CampoTextoMedio','1') }}            
         {{ macro.input({'caption':'[alertaStock] Generar alertas por falta de stock','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','datos[erp][alertaStock]','datos_erp_alertaStock',values.datos.erp.alertaStock,'255','CampoTextoMedio','1') }}            
         {{ macro.input({'caption':'[idClienteWeb] ID del cliente por defecto de la Web','visible':'1','varEnv':'0','help':''},'EtiquetaLarga','text','datos[erp][idClienteWeb]','datos_erp_idClienteWeb',values.datos.erp.idClienteWeb,'255','CampoTextoMedio','1') }}                        
+    </div>        
+
+    <div id="tabs-shop" class="ui-tabs-panel ui-widget-content ui-corner-bottom">                                           
+        {{ macro.input({'caption':'[carrito][nArticulosRelacionadosFamilia] Cúantos artículos relacionados se muestran en el carrito por familia','visible':'1','varEnv':'0'},'EtiquetaLarga','text','datos[shop][carrito][nArticulosRelacionadosFamilia]','datos_shop_carrito_nArticulosRelacionadosFamilia',values.datos.shop.carrito.nArticulosRelacionadosFamilia,'255','CampoTextoMedio','1') }}            
+        {{ macro.input({'caption':'[carrito][nArticulosRelacionadosTotal] Cúantos artículos relacionados se muestran en el carrito en total','visible':'1','varEnv':'0'},'EtiquetaLarga','text','datos[shop][carrito][nArticulosRelacionadosTotal]','datos_shop_carrito_nArticulosRelacionadosTotal',values.datos.shop.carrito.nArticulosRelacionadosTotal,'255','CampoTextoMedio','1') }}            
     </div>        
         
 </div>

@@ -21,7 +21,7 @@
                 <td class='Item'>Remitente</td>
                 <td class='Item'>Para</td>
                 <td class='Item'>Asunto</td>
-                <td class='Item'>Ok</td>>
+                <td class='Item'>Envío Ok</td>
             </tr>
 
             <tbody class='Cuerpo'>
@@ -45,7 +45,7 @@
                     {% if objeto.CCO%}<br/>Cco: {{objeto.CCO}}{% endif %}
                 </td>
                 <td class='Item'>{{objeto.Asunto}}<br/>{{objeto.Mensaje}}</td>
-                <td class='Item'>{{objeto.Ok}}</td>
+                <td class='Item' style="text-align: center;">{{objeto.Ok}}</td>
             </tr>
             {% else %}
             <tr><td colspan='2'>No hay informaci&oacute;n que cumpla esos criterios</td></tr>

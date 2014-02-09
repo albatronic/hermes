@@ -1343,7 +1343,7 @@ Articulos:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     MetatagTitle:
-      title: Título Meta
+      title: 'Título Meta'
       filter: NO
       list: NO
       visible: true
@@ -1356,7 +1356,7 @@ Articulos:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '255', min: null, max: null, message: 'Valor Requerido' }
     LockMetatagTitle:
-      title: Autogenerar título meta
+      title: 'Autogenerar título meta'
       filter: NO
       list: NO
       visible: true
@@ -1396,7 +1396,7 @@ Articulos:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '255', min: null, max: null, message: 'Valor Requerido' }
     MetatagTitleSimple:
-      title: Título simple
+      title: 'Título simple'
       filter: NO
       list: NO
       visible: true
@@ -1410,7 +1410,7 @@ Articulos:
       #aditional_filter: { order: 32, caption: MetatagTitleSimple, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     MetatagTitlePosition:
-      title: Posición del título
+      title: 'Posición del título'
       filter: NO
       list: NO
       visible: true
@@ -1424,7 +1424,7 @@ Articulos:
       #aditional_filter: { order: 33, caption: MetatagTitlePosition, entity: ValoresDchaIzq, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     ShowOnSitemap:
-      title: Mostrar en sitemap
+      title: 'Mostrar en sitemap'
       filter: NO
       list: NO
       visible: true
@@ -1451,7 +1451,7 @@ Articulos:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '5', min: null, max: null, message: 'Valor Requerido' }
     ChangeFreqSitemap:
-      title: Frecuencia de cambio
+      title: 'Frecuencia de cambio'
       filter: NO
       list: NO
       visible: true
@@ -1465,7 +1465,7 @@ Articulos:
       #aditional_filter: { order: 35, caption: ChangeFreqSitemap, entity: ValoresChangeFreq, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: string, length: '25', min: null, max: null, message: 'Valor Requerido' }
     ShowGalery:
-      title: ShowGalery
+      title: 'Mostrar galería'
       filter: NO
       list: NO
       visible: true
@@ -1479,7 +1479,7 @@ Articulos:
       #aditional_filter: { order: 36, caption: ShowGalery, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     ShowDocuments:
-      title: ShowDocuments
+      title: 'Mostrar documentos'
       filter: NO
       list: NO
       visible: true
@@ -1493,7 +1493,7 @@ Articulos:
       #aditional_filter: { order: 37, caption: ShowDocuments, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     ShowRelatedLinks:
-      title: ShowRelatedLinks
+      title: 'Mostrar enlaces relacionados'
       filter: NO
       list: NO
       visible: true
@@ -1507,7 +1507,7 @@ Articulos:
       #aditional_filter: { order: 38, caption: ShowRelatedLinks, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     ShowRelatedContents:
-      title: ShowRelatedContents
+      title: 'Mostrar contenidos relacionados'
       filter: NO
       list: NO
       visible: true
@@ -1521,7 +1521,7 @@ Articulos:
       #aditional_filter: { order: 39, caption: ShowRelatedContents, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     ShowPublishedAt:
-      title: Mostrar fecha publicación
+      title: 'Mostrar fecha publicación'
       filter: NO
       list: NO
       visible: true

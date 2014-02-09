@@ -9,7 +9,7 @@
 circulares:
 
   # ---------------------------------------------------------
-  # INFORME 347
+  # INFORME 347 CLIENTES
   # ---------------------------------------------------------
   -
     title: Ventas trimestrales (facturas) Modelo 347
@@ -27,7 +27,7 @@ circulares:
     
     queryMaster: >
       SELECT 
-        c.RazonSocial,c.Cif,
+        c.RazonSocial,c.Cif,YEAR(Fecha) as Anio,
         SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
         SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
         SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
@@ -47,23 +47,15 @@ circulares:
       -
         field: ANIO
         caption: Año
-        entity: Sucursales
-        method: getSucursalesUsuario
-        params:
-        type: input
-        default: '<?php echo date('Y');?>'
-      -
-        field: ANIO
-        caption: Mes
-        entity: Sucursales
-        method: getSucursalesUsuario
+        entity: 
+        method: 
         params:
         type: input
         default: '<?php echo date('Y');?>'
         
     columnsMaster:
       -
-        title: Cliente
+        title: RazonSocial
         field: RazonSocial
         length: 25
         align: L
@@ -81,6 +73,15 @@ circulares:
         formula: null
         format: null
       -
+        title: Año
+        field: Anio
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
         title: 1T
         field: 1T
         length: 13
@@ -90,8 +91,156 @@ circulares:
         formula: null
         format: %01.2f
       -
-        title: NOMBR_EMPR
-        field: 1Tasdasdas
+        title: 2T
+        field: 2T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 3T
+        field: 3T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 4T
+        field: 4T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: Total
+        field: Total
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+        
+    columnsDetail:
+
+  # ---------------------------------------------------------
+  # INFORME 347 PROVEEDORES
+  # ---------------------------------------------------------
+  -
+    title: Compras trimestrales (facturas) Modelo 347
+    comment: >
+      Resumen de compras por trimestre.
+      Los importes son total factura iva incluido
+    idPerfil: ''
+    plantilla: null
+    formatos : { '0': 'el de origen', '1' : 'Pdf'}
+    archivosSeparados: true
+    orientation: P
+    unit: mm
+    format: A4
+    margins: '10,10,15,10'
+    
+    queryMaster: >
+      SELECT 
+        c.RazonSocial,c.Cif,YEAR(Fecha) as Anio,
+        SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
+        SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
+        SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
+        SUM( CASE quarter(Fecha) WHEN '4' THEN Total ELSE 0 END ) AS '4T',
+        SUM(Total) AS Total
+      FROM 
+        DBNAME.ErpProveedores c, 
+        DBNAME.ErpFrecibidasCab f
+      WHERE c.IDProveedor = f.IDProveedor AND YEAR(Fecha) = 'ANIO'
+      group by f.IDProveedor
+      order by c.RazonSocial ASC
+      
+    queryDetail: >
+    
+    
+    filters:
+      -
+        field: ANIO
+        caption: Año
+        entity: 
+        method: 
+        params:
+        type: input
+        default: '<?php echo date('Y');?>'
+        
+    columnsMaster:
+      -
+        title: RazonSocial
+        field: RazonSocial
+        length: 25
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: Cif
+        field: Cif
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: Año
+        field: Anio
+        length: 13
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      -
+        title: 1T
+        field: 1T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 2T
+        field: 2T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 3T
+        field: 3T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: 4T
+        field: 4T
+        length: 13
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: %01.2f
+      -
+        title: Total
+        field: Total
         length: 13
         align: R
         type: decimal
@@ -105,109 +254,37 @@ circulares:
   # RECLAMACIÓN DE MOROSOS
   # ---------------------------------------------------------
   -
-    title: Reclamación de morosos
-    comment: >
-      Carta de reclamación de deuda. Para cada cliente se relacionan los
-      recibos pendientes de pago
+    title: 'Reclamación de morosos'
+    comment: "Carta de reclamación de deuda. Para cada cliente se relacionan los recibos pendientes de pago\n"
     idPerfil: ''
-    plantilla: null
-    formatos : { '0': 'el de origen', '1' : 'Pdf'}
+    plantilla: 'carta reclamacion 2.rtf'
+    formatos:
+      - 'el de origen'
+      - Pdf
     archivosSeparados: true
     orientation: P
     unit: mm
     format: A4
     margins: '10,10,15,10'
-    
-    queryMaster: >
-      SELECT 
-        c.RazonSocial,c.Cif,
-        SUM( CASE quarter(Fecha) WHEN '1' THEN Total ELSE 0 END ) AS '1T',
-        SUM( CASE quarter(Fecha) WHEN '2' THEN Total ELSE 0 END ) AS '2T',
-        SUM( CASE quarter(Fecha) WHEN '3' THEN Total ELSE 0 END ) AS '3T',
-        SUM( CASE quarter(Fecha) WHEN '4' THEN Total ELSE 0 END ) AS '4T',
-        SUM(Total) AS Total
-      FROM 
-        DBNAME.ErpClientes c, 
-        DBNAME.ErpFemitidasCab f
-      WHERE c.IDCliente = f.IDCliente AND YEAR(Fecha) = 'ANIO'
-      group by f.IDCliente
-      order by c.RazonSocial ASC
-      
-    queryDetail: >
-    
-    
+    queryMaster: 'SELECT c.IDCliente,c.RazonSocial,c.NombreComercial,c.Cif,c.Direccion,c.CodigoPostal,c.Poblacion,p.Provincia from DBNAME.clientes c LEFT JOIN interpra_ppuemp.provincias p ON c.IDProvincia=p.IDProvincia LEFT JOIN DBNAME.recibos_clientes r on c.IDCliente=r.IDCliente WHERE r.IDEstado=''ESTADO'' AND r.Vencimiento BETWEEN ''DESDEFECHA'' AND ''HASTAFECHA'''
+    queryDetail: 'select DATE_FORMAT(f.Fecha,''%d-%m-%Y'') AS Fecha,DATE_FORMAT(r.Vencimiento,''%d-%m-%Y'') AS Vencimiento,f.Total,r.Importe,f.NumeroFactura from DBNAME.recibos_clientes r LEFT JOIN DBNAME.clientes c ON r.IDCliente=c.IDCliente LEFT JOIN DBNAME.femitidas_cab f on r.IDFactura=f.IDFactura WHERE r.IDCliente=''LINKVALUE'' and r.IDEstado=''ESTADO'' AND r.Vencimiento BETWEEN ''DESDEFECHA'' AND ''HASTAFECHA'' ORDER BY r.Vencimiento ASC'
+    linkColumn: IDCliente
     filters:
-      -
-        field: SUCURSAL
-        caption: Sucursal
-        entity: Sucursales
-        method: getSucursalesUsuario
-        params:
-        type: select
-        default: '<?php echo $_SESSION['suc'];?>'        
-      -
-        field: DESDEFECHA
-        caption: Desde Fecha Vcto.
-        entity:
-        method:
-        params:
-        type: date
-        default: '01-01-<?php echo date('Y');?>'
-      -
-        field: HASTAFECHA
-        caption: Hasta Fecha Vcto.
-        entity:
-        method:
-        params:
-        type: date
-        default: '31-12-<?php echo date('Y');?>'
-      -
-        field: ESTADO
-        caption: Estado recibos
-        entity: EstadosRecibos
-        method: fetchAll
-        params:
-        type: select
-        default: 2
-        
+      - { field: SUCURSAL, caption: Sucursal, entity: Sucursales, method: getSucursalesUsuario, params: null, type: select, default: '1' }
+      - { field: DESDEFECHA, caption: 'Desde Fecha Vcto.', entity: null, method: null, params: null, type: date, default: 01-01-2013 }
+      - { field: HASTAFECHA, caption: 'Hasta Fecha Vcto.', entity: null, method: null, params: null, type: date, default: 31-12-2013 }
+      - { field: ESTADO, caption: 'Estado recibos', entity: EstadosRecibos, method: fetchAll, params: null, type: select, default: 2 }
     columnsMaster:
-      -
-        title: Cliente
-        field: RazonSocial
-        length: 25
-        align: L
-        type: string
-        total: NO
-        formula: null
-        format: null
-      -
-        title: Cif
-        field: Cif
-        length: 13
-        align: L
-        type: string
-        total: NO
-        formula: null
-        format: null
-      -
-        title: 1T
-        field: 1T
-        length: 13
-        align: R
-        type: decimal
-        total: YES
-        formula: null
-        format: %01.2f
-      -
-        title: NOMBR_EMPR
-        field: 1Tasdasdas
-        length: 13
-        align: R
-        type: decimal
-        total: YES
-        formula: null
-        format: %01.2f
-        
+      - { title: RazonSocial, field: RazonSocial, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: NombreComercial, field: NombreComercial, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Direccion, field: Direccion, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Cif, field: Cif, length: 13, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: CodigoPostal, field: CodigoPostal, length: 13, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Provincia, field: Provincia, length: 13, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Poblacion, field: Poblacion, length: 13, align: L, type: string, total: NO, formula: null, format: null }
     columnsDetail:
-        
-
+      - { title: NumeroFactura, field: NumeroFactura, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Fecha, field: Fecha, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Vencimiento, field: Vencimiento, length: 25, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Importe, field: Importe, length: 13, align: L, type: string, total: NO, formula: null, format: null }
+      - { title: Pendiente, field: Pendiente, length: 13, align: L, type: string, total: NO, formula: null, format: null }

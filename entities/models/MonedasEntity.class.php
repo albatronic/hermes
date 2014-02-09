@@ -3,11 +3,11 @@
 /**
  * @author Sergio Perez <sergio.perez@albatronic.com>
  * @copyright INFORMATICA ALBATRONIC SL
- * @date 17.10.2012 14:24:31
+ * @date 02.02.2014 01:15:20
  */
 
 /**
- * @orm:Entity(CommMonedas)
+ * @orm:Entity(ErpMonedas)
  */
 class MonedasEntity extends EntityComunes {
 
@@ -15,21 +15,21 @@ class MonedasEntity extends EntityComunes {
      * @orm GeneratedValue
      * @orm Id
      * @var integer
-     * @assert NotBlank(groups="CommMonedas")
+     * @assert NotBlank(groups="ErpMonedas")
      */
     protected $IDMoneda;
 
     /**
      * @var string
-     * @assert NotBlank(groups="CommMonedas")
+     * @assert NotBlank(groups="ErpMonedas")
      */
     protected $Codigo;
 
     /**
      * @var string
-     * @assert NotBlank(groups="CommMonedas")
+     * @assert NotBlank(groups="ErpMonedas")
      */
-    protected $Moneda = '';
+    protected $Moneda;
 
     /**
      * @var string
@@ -55,6 +55,12 @@ class MonedasEntity extends EntityComunes {
     protected $_primaryKeyName = 'IDMoneda';
 
     /**
+     * Array con las columnas de la primarykey
+     * @var array
+     */
+    protected $_arrayPrimaryKeys = array('IDMoneda');
+
+    /**
      * Relacion de entidades que dependen de esta
      * @var string
      */
@@ -71,13 +77,16 @@ class MonedasEntity extends EntityComunes {
         'ValoresPrivacy',
         'ValoresDchaIzq',
         'ValoresChangeFreq',
+        'RequestMethods',
+        'RequestOrigins',
+        'CpanAplicaciones',
     );
 
     /**
      * GETTERS Y SETTERS
      */
-    public function setIDMoneda($Id) {
-        $this->IDMoneda = $Id;
+    public function setIDMoneda($IDMoneda) {
+        $this->IDMoneda = $IDMoneda;
     }
 
     public function getIDMoneda() {
@@ -110,5 +119,5 @@ class MonedasEntity extends EntityComunes {
 
 }
 
-// END class CommMonedas
+// END class ErpMonedas
 ?>

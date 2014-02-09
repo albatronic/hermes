@@ -30,7 +30,10 @@ class FamiliasController extends Controller {
 
         if ($archivo->open("r")) {
             set_time_limit(0);
+            // Me salto la primera línea de cabecera
+            $linea = $archivo->readLine();
             while (($linea = $archivo->readLine()) !== FALSE) {
+                print_r($linea);
                 $fp = new Familias();
                 $fp->setFamilia(utf8_encode($linea[1]));
                 $fp->setObservations($linea[0]);

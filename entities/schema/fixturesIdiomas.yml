@@ -92,7 +92,7 @@ ErpIdiomas:
   -
     IDIdioma: 23
     Codigo: "CA"
-    Idioma: "Catalan"
+    Idioma: "Catalán"
   -
     IDIdioma: 24
     Codigo: "CE"
@@ -160,7 +160,7 @@ ErpIdiomas:
   -
     IDIdioma: 40
     Codigo: "ES"
-    Idioma: "Spanish"
+    Idioma: "Español"
   -
     IDIdioma: 41
     Codigo: "ET"
@@ -208,7 +208,7 @@ ErpIdiomas:
   -
     IDIdioma: 52
     Codigo: "GL"
-    Idioma: "Galician"
+    Idioma: "Gallego"
   -
     IDIdioma: 53
     Codigo: "GN"

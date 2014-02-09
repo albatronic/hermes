@@ -141,7 +141,7 @@ class Circulares extends Controller {
 
         if (in_array($fichero['type'], $this->tiposPermitidos)) {
             $carpetaPlantillas = $_SESSION['appPath'] . "/docs/docs{$_SESSION['emp']}/circulares/plantillas";
-
+            Archivo::creaCarpeta($carpetaPlantillas);
             if (is_uploaded_file($fichero['tmp_name'])) {
                 $ftp = new Ftp($_SESSION['project']['ftp']);
                 if ($ftp) {
@@ -211,9 +211,8 @@ class Circulares extends Controller {
         $this->circulares[$this->idCircular]['plantilla'] = $this->request['plantilla'];
         $yml = sfYaml::dump(array('circulares' => $this->circulares), 4);
         $carpeta = "docs/docs{$_SESSION['emp']}/circulares";
-        if (!file_exists($carpeta)) {
-            mkdir($carpeta);
-        }
+        Archivo::creaCarpeta($carpeta);
+
         $file = $carpeta . "/circulares.yml";
         $archivo = new Archivo($file);
         $archivo->write($yml);

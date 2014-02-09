@@ -23,7 +23,7 @@
                 
     <div id="general">
         {{ macro.input(atributos.Titulo,'EtiquetaMedia','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}
-        {{ macro.select(atributos.PrivacidadContenidos,'EtiquetaMedia',values.controller ~ '[PrivacidadContenidos]',values.controller ~ '_PrivacidadContenidos',200,datos.PrivacidadContenidos.IDTipo,datos.PrivacidadContenidos.fetchAll('Titulo',0),'chzn-select')}}
+        {{ macro.select(atributos.PrivacidadContenidos,'EtiquetaMedia',values.controller ~ '[PrivacidadContenidos]',values.controller ~ '_PrivacidadContenidos',200,datos.PrivacidadContenidos.IDTipo,datos.PrivacidadContenidos.fetchAll(false),'chzn-select')}}
         {{ macro.input(atributos.PlantillaHtm,'EtiquetaMedia','text',values.controller ~ '[PlantillaHtm]',values.controller ~ '_PlantillaHtm',datos.PlantillaHtm,'255','CampoTextoLargo','3') }}
         {{ macro.textarea(atributos.Css,'EtiquetaMedia',values.controller ~ '[Css]',values.controller ~ '_Css',datos.Css,none,none,'textarea','4')}}
         {{ macro.textarea(atributos.Html,'EtiquetaMedia',values.controller ~ '[Html]',values.controller ~ '_Html',datos.Html,none,none,'textarea','5')}}

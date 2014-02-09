@@ -1556,5 +1556,56 @@ ErpEmailBox:
     Ok:        { type: boolean, notnull: true, default: 0}
     Smtp:      { type: text, notnull: false }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+  
+ErpCarrito:
+  comment: Carrito de la compra
+  columns:
+    sesion:          { type: string(50), notnull: true, index: index }
+    IpOrigen:        { type: string(20), notnull: true }
+    UserAgent:       { type: string(100), notnull: true }    
+    IDArticulo:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }
+    Descripcion:     { type: varchar(255), notnull: true }
+    Unidades:        { type: decimal(2), notnull: true, default: 0 }
+    UnidadMedida:    { type: string(10), notnull: false, default: null }
+    Precio:          { type: decimal(3), notnull: true, default: '0.000' }
+    Descuento:       { type: decimal(2), notnull: true, default: '0.00' }
+    Importe:         { type: decimal(2), notnull: true, default: '0.00' }
+    Iva:             { type: decimal(2), notnull: true, default: '0.00' }
+    Recargo:         { type: decimal(2), notnull: true, default: '0.00' }
+    Estado:          { type: tinyint(1), notnull: true, detaul: 0 }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+  relations:
+  index:
+      
+#-----------------------
+# TABLAS DE CONTABILIDAD
+#-----------------------
+
+ErpEjerciciosContables:
+  comment: Ejercicios Contables
+  columns:   
+    Titulo:      { type: string(50), notnull: true }
+    FechaInicio: { type: date, notnull: true, default: '0000-00-00' }
+    FechaFin:    { type: date, notnul: true, default: '0000-00-00' }
+    Activo:      { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
+    Cerrado:     { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
     
-<?php include '../Hermes/entities/schema/schemaAppCpan.yml'; echoln('');?>  
+ErpPlanContable:
+  comment: Cuentas y subcuentas contables
+  columns:
+    IDEjercicio: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ErpEjerciciosContables,Id' }
+    Cuenta:      { type: string(10), notnull: true, index: index }
+    Titulo:      { type: string(100, notnull: true }
+    Debe:        { type: decimal, notnul: true, default: 0 }
+    Haber:       { type: decimal, notnul: true, default: 0 }
+    Saldo:       { type: decimal, notnul: true, default: 0 }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+  relations:
+  index:
+    EjercicioCuenta: { type: Unique, columns: 'IDEjercicio,Cuenta' }
+   
+ #------------------------------
+ # TABLAS DEL CMS
+ #------------------------------
+<?php include '../Cpanel/entities/schema/schemaAll.yml'; echoln('');?>  

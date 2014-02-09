@@ -143,7 +143,7 @@ class RutasVentasClientesController extends Controller {
                 case 'zona': //INSERTAR TODOS LOS CLIENTES DE ESA ZONA
                     if ($this->request['IDZona'] != '') {
                         $cliente = new Clientes();
-                        $rows = $cliente->cargaCondicion("IDCliente", "IDZona='{$this->request['IDZona']}' AND IDComercial='{$this->request['IDComercial']}'");
+                        $rows = $cliente->cargaCondicion("IDCliente", "IDZona='{$this->request['IDZona']}' AND IDComercial='{$this->request['IDComercial']}' AND Vigente='1'");
                         unset($cliente);
                         foreach ($rows as $key => $value) {
                             $datos = new $this->parentEntity();

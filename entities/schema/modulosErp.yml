@@ -14,15 +14,20 @@ ErpAplicaciones:
 ErpModulos:
   # ADMON
   - { Id: 1, CodigoApp: Admon, NombreModulo: Admon,       Nivel: 0, BelongsTo: 0,      Publish: 1, Titulo: Admon, Funcionalidades: AC }
-  - { CodigoApp: Admon, NombreModulo: PcaeEmpresas,  Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Empresa y Sucursales, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Admon, NombreModulo: Perfiles,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Perfiles de usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Admon, NombreModulo: Agentes,     Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Admon, NombreModulo: TiposIva,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Tipos de IVA, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Admon, NombreModulo: Bancos,      Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Bancos y Oficinas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Admon, NombreModulo: Paises,      Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Paises, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Admon, NombreModulo: Provincias,  Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Admon, NombreModulo: Contadores, Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Series y Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Admon, NombreModulo: Tpvs,       Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Tpvs y datáfonos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 2, CodigoApp: Admon, NombreModulo: PcaeEmpresas,  Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Empresa y Sucursales, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 3, CodigoApp: Admon, NombreModulo: Perfiles,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Perfiles de usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 4, CodigoApp: Admon, NombreModulo: Agentes,     Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 5, CodigoApp: Admon, NombreModulo: TiposIva,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Tipos de IVA, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 6, CodigoApp: Admon, NombreModulo: Bancos,      Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Bancos y Oficinas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 7, CodigoApp: Admon, NombreModulo: Contadores,  Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Series y Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 8, CodigoApp: Admon, NombreModulo: Tpvs,        Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Tpvs y datáfonos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 9, CodigoApp: Admon, NombreModulo: ConfiguracionRegional, Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Configuración Regional, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 10, CodigoApp: Admon, NombreModulo: Paises,      Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Paises, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 11, CodigoApp: Admon, NombreModulo: Provincias,  Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 12, CodigoApp: Admon, NombreModulo: Municipios,  Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Municipios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 13, CodigoApp: Admon, NombreModulo: Monedas,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 14, CodigoApp: Admon, NombreModulo: Idiomas,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 15, CodigoApp: Admon, NombreModulo: ZonasHorarias,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Zonas Horarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # FICHEROS
   - { Id: 20, CodigoApp: Fich, NombreModulo: Fich,             Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Ficheros, Funcionalidades: AC }
@@ -77,7 +82,10 @@ ErpModulos:
   
   # CONTABILIDAD
   - { Id: 100, CodigoApp: Conta, NombreModulo: Conta,       Nivel: 0, BelongsTo: 0,      Publish: 1, Titulo: Contabilidad, Funcionalidades: AC }
-  - { CodigoApp: Conta, NombreModulo: EnlaceConta, Nivel: 1, BelongsTo: 100,  Publish: 1, Titulo: Enlace con contabilidad, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Conta, NombreModulo: EjerciciosContables, Nivel: 1, BelongsTo: 100,  Publish: 1, Titulo: Ejercicios Contables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Conta, NombreModulo: PlanContable, Nivel: 1, BelongsTo: 100,  Publish: 1, Titulo: Plan Contable, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Conta, NombreModulo: Asientos, Nivel: 1, BelongsTo: 100,  Publish: 1, Titulo: Asientos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Conta, NombreModulo: EnlaceConta, Nivel: 1, BelongsTo: 100,  Publish: 1, Titulo: Enlace con contabilidad externa, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
 
   # INFORMES
   - { Id: 120, CodigoApp: Reports, NombreModulo: Reports, Nivel: 0, BelongsTo: 0,         Publish: 1, Titulo: Informes, Funcionalidades: AC }
@@ -119,7 +127,10 @@ ErpModulos:
   - { Id: 182, CodigoApp: CMS, NombreModulo: BolTipos,         Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Tipos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 183, CodigoApp: CMS, NombreModulo: BolFormatos,      Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Formatos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 184, CodigoApp: CMS, NombreModulo: BolBoletines,     Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Boletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 185, CodigoApp: CMS, NombreModulo: BlogComentarios,  Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Comentarios Blog, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 185, CodigoApp: CMS, NombreModulo: MultiIdioma,      Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: MultiIdioma, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 186, CodigoApp: CMS, NombreModulo: CpanTextos, Nivel: 2, BelongsTo: 185,  Publish: 1, Titulo: Textos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 187, CodigoApp: CMS, NombreModulo: CpanPlantillas,   Nivel: 2, BelongsTo: 185,  Publish: 1, Titulo: Plantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 188, CodigoApp: CMS, NombreModulo: BlogComentarios,  Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Comentarios Blog, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}   
 
 ErpPermisos:
   # PERMISOS PARA EL SUPERADMINSITRADOR
@@ -129,10 +140,15 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Agentes,  Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: TiposIva, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Bancos,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 1, NombreModulo: ConfiguracionRegional,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Paises,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Municipios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   - { IdPerfil: 1, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
@@ -182,6 +198,9 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Lotes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   - { IdPerfil: 1, NombreModulo: Conta, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 1, NombreModulo: EjerciciosContables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: PlanContable, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: Asientos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: EnlaceConta, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
 
   - { IdPerfil: 1, NombreModulo: Reports, Funcionalidades: 'AC,VW' }
@@ -222,6 +241,9 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: BolFormatos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: BolBoletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: BlogComentarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: MultiIdioma, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: CpanTextos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: CpanPlantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
 
   # PERMISOS PARA EL ADMINISTRADOR
   - { IdPerfil: 2, NombreModulo: Admon, Funcionalidades: 'AC,VW' }
@@ -230,10 +252,15 @@ ErpPermisos:
   - { IdPerfil: 2, NombreModulo: Agentes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: TiposIva, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: Bancos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: Paises, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 2, NombreModulo: ConfiguracionRegional,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Paises,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Municipios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 2, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 2, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -278,7 +305,7 @@ ErpPermisos:
   - { IdPerfil: 2, NombreModulo: TiposMvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: MvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: MvtosAlmacenInternos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 2, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 2, NombreModulo: InventariosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: Lotes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
@@ -304,10 +331,15 @@ ErpPermisos:
   - { IdPerfil: 3, NombreModulo: Agentes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: TiposIva, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: Bancos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: Paises, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: Contadores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Tpvs, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 3, NombreModulo: ConfiguracionRegional,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Paises,   Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Provincias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Municipios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 3, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 3, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -352,7 +384,7 @@ ErpPermisos:
   - { IdPerfil: 3, NombreModulo: TiposMvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: MvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: MvtosAlmacenInternos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 3, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 3, NombreModulo: InventariosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: Lotes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
@@ -383,15 +415,15 @@ ErpPermisos:
   - { IdPerfil: 4, NombreModulo: FemitidasCab, Funcionalidades: 'AC,IN,UP,DE,CO,LI'}
   - { IdPerfil: 4, NombreModulo: RecibosClientes, Funcionalidades: 'AC,IN,UP,DE,CO,LI'}
 
-  - { IdPerfil: 3, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
-  - { IdPerfil: 3, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 4, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 4, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # PERMISOS REPARTIDOR
   - { IdPerfil: 5, NombreModulo: Vtas, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 5, NombreModulo: AlbaranesCab, Funcionalidades: 'AC,IN,UP,DE,CO,LI'}
 
-  - { IdPerfil: 3, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
-  - { IdPerfil: 3, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 5, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 5, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # PERMISOS ALMACENERO
   - { IdPerfil: 6, NombreModulo: Almacen, Funcionalidades: 'AC,VW' }
@@ -403,11 +435,11 @@ ErpPermisos:
   - { IdPerfil: 6, NombreModulo: TiposMvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 6, NombreModulo: MvtosAlmacen, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 6, NombreModulo: MvtosAlmacenInternos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 6, NombreModulo: AgruparArticulos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 6, NombreModulo: InventariosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 6, NombreModulo: Lotes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
-  - { IdPerfil: 3, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
-  - { IdPerfil: 3, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 6, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 6, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   

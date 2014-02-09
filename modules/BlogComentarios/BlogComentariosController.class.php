@@ -13,6 +13,10 @@ class BlogComentariosController extends Controller {
     protected $entity = "BlogComentarios";
     protected $parentEntity = "";
 
+    public function IndexAction() {
+        return $this->listAction();
+    }
+
 }
 
 ?>

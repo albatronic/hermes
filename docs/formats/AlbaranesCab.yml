@@ -180,8 +180,12 @@ AlbaranesCab:
       - $this->SetXY(15, 255)
       - $this->SetFont('Arial', '', 8)
       - $this->Cell(0, 5, "Observaciones:", 0, 1)
-      - $this->MultiCell(0, 3, $this->master->getObservaciones())
+      - $this->MultiCell(100, 3, $this->master->getObservaciones())
 
+      # Mostrar Pendiente de cobro
+      - $pteCobro = $this->master->getIDCliente()->getPteCobro();
+      - if ($pteCobro['Importe']>0){ $this->SetXY(120, 255); $this->Cell(0, 5, "El saldo pendiente de cobro al " . date('d/m/Y') . " es de " .$pteCobro['Importe'] . " euros",0,0,L);}
+ 
       - $this->SetY(-15)
       - $this->SetFont('Arial', '', 7)
       - $this->Cell(0, 5, "OPERACIÓN ASEGURADA POR CRÉDITO Y CAUCIÓN", 0, 1, "C")

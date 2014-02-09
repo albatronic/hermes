@@ -3,7 +3,7 @@
 <div>
     <div style="float:left;">
         Buscar por:
-        <select name="filter[columnsSelected][0]">
+        <select name="filter[columnsSelected][0]" style="width: 130px;">
         {% for index,column in filter.columns %}
             <option value="{{ index }}" {% if (index == filter.columnsSelected[0])%} SELECTED {%endif%}>{{column}}</option>
         {% endfor %}

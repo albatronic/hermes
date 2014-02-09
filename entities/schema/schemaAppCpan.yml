@@ -143,3 +143,11 @@ CpanSearch:
     IdEntity:    { type: bigint(11), notnull: true }    
     <?php include '../Cpanel/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:     
+      
+# Traducciones
+CpanTextos:
+  comment: Traducciones de los textos web
+  columns:   
+    Controller:  { type: string(50), notnull: true }
+    Idioma:      { type: char(2), notnull: true, default: 'es' }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
