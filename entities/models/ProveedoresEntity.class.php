@@ -136,6 +136,16 @@ class ProveedoresEntity extends EntityComunes {
     protected $Iva = '1';
 
     /**
+     * @orm:Column(type="string")
+     */
+    protected $Iban = null;
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Bic = null;
+
+    /**
      * Nombre de la conexion a la DB
      * @var string
      */
@@ -350,6 +360,22 @@ class ProveedoresEntity extends EntityComunes {
         if (!($this->Iva instanceof ValoresSN))
             $this->Iva = new ValoresSN($this->Iva);
         return $this->Iva;
+    }
+
+    public function setIban($Iban) {
+        $this->Iban = trim($Iban);
+    }
+
+    public function getIban() {
+        return $this->Iban;
+    }
+
+    public function setBic($Bic) {
+        $this->Bic = trim($Bic);
+    }
+
+    public function getBic() {
+        return $this->Bic;
     }
 
 }

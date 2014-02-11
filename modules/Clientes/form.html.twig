@@ -36,8 +36,6 @@
         {{ macro.input(atributos.Movil,'Etiqueta','text','Clientes[Movil]','Clientes_Movil',datos.Movil,'30','CampoTextoLargo') }}
         {{ macro.input(atributos.EMail,'Etiqueta','text','Clientes[EMail]','Clientes_EMail',datos.EMail,'50','CampoTextoLargo') }}
         {{ macro.input(atributos.Web,'Etiqueta','text','Clientes[Web]','Clientes_Web',datos.Web,'50','CampoTextoLargo') }}
-        {{ macro.input(atributos.CContable,'Etiqueta','text','Clientes[CContable]','Clientes_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}
-        {{ macro.cc(atributos.Banco,'Etiqueta','cc','Clientes',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}
         {{ macro.select(atributos.IDTipo,'Etiqueta','Clientes[IDTipo]','Clientes_IDTipo',200,datos.IDTipo.IDTipo,datos.IDTipo.fetchAll('Tipo'),'Select',[app.path,'ClientesTipos','Tipos de clientes',390,450])}}
         {{ macro.select(atributos.IDGrupo,'Etiqueta','Clientes[IDGrupo]','Clientes_IDGrupo',200,datos.IDGrupo.IDGrupo,datos.IDGrupo.fetchAll('Grupo'),'Select',[app.path,'ClientesGrupos','Grupos de clientes',390,450])}}
         {{ macro.input(atributos.Vigente,'Etiqueta','checkbox','Clientes[Vigente]','Clientes_Vigente',datos.Vigente.IDTipo,'255','CampoTextoLargo','20')}}          
@@ -56,6 +54,10 @@
         {{ macro.input(atributos.DiaDePago,'Etiqueta','text','Clientes[DiaDePago]','Clientes_DiaDePago',datos.DiaDePago,'2','CampoUnidades') }}
         {{ macro.input(atributos.Iva,'Etiqueta','checkbox','Clientes[Iva]','Clientes_Iva',datos.Iva.IDTipo,'255','CampoTextoLargo','20')}}                                   
         {{ macro.input(atributos.RecargoEqu,'Etiqueta','checkbox','Clientes[RecargoEqu]','Clientes_RecargoEqu',datos.RecargoEqu.IDTipo,'255','CampoTextoLargo','20')}}                                   
+        {{ macro.input(atributos.CContable,'Etiqueta','text','Clientes[CContable]','Clientes_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}        
+        {{ macro.cc(atributos.Banco,'Etiqueta','cc','Clientes',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}        
+        {{ macro.input(atributos.Iban,'Etiqueta','text','Clientes[Iban]','Clientes_Iban',datos.Iban,'34','CampoTextoMedio') }}
+        {{ macro.input(atributos.Bic,'Etiqueta','text','Clientes[Bic]','Clientes_Bic',datos.Bic,'11','CampoTextoCorto') }}        
         {{ macro.input(atributos.LimiteRiesgo,'Etiqueta','text','Clientes[LimiteRiesgo]','Clientes_LimiteRiesgo',datos.LimiteRiesgo,'10','CampoImporte') }}
         {{ macro.fecha(atributos.FechaRiesgo,'Etiqueta','Clientes[FechaRiesgo]','Clientes_FechaRiesgo',datos.FechaRiesgo,'10','CampoFecha') }}
         {{ macro.input(atributos.CodigoRiesgo,'Etiqueta','text','Clientes[CodigoRiesgo]','Clientes_CodigoRiesgo',datos.CodigoRiesgo,'20','CampoTextoCorto') }}

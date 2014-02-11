@@ -11,6 +11,7 @@ ErpAgencias:
     Web:           { type: string(50), notnull: false, default: NULL }    
     EMail:         { type: string(50), notnull: false, default: NULL }
     CosteEstandar: { type: decimal, notnull: true, default: '0.00' }
+    UrlTracking:   { type: varchar(100), notnul: false, default: NULL }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
@@ -374,6 +375,8 @@ ErpClientes:
     IDSucursal:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
     IDZona:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Zonas,IDZona' }
     FacturacionAgrupada: { type: boolean, notnull: true, default: 1, index: index, comment: 'db,ValoresSN,IDTipo' }   
+    Iban:                { type: varchar(34), notnull: false, default: null }
+    Bic:                 { type: varchar(11), notnull: false, default: null }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:     
   
@@ -1045,6 +1048,8 @@ ErpProveedores:
     Observaciones:   { type: text, notnull: false, default: NULL }       
     IDFP:            { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }    
     Iva:             { type: boolean, notnull: true, default: 1, index: index, comment: 'db,ValoresSN,IDTipo' }
+    Iban:                { type: varchar(34), notnull: false, default: null }
+    Bic:                 { type: varchar(11), notnull: false, default: null }    
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 

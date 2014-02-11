@@ -277,7 +277,7 @@ class cargaDatosDemo {
             }
             
             $i += 1;
-            if ($i>1000) break;
+            //if ($i>1000) break;
         }
         echo "</table>";
         return $fallos;

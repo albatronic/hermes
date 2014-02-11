@@ -54,6 +54,11 @@ class AgenciasEntity extends EntityComunes {
     protected $CosteEstandar = '0.00';
 
     /**
+     * @orm:Column(type="string")
+     */
+    protected $UrlTracking = null;
+    
+    /**
      * Nombre de la conexion a la DB
      * @var string
      */
@@ -136,6 +141,13 @@ class AgenciasEntity extends EntityComunes {
         return $this->CosteEstandar;
     }
 
+    public function setUrlTracking($UrlTracking) {
+        $this->UrlTracking = trim($UrlTracking);
+    }
+
+    public function getUrlTracking() {
+        return $this->UrlTracking;
+    }
 }
 
 // END class agencias

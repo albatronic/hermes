@@ -12,7 +12,7 @@
 class Agentes extends AgentesEntity {
 
     public function __toString() {
-        return $this->getNombreApellidos();
+        return ($this->IDAgente) ? $this->getNombreApellidos() : "";
     }
 
     public function getNombreApellidos() {
@@ -147,11 +147,23 @@ class Agentes extends AgentesEntity {
     public function getArrayMenu() {
 
         $menu = $this->getOpciones(0, 0);
-        foreach ($menu as $keyOpcion=>$opcion) {
+        foreach ($menu as $keyOpcion => $opcion) {
             $menu[$keyOpcion]['hijos'] = $this->getOpciones($opcion['Id'], 1);
-            foreach ($menu[$keyOpcion]['hijos'] as $keySubOpcion=>$subOpciones) {
+            foreach ($menu[$keyOpcion]['hijos'] as $keySubOpcion => $subOpciones) {
                 $menu[$keyOpcion]['hijos'][$keySubOpcion]['hijos'] = $this->getOpciones($subOpciones['Id'], 2);
             }
+        }
+
+        // Añadir los favoritos
+        $fav = new Favoritos();
+        $rows = $fav->cargaCondicion("Controller,Titulo", "IDUsuario='{$_SESSION['usuarioPortal']['Id']}'", "SortOrder");
+        unset($fav);
+        if (count($rows)) {
+            $arrayFavoritos['Titulo'] = "Favoritos";
+            foreach ($rows as $row) {
+                $arrayFavoritos['hijos'][] = array('Titulo' => $row['Titulo'], 'NombreModulo' => $row['Controller']);
+            }
+            array_unshift($menu, $arrayFavoritos);
         }
 
         return $menu;

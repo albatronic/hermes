@@ -292,21 +292,6 @@ class IndexController extends Controller {
     }
 
     /**
-     * Devuelve un array con los favoritos del
-     * usuario en curso.
-     * 
-     * @return array Controller,Titulo
-     */
-    public function getFavoritos() {
-
-        $fav = new Favoritos();
-        $rows = $fav->cargaCondicion("Controller,Titulo", "IDUsuario='{$_SESSION['usuarioPortal']['Id']}'", "SortOrder");
-        unset($fav);
-
-        return $rows;
-    }
-
-    /**
      * Genera el array con la información para el dashboard
      * 
      * @return array
@@ -337,6 +322,20 @@ class IndexController extends Controller {
         return $array;
     }
 
+    /**
+     * Devuelve un array con los favoritos del
+     * usuario en curso.
+     * 
+     * @return array Controller,Titulo
+     */
+    public function getFavoritos() {
+
+        $fav = new Favoritos();
+        $rows = $fav->cargaCondicion("Controller,Titulo", "IDUsuario='{$_SESSION['usuarioPortal']['Id']}'", "SortOrder");
+        unset($fav);
+
+        return $rows;
+    }
 }
 
 ?>

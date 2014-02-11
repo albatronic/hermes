@@ -9,7 +9,7 @@
     
     {% if not tpv.IDTpv %}
         <form name="setTpv" id="setTpv" method="POST">
-            <input name="controller" value="{{values.controller}}" type="hidden" />
+            <input name="controller" value="Index" type="hidden" />
             <input name="action" id="action" type="hidden" />
             <input name="IDTpv" id="IDTpv" value="{{tpv.IDTpv}}" type="hidden" />
             <div id="dialogConfirmar" title="Identifique TPV">
@@ -17,8 +17,8 @@
             </div>
         </form>
     {% else %}
-        {% include values.controller ~ '/favoritos.html.twig' %}
-        {% include values.controller ~ '/dashBoardMain.html.twig' %}    
+        {% include 'Index/favoritos.html.twig' %}
+        {% include 'Index/dashBoardMain.html.twig' %}    
     {% endif %}
 
 <script language='JavaScript' type='text/javascript'>

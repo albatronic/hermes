@@ -248,6 +248,16 @@ class ClientesEntity extends EntityComunes {
     protected $FacturacionAgrupada = '1';
 
     /**
+     * @orm:Column(type="string")
+     */
+    protected $Iban = null;
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Bic = null;
+
+    /**
      * Nombre de la conexion a la DB
      * @var string
      */
@@ -659,6 +669,22 @@ class ClientesEntity extends EntityComunes {
         if (!($this->FacturacionAgrupada instanceof ValoresSN))
             $this->FacturacionAgrupada = new ValoresSN($this->FacturacionAgrupada);
         return $this->FacturacionAgrupada;
+    }
+
+    public function setIban($Iban) {
+        $this->Iban = trim($Iban);
+    }
+
+    public function getIban() {
+        return $this->Iban;
+    }
+
+    public function setBic($Bic) {
+        $this->Bic = trim($Bic);
+    }
+
+    public function getBic() {
+        return $this->Bic;
     }
 
 }

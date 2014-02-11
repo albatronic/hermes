@@ -1304,7 +1304,7 @@ Articulos:
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     UrlFriendly:
       title: UrlFriendly
-      filter: NO
+      filter: YES
       list: NO
       visible: true
       updatable: true
