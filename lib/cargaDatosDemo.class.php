@@ -316,7 +316,7 @@ class cargaDatosDemo {
     static function VaciarTablas() {
 
         $tabla = new CpanUrlAmigables();
-        $tabla->queryDelete("Controller='Familias' or Controller='Articulos' or Controller='Fabricantes'");
+        $tabla->queryDelete("Controller='Familias' or Controller='Articulos'  or Controller='Producto' or Controller='Fabricantes'");
         $tabla = new Familias();
         $tabla->queryDelete("1");
         $tabla = new Fabricantes();

@@ -2,10 +2,21 @@ config:
   debug_mode: false
   audit_mode: true
   ip_control: true
-  meta: { author: 'Informática Albatronic, SL', revisitAfter: 10 }
+  meta:
+    author: 'Informática Albatronic, SL'
+    revisitAfter: 10
   semillaMD5: pablo
-  visitas: { activo: false, ws: 'http://api.ip-adress.com/?u=1062c309c5c054edc08fe578ef8f0dd94720c0&h=', frecuenciaHorasBorrado: 5 }
-  signatures: { links: www.albatronic.com, services: { es: 'Diseño web,Venta Online,Posicionamiento web', en: 'Web design,eCommerce,SEO', fr: '' }, locations: 'Granada,Madrid,Malaga' }
+  visitas:
+    activo: false
+    ws: 'http://api.ip-adress.com/?u=1062c309c5c054edc08fe578ef8f0dd94720c0&h='
+    frecuenciaHorasBorrado: 5
+  signatures:
+    links: www.albatronic.com
+    services:
+      es: 'Diseño web,Venta Online,Posicionamiento web'
+      en: 'Web design,eCommerce,SEO'
+      fr: ''
+    locations: 'Granada,Madrid,Malaga'
   maxLengthUrlsFriendly: 50
   numMaxPages: 100
   numMaxDocuments: 0
@@ -15,11 +26,49 @@ config:
   allowTypes: 'jpg,png,gif,pdf,docx,mp3,avi,pps'
   modulosConEtiquetas: GconContenidos
   blockRobots: false
-  export_types: [xls, xml, cvs, Yaml]
-  app: { name: 'Hermes Erp', url: 'http://localhost/Hermes', path: /Hermes, framework: bin/albatronic/, urlParent: 'http://localhost/Pcae' }
-  conections: { pcae: { title: 'Portal Cloud Albatronic', description: null, folder: /Pcae, dbEngine: mysql, host: localhost, user: root, password: albatronic, database: albatro_pacs } }
-  mailer: { plugin_dir: bin/Swift-5.0.0/lib/, plugin_file: swift_required.php, motor: PHPMailer, socket: smtp, host: mail.albatronic.com, port: 25, smtp_auth: true, user_name: info@albatronic.com, password: i1234o, from: info@albatronic.com, from_name: ALBATRONIC, timeout: 30 }
+  export_types:
+    - xls
+    - xml
+    - cvs
+    - Yaml
+  app:
+    name: 'Hermes Erp'
+    url: 'http://localhost/Hermes'
+    path: /Hermes
+    framework: bin/albatronic/
+    urlParent: 'http://localhost/Pcae'
+  conections:
+    pcae:
+      title: 'Portal Cloud Albatronic'
+      description: null
+      folder: /Pcae
+      dbEngine: mysql
+      host: localhost
+      user: root
+      password: albatronic
+      database: albatro_pacs
+  mailer:
+    plugin_dir: bin/Swift-5.0.0/lib/
+    plugin_file: swift_required.php
+    motor: PHPMailer
+    socket: smtp
+    host: mail.albatronic.com
+    port: 25
+    smtp_auth: true
+    user_name: info@albatronic.com
+    password: i1234o
+    from: info@albatronic.com
+    from_name: ALBATRONIC
+    timeout: 30
   excel: bin/PHPExcel/PHPExcel.php
   pdf: bin/pdf/fpdf.class.php
-  graph: [bin/jpgraph/src/jpgraph.php, bin/jpgraph/src/jpgraph_line.php, bin/jpgraph/src/jpgraph_bar.php]
-  twig: { motor: bin/Twig-1.11.1/lib/Twig/Autoloader.php, templates_folder: modules, debug_mode: true, cache_folder: tmp, charset: null }
+  graph:
+    - bin/jpgraph/src/jpgraph.php
+    - bin/jpgraph/src/jpgraph_line.php
+    - bin/jpgraph/src/jpgraph_bar.php
+  twig:
+    motor: bin/Twig-1.15.0/lib/Twig/Autoloader.php
+    templates_folder: modules
+    debug_mode: false
+    cache_folder: tmp
+    charset: null

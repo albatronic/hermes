@@ -281,7 +281,7 @@ class IndexController extends Controller {
         $fileConfig = 'config/config.yml';
         $array = sfYaml::load($fileConfig);
         $array['config']['twig']['debug_mode'] = ($this->request[2] == 'true') ? true : false;
-        $yml = sfYaml::dump($array);
+        $yml = sfYaml::dump($array,4);
         $archivo = new Archivo($fileConfig);
         $archivo->write($yml);
         $archivo->close();
