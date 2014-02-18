@@ -69,6 +69,6 @@ config:
   twig:
     motor: bin/Twig-1.15.0/lib/Twig/Autoloader.php
     templates_folder: modules
-    debug_mode: false
+    debug_mode: true
     cache_folder: tmp
     charset: null

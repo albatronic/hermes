@@ -20,7 +20,7 @@
         {% if user.IdPerfil.Id == '1' %}
         <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#tabs-global">Globales [globales]</a></li>
         {% endif %}        
-        {% if values.datos.especificas %}
+        {% if values.d.especificas %}
         <li class="ui-state-default ui-corner-top"><a href="#tabs-especificas">Específicas{% if user.IdPerfil.Id == '1' %}  [especificas]{% endif %}</a></li>
         {% endif %}
     </ul>
@@ -32,9 +32,9 @@
             {'caption': 'linkFromColumn','visible':'1','varEnv':'0'},
             'EtiquetaLarga',
             'text',
-            'datos[globales][linkFromColumn]',
-            'datos_globales_linkFromColumn',
-            values.datos.globales.linkFromColumn,
+            'd[globales][linkFromColumn]',
+            'd_globales_linkFromColumn',
+            values.d.globales.linkFromColumn,
             '50',
             'CampoTextoMedio'
             )
@@ -43,9 +43,9 @@
             {'caption': 'linkToEntity','visible':'1','varEnv':'0'},
             'EtiquetaLarga',
             'text',
-            'datos[globales][linkToEntity]',
-            'datos_globales_linkToEntity',
-            values.datos.globales.linkToEntity,
+            'd[globales][linkToEntity]',
+            'd_globales_linkToEntity',
+            values.d.globales.linkToEntity,
             '50',
             'CampoTextoMedio'
             )
@@ -54,9 +54,9 @@
             {'caption': 'linkToColumn','visible':'1','varEnv':'0'},
             'EtiquetaLarga',
             'text',
-            'datos[globales][linkToColumn]',
-            'datos_globales_linkToColumn',
-            values.datos.globales.linkToColumn,
+            'd[globales][linkToColumn]',
+            'd_globales_linkToColumn',
+            values.d.globales.linkToColumn,
             '50',
             'CampoTextoMedio'
             )
@@ -65,9 +65,9 @@
     {% endif %}
 
     {# VARIABLES WEB ESPECIFICAS AL MODULO EN CURSO #}
-    {% if values.datos.especificas %}
+    {% if values.d.especificas %}
     <div id="tabs-especificas" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-        {% for nombre,atributos in values.datos.especificas %}
+        {% for nombre,atributos in values.d.especificas %}
             {% if user.IdPerfil.Id == '1' %} 
                 {% set prefijo = '['~nombre~']' %}
                 {% set visibilidad = '1' %}
@@ -79,8 +79,8 @@
                 {{ macro.select(
                     {'caption': prefijo~' '~atributos.caption,'visible':visibilidad,'varEnv':'0','updatable':'1'},
                     'EtiquetaLarga',
-                    'datos[especificas]['~nombre~']',
-                    'datos_especificas_'~nombre,
+                    'd[especificas]['~nombre~']',
+                    'd_especificas_'~nombre,
                     250,
                     atributos.value,
                     atributos.values,
@@ -91,8 +91,8 @@
                     {'caption': prefijo~' '~atributos.caption,'visible':visibilidad,'varEnv':'0','updatable':'1'},
                     'EtiquetaLarga',
                     'text',
-                    'datos[especificas]['~nombre~']',
-                    'datos_especificas_'~nombre,
+                    'd[especificas]['~nombre~']',
+                    'd_especificas_'~nombre,
                     atributos.value,
                     '50',
                     'CampoTextoMedio'

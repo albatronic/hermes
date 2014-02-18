@@ -105,12 +105,18 @@ class Form {
     }
 
     /**
-     * Devuelve el nombre físico de la tabla
+     * Devuelve el nombre físico de la tabla teniendo en cuenta el idioma actual
      * Nodo YAML <table>
      * @return string
      */
-    public function getTable() {       
-        return $this->getNode('table');
+    public function getTable() {
+
+        $sufijo = "";
+
+        if (($_SESSION['VARIABLES']['EnvMod']['translatable'] == 1) and ($_SESSION['idiomas']['actual'] > 0))
+            $sufijo = $_SESSION['idiomas']['actual'];
+
+        return $this->getNode('table') . $sufijo;
     }
 
     /**
@@ -530,7 +536,7 @@ class Form {
      * @return array Array de atributos
      */
     public function getAtributos($modulo) {
-        
+
         $atributos = array();
 
         // PRIMERO LEO LOS ATRIBUTOS DE LAS COLUMNAS QUE ESTÁN EN CONFIG.YML
@@ -567,13 +573,12 @@ class Form {
         //if ($_SESSION['usuarioPortal']['Id'] == '1')
         //    foreach ($atributos as $key => $value)
         //        ++$atributos[$key]['visible'];
-                /**
-                if (!$atributos[$key]['visible']) {
-                    $atributos[$key]['visible'] = '1';
-                    $atributos[$key]['caption'] .= " (oculta)";
-                }
-                 */
-
+        /**
+          if (!$atributos[$key]['visible']) {
+          $atributos[$key]['visible'] = '1';
+          $atributos[$key]['caption'] .= " (oculta)";
+          }
+         */
         return $atributos;
     }
 

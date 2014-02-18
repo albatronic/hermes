@@ -106,7 +106,7 @@ CpanTextos:
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: string, length: '2', min: null, max: null, message: 'Valor Requerido' }
-      aditional_filter: { order: 1, caption: Idioma, entity: Idiomas, method: getArrayIdiomas, params: true, type: select, operator: '=', event: null }      
+      aditional_filter: { order: 2, caption: Idioma, entity: Idiomas, method: getArrayIdiomas, params: true, type: select, operator: '=', event: null }      
     Controller:
       title: Página
       filter: YES
@@ -120,7 +120,7 @@ CpanTextos:
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '50', min: null, max: null, message: 'Valor Requerido' }
-      aditional_filter: { order: 2, caption: Página, entity: CpanUrlAmigables, method: fetchAllAditional, params: Controller, type: select, operator: '=', event: null }       
+      aditional_filter: { order: 1, caption: Página, entity: CpanUrlAmigables, method: fetchAllAditional, params: Controller, type: select, operator: '=', event: null }       
     Clave:
       title: Clave
       filter: YES

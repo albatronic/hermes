@@ -446,7 +446,7 @@ class Controller {
                         $this->values['datos'] = $datos;
                         $this->values['metadatos'] = $datos->getMetaDatas();
 
-                        $template = ($this->values['errores']) ? $this->entity . '/edit.html.twig' : $this->entity . '/edit.html.twig';
+                        $template =  $this->entity . '/edit.html.twig';
                     } else {
                         $this->values['datos'] = $datos;
                         $this->values['metadatos'] = $datos->getMetaDatas();

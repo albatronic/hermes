@@ -22,7 +22,7 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            $query = "SELECT {$column} as Id, {$column} as Value FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE (Deleted = '0') ORDER BY $column ASC";
+            $query = "SELECT distinct {$column} as Id, {$column} as Value FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE (Deleted = '0') ORDER BY $column ASC";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->setStatus($this->_em->numRows());

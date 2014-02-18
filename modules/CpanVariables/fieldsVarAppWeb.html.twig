@@ -21,9 +21,9 @@
             {'caption':prefijo~' Nombre de la Web','visible':'1','varEnv':'0'},
             'field_title',
             'text',
-            'datos[globales][webName]',
-            'datos_globales_webName',
-            values.datos.globales.webName,
+            'd[globales][webName]',
+            'd_globales_webName',
+            values.d.globales.webName,
             '50',
             'CampoTextoCorto',
             '1')
@@ -32,14 +32,14 @@
 
     {# VARIABLES WEB ESPECIFICAS AL MODULO EN CURSO nombreModulo/varWeb.yml #}
     <div id="tabs-especificas" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-        {% for nombre,atributos in values.datos.especificas %}
+        {% for nombre,atributos in values.d.especificas %}
             {% if user.IdPerfil.Id == '1' %} {% set prefijo = '[especificas]['~nombre~']' %} {% else %} {% set prefijo = '' %} {% endif %}
             {{ macro.input(
                 {'caption':prefijo~' '~atributos.caption,'visible':'1','varEnv':'0'},
                 'field_title',
                 'text',
-                'datos[especificas]['~nombre~']',
-                'datos_especificas_'~nombre,
+                'd[especificas]['~nombre~']',
+                'd_especificas_'~nombre,
                 atributos.value,
                 '50',
                 'CampoTextoCorto'

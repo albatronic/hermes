@@ -27,7 +27,7 @@
             <input name="controller" value="{{values.controller}}" type="hidden" />
             <input name="action" id="action" value="edit" type="hidden" />
             <input name="accion" id="accion{{key}}" value="" type="hidden" />
-            
+            {% set claveAnterior = '' %}
             {% for keyItem,item in items %}
             <tr>
             <input name="{{values.controller}}[{{keyItem}}][Id]" value="{{item.Id}}" type="hidden" />
@@ -43,10 +43,8 @@
                 <!--<input name="{{values.controller}}[{{keyItem}}][Controller]" value="{{item.Controller}}" type="hidden"/>-->
                 {% endif %}
             </td>
-            <td>
-                {% if keyItem == 0 %}                
-                <input name="{{values.controller}}[{{keyItem}}][Clave]" value="{{item.Clave}}" type="{%if keyItem==0%}text{%else%}hidden{%endif%}" style="width: 265px;"/>
-                {% endif %}
+            <td>               
+                <input name="{{values.controller}}[{{keyItem}}][Clave]" value="{{item.Clave}}" type="{%if claveAnterior!=item.Clave%}text{%else%}hidden{%endif%}" style="width: 265px;"/>
             </td>
             <td>              
                 <textarea style="background: url({{app.path}}/lang/{{item.Lang|lower}}.gif) no-repeat right bottom;" name="{{values.controller}}[{{keyItem}}][Observations]" cols="45" rows="2"/>{{item.Observations}}</textarea>
@@ -60,6 +58,7 @@
                 {% endif %}
             </td>
             </tr>
+            {% set claveAnterior = item.Clave %}
             {% endfor %}         
         </form>
         <tr style="height: 8px;"></tr>

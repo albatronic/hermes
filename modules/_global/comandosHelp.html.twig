@@ -1,7 +1,9 @@
 {# Template para el comando Ayuda #}
 <div style="float: right;">
     <div>
+    {% if user.IDPerfil.IDPerfil == '1' %}        
     <a href="{{app.path}}/CpanVariables/Env/Pro" title="Variables de entorno del proyecto">VEP</a>
+    {% endif %}    
     <a href="{{app.path}}/CpanVariables/Web/Pro" title="Variables web del proyecto">VWP</a>     
     {% if user.IDPerfil.IDPerfil == '1' and values.controller != "CpanVariables" %}        
         <a href="{{app.path}}/CpanVariables/Env/Mod/{{values.controller}}" title="Variables de entorno del módulo">VEM</a>

@@ -72,9 +72,10 @@ ManufacCab:
       - $this->Cell(25, 5, 'Udes', 1, 0, 'C')
       - $this->SetFont('Arial','', 8)
     body:
+      - if ($this->detail->getTipo() == 0) $lotes = $this->detail->getLotesExpedidos(); else $lotes = $this->detail->getLotesRecibidos();
       - $this->Cell(20, 4, $this->detail->getIDArticulo()->getCodigo(),0,0,'L')
       - $y0 = $this->GetY()
-      - $this->MultiCell(125, 4, $this->detail->getDescripcion(), 0, 'J')
+      - $this->MultiCell(125, 4, $this->detail->getDescripcion() . " (Lotes " . $lotes . ")", 0, 'J')        
       - $y1 = $this->GetY()
       - $this->SetXY(160, $y0)
       - $this->Cell(25, 4, $this->detail->getUnidades() . " " . $this->detail->getIDArticulo()->getUMA()->getUnidadMedida(),0,0,'R')

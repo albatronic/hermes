@@ -206,7 +206,7 @@ class Entity {
             if (!$this->_em->query($query)) {
                 $this->_errores = $this->_em->getError();
             } else {
-                $lastId = $this->_em->getInsertId();
+                $lastId = (!$this->getPrimaryKeyValue()) ? $this->_em->getInsertId() : $this->getPrimaryKeyValue();
                 // ***** Comentar para importar
 
                 $this->setPrimaryKeyValue($lastId);

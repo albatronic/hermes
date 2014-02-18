@@ -201,7 +201,7 @@ class CpanVariablesController {
             $this->values['ambito'] = $ambito;
             $this->values['nombre'] = $nombre;
             $this->values['titulo'] = $this->variables->getTitulo();
-            $this->values['datos'] = $datos;
+            $this->values['d'] = $datos;
             $this->values['yml'] = $this->variables->getYml();
             $this->values['template'] = $this->variables->getTemplate();
             unset($this->variables);
@@ -236,14 +236,14 @@ class CpanVariablesController {
                 case 'Guardar':
                     if ($this->values['permisos']['permisosModulo']['UP']) {
 
-                        $this->ponValoresDefecto($ambito, $tipo, $nombre, $this->request['datos']);
+                        $this->ponValoresDefecto($ambito, $tipo, $nombre, $this->request['d']);
 
                         $variables = new CpanVariables($ambito, $tipo, $nombre);
-                        $variables->setDatosYml($this->request['datos']);
+                        $variables->setDatosYml($this->request['d']);
                         $variables->save();
                         $this->values['errores'] = $variables->getErrores();
                         if (count($this->values['errores']) == 0)
-                            $_SESSION['VARIABLES'][$tipo . $ambito] = $this->request['datos'];
+                            $_SESSION['VARIABLES'][$tipo . $ambito] = $this->request['d'];
 
                         unset($variables);
 
@@ -305,7 +305,7 @@ class CpanVariablesController {
                     $this->values['ambito'] = $ambito;
                     $this->values['nombre'] = $nombre;
                     $this->values['columna'] = $columna;
-                    $this->values['datos'] = $datos;
+                    $this->values['d'] = $datos;
 
                     $template = $this->entity . '/formPlantillaVariables.html.twig';
                     break;
@@ -319,7 +319,7 @@ class CpanVariablesController {
                     $titulo = "Variables {$tipo} de '{$columna}'";
 
                     $variables = new CpanVariables($ambito, $tipo, $nombre);
-                    $variables->setColumn($columna, $this->request['datos']);
+                    $variables->setColumn($columna, $this->request['d']);
                     $variables->save();
 
                     $this->values['titulo'] = $titulo;
@@ -333,7 +333,7 @@ class CpanVariablesController {
                     $columnasConfig = $archivoConfig->getNode('columns');
                     unset($archivoConfig);
                     $datos = $this->ponAtributos($variables->getColumn($columna), $columnasConfig[$columna]);
-                    $this->values['datos'] = $datos;
+                    $this->values['d'] = $datos;
                     unset($variables);
 
                     $template = $this->entity . '/formPlantillaVariables.html.twig';

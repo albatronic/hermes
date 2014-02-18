@@ -209,7 +209,7 @@ class Circulares extends Controller {
 
         // guardar en el yml el archivo de plantilla seleccionado asociándolo al tipo de circular
         $this->circulares[$this->idCircular]['plantilla'] = $this->request['plantilla'];
-        $yml = sfYaml::dump(array('circulares' => $this->circulares), 4);
+        $yml = sfYaml::dump(array('circulares' => $this->circulares), 5);
         $carpeta = "docs/docs{$_SESSION['emp']}/circulares";
         Archivo::creaCarpeta($carpeta);
 
@@ -250,6 +250,7 @@ class Circulares extends Controller {
                 $this->queryMaster = str_replace($value, $valor, $this->queryMaster);
             }
             $this->queryMaster = str_replace("DBNAME", $_SESSION['project']['conection']['database'], $this->queryMaster);
+            //echo $this->queryMaster;
             $em = new EntityManager($_SESSION['project']['conection']);
             if ($em->getDbLink()) {
                 $em->query($this->queryMaster);
