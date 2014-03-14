@@ -37,12 +37,14 @@
             {{ macro.input(atributos.CContable,'Etiqueta','text','Proveedores[CContable]','Proveedores_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}
             {{ macro.cc(atributos.Banco,'Etiqueta','cc','Proveedores',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}
             {{ macro.input(atributos.Iban,'Etiqueta','text','Proveedores[Iban]','Proveedores_Iban',datos.Iban,'34','CampoTextoMedio') }}
-            {{ macro.input(atributos.Bic,'Etiqueta','text','Proveedores[Bic]','Proveedores_Bic',datos.Bic,'11','CampoTextoCorto') }}        
+            {{ macro.input(atributos.Bic,'Etiqueta','text','Proveedores[Bic]','Proveedores_Bic',datos.Bic,'11','CampoTextoCorto') }}         
+            {{ macro.input(atributos.Mandato,'Etiqueta','text','Proveedores[Mandato]','Proveedores_Mandato',datos.Mandato,'35','CampoTextoCorto') }}        
+            {{ macro.fecha(atributos.FechaMandato,'Etiqueta','Proveedores[FechaMandato]','Proveedores_FechaMandato',datos.FechaMandato,'10','CampoFecha') }}               
             {{ macro.select(atributos.IDFP,'Etiqueta','Proveedores[IDFP]','Proveedores_IDFP',200,datos.IDFP.IDFP,datos.IDFP.fetchAll('Descripcion',false),'Select') }}
-            {{ macro.input(atributos.Iva,'Etiqueta','checkbox','Proveedores[Iva]','Proveedores[Iva]',datos.Iva.IDTipo,'255','CampoTextoLargo') }}            
-            {{ macro.textarea(atributos.Observaciones,'Etiqueta','Proveedores[Observaciones]','Proveedores_Observaciones',datos.Observaciones,none,none,'TextArea')}}             
+            {{ macro.input(atributos.Iva,'Etiqueta','checkbox','Proveedores[Iva]','Proveedores[Iva]',datos.Iva.IDTipo,'255','CampoTextoLargo') }}                        
         </div>
         <div style="float: left; width: 47%;">
+            {{ macro.textarea(atributos.Observaciones,'Etiqueta','Proveedores[Observaciones]','Proveedores_Observaciones',datos.Observaciones,none,none,'TextArea')}}             
             {% include '_global/metaDatos.html.twig' %}
         </div>
     </div>  

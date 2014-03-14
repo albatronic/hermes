@@ -61,10 +61,10 @@ FemitidasCab:
   order_by:
     -
       title: Fecha z-a
-      criteria: Fecha DESC
+      criteria: Fecha DESC, NumeroFactura DESC
     -
       title: Fecha a-z
-      criteria: Fecha ASC    
+      criteria: Fecha ASC, NumeroFactura ASC    
     -
       title: Numero z-a
       criteria: NumeroFactura DESC

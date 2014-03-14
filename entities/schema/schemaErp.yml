@@ -12,6 +12,7 @@ ErpAgencias:
     EMail:         { type: string(50), notnull: false, default: NULL }
     CosteEstandar: { type: decimal, notnull: true, default: '0.00' }
     UrlTracking:   { type: varchar(100), notnul: false, default: NULL }
+    Uso:           { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
@@ -377,6 +378,8 @@ ErpClientes:
     FacturacionAgrupada: { type: boolean, notnull: true, default: 1, index: index, comment: 'db,ValoresSN,IDTipo' }   
     Iban:                { type: varchar(34), notnull: false, default: null }
     Bic:                 { type: varchar(11), notnull: false, default: null }
+    Mandato:             { type: varchar(35), notnull: false, default: null }
+    FechaMandato:        { type: date, notnull: true, default: '0000-00-00' }    
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:     
   
@@ -542,7 +545,7 @@ ErpFabricantes:
     
 # Jerarquía de Categorías, Familias, Subfamilias, etc
 ErpFamilias:
-  engine: mysql
+  engine: 
   charSet:
   comment: Jerarquía de Categorías, Familias, Subfamilias, etc
   columns:
@@ -594,7 +597,16 @@ ErpFavoritosTpv:
     Descripcion: { type: varchar(255), notnull: true }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
-    
+          
+# Articulos favoritos para cada usuario de la Web
+ErpFavoritosWeb:
+  comment: Articulos favoritos para cada usuario de la Web
+  columns:
+    IDUsuario:   { type: bigint(11), notnull: true, index: index }
+    IDArticulo:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }    
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+  relations:  
+      
 # Cabecera de Facturas emitidas
 ErpFemitidasCab:
   comment: Cabecera de Facturas emitidas
@@ -689,7 +701,7 @@ ErpFormasPago:
     EstadoRecibo:        { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosRecibos,IDTipo' }
     RecargoFinanciero:   { type: decimal(5), notnull: true, default: '0.00' }
     DescuentoFinanciero: { type: decimal(5), notnull: true, default: '0.00' }
-    Web:                 { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }    
+    Uso:                 { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' } 
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
@@ -862,7 +874,7 @@ ErpMunicipios:
     IDProvincia:   { type: bigint(11), notnull: true, defautl: 0, index: index, comment: 'db,Provincias,IDProvincia' }
     Codigo:        { type: string(5), notnull: true }
     DigitoControl: { type: string(2), notnull: true }
-    Municipio:     { type: string(2555), notnull: true }
+    Municipio:     { type: string(255), notnull: true, index: INDEX }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
     
@@ -1048,8 +1060,10 @@ ErpProveedores:
     Observaciones:   { type: text, notnull: false, default: NULL }       
     IDFP:            { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }    
     Iva:             { type: boolean, notnull: true, default: 1, index: index, comment: 'db,ValoresSN,IDTipo' }
-    Iban:                { type: varchar(34), notnull: false, default: null }
-    Bic:                 { type: varchar(11), notnull: false, default: null }    
+    Iban:            { type: varchar(34), notnull: false, default: null }
+    Bic:             { type: varchar(11), notnull: false, default: null }
+    Mandato:         { type: varchar(35), notnull: false, default: null }
+    FechaMandato:    { type: date, notnull: true, default: '0000-00-00' }     
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
@@ -1060,7 +1074,7 @@ ErpProvincias:
     IDProvincia: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}
     IDPais:      { type: bigint(11), notnull: true, default: 68 }
     Codigo:      { type: varchar(5), notnull: false }
-    Provincia:   { type: string(255), notnull: true }
+    Provincia:   { type: string(255), notnull: true, index: INDEX }
     IDZona:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ZonasTransporte,IDZona' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
@@ -1178,22 +1192,25 @@ ErpRecepciones:
 ErpRecibosClientes:
   comment: Recibos de clientes
   columns:
-    IDRecibo:    { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}   
-    Recibo:      { type: char(4), notnull: true}
-    IDSucursal:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
-    IDFactura:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FemitidasCab,IDFactura' }
-    IDCliente:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Clientes,IDCliente' }     
-    IDComercial: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }     
-    Fecha:       { type: date, notnull: true, default: '0000-00-00', index: index }
-    Vencimiento: { type: date, notnull: true, default: '0000-00-00', index: index }
-    Importe:     { type: decimal(2), notnull: true, default: '0.00' }
-    CBanco:      { type: varchar(20), notnull: true, default: '' }
-    Asiento:     { type: integer(6), notnull: true, default: 0 }
-    Concepto:    { type: varchar(255), notnull: true, default: ''}
-    IDEstado:    { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosRecibos,IDTipo' }
-    IDRemesa:    { type: varchar(14), notnull: false, default: NULL, index: index }
-    Remesar:     { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    CContable:   { type: string(10), notnull: true, default: '0000000000' }
+    IDRecibo:     { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}   
+    Recibo:       { type: char(4), notnull: true}
+    IDSucursal:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
+    IDFactura:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FemitidasCab,IDFactura' }
+    IDCliente:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Clientes,IDCliente' }     
+    IDComercial:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }     
+    Fecha:        { type: date, notnull: true, default: '0000-00-00', index: index }
+    Vencimiento:  { type: date, notnull: true, default: '0000-00-00', index: index }
+    Importe:      { type: decimal(2), notnull: true, default: '0.00' }
+    Iban:         { type: varchar(34), notnull: false, default: null }
+    Bic:          { type: varchar(11), notnull: false, default: null }
+    Mandato:      { type: varchar(35), notnull: false, default: null }
+    FechaMandato: { type: date, notnull: true, default: '0000-00-00' } 
+    Asiento:      { type: integer(6), notnull: true, default: 0 }
+    Concepto:     { type: varchar(255), notnull: true, default: ''}
+    IDEstado:     { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosRecibos,IDTipo' }
+    IDRemesa:     { type: varchar(14), notnull: false, default: NULL, index: index }
+    Remesar:      { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
+    CContable:    { type: string(10), notnull: true, default: '0000000000' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
 
@@ -1201,21 +1218,24 @@ ErpRecibosClientes:
 ErpRecibosProveedores:
   comment: Recibos de proveedores
   columns:
-    IDRecibo:    { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}   
-    Recibo:      { type: char(4), notnull: true}
-    IDSucursal:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
-    IDFactura:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FrecibidasCab,IDFactura' }
-    IDProveedor: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Proveedores,IDProveedor' }     
-    Fecha:       { type: date, notnull: true, default: '0000-00-00', index: index }
-    Vencimiento: { type: date, notnull: true, default: '0000-00-00', index: index }
-    Importe:     { type: decimal(2), notnull: true, default: '0.00' }
-    CBanco:      { type: varchar(20), notnull: true, default: '' }
-    Asiento:     { type: integer(6), notnull: true, default: 0 }
-    Concepto:    { type: varchar(255), notnull: true, default: ''}
-    IDEstado:    { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosRecibos,IDTipo' }
-    IDRemesa:    { type: varchar(14), notnull: false, default: NULL, index: index }
-    Remesar:     { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    CContable:   { type: string(10), notnull: true, default: '0000000000' }
+    IDRecibo:     { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}   
+    Recibo:       { type: char(4), notnull: true}
+    IDSucursal:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
+    IDFactura:    { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FrecibidasCab,IDFactura' }
+    IDProveedor:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Proveedores,IDProveedor' }     
+    Fecha:        { type: date, notnull: true, default: '0000-00-00', index: index }
+    Vencimiento:  { type: date, notnull: true, default: '0000-00-00', index: index }
+    Importe:      { type: decimal(2), notnull: true, default: '0.00' }
+    Iban:         { type: varchar(34), notnull: false, default: null }
+    Bic:          { type: varchar(11), notnull: false, default: null }
+    Mandato:      { type: varchar(35), notnull: false, default: null }
+    FechaMandato: { type: date, notnull: true, default: '0000-00-00' } 
+    Asiento:      { type: integer(6), notnull: true, default: 0 }
+    Concepto:     { type: varchar(255), notnull: true, default: ''}
+    IDEstado:     { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosRecibos,IDTipo' }
+    IDRemesa:     { type: varchar(14), notnull: false, default: NULL, index: index }
+    Remesar:      { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
+    CContable:    { type: string(10), notnull: true, default: '0000000000' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
 
@@ -1461,6 +1481,7 @@ ErpZonasTransporte:
   columns:
     IDZona: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Zona:   { type: string(50), notnull: true }
+    Uso:    { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' }    
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:    
   
@@ -1537,7 +1558,7 @@ ErpPaises:
   columns:
     IDPais:        { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}        
     Codigo:        { type: string(2), notnull: true }
-    Pais:          { type: string(255), notnull: true }
+    Pais:          { type: string(255), notnull: true, index: INDEX }
     IDMoneda:      { type: bigint(11), notnull: false, default: 0, index: index, comment: 'db,Monedas,IDMoneda' }
     IDZonaHoraria: { type: bigint(11), notnull: false, default: 0, index: index, comment: 'db,ZonasHorarias,IDZona' }
     Latitud:       { type: float, notnull: true, default: 0 }

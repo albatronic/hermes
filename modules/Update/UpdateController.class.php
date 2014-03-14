@@ -11,8 +11,10 @@ class UpdateController {
 
     //protected $dbOrigen = "aeroprint_gestion001";
     //protected $dbDestino = "albatro_aeroprint";
-    protected $dbOrigen = "albatro_ppuerp006";
-    protected $dbDestino = "albatro_carroceriasgranada";
+    //protected $dbOrigen = "albatro_ppuerp006";
+    //protected $dbDestino = "albatro_carroceriasgranada";
+    protected $dbOrigen = "albatro_gestion001";
+    protected $dbDestino = "albatro_pacs";
     //protected $dbOrigen = "aeroprint_gestion003";
     //protected $dbDestino = "albatro_gastosaeroprint";  
     //protected $dbOrigen = "aeroprint_gestion004";
@@ -23,9 +25,18 @@ class UpdateController {
      * @var array
      */
     protected $agentes = array(
-        '0' => '8',
-        '8' => '8',
-        '14' => '14',
+        //Albatronic
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+        '7' => '7',
+            /**
+              '0' => '8',
+              '8' => '8',
+              '14' => '14',
+             */
     );
     protected $correspondenciaIva = array(
         '0.00' => 0,
@@ -41,30 +52,32 @@ class UpdateController {
 
         $_SESSION['idiomas']['actual'] = -1;
 
-        $this->Agencias();
-        $this->FormasPago();
-        $this->Clientes();
-        $this->ClientesTipos();
-        $this->ClientesGrupos();
-        $this->Fabricantes();
-        $this->Familias();
-        $this->Subfamilias();
-        $this->Proveedores();
-        $this->Articulos();
-        $this->PstoCab();
-        $this->PstoLineas();
-        $this->AlbaranesCab();
-        $this->AlbaranesLineas();
-        $this->FemitidasCab();
-        $this->FemitidasLineas();
-        $this->FrecibidasCab();
-        $this->FrecibidasLineas();
-        $this->PedidosCab();
-        $this->PedidosLineas();
+        //$this->Agencias();
+        //$this->FormasPago();
+        //$this->Clientes();
+        //$this->ClientesTipos();
+        //$this->ClientesGrupos();
+        //$this->Fabricantes();
+        //$this->Familias();
+        //$this->Subfamilias();
+        //$this->Proveedores();
+        //$this->Articulos();
+        //$this->PstoCab();
+        //$this->PstoLineas();
+        //$this->AlbaranesCab();
+        //$this->AlbaranesLineas();
+        //$this->FemitidasCab();
+        //$this->FemitidasLineas();
+        //$this->FrecibidasCab();
+        //$this->FrecibidasLineas();
+        //$this->PedidosCab();
+        //this->PedidosLineas();
         $this->RecibosClientes();
-        $this->RecibosProveedores();
-        $this->Existencias();
-        $this->Inventarios();
+        //$this->RecibosProveedores();
+        /*
+          $this->Existencias();
+          $this->Inventarios();
+         */
     }
 
     public function Inventarios() {
@@ -250,7 +263,11 @@ class UpdateController {
             $c->setFecha($row['Fecha']);
             $c->setVencimiento($row['Vencimiento']);
             $c->setImporte($row['Importe']);
-            $c->setCBanco($row['CBanco']);
+            $c->setIban(Utils::iban($row['CBanco']));
+            $c->setMandato($row['IDProveedor']);
+            $c->setFechaMandato('2013-01-01');
+            $c->setIDRemesa($row['IDRemesa']);
+            $c->setCContable($row['CContable']);            
             $c->setAsiento($row['Asiento']);
             $c->setConcepto($row['Concepto']);
 
@@ -308,7 +325,11 @@ class UpdateController {
             $c->setFecha($row['Fecha']);
             $c->setVencimiento($row['Vencimiento']);
             $c->setImporte($row['Importe']);
-            $c->setCBanco($row['CBanco']);
+            $c->setIban(Utils::iban($row['CBanco']));
+            $c->setMandato($row['IDCliente']);
+            $c->setFechaMandato('2013-01-01'); 
+            $c->setIDRemesa($row['IDRemesa']);
+            $c->setCContable($row['CContable']);
             $c->setAsiento($row['Asiento']);
             $c->setConcepto($row['Concepto']);
 
@@ -362,6 +383,8 @@ class UpdateController {
             $c->setIDAgente(2);
             $c->setSuPedido($row['SuPedido']);
             $c->setFecha($row['Fecha']);
+            $c->setFechaEntrega($row['FechaEntrega']);
+            $c->setFechaEntrada($row['FechaEntrada']);
             $c->setIDProveedor($row['IDProveedor']);
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
@@ -406,6 +429,61 @@ class UpdateController {
         //mysql_close($dbLink);
 
         echo "Pedidos creados {$nItems}<br/>";
+        if (count($errores)) {
+            echo "<pre>";
+            print_r($errores);
+            echo "</pre>";
+        }
+    }
+
+    public function PedidosLineas() {
+
+        $nItems = 0;
+        $nErrores = 0;
+
+        $dbLink = mysql_connect("localhost", "root", "albatronic");
+
+        $query = "TRUNCATE {$this->dbDestino}.ErpPedidosLineas";
+        mysql_query($query);
+
+        $query = "select Codigo,IDArticulo from {$this->dbDestino}.ErpArticulos";
+        $result = mysql_query($query, $dbLink);
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
+            $correspondencia[$row['Codigo']] = $row['IDArticulo'];
+
+        $query = "select c.Fecha, l.* from {$this->dbOrigen}.pedidos_cab as c LEFT JOIN {$this->dbOrigen}.pedidos_lineas as l ON c.IDPedido=l.IDPedido where l.IDPedido>0";
+        $result = mysql_query($query, $dbLink);
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $c = new PedidosLineas();
+            $c->setIDPedido($row['IDPedido']);
+            $c->setIDLinea($row['IDLinea']);
+            $c->setIDArticulo($correspondencia[$row['IDArticulo']]);
+            $c->setDescripcion($row['Descripcion']);
+            $c->setUnidades($row['Unidades']);
+            $c->setUnidadMedida("UMC");
+            $c->setPrecio($row['Precio']);
+            $c->setDescuento($row['Descuento']);
+            $c->setImporte($row['Importe']);
+            if ($row['Fecha'] >= '2012-09-01')
+                $c->setIva($this->correspondenciaIva[$row['Iva']]);
+            else
+                $c->setIva($row['Iva']);
+            $c->setUnidadesRecibidas($row['Unidades'] - $row['PteFacturar']);
+            $c->setUnidadesPtesFacturar($row['PteFacturar']);
+
+            $c->setPrimaryKeyMD5(md5($row['IDLinea']));
+
+            if (!$c->create()) {
+                $errores[] = $c->getErrores();
+                $nErrores++;
+            } else
+                $nItems++;
+        }
+
+        //mysql_close($dbLink);
+
+        echo "Líneas de Pedido creadas {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -525,61 +603,6 @@ class UpdateController {
         //mysql_close($dbLink);
 
         echo "Líneas Factura recibidas creadas {$nItems}<br/>";
-        if (count($errores)) {
-            echo "<pre>";
-            print_r($errores);
-            echo "</pre>";
-        }
-    }
-
-    public function PedidosLineas() {
-
-        $nItems = 0;
-        $nErrores = 0;
-
-        $dbLink = mysql_connect("localhost", "root", "albatronic");
-
-        $query = "TRUNCATE {$this->dbDestino}.ErpPedidosLineas";
-        mysql_query($query);
-
-        $query = "select Codigo,IDArticulo from {$this->dbDestino}.ErpArticulos";
-        $result = mysql_query($query, $dbLink);
-        while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
-            $correspondencia[$row['Codigo']] = $row['IDArticulo'];
-
-        $query = "select c.Fecha, l.* from {$this->dbOrigen}.pedidos_cab as c LEFT JOIN {$this->dbOrigen}.pedidos_lineas as l ON c.IDPedido=l.IDPedido where l.IDPedido>0";
-        $result = mysql_query($query, $dbLink);
-
-        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-            $c = new PedidosLineas();
-            $c->setIDPedido($row['IDPedido']);
-            $c->setIDLinea($row['IDLinea']);
-            $c->setIDArticulo($correspondencia[$row['IDArticulo']]);
-            $c->setDescripcion($row['Descripcion']);
-            $c->setUnidades($row['Unidades']);
-            $c->setUnidadMedida("UMC");
-            $c->setPrecio($row['Precio']);
-            $c->setDescuento($row['Descuento']);
-            $c->setImporte($row['Importe']);
-            if ($row['Fecha'] >= '2012-09-01')
-                $c->setIva($this->correspondenciaIva[$row['Iva']]);
-            else
-                $c->setIva($row['Iva']);
-            $c->setUnidadesRecibidas($row['Unidades'] - $row['PteFacturar']);
-            $c->setUnidadesPtesFacturar($row['PteFacturar']);
-
-            $c->setPrimaryKeyMD5(md5($row['IDLinea']));
-
-            if (!$c->create()) {
-                $errores[] = $c->getErrores();
-                $nErrores++;
-            } else
-                $nItems++;
-        }
-
-        //mysql_close($dbLink);
-
-        echo "Líneas de Pedido creadas {$nItems}<br/>";
         if (count($errores)) {
             echo "<pre>";
             print_r($errores);
@@ -878,10 +901,10 @@ class UpdateController {
 
             $c = new Proveedores();
             $c->setIDProveedor($row['IDProveedor']);
-            $c->setRazonSocial($row['RazonSocial']);
-            $c->setNombreComercial($row['NombreComercial']);
+            $c->setRazonSocial(utf8_decode($row['RazonSocial']));
+            $c->setNombreComercial(utf8_decode($row['NombreComercial']));
             $c->setCif($row['Cif']);
-            $c->setDireccion($row['Direccion']);
+            $c->setDireccion(utf8_decode($row['Direccion']));
             $c->setIDPais(68);
             if ($poblacion[0]['IDMunicipio']) {
                 $c->setIDProvincia($poblacion[0]['IDProvincia']);
@@ -900,6 +923,9 @@ class UpdateController {
             $c->setOficina($row['IDOficina']);
             $c->setDigito($row['Digito']);
             $c->setCuenta($row['Cuenta']);
+            $c->setIban(Utils::iban($row['IDBanco'].$row['IDOficina'].$row['Digito'].$row['Cuenta']));
+            $c->setMandato($row['IDProveedor']);
+            $c->setFechaMandato('2013-01-01');            
             $c->setIDFP($row['IDFP']);
             $c->setObservaciones($row['Observaciones']);
             $c->setPrimaryKeyMD5(md5($row['IDProveedor']));
@@ -1130,10 +1156,10 @@ class UpdateController {
 
             $c = new Clientes();
             $c->setIDCliente($row['IDCliente']);
-            $c->setRazonSocial($row['RazonSocial']);
-            $c->setNombreComercial($row['NombreComercial']);
+            $c->setRazonSocial(utf8_decode($row['RazonSocial']));
+            $c->setNombreComercial(utf8_decode($row['NombreComercial']));
             $c->setCif($row['Cif']);
-            $c->setDireccion($row['Direccion']);
+            $c->setDireccion(utf8_decode($row['Direccion']));
             $c->setIDPais(68);
             if ($poblacion[0]['IDMunicipio']) {
                 $c->setIDProvincia($poblacion[0]['IDProvincia']);
@@ -1153,6 +1179,9 @@ class UpdateController {
             $c->setOficina($row['IDOficina']);
             $c->setDigito($row['Digito']);
             $c->setCuenta($row['Cuenta']);
+            $c->setIban(Utils::iban($row['IDBanco'].$row['IDOficina'].$row['Digito'].$row['Cuenta']));
+            $c->setMandato($row['IDCliente']);
+            $c->setFechaMandato('2013-01-01');
             $c->setIDTipo($row['IDTipo']);
             $c->setIDGrupo($row['IDGrupo']);
             $c->setIDFP($row['IDFP']);
@@ -1216,24 +1245,35 @@ class UpdateController {
 
             $c->setImporte($row['Importe']);
             $c->setDescuento($row['Descuento']);
-            $c->setBaseImponible1($row['BaseImponible1']);
-            $c->setIva1($row['Iva1']);
-            $c->setCuotaIva1($row['CuotaIva1']);
-            $c->setRecargo1($row['Recargo1']);
-            $c->setCuotaRecargo1($row['CuotaRecargo1']);
-            $c->setBaseImponible2($row['BaseImponible2']);
-            $c->setIva2($row['Iva2']);
-            $c->setCuotaIva2($row['CuotaIva2']);
-            $c->setRecargo2($row['Recargo2']);
-            $c->setCuotaRecargo2($row['CuotaRecargo2']);
-            $c->setBaseImponible3($row['BaseImponible3']);
-            $c->setIva3($row['Iva3']);
-            $c->setCuotaIva3($row['CuotaIva3']);
-            $c->setRecargo3($row['Recargo3']);
-            $c->setCuotaRecargo3($row['CuotaRecargo3']);
-            $c->setTotalBases($row['TotalBases']);
-            $c->setTotalIva($row['TotalIva']);
-            $c->setTotalRecargo($row['TotalRecargo']);
+            if ($this->dbOrigen != 'albatro_gestion001') {
+                $c->setBaseImponible1($row['BaseImponible1']);
+                $c->setIva1($row['Iva1']);
+                $c->setCuotaIva1($row['CuotaIva1']);
+                $c->setRecargo1($row['Recargo1']);
+                $c->setCuotaRecargo1($row['CuotaRecargo1']);
+                $c->setBaseImponible2($row['BaseImponible2']);
+                $c->setIva2($row['Iva2']);
+                $c->setCuotaIva2($row['CuotaIva2']);
+                $c->setRecargo2($row['Recargo2']);
+                $c->setCuotaRecargo2($row['CuotaRecargo2']);
+                $c->setBaseImponible3($row['BaseImponible3']);
+                $c->setIva3($row['Iva3']);
+                $c->setCuotaIva3($row['CuotaIva3']);
+                $c->setRecargo3($row['Recargo3']);
+                $c->setCuotaRecargo3($row['CuotaRecargo3']);
+                $c->setTotalBases($row['TotalBases']);
+                $c->setTotalIva($row['TotalIva']);
+                $c->setTotalRecargo($row['TotalRecargo']);
+            } else {
+                $c->setBaseImponible1($row['BaseImponible']);
+                $c->setIva1($row['Iva']);
+                $c->setCuotaIva1($row['CuotaIva']);
+                $c->setRecargo1($row['Recargo']);
+                $c->setCuotaRecargo1($row['CuotaRecargo']);
+                $c->setTotalBases($row['BaseImponible']);
+                $c->setTotalIva($row['CuotaIva']);
+                $c->setTotalRecargo($row['CuotaRecargo']);
+            }
             $c->setTotal($row['Total']);
             $c->setIDEstado($row['Estado']);
             $c->setObservaciones($row['Observaciones']);
@@ -1370,6 +1410,7 @@ class UpdateController {
             $c->setTotalBases($row['TotalBases']);
             $c->setTotalIva($row['TotalIva']);
             $c->setTotalRecargo($row['TotalRecargo']);
+
             $c->setTotal($row['Total']);
             if ($row['Expedido'] == 0)
                 $c->setIDEstado(0);

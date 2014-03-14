@@ -18,90 +18,123 @@ class RecibosClientesEntity extends EntityComunes {
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDRecibo;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Recibo;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDSucursal;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDFactura;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDCliente;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDComercial;
+
     /**
      * @orm:Column(type="date")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Fecha;
+
     /**
      * @orm:Column(type="date")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Vencimiento;
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Importe = '0.00';
+
     /**
      * @orm:Column(type="string")
-     * @assert:NotBlank(groups="RecibosClientes")
      */
-    protected $CBanco = '';
+    protected $Iban = null;
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Bic = null;
+
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Mandato;
+
+    /**
+     * @orm:Column(type="date")
+     * @assert:NotBlank(groups="clientes")
+     */
+    protected $FechaMandato = '0000-00-00';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Asiento = 0;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Concepto = '';
+
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $IDEstado;
+
     /**
      * @orm:Column(type="string")
      */
     protected $IDRemesa;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $Remesar = '1';
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="RecibosClientes")
      */
     protected $CContable = '0000000000';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
     protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
     protected $_tableName = 'ErpRecibosClientes';
+
     /**
      * Nombre de la primaryKey
      * @var string
@@ -201,12 +234,41 @@ class RecibosClientesEntity extends EntityComunes {
         return $this->Importe;
     }
 
-    public function setCBanco($CBanco) {
-        $this->CBanco = trim($CBanco);
+    public function setIban($Iban) {
+        $this->Iban = trim($Iban);
     }
 
-    public function getCBanco() {
-        return $this->CBanco;
+    public function getIban() {
+        return $this->Iban;
+    }
+
+    public function setBic($Bic) {
+        $this->Bic = trim($Bic);
+    }
+
+    public function getBic() {
+        return $this->Bic;
+    }
+
+    public function setMandato($Mandato) {
+        $this->Mandato = trim($Mandato);
+    }
+
+    public function getMandato() {
+        return $this->Mandato;
+    }
+
+    public function setFechaMandato($FechaMandato) {
+        $fecha = new Fecha($FechaMandato);
+        $this->FechaMandato = $fecha->getFecha();
+        unset($fecha);
+    }
+
+    public function getFechaMandato() {
+        $fecha = new Fecha($this->FechaMandato);
+        $ddmmaaaa = $fecha->getddmmaaaa();
+        unset($fecha);
+        return $ddmmaaaa;
     }
 
     public function setAsiento($Asiento) {

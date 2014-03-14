@@ -61,11 +61,11 @@ class Fecha {
         //Buscar en que formato viene la fecha. Lo indicará el valor del índice $i
         for ($i = 0; $i < count($this->plantilla); $i++) {
             if (preg_match($this->plantilla[$i], $fecha, $registro)) {
-                $formatoCorrecto = 1;
+                $formatoCorrecto = $i;
                 break;
             }
         }
-
+        //echo "---->",$fecha," ",$formatoCorrecto,"<br/>";
         if ($formatoCorrecto) {
             switch ($i) {
                 case '0': // Formato datetime ddmmaaaa hh:mm:ss
@@ -90,6 +90,7 @@ class Fecha {
                     $this->segundos = $hora[2];
                     $this->time = $this->hora . ":" . $this->minutos . ":" . $this->segundos;
                     $this->esDateTime = TRUE;
+                    break;
                 case '2': // Formato datetime dd.mm.aaaa hh:mm:ss
                     $fecha = explode(".", substr($registro[0], 0, 10));
                     $this->dia = $fecha[0];
@@ -101,6 +102,7 @@ class Fecha {
                     $this->segundos = $hora[2];
                     $this->time = $this->hora . ":" . $this->minutos . ":" . $this->segundos;
                     $this->esDateTime = TRUE;
+                    break;
                 case '3': // Formato datetime dd/mm/aaaa hh:mm:ss
                     $fecha = explode("/", substr($registro[0], 0, 10));
                     $this->dia = $fecha[0];

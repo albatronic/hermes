@@ -124,8 +124,8 @@ Municipios:
       aditional_filter: { order: 2, caption: Provincia, entity: Provincias, method: fetchAll, params: Provincia, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     Codigo:
-      title: Codigo
-      filter: YES
+      title: Código
+      filter: NO
       list: YES
       visible: true
       updatable: true
@@ -137,8 +137,8 @@ Municipios:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: string, length: '5', min: null, max: null, message: 'Valor Requerido' }
     DigitoControl:
-      title: DigitoControl
-      filter: YES
+      title: Dígito Control
+      filter: NO
       list: NO
       visible: true
       updatable: true

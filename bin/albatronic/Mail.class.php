@@ -51,8 +51,7 @@ class Mail {
                 $this->mailer->From = $this->config['from'];
                 $this->mailer->FromName = $this->config['from_name'];
                 $this->mailer->setLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), $this->config['plugin_dir'] . "language/");
-            }
-            else
+            } else
                 $this->mensaje = "Error: no se ha podido crear el objeto mailer.";
         }
     }
@@ -71,7 +70,7 @@ class Mail {
 
                 $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
                 $user = $usuario->getIDAgente();
-                
+
                 // Create the Transport
                 $transport = Swift_SmtpTransport::newInstance()
                         ->setHost($user->getEMailHost())
@@ -81,11 +80,10 @@ class Mail {
                 ;
                 unset($user);
                 unset($usuario);
-                
+
                 // Create the Mailer using your created Transport
                 $this->mailer = Swift_Mailer::newInstance($transport);
-            }
-            else {
+            } else {
                 $this->mensaje[] = "Error: no se ha podido crear el objeto mailer.";
             }
         }
@@ -117,11 +115,11 @@ class Mail {
                     ->setContentType('text/html')
                     ->setFrom(array($de => $deNombre))
                     ->setTo(array($para))
-                    ->setCc(array($conCopia))
-                    ->setBcc(array($conCopiaOculta))
                     ->setReadReceiptTo($de)
                     ->setPriority(2)
-                    ->setBody($mensaje);
+                    ->setBody($mensaje);                    
+            if ($conCopia) $message->setCc(array($conCopia));
+            if ($conCopiaOculta) $message->setBcc(array($conCopiaOculta));
 
             foreach ($adjuntos as $adjunto) {
                 $message->attach(Swift_Attachment::fromPath($adjunto));
@@ -182,26 +180,28 @@ class Mail {
 
         $ok = false;
 
-        //compruebo unas cosas primeras
-        if ((strlen($email) >= 6) && (substr_count($email, "@") == 1) && (substr($email, 0, 1) != "@") && (substr($email, strlen($email) - 1, 1) != "@")) {
-            if ((!strstr($email, "'")) && (!strstr($email, "\"")) && (!strstr($email, "\\")) && (!strstr($email, "\$")) && (!strstr($email, " "))) {
-                //miro si tiene caracter .
-                if (substr_count($email, ".") >= 1) {
-                    //obtengo la terminacion del dominio
-                    $term_dom = substr(strrchr($email, '.'), 1);
-                    //compruebo que la terminación del dominio sea correcta
-                    if (strlen($term_dom) > 1 && strlen($term_dom) < 5 && (!strstr($term_dom, "@"))) {
-                        //compruebo que lo de antes del dominio sea correcto
-                        $antes_dom = substr($email, 0, strlen($email) - strlen($term_dom) - 1);
-                        $caracter_ult = substr($antes_dom, strlen($antes_dom) - 1, 1);
-                        if ($caracter_ult != "@" && $caracter_ult != ".") {
-                            $ok = true;
-                        }
-                    }
-                }
-            }
-        }
-
+        /**
+          //compruebo unas cosas primeras
+          if ((strlen($email) >= 6) && (substr_count($email, "@") == 1) && (substr($email, 0, 1) != "@") && (substr($email, strlen($email) - 1, 1) != "@")) {
+          if ((!strstr($email, "'")) && (!strstr($email, "\"")) && (!strstr($email, "\\")) && (!strstr($email, "\$")) && (!strstr($email, " "))) {
+          //miro si tiene caracter .
+          if (substr_count($email, ".") >= 1) {
+          //obtengo la terminacion del dominio
+          $term_dom = substr(strrchr($email, '.'), 1);
+          //compruebo que la terminación del dominio sea correcta
+          if (strlen($term_dom) > 1 && strlen($term_dom) < 5 && (!strstr($term_dom, "@"))) {
+          //compruebo que lo de antes del dominio sea correcto
+          $antes_dom = substr($email, 0, strlen($email) - strlen($term_dom) - 1);
+          $caracter_ult = substr($antes_dom, strlen($antes_dom) - 1, 1);
+          if ($caracter_ult != "@" && $caracter_ult != ".") {
+          $ok = true;
+          }
+          }
+          }
+          }
+          }
+         */
+        $ok = Swift_Validate::email($email);
         if (!$ok)
             $this->mensaje[] = "La direccion email indicada no es valida";
 

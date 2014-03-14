@@ -18,26 +18,37 @@ class ZonasTransporteEntity extends EntityComunes {
      * @assert:NotBlank(groups="ZonasTransporte")
      */
     protected $IDZona;
+
     /**
      * @orm:Column(type="string")
      * @assert:NotBlank(groups="ZonasTransporte")
      */
     protected $Zona = '';
+
+    /**
+     * @orm:Column(type="tinyint")
+     * @assert:NotBlank(groups="ZonasTransporte")
+     */
+    protected $Uso = '0';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
      */
     protected $_conectionName = '';
+
     /**
      * Nombre de la tabla física
      * @var string
      */
     protected $_tableName = 'ErpZonasTransporte';
+
     /**
      * Nombre de la primaryKey
      * @var string
      */
     protected $_primaryKeyName = 'IDZona';
+
     /**
      * Relacion de entidades que dependen de esta
      * @var array
@@ -64,6 +75,16 @@ class ZonasTransporteEntity extends EntityComunes {
 
     public function getZona() {
         return $this->Zona;
+    }
+
+    public function setUso($Uso) {
+        $this->Uso = trim($Uso);
+    }
+
+    public function getUso() {
+        if (!($this->Uso instanceof UsoWeb))
+            $this->Uso = new UsoWeb($this->Uso);
+        return $this->Uso;
     }
 
 }

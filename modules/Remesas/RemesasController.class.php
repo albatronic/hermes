@@ -70,7 +70,7 @@ class RemesasController  {
 
         $filtroSucursal = ($filtro['idSucursal']) ? "IDSucursal='{$filtro['idSucursal']}'" : "1";
         $filtroEstado = ($filtro['idEstado'] != '') ? "IDEstado='{$filtro['idEstado']}'" : "1";
-        $filtroQuery = "(Vencimiento>='{$desde->getaaaammdd()}') and (Vencimiento<='{$hasta->getaaaammdd()}') and ({$filtroSucursal}) and ({$filtroEstado})";// and (CBanco<>0)";
+        $filtroQuery = "(Vencimiento>='{$desde->getaaaammdd()}') and (Vencimiento<='{$hasta->getaaaammdd()}') and ({$filtroSucursal}) and ({$filtroEstado})";// and (Iban<>0)";
 
         $recibos = new RecibosClientes();
         $rows = $recibos->cargaCondicion("IDRecibo",$filtroQuery,"Vencimiento ASC");
@@ -87,7 +87,7 @@ class RemesasController  {
                 'Vencimiento' => $recibo->getVencimiento(),
                 'Importe' => $recibo->getImporte(),
                 'Remesa' => $recibo->getIDRemesa(),
-                'CBanco' => $recibo->getCBanco(),
+                'Iban' => $recibo->getIban(),
                 'Estado' => $recibo->getIDEstado()->getDescripcion(),
             );
         }

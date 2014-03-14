@@ -14,7 +14,10 @@
 {{ macro.etiqueta(atributos.Fecha,'Etiqueta',datos.Fecha) }}
 {{ macro.fecha(atributos.Vencimiento,'Etiqueta','RecibosClientes[Vencimiento]','RecibosClientes_Vencimiento',datos.Vencimiento,'10','CampoFecha') }}
 {{ macro.input(atributos.Importe,'Etiqueta','text','RecibosClientes[Importe]','RecibosClientes_Importe',datos.Importe,'10','CampoImporte') }}
-{{ macro.input(atributos.CBanco,'Etiqueta','text','RecibosClientes[CBanco]','RecibosClientes_CBanco',datos.CBanco,'20','CampoTextoMedio') }}
+{{ macro.input(atributos.Iban,'Etiqueta','text','RecibosClientes[Iban]','RecibosClientes_Iban',datos.Iban,'34','CampoTextoMedio') }}
+{{ macro.input(atributos.Bic,'Etiqueta','text','RecibosClientes[Bic]','RecibosClientes_Bic',datos.Bic,'11','CampoTextoMedio') }}
+{{ macro.input(atributos.Mandato,'Etiqueta','text','RecibosClientes[Mandato]','RecibosClientes_Mandato',datos.Mandato,'35','CampoTextoMedio') }}
+{{ macro.fecha(atributos.FechaMandato,'Etiqueta','RecibosClientes[FechaMandato]','RecibosClientes_FechaMandato',datos.FechaMandato,'10','CampoFecha') }}
 {{ macro.input(atributos.Concepto,'Etiqueta','text','RecibosClientes[Concepto]','RecibosClientes_Concepto',datos.Concepto,'255','CampoTextoLargo') }}
 {{ macro.input(atributos.IDRemesa,'Etiqueta','text','RecibosClientes[IDRemesa]','RecibosClientes_IDRemesa',datos.IDRemesa,'14','CampoTextoCorto') }}
 {{ macro.input(atributos.Remesar,'Etiqueta','checkbox','RecibosClientes[Remesar]','RecibosClientes_Remesar',datos.Remesar.IDTipo,'255','CampoTextoLargo','20')}} 

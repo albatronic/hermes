@@ -285,7 +285,10 @@ class FemitidasCab extends FemitidasCabEntity {
                 $recibo->setFecha($factura->getFecha());
                 $recibo->setVencimiento($fVcto);
                 $recibo->setImporte($importeRecibo);
-                $recibo->setCBanco($factura->getIDCliente()->getCtaCorriente());
+                $recibo->setIban($factura->getIDCliente()->getIban());
+                $recibo->setBic($factura->getIDCliente()->getBic());
+                $recibo->setMandato($factura->getIDCliente()->getMandato());
+                $recibo->setFechaMandato($factura->getIDCliente()->getFechaMandato());
                 $recibo->setConcepto("Cobro Factura");
                 $recibo->setAsiento($asiento);
                 $recibo->setIDEstado($formaPago->getEstadoRecibo()->getIDTipo());

@@ -60,12 +60,12 @@ Proveedores:
   records_per_page: 15
   order_by:
     -
-      title: 'IDProveedor a-z'
-      criteria: 'IDProveedor ASC'
+      title: 'Razón Social a-z'
+      criteria: 'RazonSocial ASC'
     -
-      title: 'IDProveedor z-a'
-      criteria: 'IDProveedor DESC'
-  search_default: IDProveedor
+      title: 'Razón Social z-a'
+      criteria: 'RazonSocial DESC'
+  search_default: RazonSocial
   referenced_entities:
     - Paises
     - Provincias
@@ -102,7 +102,7 @@ Proveedores:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      validator: { nullable: NO, type: string, length: '50', min: null, max: null, message: 'Valor Requerido' }
+      validator: { nullable: NO, type: string, length: '40', min: null, max: null, message: 'Valor Requerido' }
     NombreComercial:
       title: Nombre Comercial
       filter: YES
@@ -141,7 +141,7 @@ Proveedores:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      validator: { nullable: NO, type: string, length: '40', min: null, max: null, message: 'Valor Requerido' }
+      validator: { nullable: NO, type: string, length: '30', min: null, max: null, message: 'Valor Requerido' }
     IDPais:
       title: País
       filter: NO
@@ -278,7 +278,7 @@ Proveedores:
       title: Banco
       filter: NO
       list: NO
-      visible: true
+      visible: false
       updatable: true
       default: '0000'
       help: null
@@ -291,7 +291,7 @@ Proveedores:
       title: Oficina
       filter: NO
       list: NO
-      visible: true
+      visible: false
       updatable: true
       default: '0000'
       help: null
@@ -304,7 +304,7 @@ Proveedores:
       title: Dígito
       filter: YES
       list: NO
-      visible: true
+      visible: false
       updatable: true
       default: '00'
       help: null
@@ -317,7 +317,7 @@ Proveedores:
       title: Cuenta
       filter: YES
       list: NO
-      visible: true
+      visible: false
       updatable: true
       default: '0000000000'
       help: null
@@ -392,7 +392,34 @@ Proveedores:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      validator: { nullable: YES, type: string, length: '1', min: null, max: null, message: 'Valor Requerido' }         
+      validator: { nullable: YES, type: string, length: '1', min: null, max: null, message: 'Valor Requerido' }      
+    Mandato:
+      title: Mandato
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: string, length: '35', min: null, max: null, message: 'Valor Requerido' }      
+    FechaMandato:
+      title: Fecha de mandato
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: '0000-00-00'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      #aditional_filter: { order: 13, caption: FechaMandato, type: range, operator: '>=' }
+      validator: { nullable: NO, type: date, length: 10, min: null, max: null, message: 'Valor Requerido' }         
     Observations:
       title: Observaciones
       filter: NO

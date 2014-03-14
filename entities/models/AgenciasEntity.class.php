@@ -57,7 +57,11 @@ class AgenciasEntity extends EntityComunes {
      * @orm:Column(type="string")
      */
     protected $UrlTracking = null;
-    
+    /**
+     * @orm:Column(type="string")
+     */
+    protected $Uso = '0';
+
     /**
      * Nombre de la conexion a la DB
      * @var string
@@ -147,6 +151,16 @@ class AgenciasEntity extends EntityComunes {
 
     public function getUrlTracking() {
         return $this->UrlTracking;
+    }
+
+    public function setUso($Uso) {
+        $this->Uso = trim($Uso);
+    }
+
+    public function getUso() {
+        if (!($this->Uso instanceof UsoWeb))
+            $this->Uso = new UsoWeb($this->Uso);
+        return $this->Uso;
     }
 }
 

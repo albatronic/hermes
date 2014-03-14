@@ -1,20 +1,10 @@
-  
-ErpCarrito:
-  comment: Carrito de la compra
+      
+# Articulos favoritos para cada usuario de la Web
+ErpFavoritosWeb:
+  comment: Articulos favoritos para cada usuario de la Web
   columns:
-    sesion:          { type: string(50), notnull: true, index: index }
-    IpOrigen:        { type: string(20), notnull: true }
-    UserAgent:       { type: string(100), notnull: true }    
-    IDArticulo:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }
-    Descripcion:     { type: varchar(255), notnull: true }
-    Unidades:        { type: decimal(2), notnull: true, default: 0 }
-    UnidadMedida:    { type: string(10), notnull: false, default: null }
-    Precio:          { type: decimal(3), notnull: true, default: '0.000' }
-    Descuento:       { type: decimal(2), notnull: true, default: '0.00' }
-    Importe:         { type: decimal(2), notnull: true, default: '0.00' }
-    Iva:             { type: decimal(2), notnull: true, default: '0.00' }
-    Recargo:         { type: decimal(2), notnull: true, default: '0.00' }
-    Estado:          { type: tinyint(1), notnull: true, detaul: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    IDUsuario:   { type: bigint(11), notnull: true, index: index }
+    IDArticulo:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }    
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
-  index:
+      

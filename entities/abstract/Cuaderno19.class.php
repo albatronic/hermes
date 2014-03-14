@@ -32,9 +32,9 @@ class Cuaderno19 extends Remesas {
         self::$parametros = $parametros;
 
         $ficheroRemesa = '';
-        
+
         if (self::valida()) {
-            self::openCuaderno($parametros);
+            self::openCuaderno();
 
             $empresas = new PcaeEmpresas();
             $ordenantes = $empresas->cargaCondicion("*", "Id>='{$_SESSION['emp']}' and Id<='{$_SESSION['emp']}'", "Id ASC");
@@ -54,12 +54,12 @@ class Cuaderno19 extends Remesas {
             $ficheroRemesa = self::closeCuaderno();
             self::escribeLog();
         }
-        
+
         return $ficheroRemesa;
     }
 
     static function escribeLog() {
-        
+
         $log[self::$idRemesa] = array(
             'parametros' => self::$parametros,
             'ficheroRemesa' => self::$fileName,
@@ -72,19 +72,19 @@ class Cuaderno19 extends Remesas {
             'nDomiciliacionesOrdenante' => self::$nDomiciliacionesOrdenante,
             'totalOrdenante' => self::$totalOrdenante,
         );
-        
+
         $archivo = "docs/docs{$_SESSION['emp']}/remesas/log.yml";
         if (!file_exists($archivo))
-            $fp = fopen ($archivo, "w");
+            $fp = fopen($archivo, "w");
         else
-            $fp = fopen($archivo,"a");
+            $fp = fopen($archivo, "a");
 
         $yml = sfYaml::dump($log);
-        
+
         fwrite($fp, $yml);
         fclose($fp);
     }
-    
+
     static function valida() {
 
         $ok = true;
@@ -97,7 +97,8 @@ class Cuaderno19 extends Remesas {
         //CREAR FICHERO DESTINO
         self::$idRemesa = date('YmdHis');
         $log = "Remesa" . self::$idRemesa;
-        self::$fileName = Archivo::getTemporalFileName('remesas','txt');//"docs/docs{$_SESSION['emp']}/remesas/$log";
+        self::$fileName = Archivo::getTemporalFileName('remesas', 'txt'); //"docs/docs{$_SESSION['emp']}/remesas/$log";
+
         $ok = self::$fp = fopen(self::$fileName, 'w');
         if ($ok) {
             $reg = "";
@@ -170,12 +171,11 @@ class Cuaderno19 extends Remesas {
      * GENERA UN RECIBO BANCARIO POR CADA RECIBO DE CLIENTE    
      */
     static function RecibosIndividuales($filtro) {
-
-        $aux = substr(self::$parametros['fechaCobro'], 0, 4) . '20' . substr(self::$parametros['fechaCobro'], -2);
-        $fecha = new Fecha($aux);
+        
+        $fecha = new Fecha(self::$parametros['fechaCobro']);
         $fCargo = $fecha->getaaaammdd();
         unset($fecha);
-        
+
         $recibos = new RecibosClientes();
         $clientes = new Clientes();
         $facturas = new FemitidasCab();
@@ -185,13 +185,13 @@ class Cuaderno19 extends Remesas {
 
         $em = new EntityManager($recibos->getConectionName());
         if ($em->getDbLink()) {
-            $filtro .= " and (Remesar='1') and (CHAR_LENGTH(r.CBanco)=20) and (r.CBanco<>'00000000000000000000') and (r.Importe>0)";
+            $filtro .= " and (Remesar='1') and (CHAR_LENGTH(r.Iban)>23) and (r.Iban<>'ES8200000000000000000000') and (r.Importe>0)";
             $query = "select r.*,c.RazonSocial,f.NumeroFactura from {$tablaRecibos} as r
             left join {$tablaClientes} as c on r.IDCliente=c.IDCliente
             left join {$tablaFacturas} as f on r.IDFactura=f.IDFactura
             where {$filtro}
             order by c.RazonSocial,r.Vencimiento ASC";
-            $em->query($query);
+            $em->query($query);//echo $query;
             $rows = $em->fetchResult();
         }
         unset($em);
@@ -204,7 +204,7 @@ class Cuaderno19 extends Remesas {
             $importe = self::Ceros(str_replace(".", "", $recibo['Importe']), 10);
             $concepto = self::Rellena("Factura " . $recibo['NumeroFactura'] . "/" . $recibo['Recibo'], 40);
 
-            $reg = "5680" . self::$ordenante['Cif'] . self::$ordenante['SufijoRemesas'] . $codclie . $titular . $recibo['CBanco'] . $importe . self::Vacio(16) . $concepto . self::Vacio(8);
+            $reg = "5680" . self::$ordenante['Cif'] . self::$ordenante['SufijoRemesas'] . $codclie . $titular . substr($recibo['Iban'], 4, strlen($recibo['Iban'])) . $importe . self::Vacio(16) . $concepto . self::Vacio(8);
             self::Escribe(self::$fp, $reg);
 
             self::$nRegistrosOrdenante+=1;
@@ -218,11 +218,11 @@ class Cuaderno19 extends Remesas {
 
     public function RecibosAgrupados($filtro) {
 
-        $aux = substr(self::$parametros['fechaCobro'], 0, 4) . '20' . substr(self::$parametros['fechaCobro'], -2);
-        $fecha = new Fecha($aux);
+        //$aux = substr(self::$parametros['fechaCobro'], 0, 4) . '20' . substr(self::$parametros['fechaCobro'], -2);
+        $fecha = new Fecha(self::$parametros['fechaCobro']);
         $fCargo = $fecha->getaaaammdd();
         unset($fecha);
-        
+
         $recibos = new RecibosClientes();
         $clientes = new Clientes();
         $tablaRecibos = $recibos->getDataBaseName() . "." . $recibos->getTableName();
@@ -230,15 +230,16 @@ class Cuaderno19 extends Remesas {
 
         $em = new EntityManager($recibos->getConectionName());
         if ($em->getDbLink()) {
-            $filtro .= " and (Remesar='1') and (CHAR_LENGTH(r.CBanco)=20) and (r.CBanco<>'00000000000000000000')";
-            $query = "select r.IDCliente,sum(r.Importe) as Importe,r.CBanco,c.RazonSocial from {$tablaRecibos} as r
+            $filtro .= " and (Remesar='1') and (CHAR_LENGTH(r.Iban)>23) and (r.Iban<>'ES8200000000000000000000')";
+            $query = "select r.IDCliente,sum(r.Importe) as Importe,r.Iban,c.RazonSocial from {$tablaRecibos} as r
             left join {$tablaClientes} as c on r.IDCliente=c.IDCliente
             where {$filtro}
-            group by r.IDCliente,r.CBanco,c.RazonSocial 
+            group by r.IDCliente,r.Iban,c.RazonSocial 
             having sum(r.Importe)>0
             order by c.RazonSocial,r.Vencimiento ASC";
             $em->query($query);
             $rows = $em->fetchResult();
+            echo $query;
         }
         unset($em);
         unset($clientes);
@@ -249,7 +250,7 @@ class Cuaderno19 extends Remesas {
             $importe = self::Ceros(str_replace(".", "", $recibo['Importe']), 10);
             $concepto = self::Rellena("Facturas", 40);
 
-            $reg = "5680" . self::$ordenante['Cif'] . self::$ordenante['SufijoRemesas'] . $codclie . $titular . $recibo['CBanco'] . $importe . self::Vacio(16) . $concepto . self::Vacio(8);
+            $reg = "5680" . self::$ordenante['Cif'] . self::$ordenante['SufijoRemesas'] . $codclie . $titular . substr($recibo['Iban'], 4, strlen($recibo['Iban'])) . $importe . self::Vacio(16) . $concepto . self::Vacio(8);
             self::Escribe(self::$fp, $reg);
 
             self::$nRegistrosOrdenante+=1;

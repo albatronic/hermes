@@ -494,6 +494,30 @@ class Clientes extends ClientesEntity {
         return $rows;
     }
 
+    /**
+     * Devuelve un array con objetos de albaranesCab del cliente en curso
+     * 
+     * @param type $idEstado
+     * @return \AlbaranesCab Array de objetos albaranesCab
+     */
+    public function getAlbaranes($idEstado = '') {
+
+        $filtro = "IDCliente='{$this->IDCliente}'";
+        if ($idEstado != '')
+            $filtro .= " AND IDEstado='{$idEstado}'";
+
+        $array = array();
+
+        $albaran = new AlbaranesCab();
+        $rows = $albaran->querySelect("IDAlbaran", $filtro, "Fecha DESC");
+        unset($albaran);
+        foreach ($rows as $row) {
+            $array[] = new AlbaranesCab($row['IDAlbaran']);
+        }
+
+        return $array;
+    }
+
 }
 
 ?>

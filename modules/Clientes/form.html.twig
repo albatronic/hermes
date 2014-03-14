@@ -48,34 +48,46 @@
         </div>
     </div>            
     <div id="tabs-1">
-        {{ macro.input(atributos.FacturacionAgrupada,'Etiqueta','checkbox','Clientes[FacturacionAgrupada]','Clientes_FacturacionAgrupada',datos.FacturacionAgrupada.IDTipo,'255','CampoTextoLargo','20')}}                    
-        {{ macro.select(atributos.IDTarifa,'Etiqueta','Clientes[IDTarifa]','Clientes_IDTarifa',200,datos.IDTarifa.IDTarifa,datos.IDTarifa.fetchAll('Descripcion',false),'Select100')}}
-        {{ macro.select(atributos.IDFP,'Etiqueta','Clientes[IDFP]','Clientes_IDFP',200,datos.IDFP.IDFP,datos.IDFP.fetchAll('Descripcion',false),'Select220')}}
-        {{ macro.input(atributos.DiaDePago,'Etiqueta','text','Clientes[DiaDePago]','Clientes_DiaDePago',datos.DiaDePago,'2','CampoUnidades') }}
-        {{ macro.input(atributos.Iva,'Etiqueta','checkbox','Clientes[Iva]','Clientes_Iva',datos.Iva.IDTipo,'255','CampoTextoLargo','20')}}                                   
-        {{ macro.input(atributos.RecargoEqu,'Etiqueta','checkbox','Clientes[RecargoEqu]','Clientes_RecargoEqu',datos.RecargoEqu.IDTipo,'255','CampoTextoLargo','20')}}                                   
-        {{ macro.input(atributos.CContable,'Etiqueta','text','Clientes[CContable]','Clientes_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}        
-        {{ macro.cc(atributos.Banco,'Etiqueta','cc','Clientes',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}        
-        {{ macro.input(atributos.Iban,'Etiqueta','text','Clientes[Iban]','Clientes_Iban',datos.Iban,'34','CampoTextoMedio') }}
-        {{ macro.input(atributos.Bic,'Etiqueta','text','Clientes[Bic]','Clientes_Bic',datos.Bic,'11','CampoTextoCorto') }}        
-        {{ macro.input(atributos.LimiteRiesgo,'Etiqueta','text','Clientes[LimiteRiesgo]','Clientes_LimiteRiesgo',datos.LimiteRiesgo,'10','CampoImporte') }}
-        {{ macro.fecha(atributos.FechaRiesgo,'Etiqueta','Clientes[FechaRiesgo]','Clientes_FechaRiesgo',datos.FechaRiesgo,'10','CampoFecha') }}
-        {{ macro.input(atributos.CodigoRiesgo,'Etiqueta','text','Clientes[CodigoRiesgo]','Clientes_CodigoRiesgo',datos.CodigoRiesgo,'20','CampoTextoCorto') }}
+        <div style="float: left; width: 47%">
+        {{ macro.input(atributos.FacturacionAgrupada,'EtiquetaMedia','checkbox','Clientes[FacturacionAgrupada]','Clientes_FacturacionAgrupada',datos.FacturacionAgrupada.IDTipo,'255','CampoTextoLargo','20')}}                    
+        {{ macro.select(atributos.IDTarifa,'EtiquetaMedia','Clientes[IDTarifa]','Clientes_IDTarifa',150,datos.IDTarifa.IDTarifa,datos.IDTarifa.fetchAll('Descripcion',false),'Select100')}}
+        {{ macro.select(atributos.IDFP,'EtiquetaMedia','Clientes[IDFP]','Clientes_IDFP',150,datos.IDFP.IDFP,datos.IDFP.fetchAll('Descripcion',false),'Select220')}}
+        {{ macro.input(atributos.DiaDePago,'EtiquetaMedia','text','Clientes[DiaDePago]','Clientes_DiaDePago',datos.DiaDePago,'2','CampoUnidades') }}
+        {{ macro.input(atributos.Iva,'EtiquetaMedia','checkbox','Clientes[Iva]','Clientes_Iva',datos.Iva.IDTipo,'255','CampoTextoLargo','20')}}                                   
+        {{ macro.input(atributos.RecargoEqu,'EtiquetaMedia','checkbox','Clientes[RecargoEqu]','Clientes_RecargoEqu',datos.RecargoEqu.IDTipo,'255','CampoTextoLargo','20')}}                                   
+        {{ macro.input(atributos.CContable,'EtiquetaMedia','text','Clientes[CContable]','Clientes_CContable',datos.CContable,digitosCta,'CampoTextoCorto') }}        
+        </div>
+        <div style="float: left; margin-left: 5px;">
+        {{ macro.cc(atributos.Banco,'EtiquetaMedia','cc','Clientes',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}        
+        {{ macro.input(atributos.Iban,'EtiquetaMedia','text','Clientes[Iban]','Clientes_Iban',datos.Iban,'34','CampoTextoMedio') }}
+        {{ macro.input(atributos.Bic,'EtiquetaMedia','text','Clientes[Bic]','Clientes_Bic',datos.Bic,'11','CampoTextoCorto') }}        
+        {{ macro.input(atributos.Mandato,'EtiquetaMedia','text','Clientes[Mandato]','Clientes_Mandato',datos.Mandato,'35','CampoTextoCorto') }}        
+        {{ macro.fecha(atributos.FechaMandato,'EtiquetaMedia','Clientes[FechaMandato]','Clientes_FechaMandato',datos.FechaMandato,'10','CampoFecha') }}        
+        {{ macro.input(atributos.LimiteRiesgo,'EtiquetaMedia','text','Clientes[LimiteRiesgo]','Clientes_LimiteRiesgo',datos.LimiteRiesgo,'10','CampoImporte') }}
+        {{ macro.fecha(atributos.FechaRiesgo,'EtiquetaMedia','Clientes[FechaRiesgo]','Clientes_FechaRiesgo',datos.FechaRiesgo,'10','CampoFecha') }}
+        {{ macro.input(atributos.CodigoRiesgo,'EtiquetaMedia','text','Clientes[CodigoRiesgo]','Clientes_CodigoRiesgo',datos.CodigoRiesgo,'20','CampoTextoCorto') }}
+        </div> 
+        <div class="salto"></div>
     </div>
     {% if datos.IDCliente %}            
     <div id="tabs-2"></div>
     <div id="tabs-3"></div>
     <div id="tabs-4">
+        <div style="float: left; width: 46%">
         {{ macro.radio(atributos.Sexo,'Etiqueta','Clientes[Sexo]','Clientes_Sexo',datos.Sexo.IDTipo,datos.Sexo.fetchAll(none,false),'Select') }}        
         {{ macro.radio(atributos.Tratamiento,'Etiqueta','Clientes[Tratamiento]','Clientes_Tratamiento',datos.Tratamiento.IDTipo,datos.Tratamiento.fetchAll(none,false),'Select') }}  
         {{ macro.fecha(atributos.FechaNacimiento,'Etiqueta','Clientes[FechaNacimiento]','Clientes_FechaNacimiento',datos.FechaNacimiento,'10','CampoFecha') }}
         {{ macro.input(atributos.Login,'Etiqueta','text','Clientes[Login]','Clientes_Login',datos.Login,'50','CampoTextoLargo') }} 
         {# EL PASSW SE PIDE SOLO AL CREAR EL CLIENTE, SI NO SE INDICA SE PONE "1234" #}
         {% if not datos.PrimaryKeyValue %}
-            {{ macro.input(atributos.Password,'Etiqueta','text','Clientes[Password]','Clientes_Password',datos.Password,'50','CampoTextoLargo') }}        
+            {{ macro.input(atributos.Password,'Etiqueta','text','Clientes[Password]','Clientes_Password',datos.Password,'50','CampoTextoCorto') }}        
         {% endif %}
+        </div>
+        <div style="float: left; margin-left: 5px;">            
         {{ macro.textarea(atributos.Observaciones,'Etiqueta','Clientes[Observaciones]','Clientes_Observaciones',datos.Observaciones,none,none,'TextArea')}}
         {{ macro.textarea(atributos.Avisos,'Etiqueta','Clientes[Avisos]','Clientes_Avisos',datos.Avisos,none,none,'TextArea')}}
+        </div> 
+        <div class="salto"></div>            
     </div>
     <div id="tabs-5"></div>
     {% include '_global/fieldsComunes.html.twig' %}    

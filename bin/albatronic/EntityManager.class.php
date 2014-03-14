@@ -123,6 +123,10 @@ class EntityManager {
             case 'interbase':
                 self::$dbLinkInstance = ibase_connect(self::$host, self::$user, self::$password);
                 break;
+
+            case 'pgsql':
+                self::$dbLinkInstance = pg_connect("host=" . self::$host . " dbname=" . self::$dataBase . " user=" . self::$user . " password=" . self::$password);
+                break;
             default:
                 $this->error[] = "EntityManager [conecta]: Conexión no realizada. No se ha indicado el tipo de base de datos. " . mysql_errno() . " " . mysql_error();
         }
@@ -165,13 +169,14 @@ class EntityManager {
     public function query($query) {
         $this->result = null;
 
+        //$fp = fopen("log/queries.sql", "a");
+        //fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
+        //fclose($fp); 
+        
         switch (self::$dbEngine) {
             case 'mysql':
                 //mysql_select_db($this->getdataBase());
                 $this->result = mysql_query($query, self::$dbLinkInstance);
-                //$fp = fopen("log/queries.sql", "a");
-                //fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
-                //fclose($fp);
                 if (!$this->result)
                     $this->setError("query");
                 else
@@ -180,6 +185,7 @@ class EntityManager {
 
             case 'mssql':
                 //mssql_select_db($this->dataBase);
+                $query = str_replace("`", "", $query);
                 $this->result = mssql_query($query, self::$dbLinkInstance);
                 if (!$this->result)
                     $this->setError("query");
@@ -194,6 +200,15 @@ class EntityManager {
                     $this->setError("query");
                 else
                     $this->affectedRows = ibase_affected_rows(self::$dbLinkInstance);
+                break;
+
+            case 'pgsql':
+                $query = str_replace("`", "", $query);
+                $this->result = pg_query(self::$dbLinkInstance, $query);
+                if (!$this->result)
+                    $this->setError("query");
+                else
+                    $this->affectedRows = pg_affected_rows(self::$dbLinkInstance);
                 break;
 
             default:
@@ -229,6 +244,11 @@ class EntityManager {
                     $rows[] = $row;
                 break;
 
+            case 'pgsql':
+                while ($row = pg_fetch_assoc($this->result))
+                    $rows[] = $row;
+                break;
+
             default:
                 $this->setError("fetchResult", "No se ha indicado el tipo de base de datos");
                 break;
@@ -251,9 +271,6 @@ class EntityManager {
         // Criterio de ordenación
         $orderBy = ($orderBy != '') ? $orderBy : "{$tp}.SortOrder";
 
-        // Limit
-        $limit = ($limit != '') ? "LIMIT {$limit}" : "";
-
         // Condición de vigencia
         $filtro = "({$tp}.Deleted='0')";
 
@@ -261,7 +278,36 @@ class EntityManager {
             $filtro .= " AND {$where}";
         }
 
-        $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy} {$limit}";
+        // Limit
+        if ($limit != '') {
+            switch (self::$dbEngine) {
+                case 'mysql':
+                    $limit = "LIMIT {$limit}";
+                    $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy} {$limit}";
+                    break;
+
+                case 'mssql':
+                    $limit = "TOP {$limit}";
+                    $select = str_replace("SELECT", "SELECT {$limit}", $select);
+                    $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy}";
+                    break;
+
+                case 'interbase':
+                    break;
+
+                case 'pgsql':
+                    $valores = explode(",", $limit);
+                    if (count($valores) == 1) {
+                        $limit = "LIMIT {$valores[0]}";
+                    } elseif (count($valores) == 2) {
+                        $limit = "LIMIT {$valores[1]} OFFSET {$valores[0]}";
+                    }
+                    $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy} {$limit}";
+                    break;
+            }
+        }
+
+
         //echo $query;
         $this->query($query);
 
@@ -316,15 +362,12 @@ class EntityManager {
         switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_num_fields($this->result);
-                break;
-
             case 'mssql':
                 return mssql_num_fields($this->result);
-                break;
-
             case 'interbase':
                 return ibase_num_fields($this->result);
-
+            case 'pgsql':
+                return pg_num_fields($this->result);
             default:
                 $this->setError("numFields", "No se ha indicado el tipo de base de datos");
                 break;
@@ -339,16 +382,12 @@ class EntityManager {
         switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_num_rows($this->result);
-                break;
-
             case 'mssql':
                 return mssql_num_rows($this->result);
-                break;
-
             case 'interbase': //NO IMPLEMENTADO
                 return false;
-                break;
-
+            case 'pgsql':
+                return pg_num_rows($this->result);
             default:
                 $this->setError("numRows", "No se ha indicado el tipo de base de datos");
                 break;
@@ -364,17 +403,15 @@ class EntityManager {
         switch (self::$dbEngine) {
             case 'mysql':
                 return mysql_data_seek($this->result, $rowNumber);
-                break;
-
             case 'mssql':
                 //No implementado
                 return false;
-                break;
-
             case 'interbase':
                 //No implementado
                 return false;
-                break;
+            case 'pgsql':
+                //No implementado
+                return false;
 
             default:
                 $this->setError("dataSeek", "No se ha indicado el tipo de base de datos");
@@ -391,25 +428,21 @@ class EntityManager {
         switch (self::$dbEngine) {
             case 'mysql':
                 //return mysql_insert_id(self::$dbLinkInstance);
-                $result = mysql_query("SELECT LAST_INSERT_ID()",self::$dbLinkInstance);
+                $result = mysql_query("SELECT LAST_INSERT_ID()", self::$dbLinkInstance);
                 $row = mysql_fetch_row($result);
                 return $row[0];
-                break;
-
             case 'mssql':
                 //No implementado
                 return 0;
-                break;
-
             case 'interbase':
                 //No implementado
                 return 0;
-                break;
-
+            case 'pgsql':
+                //No implementado
+                return 0;
             default:
                 $this->setError("getInsertId", "No se ha indicado el tipo de base de datos");
                 return 0;
-                break;
         }
     }
 

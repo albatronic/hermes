@@ -99,7 +99,7 @@ class RecibosClientesController extends Controller {
                 $objeto = new RecibosClientes($recibo['IDRecibo']);
                 $objeto->setVencimiento($recibo['Vencimiento']);
                 $objeto->setImporte($recibo['Importe']);
-                $objeto->setCBanco($recibo['CBanco']);
+                $objeto->setIban($recibo['Iban']);
                 $objeto->setConcepto($recibo['Concepto']);
                 $objeto->setIDRemesa($recibo['IDRemesa']);
                 $objeto->setIDEstado($recibo['IDEstado']);
@@ -198,7 +198,12 @@ class RecibosClientesController extends Controller {
         $remesa = $this->request['remesa'];
 
         // Construir el filtro
-        $filtro = "(r.Vencimiento>='{$remesa['desdeFecha']}') and (r.Vencimiento<='{$remesa['hastaFecha']}')";
+        $fecha = new Fecha($remesa['desdeFecha']);
+        $desde = $fecha->getaaaammdd();
+        $fecha = new Fecha($remesa['hastaFecha']);
+        $hasta = $fecha->getaaaammdd();
+        unset($fecha);
+        $filtro = "(r.Vencimiento>='{$desde}') and (r.Vencimiento<='{$hasta}')";
 
         foreach ($this->request['filter']['valuesSelected'] as $key => $value)
             if (($value != '') and (!in_array($key, array('6', '7', '8', '9')))) {

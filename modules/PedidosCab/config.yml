@@ -60,17 +60,17 @@ PedidosCab:
   records_per_page: 15
   order_by:
     -
+      title: Fecha z-a
+      criteria: Fecha DESC
+    -
+      title: Fecha a-z
+      criteria: Fecha ASC      
+    -
       title: Número z-a
       criteria: IDPedido DESC
     -
       title: Número a-z
       criteria: IDPedido ASC
-    -
-      title: Fecha z-a
-      criteria: Fecha DESC
-    -
-      title: Fecha a-z
-      criteria: Fecha ASC
   search_default: IDPedido
   referenced_entities:
     - Sucursales

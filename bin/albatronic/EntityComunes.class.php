@@ -601,7 +601,7 @@ class EntityComunes extends Entity {
 
     public function setPublishedAt($PublishedAt) {
         if ($PublishedAt != '0000-00-00 00:00:00') {
-            $date = new Fecha($PublishedAt);
+            $date = new Fecha($PublishedAt,true);
             $this->PublishedAt = $date->getFechaTime();
         } else {
             $this->PublishedAt = date('Y-m-d H:i:s');
@@ -620,16 +620,13 @@ class EntityComunes extends Entity {
         if ($ActiveFrom == '')
             $ActiveFrom = '0000-00-00 00:00:00';
 
-        $date = new Fecha($ActiveFrom);
+        $date = new Fecha($ActiveFrom,true);
         $this->ActiveFrom = $date->getFechaTime();
         unset($date);
     }
 
     public function getActiveFrom() {
-        $date = new Fecha($this->ActiveFrom);
-        $ddmmaaaahhmmss = $date->getddmmaaaahhmmss();
-        unset($date);
-        return $ddmmaaaahhmmss;
+        return ($this->ActiveFrom>0) ? date_format(date_create($this->ActiveFrom), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
     }
 
     public function setActiveTo($ActiveTo) {
@@ -639,16 +636,13 @@ class EntityComunes extends Entity {
         if ($ActiveTo == '')
             $ActiveTo = '0000-00-00 00:00:00';
 
-        $date = new Fecha($ActiveTo);
+        $date = new Fecha($ActiveTo,true);
         $this->ActiveTo = $date->getFechaTime();
         unset($date);
     }
 
     public function getActiveTo() {
-        $date = new Fecha($this->ActiveTo);
-        $ddmmaaaahhmmss = $date->getddmmaaaahhmmss();
-        unset($date);
-        return $ddmmaaaahhmmss;
+        return ($this->ActiveTo>0) ? date_format(date_create($this->ActiveTo), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
     }
 
     public function setUrlPrefix($UrlPrefix) {

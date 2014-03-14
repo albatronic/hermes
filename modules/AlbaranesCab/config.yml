@@ -60,17 +60,17 @@ AlbaranesCab:
   records_per_page: 15
   order_by:
     -
+      title: Fecha z-a
+      criteria: Fecha DESC, NumeroAlbaran DESC
+    -
+      title: Fecha a-z
+      criteria: Fecha ASC, NumeroAlbaran ASC     
+    -
       title: Número z-a
       criteria: NumeroAlbaran DESC
     -
       title: Número a-z
       criteria: NumeroAlbaran ASC
-    -
-      title: Fecha z-a
-      criteria: Fecha DESC
-    -
-      title: Fecha a-z
-      criteria: Fecha ASC
   search_default: IDAlbaran
   referenced_entities:
     - Contadores

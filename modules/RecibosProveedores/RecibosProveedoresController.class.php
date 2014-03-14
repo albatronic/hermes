@@ -66,7 +66,7 @@ class RecibosProveedoresController extends Controller {
                 $objeto = new RecibosProveedores($recibo['IDRecibo']);
                 $objeto->setVencimiento($recibo['Vencimiento']);
                 $objeto->setImporte($recibo['Importe']);
-                $objeto->setCBanco($recibo['CBanco']);
+                $objeto->setIban($recibo['Iban']);
                 $objeto->setConcepto($recibo['Concepto']);
                 $objeto->setIDRemesa($recibo['IDRemesa']);
                 $objeto->setIDEstado($recibo['IDEstado']);

@@ -225,19 +225,59 @@ RecibosProveedores:
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '10', min: null, max: null, message: 'Valor Requerido' }
-    CBanco:
-      title: Cta. de cargo
-      filter: YES
+    Iban:
+      title: Iban
+      filter: NO
       list: NO
       visible: true
       updatable: true
-      default: ''
+      default: null
       help: null
       permission: null
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      validator: { nullable: NO, type: string, length: '20', min: null, max: null, message: 'Valor Requerido' }
+      validator: { nullable: YES, type: string, length: '34', min: null, max: null, message: 'Valor Requerido' }
+    Bic:
+      title: Bic
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: string, length: '1', min: null, max: null, message: 'Valor Requerido' }      
+    Mandato:
+      title: Mandato
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: string, length: '35', min: null, max: null, message: 'Valor Requerido' }      
+    FechaMandato:
+      title: Fecha de mandato
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: '0000-00-00'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      #aditional_filter: { order: 13, caption: FechaMandato, type: range, operator: '>=' }
+      validator: { nullable: NO, type: date, length: 10, min: null, max: null, message: 'Valor Requerido' } 
     Asiento:
       title: Asiento
       filter: YES

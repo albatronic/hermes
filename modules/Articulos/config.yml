@@ -65,17 +65,17 @@ Articulos:
   records_per_page: 20
   order_by:
     -
-      title: Descripción a-z
-      criteria: Descripcion ASC
-    -
-      title: Descripción z-a
-      criteria: Descripcion DESC
-    -
       title: Código a-z
       criteria: Codigo ASC
     -
       title: Código z-a
       criteria: Codigo DESC      
+    -
+      title: Descripción a-z
+      criteria: Descripcion ASC
+    -
+      title: Descripción z-a
+      criteria: Descripcion DESC      
   search_default: Descripción
   referenced_entities:
     - Familias

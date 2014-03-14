@@ -325,9 +325,11 @@ class Entity {
      * @param array $datos
      */
     public function bind(array $datos) {
-        foreach ($datos as $key => $value)
-            if (method_exists($this, "set{$key}"))
+        foreach ($datos as $key => $value){
+            if (method_exists($this, "set{$key}")){
                 $this->{"set$key"}($value);
+            }
+        }
     }
 
     /**
@@ -618,6 +620,32 @@ class Entity {
         //unset($this->_em);
 
         return $filasAfectadas;
+    }
+    
+    /**
+     * Ejecuta una sentencia SELECT sobre la entidad
+     * 
+     * @param string $columnas Las columnas a obtener separadas por comas
+     * @param string $condicion Condicion del where (sin el where)
+     * @return int El número de filas afectadas
+     */
+    public function querySelect($columnas, $condicion='1', $orden='') {
+
+        $rows = array();
+
+        $orden = ($orden == '') ? '': "ORDER BY {$orden}";
+        
+        $this->conecta();
+        if (is_resource($this->_dbLink)) {
+
+            $query = "SELECT {$columnas} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE ({$condicion}) {$orden}";
+            $this->_em->query($query);
+            $rows = $this->_em->fetchResult();
+            //$this->_em->desConecta();
+        }
+        //unset($this->_em);
+
+        return $rows;
     }
 
     /**

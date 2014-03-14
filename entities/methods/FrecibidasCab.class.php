@@ -217,7 +217,10 @@ class FrecibidasCab extends FrecibidasCabEntity {
                 $recibo->setFecha($factura->getFecha());
                 $recibo->setVencimiento($fVcto);
                 $recibo->setImporte($importeRecibo);
-                $recibo->setCBanco($factura->getIDProveedor()->getCtaCorriente());
+                $recibo->setIban($factura->getIDProveedor()->getIban());
+                $recibo->setBic($factura->getIDProveedor()->getBic());
+                $recibo->setMandato($factura->getIDProveedor()->getMandato());
+                $recibo->setFechaMandato($factura->getIDProveedor()->getFechaMandato());
                 $recibo->setConcepto("Pago Factura");
                 $recibo->setAsiento($asiento);
                 $recibo->setIDEstado($formaPago->getEstadoRecibo()->getIDTipo());

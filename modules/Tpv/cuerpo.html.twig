@@ -280,8 +280,7 @@
             url: appPath + '/lib/ticket.php',
             dataType: 'html',
             type: 'post',
-            data: {'parametros': {'accion': 'borrar', 'datos': datos}
-            },
+            data: {'parametros': {'accion': 'borrar', 'datos': datos}},
             success: function(resultado) {
                 var datos = $.parseJSON(resultado);
                 if (datos.status === 'error') {

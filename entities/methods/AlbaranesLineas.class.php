@@ -55,7 +55,7 @@ class AlbaranesLineas extends AlbaranesLineasEntity {
     /**
      * Validaciones antes de actualizar o crear
      */
-    public function valida(array $rules) {
+    public function valida(array $rules=array()) {
         unset($this->_errores);
 
         if ($this->IDArticulo == '') {

@@ -15,7 +15,7 @@
                 <td class='Item'>Vencimiento</td>
                 <td class='Item'>Proveedor</td>
                 <td class='Item'>Importe</td>
-                <td class='Item'>C/C</td>
+                <td class='Item'>IBAN</td>
                 <td class='Item'>Concepto</td>
                 <td class='Item'>Remesa</td>
                 <td class='Item'>Estado</td>
@@ -53,8 +53,8 @@
                 <td>{{ macro.fecha(none,none,'RecibosProveedores['~key~'][Vencimiento]','RecibosProveedores_Vencimiento'~key,objeto.Vencimiento) }}</td>
                 <td>{{objeto.IDProveedor.RazonSocial|slice(0,19)}}</td>
                 <td align="right"><input name="RecibosProveedores[{{key}}][Importe]" id="RecibosProveedores_Importe{{key}}" value="{{objeto.Importe}}" class="CampoImporte"/></td>
-                <td><input name="RecibosProveedores[{{key}}][CBanco]" id="RecibosProveedores_CBanco{{key}}" value="{{objeto.CBanco}}" maxlength="20" class="CampoTextoMedio" style="width: 145px;" /></td>
-                <td><input name="RecibosProveedores[{{key}}][Concepto]" id="RecibosProveedores_Concepto{{key}}" value="{{objeto.Concepto}}" maxlength="255" class="CampoTextoMedio" style="width: 130px;" /></td>
+                <td><input name="RecibosProveedores[{{key}}][Iban]" id="RecibosProveedores_Iban{{key}}" value="{{objeto.Iban}}" maxlength="34" class="CampoTextoMedio" style="width: 180px;" /></td>
+                <td><input name="RecibosProveedores[{{key}}][Concepto]" id="RecibosProveedores_Concepto{{key}}" value="{{objeto.Concepto}}" maxlength="255" class="CampoTextoMedio" style="width: 95px;" /></td>
                 <td>
                     <input name="RecibosProveedores[{{key}}][IDRemesa]" id="RecibosProveedores_IDRemesa{{key}}" value="{{objeto.IDRemesa}}" maxlength="14" class="CampoImporte" />
                     {% if objeto.IDRemesa %}
