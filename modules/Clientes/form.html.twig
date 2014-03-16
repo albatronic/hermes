@@ -77,7 +77,7 @@
         {{ macro.radio(atributos.Sexo,'Etiqueta','Clientes[Sexo]','Clientes_Sexo',datos.Sexo.IDTipo,datos.Sexo.fetchAll(none,false),'Select') }}        
         {{ macro.radio(atributos.Tratamiento,'Etiqueta','Clientes[Tratamiento]','Clientes_Tratamiento',datos.Tratamiento.IDTipo,datos.Tratamiento.fetchAll(none,false),'Select') }}  
         {{ macro.fecha(atributos.FechaNacimiento,'Etiqueta','Clientes[FechaNacimiento]','Clientes_FechaNacimiento',datos.FechaNacimiento,'10','CampoFecha') }}
-        {{ macro.input(atributos.Login,'Etiqueta','text','Clientes[Login]','Clientes_Login',datos.Login,'50','CampoTextoLargo') }} 
+        {{ macro.input(atributos.Login,'Etiqueta','text','Clientes[Login]','Clientes_Login',datos.Login,'50','CampoTextoMedio') }} 
         {# EL PASSW SE PIDE SOLO AL CREAR EL CLIENTE, SI NO SE INDICA SE PONE "1234" #}
         {% if not datos.PrimaryKeyValue %}
             {{ macro.input(atributos.Password,'Etiqueta','text','Clientes[Password]','Clientes_Password',datos.Password,'50','CampoTextoCorto') }}        

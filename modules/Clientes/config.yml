@@ -65,6 +65,12 @@ Clientes:
     -
       title: 'Razón Social z-a'
       criteria: 'RazonSocial DESC'
+    -
+      title: 'Antigüedad a-z'
+      criteria: 'CreatedAt ASC'
+    -
+      title: 'Antigüedad z-a'
+      criteria: 'CreatedAt DESC'
   search_default: IDCliente
   referenced_entities:
     - Paises

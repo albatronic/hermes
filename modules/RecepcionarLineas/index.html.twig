@@ -19,4 +19,11 @@
 
     <div id="notificacion"></div>
 
+    {% if values.entidad == 'PedidosCab' %}
+        {% if values.objetoEntidad.IDEstado.IDTipo == '2' %}
+        <h3 style="cursor: pointer; margin: 50px;" onclick="$('#dialogFacturar').dialog('open');">Conformar Pedido</h3>
+        {% include 'PedidosCab/dialogoFacturar.html.twig' with {'pedido': values.objetoEntidad } %}
+        {% endif %}         
+    {% endif %}
+    
 {% endblock %}

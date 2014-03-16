@@ -97,6 +97,7 @@ class FormasPagoEntity extends EntityComunes {
         array('SourceColumn' => 'IDFP', 'ParentEntity' => 'FemitidasCab', 'ParentColumn' => 'IDFP'),
         array('SourceColumn' => 'IDFP', 'ParentEntity' => 'PedidosCab', 'ParentColumn' => 'IDFP'),
         array('SourceColumn' => 'IDFP', 'ParentEntity' => 'FrecibidasCab', 'ParentColumn' => 'IDFP'),
+        array('SourceColumn' => 'IDFP', 'ParentEntity' => 'ZonasPagoEnvio', 'ParentColumn' => 'IDFP'),
     );
 
     /**

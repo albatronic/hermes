@@ -57,6 +57,7 @@ class AgenciasEntity extends EntityComunes {
      * @orm:Column(type="string")
      */
     protected $UrlTracking = null;
+
     /**
      * @orm:Column(type="string")
      */
@@ -84,6 +85,7 @@ class AgenciasEntity extends EntityComunes {
         array('SourceColumn' => 'IDAgencia', 'ParentEntity' => 'AlbaranesCab', 'ParentColumn' => 'IDAgencia'),
         array('SourceColumn' => 'IDAgencia', 'ParentEntity' => 'FemitidasCab', 'ParentColumn' => 'IDAgencia'),
         array('SourceColumn' => 'IDAgencia', 'ParentEntity' => 'PedidosCab', 'ParentColumn' => 'IDAgencia'),
+        array('SourceColumn' => 'IDAgencia', 'ParentEntity' => 'ZonasPagoEnvio', 'ParentColumn' => 'IDAgencia'),
     );
 
     /**
@@ -162,6 +164,7 @@ class AgenciasEntity extends EntityComunes {
             $this->Uso = new UsoWeb($this->Uso);
         return $this->Uso;
     }
+
 }
 
 // END class agencias

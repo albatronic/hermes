@@ -2,6 +2,7 @@
   
 ErpAplicaciones:
   - { CodigoApp: Admon,   NombreApp: Admon }
+  - { CodigoApp: Logis,   NombreApp: Logística }
   - { CodigoApp: Fich,    NombreApp: Ficheros }  
   - { CodigoApp: Compras, NombreApp: Compras }
   - { CodigoApp: Vtas,    NombreApp: Ventas } 
@@ -29,20 +30,24 @@ ErpModulos:
   - { Id: 14, CodigoApp: Admon, NombreModulo: Idiomas,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { Id: 15, CodigoApp: Admon, NombreModulo: ZonasHorarias,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Zonas Horarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
+  # LOGÍSTICA
+  - { Id: 20, CodigoApp: Logis, NombreModulo: Logis,            Nivel: 0, BelongsTo: 0,   Publish: 1, Titulo: Logística, Funcionalidades: AC }
+  - { Id: 21, CodigoApp: Logis, NombreModulo: Agencias,         Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Agencias / Formas de envío, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 22, CodigoApp: Logis, NombreModulo: ZonasTransporte,  Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Zonas de Envío, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 23, CodigoApp: Logis, NombreModulo: Zonas,            Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Zonas comerciales y reparto, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 24, CodigoApp: Logis, NombreModulo: ZonasPagoEnvio,   Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Zonas - Pago - Envío, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+
   # FICHEROS
-  - { Id: 20, CodigoApp: Fich, NombreModulo: Fich,             Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Ficheros, Funcionalidades: AC }
-  - { CodigoApp: Fich, NombreModulo: Familias,         Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: 'Categorias, Familias y Subfamilias', Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Fich, NombreModulo: Proveedores,      Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Proveedores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Fich, NombreModulo: Clientes,         Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Clientes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Fich, NombreModulo: Fabricantes,      Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Marcas/Fabricantes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: Propiedades,      Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Propiedades y Valores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: Articulos,        Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Artículos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: UnidadesMedida,   Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Unidades de medida, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: FormasPago,       Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Formas de pago, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: Tarifas,          Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Tarifas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: Agencias,         Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Agencias de transporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: ZonasTransporte,  Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Zonas de transporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Fich, NombreModulo: Zonas,            Nivel: 1, BelongsTo: 20,  Publish: 1, Titulo: Zonas comerciales y reparto, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 30, CodigoApp: Fich, NombreModulo: Fich,     Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Ficheros, Funcionalidades: AC }
+  - { CodigoApp: Fich, NombreModulo: Familias,         Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: 'Categorias, Familias y Subfamilias', Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Fich, NombreModulo: Proveedores,      Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Proveedores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Fich, NombreModulo: Clientes,         Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Clientes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Fich, NombreModulo: Fabricantes,      Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Marcas/Fabricantes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Fich, NombreModulo: Propiedades,      Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Propiedades y Valores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Fich, NombreModulo: Articulos,        Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Artículos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Fich, NombreModulo: UnidadesMedida,   Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Unidades de medida, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Fich, NombreModulo: FormasPago,       Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Formas de pago, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Fich, NombreModulo: Tarifas,          Nivel: 1, BelongsTo: 30,  Publish: 1, Titulo: Tarifas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # COMPRAS
   - { Id: 40, CodigoApp: Compras, NombreModulo: Compras,            Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Compras, Funcionalidades: AC }
@@ -149,6 +154,12 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+
+  - { IdPerfil: 1, NombreModulo: Logis, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 1, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: ZonasPagoEnvio, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   - { IdPerfil: 1, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
@@ -160,9 +171,6 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: UnidadesMedida, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: FormasPago, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Tarifas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 1, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 1, NombreModulo: Compras, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: PedidosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
@@ -262,6 +270,12 @@ ErpPermisos:
   - { IdPerfil: 2, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
+  - { IdPerfil: 2, NombreModulo: Logis, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 2, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: ZonasPagoEnvio, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+
   - { IdPerfil: 2, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 2, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: Proveedores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -272,9 +286,6 @@ ErpPermisos:
   - { IdPerfil: 2, NombreModulo: UnidadesMedida, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: FormasPago, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: Tarifas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 2, NombreModulo: Compras, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 2, NombreModulo: PedidosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -341,6 +352,12 @@ ErpPermisos:
   - { IdPerfil: 3, NombreModulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: ZonasHorarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
+  - { IdPerfil: 3, NombreModulo: Logis, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 3, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: ZonasPagoEnvio, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+
   - { IdPerfil: 3, NombreModulo: Fich, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 3, NombreModulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: Proveedores, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -351,9 +368,6 @@ ErpPermisos:
   - { IdPerfil: 3, NombreModulo: UnidadesMedida, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: FormasPago, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: Tarifas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: Agencias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: ZonasTransporte, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 3, NombreModulo: Compras, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 3, NombreModulo: PedidosCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}

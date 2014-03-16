@@ -57,11 +57,11 @@ class EnlaceContaController extends Controller {
 
         // Cargas las variables
         $this->cargaVariables();
-        
+
         // Registrar en el archivo log
         if ($this->varEnvPro[log])
             Log::write($this->request);
-        
+
         $empresa = new PcaeEmpresas($_SESSION['emp']);
         $this->DIGCC = $empresa->getDigitosCuentaContable();
         unset($empresa);
@@ -128,7 +128,6 @@ class EnlaceContaController extends Controller {
 
             // Registrar el traspaso en el log de traspasos
             $this->RegistroLog();
-
         } else
             $this->values['errores'] = $this->errores;
 
@@ -231,7 +230,55 @@ class EnlaceContaController extends Controller {
      * Travasa los Pagos
      */
     private function Pagos($idSucursal, $idEstado) {
-        
+
+        $filtro = "";
+        if ($idSucursal != "")
+            $filtro = "IDSucursal='{$idSucursal}' and";
+        if ($idEstado != "")
+            $filtro .= " IDEstado='{$idEstado}' and";
+
+        $filtro .= " Vencimiento>='{$this->desdeFecha}' and Vencimiento<='{$this->hastaFecha}'";
+
+        $em = new EntityManager("datos" . $_SESSION['emp']);
+        if ($em->getDbLink()) {
+            $query = "
+            SELECT IDProveedor, Vencimiento, IDRemesa, CContable as CuentaPago, sum(Importe) as Importe , count(IDRecibo) as NRecibos, IDEstado
+            FROM recibos_proveedores
+            WHERE {$filtro}
+            GROUP BY IDProveedor, IDRemesa, CuentaPago
+            ORDER BY Vencimiento ASC, IDRemesa ASC;";
+            $em->query($query);
+            $recibos = $em->fetchResult();
+            $em->desConecta();
+
+            foreach ($recibos as $recibo) {
+                $this->nAsiento++;
+                $this->nPagos++;
+
+                $asiento = array();
+
+                $proveedor = new Proveedores($recibo['IDProveedor']);
+
+                $fecha = str_replace("-", "", $recibo['Vencimiento']);
+
+                // Apunte de Pago
+                $asiento[] = $this->ApuntePago($this->nAsiento, $fecha, $recibo, $proveedor);
+
+                // Apunte(s) de detalle pagos
+                $apuntes = $this->ApunteDetallePago($this->nAsiento, $fecha, $recibo);
+                foreach ($apuntes as $apunte)
+                    $asiento[] = $apunte;
+
+                // Escribir en el fichero el asiento
+                foreach ($asiento as $apunte)
+                    fwrite($this->fpDiario, $apunte);
+
+                // Guardar la subcuenta del proveedor
+                if (!isset($this->arraySubcuentas[$recibo['IDProveedor']]))
+                    $this->arraySubcuentas[$recibo['IDProveedor']] = $this->SubcuentaProveedor($proveedor);
+            }
+        }
+        unset($em);
     }
 
     /**
@@ -248,8 +295,8 @@ class EnlaceContaController extends Controller {
         $filtro .= " Vencimiento>='{$this->desdeFecha}' and Vencimiento<='{$this->hastaFecha}'";
 
         $recibos = new RecibosClientes();
-        $tabla = $recibos->getDataBaseName().".".$recibos->getTableName();
-        
+        $tabla = $recibos->getDataBaseName() . "." . $recibos->getTableName();
+
         $em = new EntityManager($recibos->getConectionName());
         if ($em->getDbLink()) {
             $query = "
@@ -337,6 +384,59 @@ class EnlaceContaController extends Controller {
             $apunte->setConcepto("Cob Ftra Cliente " . $cliente->getRazonSocial());
             $apunte->setDocumento($recibo->getIDFactura()->getNumeroFactura());
             $apunte->setEuroHaber($recibo->getImporte());
+            $apuntes[] = $apunte;
+        }
+
+        unset($apunte);
+        unset($recibo);
+
+        return $apuntes;
+    }
+
+    /**
+     * Devuelve un objeto Apunte,
+     * con el apunte correspondiente al pago de un asiento de PAGO
+     * 
+     * @param integer $nAsiento
+     * @param date $fecha
+     * @param array $recibo
+     * @param Clientes $proveedor
+     * @return ContaPlusDiario 
+     */
+    private function ApuntePago($nAsiento, $fecha, array $recibo, Proveedores $proveedor) {
+
+        $apunte = new ContaPlusDiarioV10($nAsiento, $fecha);
+
+        $apunte->setSubCta($recibo['CuentaPago']);
+        $apunte->setContra($proveedor->getCContable());
+        $apunte->setConcepto("Pag Ftra Proveedor " . $proveedor->getCContable());
+        $apunte->setDocumento("N.Ftras " . $recibo['NRecibos']);
+        $apunte->setEuroHaber($recibo['Importe']);
+
+        return $apunte;
+    }
+
+    private function ApunteDetallePago($nAsiento, $fecha, array $cabecera) {
+
+        $filtro = "IDProveedor='{$cabecera['IDProveedor']}' and Vencimiento='{$cabecera['Vencimiento']}' and IDRemesa='{$cabecera['IDRemesa']}' and IDEstado='{$cabecera['IDEstado']}'";
+
+        $recibo = new RecibosProveedores();
+        $recibos = $recibo->cargaCondicion("*", $filtro);
+        unset($recibo);
+
+        $proveedor = new Proveedores($cabecera['IDProveedor']);
+
+        foreach ($recibos as $recibo) {
+
+            $recibo = new RecibosProveedores($recibo['IDRecibo']);
+
+            $apunte = new ContaPlusDiarioV10($nAsiento, $fecha);
+
+            $apunte->setSubCta($proveedor->getCContable());
+            $apunte->setContra($recibo->getCContable());
+            $apunte->setConcepto("Pag Ftra Proveedor " . $proveedor->getRazonSocial());
+            $apunte->setDocumento($recibo->getIDFactura()->getSuFactura());
+            $apunte->setEuroDebe($recibo->getImporte());
             $apuntes[] = $apunte;
         }
 

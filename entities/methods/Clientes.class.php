@@ -10,6 +10,8 @@
  */
 class Clientes extends ClientesEntity {
 
+    protected $Publish = '1';
+
     public function __toString() {
         if ($this->RazonSocial)
             return $this->getRazonSocial();
@@ -89,8 +91,6 @@ class Clientes extends ClientesEntity {
     public function validaLogico() {
 
         parent::validaLogico();
-
-        $this->Publish = 1;
 
         if ($this->NombreComercial == "") {
             $this->NombreComercial = $this->RazonSocial;
@@ -513,6 +513,54 @@ class Clientes extends ClientesEntity {
         unset($albaran);
         foreach ($rows as $row) {
             $array[] = new AlbaranesCab($row['IDAlbaran']);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Devuelve un array de objetos direcciones de entrega
+     * del cliente en curso
+     * 
+     * @return \ClientesDentrega array de objetos Direcciones de entrega
+     */
+    public function getDireccionesEntrega() {
+
+        $direc = new ClientesDentrega();
+        $rows = $direc->cargaCondicion("IDDirec", "IDCliente='{$this->IDCliente}'");
+        unset($direc);
+
+        $array = array();
+        foreach ($rows as $row) {
+            $array[] = new ClientesDentrega($row['IDDirec']);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Devuelve array de dos dimensiones con los
+     * boletines a los que está suscrito el cliente en curso.
+     * 
+     * @return array
+     */
+    public function getSuscripciones() {
+
+        $array = array();
+
+        $tipoBoletines = new BolTipos();
+        $tipos = $tipoBoletines->cargaCondicion("Id,Titulo");
+        foreach ($tipos as $tipo) {
+            $boletin = new BolBoletines();
+            $boletines = $boletin->cargaCondicion("Id,Titulo", "IDTipo='{$tipo['Id']}'");
+            foreach ($boletines as $boletin) {
+                $relaciones = new CpanRelaciones();
+                $idRelacion = $relaciones->getIdRelacion("Clientes", $this->IDCliente, "BolBoletines", $boletin['Id']);
+                $array[$tipo['Titulo']][$boletin['Id']] = array(
+                    'titulo' => $boletin['Titulo'],
+                    'suscrito' => $idRelacion,
+                );
+            }
         }
 
         return $array;

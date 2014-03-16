@@ -21,7 +21,7 @@
             {% else %}
                 {% set classFila = 'Par' %}
             {% endif %}
-            <tr onclick="location.href='{{app.path}}/{{values.controller}}/edit/{{objeto.PrimaryKeyMD5}}'" class='{{classFila}}'>
+            <tr class='{{classFila}}'>
             <td>
                 <a href='{{app.path}}/Provincias/Edit/{{objeto.PrimaryKeyMD5}}' title='Editar ...'>
                     <img src="{{app.path}}/images/botoneditar.png" width="16px" height="16px" />

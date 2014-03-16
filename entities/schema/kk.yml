@@ -1,10 +1,16 @@
-      
-# Articulos favoritos para cada usuario de la Web
-ErpFavoritosWeb:
-  comment: Articulos favoritos para cada usuario de la Web
+ErpZonasPagoEnvio:
+  comment: Combinaciones de zonas de envio, formas de pago y forma de envio
   columns:
-    IDUsuario:   { type: bigint(11), notnull: true, index: index }
-    IDArticulo:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    IDZona   :           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ZonasTransporte,IDZona' }
+    IDFP     :           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }
+    IDAgencia:           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agencias,IDAgencia' }
+    PlazoEntrega:        { type: varchar(50), notnull: true }
+    ImportePedidoMinimo: { type: decimal(2), notnull: true, default: 0}
+    ImportePedidoMaximo: { type: decimal(2), notnull: true, default: 0}
+    DesdeGramos:         { type: decimal(2), notnull: true, default: 0}
+    HastaGramos:         { type: decimal(2), notnull: true, default: 0}
+    Gastos:              { type: decimal(2), notnull: true, default: 0}
+    Uso:                 { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,UsoWeb,IDTipo' }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
-      
+  index:     

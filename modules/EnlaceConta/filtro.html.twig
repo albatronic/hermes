@@ -99,7 +99,7 @@
 <script>
     $(function(){
         $('#botonTrasvase').click(function(){
-            $('#divBoton').html('<img src="{{app.path}}/images/loadingAnimation.gif"/>');
+            $('#botonTrasvase').hide("slow");
             $('#fromTrasvase').submit();
         });
     });
