@@ -16,7 +16,7 @@
 
 	{% block filtro %}
 	{% if values.permisos.permisosModulo['CO'] and values.tieneListado %}
-		{% include values.controller ~ '/filtro.html.twig' with {'filter': values.listado.filter} %}
+            {% include values.controller ~ '/filtro.html.twig' with {'filter': values.listado.filter} %}
 	{% endif %}
 	{% endblock %}
 

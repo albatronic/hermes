@@ -36,14 +36,15 @@
         {{ macro.input(atributos.Movil,'Etiqueta','text','Clientes[Movil]','Clientes_Movil',datos.Movil,'30','CampoTextoLargo') }}
         {{ macro.input(atributos.EMail,'Etiqueta','text','Clientes[EMail]','Clientes_EMail',datos.EMail,'50','CampoTextoLargo') }}
         {{ macro.input(atributos.Web,'Etiqueta','text','Clientes[Web]','Clientes_Web',datos.Web,'50','CampoTextoLargo') }}
-        {{ macro.select(atributos.IDTipo,'Etiqueta','Clientes[IDTipo]','Clientes_IDTipo',200,datos.IDTipo.IDTipo,datos.IDTipo.fetchAll('Tipo'),'Select',[app.path,'ClientesTipos','Tipos de clientes',390,450])}}
-        {{ macro.select(atributos.IDGrupo,'Etiqueta','Clientes[IDGrupo]','Clientes_IDGrupo',200,datos.IDGrupo.IDGrupo,datos.IDGrupo.fetchAll('Grupo'),'Select',[app.path,'ClientesGrupos','Grupos de clientes',390,450])}}
-        {{ macro.input(atributos.Vigente,'Etiqueta','checkbox','Clientes[Vigente]','Clientes_Vigente',datos.Vigente.IDTipo,'255','CampoTextoLargo','20')}}          
-        {{ macro.select(atributos.IDSucursal,'Etiqueta','Clientes[IDSucursal]','Clientes_IDSucursal',200,datos.IDSucursal.IDSucursal,user.getSucursales('',0),'Select',none,'DesplegableAjax("div_Clientes_IDZona","Clientes_IDZona","Clientes[IDZona]","zonassucursal",this.value);DesplegableAjax("div_Clientes_IDComercial","Clientes_IDComercial","Clientes[IDComercial]","comercialessucursal",this.value);') }}
-        {{ macro.select(atributos.IDComercial,'Etiqueta','Clientes[IDComercial]','Clientes_IDComercial',200,datos.IDComercial.IDAgente,datos.IDComercial.getComerciales('',datos.IDSucursal.IDSucursal,false),'Select') }}
-        {{ macro.select(atributos.IDZona,'Etiqueta','Clientes[IDZona]','Clientes_IDZona',200,datos.IDZona.IDZona,datos.IDZona.fetchAll(datos.IDSucursal.IDSucursal,'Zona',false),'Select') }}
         </div>
         <div style="float: left; width: 47%;">
+        {{ macro.input(atributos.Vigente,'Etiqueta','checkbox','Clientes[Vigente]','Clientes_Vigente',datos.Vigente.IDTipo,'255','CampoTextoLargo','20')}}          
+        {{ macro.select(atributos.IDPerfilWeb,'Etiqueta','Clientes[IDPerfilWeb]','Clientes_IDPerfilWeb',200,datos.IDPerfilWeb.Id,datos.IDPerfilWeb.fetchAll('Perfil',false),'Select')}}
+        {{ macro.select(atributos.IDTipo,'Etiqueta','Clientes[IDTipo]','Clientes_IDTipo',200,datos.IDTipo.IDTipo,datos.IDTipo.fetchAll('Tipo'),'Select',[app.path,'ClientesTipos','Tipos de clientes',390,450])}}
+        {{ macro.select(atributos.IDGrupo,'Etiqueta','Clientes[IDGrupo]','Clientes_IDGrupo',200,datos.IDGrupo.IDGrupo,datos.IDGrupo.fetchAll('Grupo'),'Select',[app.path,'ClientesGrupos','Grupos de clientes',390,450])}}
+        {{ macro.select(atributos.IDSucursal,'Etiqueta','Clientes[IDSucursal]','Clientes_IDSucursal',200,datos.IDSucursal.IDSucursal,user.getSucursales('',0),'Select',none,'DesplegableAjax("div_Clientes_IDZona","Clientes_IDZona","Clientes[IDZona]","zonassucursal",this.value);DesplegableAjax("div_Clientes_IDComercial","Clientes_IDComercial","Clientes[IDComercial]","comercialessucursal",this.value);') }}
+        {{ macro.select(atributos.IDComercial,'Etiqueta','Clientes[IDComercial]','Clientes_IDComercial',200,datos.IDComercial.IDAgente,datos.IDComercial.getComerciales('',datos.IDSucursal.IDSucursal,false),'Select') }}
+        {{ macro.select(atributos.IDZona,'Etiqueta','Clientes[IDZona]','Clientes_IDZona',200,datos.IDZona.IDZona,datos.IDZona.fetchAll(datos.IDSucursal.IDSucursal,'Zona',false),'Select') }}            
         {% include '_global/metaDatos.html.twig' %}
         </div>
     </div>            

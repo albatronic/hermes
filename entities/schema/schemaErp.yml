@@ -379,7 +379,8 @@ ErpClientes:
     Iban:                { type: varchar(34), notnull: false, default: null }
     Bic:                 { type: varchar(11), notnull: false, default: null }
     Mandato:             { type: varchar(35), notnull: false, default: null }
-    FechaMandato:        { type: date, notnull: true, default: '0000-00-00' }    
+    FechaMandato:        { type: date, notnull: true, default: '0000-00-00' } 
+    IDPerfilWeb:         { type: bigint(11), notnull: true, default: 1, index: index, comment: 'db,WebPerfiles,Id' }     
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:     
   

@@ -110,32 +110,33 @@ ErpModulos:
   - { Id: 160, CodigoApp: CMS, NombreModulo: CMS,              Nivel: 0, BelongsTo: 0,    Publish: 1, Titulo: CMS, Funcionalidades: AC }
   - { Id: 161, CodigoApp: CMS, NombreModulo: CpanEsqueletoWeb, Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Esqueleto Web, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 162, CodigoApp: CMS, NombreModulo: CpanUrlAmigables, Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Urls amigables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 163, CodigoApp: CMS, NombreModulo: 'Gcon',           Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Gestor de contenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 164, CodigoApp: CMS, NombreModulo: GconSecciones,    Nivel: 2, BelongsTo: 163,  Publish: 1, Titulo: Secciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 165, CodigoApp: CMS, NombreModulo: GconContenidos,   Nivel: 2, BelongsTo: 163,  Publish: 1, Titulo: Contenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 166, CodigoApp: CMS, NombreModulo: 'Sld',            Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Sliders, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 167, CodigoApp: CMS, NombreModulo: SldZonas,         Nivel: 2, BelongsTo: 166,  Publish: 1, Titulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 168, CodigoApp: CMS, NombreModulo: SldSliders,       Nivel: 2, BelongsTo: 166,  Publish: 1, Titulo: Sliders, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 169, CodigoApp: CMS, NombreModulo: 'Bann',           Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Banners, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 170, CodigoApp: CMS, NombreModulo: BannZonas,        Nivel: 2, BelongsTo: 169,  Publish: 1, Titulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 171, CodigoApp: CMS, NombreModulo: BannBanners,      Nivel: 2, BelongsTo: 169,  Publish: 1, Titulo: Banners, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 172, CodigoApp: CMS, NombreModulo: 'Albm',           Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Álbumes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 173, CodigoApp: CMS, NombreModulo: AlbmSecciones,    Nivel: 2, BelongsTo: 172,  Publish: 1, Titulo: Seciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 174, CodigoApp: CMS, NombreModulo: AlbmAlbumes,      Nivel: 2, BelongsTo: 172,  Publish: 1, Titulo: Álbumes Fotográficos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 175, CodigoApp: CMS, NombreModulo: 'Enl',            Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Enlaces de interés, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 176, CodigoApp: CMS, NombreModulo: EnlSecciones,     Nivel: 2, BelongsTo: 175,  Publish: 1, Titulo: Secciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 177, CodigoApp: CMS, NombreModulo: EnlEnlaces,       Nivel: 2, BelongsTo: 175,  Publish: 1, Titulo: Enlaces, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 178, CodigoApp: CMS, NombreModulo: 'Serv',           Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Servicios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 179, CodigoApp: CMS, NombreModulo: ServFamilias,     Nivel: 2, BelongsTo: 178,  Publish: 1, Titulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 180, CodigoApp: CMS, NombreModulo: ServServicios,    Nivel: 2, BelongsTo: 178,  Publish: 1, Titulo: Servicios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 181, CodigoApp: CMS, NombreModulo: 'Bol',            Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Boletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 182, CodigoApp: CMS, NombreModulo: BolTipos,         Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Tipos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 183, CodigoApp: CMS, NombreModulo: BolFormatos,      Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Formatos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 184, CodigoApp: CMS, NombreModulo: BolBoletines,     Nivel: 2, BelongsTo: 181,  Publish: 1, Titulo: Boletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { Id: 185, CodigoApp: CMS, NombreModulo: MultiIdioma,      Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: MultiIdioma, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
-  - { Id: 186, CodigoApp: CMS, NombreModulo: CpanTextos, Nivel: 2, BelongsTo: 185,  Publish: 1, Titulo: Textos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
-  - { Id: 187, CodigoApp: CMS, NombreModulo: CpanPlantillas,   Nivel: 2, BelongsTo: 185,  Publish: 1, Titulo: Plantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
-  - { Id: 188, CodigoApp: CMS, NombreModulo: BlogComentarios,  Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Comentarios Blog, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}   
+  - { Id: 163, CodigoApp: CMS, NombreModulo: WebPerfiles,      Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Perfiles de Usuarios Web, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 164, CodigoApp: CMS, NombreModulo: Gcon,             Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Gestor de contenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 165, CodigoApp: CMS, NombreModulo: GconSecciones,    Nivel: 2, BelongsTo: 164,  Publish: 1, Titulo: Secciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 166, CodigoApp: CMS, NombreModulo: GconContenidos,   Nivel: 2, BelongsTo: 164,  Publish: 1, Titulo: Contenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 167, CodigoApp: CMS, NombreModulo: Sld,              Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Sliders, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 168, CodigoApp: CMS, NombreModulo: SldZonas,         Nivel: 2, BelongsTo: 167,  Publish: 1, Titulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 169, CodigoApp: CMS, NombreModulo: SldSliders,       Nivel: 2, BelongsTo: 167,  Publish: 1, Titulo: Sliders, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 170, CodigoApp: CMS, NombreModulo: Bann,             Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Banners, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 171, CodigoApp: CMS, NombreModulo: BannZonas,        Nivel: 2, BelongsTo: 168,  Publish: 1, Titulo: Zonas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 172, CodigoApp: CMS, NombreModulo: BannBanners,      Nivel: 2, BelongsTo: 168,  Publish: 1, Titulo: Banners, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 173, CodigoApp: CMS, NombreModulo: Albm,             Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Álbumes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 174, CodigoApp: CMS, NombreModulo: AlbmSecciones,    Nivel: 2, BelongsTo: 173,  Publish: 1, Titulo: Seciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 175, CodigoApp: CMS, NombreModulo: AlbmAlbumes,      Nivel: 2, BelongsTo: 173,  Publish: 1, Titulo: Álbumes Fotográficos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 176, CodigoApp: CMS, NombreModulo: Enl,              Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Enlaces de interés, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 177, CodigoApp: CMS, NombreModulo: EnlSecciones,     Nivel: 2, BelongsTo: 176,  Publish: 1, Titulo: Secciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 178, CodigoApp: CMS, NombreModulo: EnlEnlaces,       Nivel: 2, BelongsTo: 176,  Publish: 1, Titulo: Enlaces, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 179, CodigoApp: CMS, NombreModulo: Serv,             Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Servicios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 190, CodigoApp: CMS, NombreModulo: ServFamilias,     Nivel: 2, BelongsTo: 179,  Publish: 1, Titulo: Familias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 181, CodigoApp: CMS, NombreModulo: ServServicios,    Nivel: 2, BelongsTo: 179,  Publish: 1, Titulo: Servicios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 182, CodigoApp: CMS, NombreModulo: Bol,              Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Boletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 183, CodigoApp: CMS, NombreModulo: BolTipos,         Nivel: 2, BelongsTo: 182,  Publish: 1, Titulo: Tipos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 184, CodigoApp: CMS, NombreModulo: BolFormatos,      Nivel: 2, BelongsTo: 182,  Publish: 1, Titulo: Formatos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 185, CodigoApp: CMS, NombreModulo: BolBoletines,     Nivel: 2, BelongsTo: 182,  Publish: 1, Titulo: Boletines, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 186, CodigoApp: CMS, NombreModulo: MultiIdioma,      Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: MultiIdioma, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 187, CodigoApp: CMS, NombreModulo: CpanTextos,       Nivel: 2, BelongsTo: 186,  Publish: 1, Titulo: Textos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 188, CodigoApp: CMS, NombreModulo: CpanPlantillas,   Nivel: 2, BelongsTo: 186,  Publish: 1, Titulo: Plantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
+  - { Id: 189, CodigoApp: CMS, NombreModulo: BlogComentarios,  Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Comentarios Blog, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}   
 
 ErpPermisos:
   # PERMISOS PARA EL SUPERADMINSITRADOR
@@ -226,6 +227,7 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: CMS, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: CpanEsqueletoWeb, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: CpanUrlAmigables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: WebPerfiles, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: Gcon, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: GconSecciones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: GconContenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    

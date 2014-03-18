@@ -367,6 +367,26 @@ Clientes:
         type: select
         event: "onchange='submit();'"
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
+    IDPerfilWeb:
+      title: Perfil Web
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: '0'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      aditional_filter:
+        order: 100
+        caption: Perfil Web
+        entity: WebPerfiles
+        method: fetchAll
+        params: Perfil
+        type: select
+      validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDGrupo:
       title: Grupo
       filter: NO

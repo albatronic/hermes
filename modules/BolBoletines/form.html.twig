@@ -21,17 +21,14 @@
         </li>
         
         {% if (values.datos.getPrimaryKeyValue) %}
-            {% if datos.getTieneEtiquetas() %}
-            <li>
-                <a href="#etiquetas" onclick="cargaEtiquetasRelacionadas('etiquetas','{{values.controller}}','{{datos.primaryKeyValue}}');">Etiquetas</a>
-            </li>
-            {% endif %}
-            
             <li>
                 <a href="#contenidos">Contenido del boletín</a>
             </li>            
             <li>
                 <a href="#envios">Envíos</a>
+            </li>            
+            <li>
+                <a href="#suscriptores">Suscriptores ({{values.suscriptores|length}})</a>
             </li>            
         {% endif %} 
             
@@ -78,6 +75,9 @@
         </div>        
         <div id="envios">
             {% include values.controller ~ '/envios.html.twig' %}
+        </div>        
+        <div id="suscriptores">
+            {% include values.controller ~ '/suscriptores.html.twig' %}
         </div>        
     {% endif %}  
         

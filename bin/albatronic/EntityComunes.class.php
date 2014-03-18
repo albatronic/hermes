@@ -131,7 +131,7 @@ class EntityComunes extends Entity {
      * @orm Column(type="tinyint")
      * @var entities\ValoresPrivacy
      */
-    protected $Privacy = '0';
+    protected $Privacy = '2';
 
     /**
      * @orm Column(type="integer")
@@ -287,13 +287,13 @@ class EntityComunes extends Entity {
      * @orm Column(type="string")
      * @var string(100)
      */
-    protected $AccessProfileList = "perfiles: 1: 1 2: 2";
+    protected $AccessProfileList = "perfiles:\n 1: '1'\n 2: '2'";
 
     /**
      * @orm Column(type="string")
      * @var string(100)
      */
-    protected $AccessProfileListWeb = "perfiles: 1: 1";
+    protected $AccessProfileListWeb = "perfiles:\n 1: '1'";
 
     /**
      * @orm Column(type="string")

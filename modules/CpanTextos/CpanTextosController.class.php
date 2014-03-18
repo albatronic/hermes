@@ -81,29 +81,12 @@ class CpanTextosController extends Controller {
         switch ($this->request['accion']) {
             case 'G': //GUARDAR DATOS
                 if ($this->values['permisos']['permisosModulo']['UP']) {
-                    foreach ($this->request[$this->entity] as $keyItem=>$item) {
-                        if ($keyItem == 0) {
-                            $controller = $item['Controller'];
-                            $clave = $item['Clave'];
-                        }
-                        if ($item['Id'] == 0) {
-                            //Crear
-                            $datos = new $this->entity();
-                            $datos->setController($controller);
-                            $datos->setClave($clave);
-                            $datos->setLang($item['Lang']);
-                            $datos->setObservations($item['Observations']);
-                            $datos->create();
-                        } else {
-                            // Modificar
-                            $datos = new $this->entity($item['Id']);
-                            $datos->setController($controller);
-                            $datos->setClave($clave);
-                            $datos->setLang($item['Lang']);
-                            $datos->setObservations($item['Observations']);
-                            $datos->save();                            
-                        }
-                    }
+                    $datos = new $this->entity();
+                    $datos->bind($this->request[$this->entity]);
+                    if ($datos->getPrimaryKeyValue())
+                        $datos->save();
+                    else
+                        $datos->create();
 
                     $this->values['errores'] = $datos->getErrores();
                     $this->values['alertas'] = $datos->getAlertas();
@@ -144,13 +127,13 @@ class CpanTextosController extends Controller {
         $item = new $this->entity();
 
         $items = array();
-
-        foreach ($this->getArrayIdiomas() as $idioma) {
-            $items[0][] = array(
+        $arrayIdiomas = $this->getArrayIdiomas();
+        foreach ($arrayIdiomas as $idioma) {
+            $items[0][''][$idioma['Id']] = array(
                 "Id" => 0,
-                "Controller" => "",
-                "Lang" => $idioma['Id'],
-                "Clave" => "",
+                //"Controller" => "",
+                //"Lang" => $idioma['Id'],
+                //"Clave" => "",
                 "Observations" => "",
             );
         }
@@ -162,7 +145,21 @@ class CpanTextosController extends Controller {
         unset($item);
 
         foreach ($rows as $row) {
-            $items[$row['Controller']][] = $row;
+            $items[$row['Controller']][$row['Clave']][$row['Lang']] = array(
+                "Id" => $row["Id"],
+                "Observations" => $row["Observations"],
+            );
+            foreach ($arrayIdiomas as $idioma) {
+                if (!isset($items[$row['Controller']][$row['Clave']][$idioma["Id"]])) {
+                    $items[$row['Controller']][$row['Clave']][$idioma["Id"]] = array(
+                        "Id" => 0,
+                        //"Controller" => $row['Controller'],
+                        //"Lang" => $idioma["Id"],
+                        //"Clave" => $row['Clave'],
+                        "Observations" => '',
+                    );
+                }
+            }
         }
         //print_r($items);
         $this->values['textos'] = $items;

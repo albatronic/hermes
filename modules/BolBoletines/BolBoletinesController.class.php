@@ -17,6 +17,26 @@ class BolBoletinesController extends Controller {
         parent::__construct($request);
 
         $this->values['objetoController'] = $this;
+        
+        switch ($this->request['METHOD']) {
+            case 'GET':
+                $idBoletin = $this->request[2];
+                if ($idBoletin) {
+                    $bol = new BolBoletines();
+                    $bol = $bol->find("PrimaryKeyMD5", $idBoletin);
+                    $idBoletin = $bol->getPrimaryKeyValue();
+                    unset($bol);
+                }
+                break;
+            case 'POST':
+                $idBoletin = $this->request["BolBoletines"]["Id"];
+                break;
+        }
+        $relacion = new CpanRelaciones();
+        $relaciones = $relacion->getObjetosRelacionadosInverso("BolBoletines", $idBoletin);
+        //print_r($relaciones);
+
+        $this->values['suscriptores'] = $relaciones;
     }
 
     public function IndexAction() {

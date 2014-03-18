@@ -1,0 +1,15 @@
+{# USUARIOS SUSCRITOS AL BOLETIN #}
+<table>
+    <thead>
+        <tr><th>Nombre</th><th>Email</th><th>Fecha Suscripción</th></tr>
+    </thead>
+    <tbody>
+        {% for suscriptor in values.suscriptores %}
+        <tr>
+            <td>{{suscriptor.objeto.RazonSocial}}</td>
+            <td>{{suscriptor.objeto.Email}}</td>
+            <td>{{suscriptor.fechaRelacion|date('d-m-Y H:i:s')}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

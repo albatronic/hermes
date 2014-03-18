@@ -1162,6 +1162,9 @@ class Controller {
             $urls->setUrlFriendly($urlAmigable);
             $urls->setEntity($this->entity);
             $urls->setIdEntity($datos->getPrimaryKeyValue());
+            $urls->setPrivacy($datos->getPrivacy()->getIDTipo());
+            $urls->setAccessProfileList($datos->getAccessProfileList());
+            $urls->setAccessProfileListWeb($datos->getAccessProfileListWeb());
             $urls->save();
         }
 

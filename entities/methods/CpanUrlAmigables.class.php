@@ -11,6 +11,9 @@
  */
 class CpanUrlAmigables extends CpanUrlAmigablesEntity {
 
+    protected $Publish = '1';
+    protected $Privacy = '2';
+    
     public function __toString() {
         return $this->getId();
     }
@@ -58,12 +61,6 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
                 unset($entidadAsociada);
             }
         }
-    }
-
-    public function create() {
-
-        $this->setPublish(1);
-        return parent::create();
     }
 
     /**
