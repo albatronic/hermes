@@ -264,11 +264,15 @@ class RecibosClientesEntity extends EntityComunes {
         unset($fecha);
     }
 
-    public function getFechaMandato() {
+    public function getFechaMandato($formato = "ddmmaaaa") {
         $fecha = new Fecha($this->FechaMandato);
-        $ddmmaaaa = $fecha->getddmmaaaa();
+        if ($formato == 'aaaammdd') {
+            $formato = $fecha->getaaaammdd();
+        } else {
+            $formato = $fecha->getddmmaaaa();
+        }
         unset($fecha);
-        return $ddmmaaaa;
+        return $formato;
     }
 
     public function setAsiento($Asiento) {

@@ -16,7 +16,8 @@
     {{ macro.input(atributos.EMail,'Etiqueta','text','PcaeEmpresas[EMail]','PcaeEmpresas_EMail',datos.EMail,'50','CampoTextoLargo') }}
     {{ macro.input(atributos.Web,'Etiqueta','text','PcaeEmpresas[Web]','PcaeEmpresas_Web',datos.Web,'50','CampoTextoLargo') }} 
     {{ macro.cc(atributos.Banco,'Etiqueta','cc','PcaeEmpresas',datos.Banco,datos.Oficina,datos.Digito,datos.Cuenta) }}
-    {{ macro.input(atributos.IBAN,'Etiqueta','text','PcaeEmpresas[IBAN]','PcaeEmpresas_IBAN',datos.IBAN,'34','CampoTextoLargo') }}
+    {{ macro.input(atributos.Iban,'Etiqueta','text','PcaeEmpresas[Iban]','PcaeEmpresas_Iban',datos.Iban,'34','CampoTextoMedio') }}
+    {{ macro.input(atributos.Bic,'Etiqueta','text','PcaeEmpresas[Bic]','PcaeEmpresas_Bic',datos.Bic,'11','CampoTextoCorto') }}
     {{ macro.input(atributos.SufijoRemesas,'Etiqueta','text','PcaeEmpresas[SufijoRemesas]','PcaeEmpresas_SufijoRemesas',datos.SufijoRemesas,'3','CampoUnidades') }}
     {{ macro.input(atributos.DigitosCuentaContable,'Etiqueta','text','PcaeEmpresas[DigitosCuentaContable]','PcaeEmpresas_DigitosCuentaContable',datos.DigitosCuentaContable,'3','CampoUnidades') }}
     {{ macro.input(atributos.IdCNAE,'Etiqueta','text','PcaeEmpresas[IdCNAE]','PcaeEmpresas_IdCNAE',datos.IdCNAE.Id,'255','CampoTextoLargo',none,none,['cnae','Actividad',datos.IdCNAE.Actividad]) }}

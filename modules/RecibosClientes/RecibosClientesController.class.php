@@ -215,7 +215,8 @@ class RecibosClientesController extends Controller {
                     $filtro .= " and (r.{$this->request['filter']['columnsSelected'][$key]}='{$value}')";
             }
 
-        $ficheroRemesa = Cuaderno19::makeRemesa($remesa, $filtro);
+        //$ficheroRemesa = Cuaderno19::makeRemesa($remesa, $filtro);
+        $ficheroRemesa = Cuaderno19SepaXml::makeRemesa($remesa, $filtro);
         
         if ($ficheroRemesa)
             $this->values['alertas'][] = "Se ha generado la remesa {$ficheroRemesa}";

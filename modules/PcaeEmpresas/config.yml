@@ -257,8 +257,8 @@ PcaeEmpresas:
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: string, length: '10', min: null, max: null, message: 'Valor Requerido' }
-    IBAN:
-      title: IBAN
+    Iban:
+      title: Iban
       filter: YES
       list: NO
       visible: true
@@ -268,6 +268,17 @@ PcaeEmpresas:
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '34', min: null, max: null, message: 'Valor Requerido' }
+    Bic:
+      title: Bic
+      filter: YES
+      list: NO
+      visible: true
+      updatable: true
+      default: null
+      help: null
+      permission: null
+      link: { route: null, param: null, title: null, target: null, link: null }
+      validator: { nullable: YES, type: string, length: '11', min: null, max: null, message: 'Valor Requerido' }
     SufijoRemesas:
       title: 'Sufijo Remesas'
       filter: YES

@@ -442,6 +442,7 @@ class CpanDocs extends CpanDocsEntity {
 
             $ftp = new Ftp($_SESSION['project']['ftp']);
             if ($ftp) {
+                //echo $carpetaDestino," ",$archivoSubir;
                 $ok = $ftp->upLoad($carpetaDestino, $archivoSubir, $this->Name);
                 $this->_errores = $ftp->getErrores();
                 $ftp->close();

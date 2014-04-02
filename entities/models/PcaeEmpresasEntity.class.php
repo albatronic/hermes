@@ -110,7 +110,12 @@ class PcaeEmpresasEntity extends EntityComunes {
     /**
      * @var string
      */
-    protected $IBAN;
+    protected $Iban;
+
+    /**
+     * @var string
+     */
+    protected $Bic;
 
     /**
      * @var string
@@ -328,12 +333,20 @@ class PcaeEmpresasEntity extends EntityComunes {
         return $this->Cuenta;
     }
 
-    public function setIBAN($IBAN) {
-        $this->IBAN = trim($IBAN);
+    public function setIban($Iban) {
+        $this->Iban = trim($Iban);
     }
 
-    public function getIBAN() {
-        return $this->IBAN;
+    public function getIban() {
+        return $this->Iban;
+    }
+
+    public function setBic($Bic) {
+        $this->Bic = trim($Bic);
+    }
+
+    public function getBic() {
+        return $this->Bic;
     }
 
     public function setSufijoRemesas($SufijoRemesas) {

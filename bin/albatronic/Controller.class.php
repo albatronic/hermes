@@ -114,8 +114,7 @@ class Controller {
                 $this->permisos = new ControlAcceso($this->entity);
             else
                 $this->permisos = new ControlAcceso($this->parentEntity);
-        }
-        else
+        } else
             $this->permisos = new ControlAcceso();
 
         $this->values['titulo'] = $this->form->getTitle();
@@ -250,8 +249,7 @@ class Controller {
                                     // Si ex buscable, actualizar la tabla de búsquedas
                                     if ($this->varEnvMod['searchable'] == '1')
                                         $this->ActualizaBusquedas($datos);
-                                }
-                                else
+                                } else
                                     $this->values['errores'] = $datos->getErrores();
 
                                 //Recargo el objeto para refrescar las propiedas que
@@ -446,7 +444,7 @@ class Controller {
                         $this->values['datos'] = $datos;
                         $this->values['metadatos'] = $datos->getMetaDatas();
 
-                        $template =  $this->entity . '/edit.html.twig';
+                        $template = $this->entity . '/edit.html.twig';
                     } else {
                         $this->values['datos'] = $datos;
                         $this->values['metadatos'] = $datos->getMetaDatas();
@@ -819,8 +817,7 @@ class Controller {
                                         $this->values['errores'] = $doc->getErrores();
                                 }
                             }
-                    }
-                    else
+                    } else
                         $this->values['errores'] = $doc->getErrores();
 
                     $template = $this->entity . '/edit.html.twig';
@@ -972,8 +969,7 @@ class Controller {
                 $_SESSION['idiomas']['actual'] = $idiomaNuevo;
                 return $this->newAction();
             }
-        }
-        else
+        } else
             return $this->IndexAction();
     }
 
@@ -1001,9 +997,9 @@ class Controller {
                 $arrayUpdate['Slug'] = $urlAmigable['slug'];
                 $arrayUpdate['UrlFriendly'] = $urlAmigable['url'];
                 /**
-                $datos->setUrlPrefix($urlAmigable['prefix']);
-                $datos->setSlug($urlAmigable['slug']);
-                $datos->setUrlFriendly($urlAmigable['url']);*/
+                  $datos->setUrlPrefix($urlAmigable['prefix']);
+                  $datos->setSlug($urlAmigable['slug']);
+                  $datos->setUrlFriendly($urlAmigable['url']); */
             }
 
             if (count($metatag)) {
@@ -1013,7 +1009,7 @@ class Controller {
                 //$datos->setMetatagTitle($metatagTitle);
             }
             $condicion = "{$datos->getPrimaryKeyName()}='{$datos->getPrimaryKeyValue()}'";
-            $datos->queryUpdate($arrayUpdate,$condicion);
+            $datos->queryUpdate($arrayUpdate, $condicion);
             //$datos->save();
         }
     }
@@ -1192,13 +1188,13 @@ class Controller {
             $columnaMetatagTitle = $this->varEnvMod['fieldGeneratorMetatagTitle'];
             $columnaMetatagDescription = $this->varEnvMod['fieldGeneratorMetatagDescription'];
             $columnaMetatagKeywords = $this->varEnvMod['fieldGeneratorMetatagKeywords'];
-            if ($columnaMetatagTitle != ''){
+            if ($columnaMetatagTitle != '') {
                 $metatag['title'] = $datos->{"get$columnaMetatagTitle"}();
             }
-            if ($columnaMetatagDescription != ''){
+            if ($columnaMetatagDescription != '') {
                 $metatag['description'] = $datos->{"get$columnaMetatagDescription"}();
             }
-            if ($columnaMetatagKeywords != ''){
+            if ($columnaMetatagKeywords != '') {
                 $metatag['keywords'] = $datos->{"get$columnaMetatagKeywords"}();
             }
         }
@@ -1261,8 +1257,7 @@ class Controller {
             $variables = new CpanVariables('Pro', 'Env');
             $this->varEnvPro = $variables->getValores();
             $_SESSION['VARIABLES']['EnvPro'] = $this->varEnvPro;
-        }
-        else
+        } else
             $this->varEnvPro = $_SESSION['VARIABLES']['EnvPro'];
         $this->values['varEnvPro'] = $this->varEnvPro;
         if ((count($this->values['varEnvPro']) == 0) and ($_SESSION['usuarioPortal']['IdPerfil'] == '1'))
@@ -1273,8 +1268,7 @@ class Controller {
             $variables = new CpanVariables('Pro', 'Web');
             $this->varWebPro = $variables->getValores();
             $_SESSION['VARIABLES']['WebPro'] = $this->varWebPro;
-        }
-        else
+        } else
             $this->varWebPro = $_SESSION['VARIABLES']['WebPro'];
         $this->values['varWebPro'] = $this->varWebPro;
         if ((count($this->values['varWebPro']) == 0) and ($_SESSION['usuarioPortal']['IdPerfil'] == '1'))
@@ -1293,8 +1287,7 @@ class Controller {
             $variables = new CpanVariables('Mod', 'Web', $this->entity);
             $this->varWebMod = $variables->getValores();
             $_SESSION['VARIABLES']['WebMod'] = $this->varWebMod;
-        }
-        else
+        } else
             $this->varWebMod = $_SESSION['VARIABLES']['WebMod'];
         $this->values['varWebMod'] = $this->varWebMod;
         if ((count($this->values['varWebMod']) == 0) and ($_SESSION['usuarioPortal']['IdPerfil'] == '1'))
@@ -1305,8 +1298,7 @@ class Controller {
             $variables = new CpanVariables('App', 'Env', $this->app);
             $this->varEnvApp = $variables->getValores();
             $_SESSION['VARIABLES']['EnvApp'] = $this->varEnvApp;
-        }
-        else
+        } else
             $this->varEnvApp = $_SESSION['VARIABLES']['EnvApp'];
         $this->values['varEnvApp'] = $this->varEnvApp;
         //if ((count($this->values['varEnvApp']) == 0) and ($_SESSION['usuarioPortal']['IdPerfil'] == '1'))
@@ -1316,8 +1308,7 @@ class Controller {
             $variables = new CpanVariables('App', 'Web', $this->app);
             $this->varWebApp = $variables->getValores();
             $_SESSION['VARIABLES']['WebApp'] = $this->varWebApp;
-        }
-        else
+        } else
             $this->varWebApp = $_SESSION['VARIABLES']['WebApp'];
         $this->values['varWebApp'] = $this->varWebApp;
         //if ((count($this->values['varWebApp']) == 0) and ($_SESSION['usuarioPortal']['IdPerfil'] == '1'))
@@ -1361,7 +1352,7 @@ class Controller {
                 unset($fav);
                 return $this->IndexAction();
                 break;
-                
+
             case 'delete': // Quitar del menú de favoritos
                 $fav = new Favoritos();
                 $ok = $fav->queryDelete("IDUsuario='{$_SESSION['usuarioPortal']['Id']}' and Controller='{$this->entity}'");
@@ -1384,13 +1375,14 @@ class Controller {
      * @return array
      */
     public function getArrayIdiomas() {
-        
+
         $idiomas = new Idiomas();
         $array = $idiomas->getArrayIdiomas();
         unset($idiomas);
-        
+
         return $array;
-}
+    }
+
     /**
      * Devuelve un array con los favoritos del
      * usuario en curso.
@@ -1405,6 +1397,7 @@ class Controller {
 
         return $rows;
     }
+
 }
 
 ?>

@@ -75,12 +75,12 @@ class Ftp {
             $ok = $this->chdir($targetFolder);
 
             if (!$ok) {
-                $this->mkdir($targetFolder);
+                Archivo::creaCarpeta($_SERVER['DOCUMENT_ROOT'] . "/" . $targetFolder);
                 $ok = $this->chdir($targetFolder);
             }
 
             if ($ok) {
-                $ok = @ftp_put($this->connectId, $targetFile, $sourceFile, $transferMode);
+                $ok = ftp_put($this->connectId, $targetFile, $sourceFile, $transferMode);
 
                 if (!$ok)
                     $this->errores[] = "FTP: La carga ha fallado!";

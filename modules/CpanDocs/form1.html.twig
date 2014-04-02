@@ -13,7 +13,8 @@
 
 {% include "_global/alertas.html.twig" with {'alertas': values.alertas,'errores': values.errores} %}
 
-<div id="accordion11111">
+<div id="acordeonDocumentos">
+<div class="agrupacionImagenes">    
 {% for key,objeto in values.listado.data %}
     <h3>
         {% if objeto.PathName != '' %}
@@ -35,7 +36,7 @@
         {% endif %}        
     </h3>
 
-    <div class="FormManto grupoImagen">
+    <div class="grupoImagen">
     <form name="linea{{key}}" id="linea{{key}}" action="" method="POST" enctype="multipart/form-data" class="form_container left_label">
         <input name="controller" value="{{values.controller}}" type="hidden" />
         <input name="action" id="action{{key}}" value="edit" type="hidden" />
@@ -75,7 +76,9 @@
         {% else %}
             {% set valorPublish = values.varEnvMod[objeto.Type].valorDefectoPublicar %}        
         {% endif %}
-        {% if idiomas.actual == 0 %}        
+        
+        {% if idiomas.actual == 0 %} 
+            <div class="subirNuevoArchivo">        
             <span>Tratamiento de la imagen:&nbsp;</span>
             <select name="modoRecortar" id="image_{{key}}_modoRecortar">
                 <option value="ajustar">Imagen completa</option>                            
@@ -83,14 +86,14 @@
             </select>
             <br/><br/>
 
-            <div class="subirNuevoArchivo">
+
             <input name="MAX_FILE_SIZE" value="{{values.maxFileSize}}" type="hidden"  />
             Archivo {% if objeto.type == 'galery'%}({{values.varEnvMod.galery.maxWidthImage}}x{{values.varEnvMod.galery.maxHeightImage}}) {%endif%}<input name="documento" id="documento{{key}}" type="file" />
             </div>
         {% endif %}
 
-        {{ macro.input({'caption':'Título','visible':values.varEnvMod[objeto.Type].mostrarTitulo,'varEnv':'0'},'Etiqueta','text','CpanDocs[Title]','CpanDocs_Title',objeto.Title,255,none) }}                   
-        {{ macro.input({'caption':'Nombre','visible':values.varEnvMod[objeto.Type].mostrarNombre,'varEnv':'0'},'Etiqueta','text','CpanDocs[Name]','CpanDocs_Name',objeto.Name,255,none) }}        
+        {{ macro.input({'caption':'Título','visible':values.varEnvMod[objeto.Type].mostrarTitulo,'varEnv':'0'},'Etiqueta','text','CpanDocs[Title]','CpanDocs_Title',objeto.Title,255,'CampoTextoCorto') }}                   
+        {{ macro.input({'caption':'Nombre','visible':values.varEnvMod[objeto.Type].mostrarNombre,'varEnv':'0'},'Etiqueta','text','CpanDocs[Name]','CpanDocs_Name',objeto.Name,255,'CampoTextoCorto') }}            
         {{ macro.input({'caption':'Mostrar pie de foto','visible':values.varEnvMod[objeto.Type].mostrarPieDeFoto,'varEnv':'0'},'Etiqueta','checkbox','CpanDocs[ShowCaption]','CpanDocs_ShowCaption'~key,objeto.ShowCaption.IDTipo,'255','CampoTextoLargo','12') }}
         {{ macro.input({'caption':'Publicar','visible':values.varEnvMod[objeto.Type].mostrarPublicar,'varEnv':'0'},'Etiqueta','checkbox','CpanDocs[Publish]','CpanDocs_Publish'~key,valorPublish,'255','CampoTextoLargo','12') }}            
             
@@ -114,11 +117,22 @@
             {% endif %}
         </div>
     </div>
-
     </form>
     </div>
-    <div style="height: 20px;"></div>
 {% endfor %}
 </div>
+</div>
 
+<script>
+$(function(){
+    $( "#acordeonDocumentos" ).accordion({
+        header: "> div > h3",        
+        autoHeight: false,
+        navigation: true,
+        collapsible: true,
+        active: false,
+        heightStyle: "content"
+    });    
+});
+</script>
 {% endblock %}

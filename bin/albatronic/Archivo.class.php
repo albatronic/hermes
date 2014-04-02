@@ -255,9 +255,10 @@ class Archivo {
             for ($i = 0; $i <= $key; $i++) {
                 $ruta .= $carpetas[$i] . "/";
             }
-            
+
             if (!is_dir($ruta)) {
                 mkdir($ruta);
+                chmod($ruta, 0777);
             }
         }
     }
