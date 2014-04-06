@@ -29,7 +29,7 @@ class CpanVariables extends CpanVariablesEntity {
      * @param string $tipo El tipo de variable: Env, Web
      * @param string $nombre El nombre de la app o del modulo según $ambito
      */
-    public function __construct($ambito='', $tipo='', $nombre = '') {
+    public function __construct($ambito = '', $tipo = '', $nombre = '') {
 
         if ($this->carga($ambito, $tipo, $nombre)) {
 
@@ -187,7 +187,7 @@ class CpanVariables extends CpanVariablesEntity {
             $this->setYml(sfYaml::dump($this->_objeto['datos'], 3));
 
         $this->Publish = '1';
-        
+
         if ($this->Id)
             $ok = parent::save();
         else {
@@ -261,14 +261,13 @@ class CpanVariables extends CpanVariablesEntity {
             $filtro = "Variable='{$variable}'";
             $rows = $this->cargaCondicion('*', $filtro);
 
-            if ($rows[0])
+            if (isset($rows[0])) {
                 $this->bind($rows[0]);
-            else {
+            } else {
                 $this->setIdProyectosApps($_SESSION['project']['Id']);
                 $this->setVariable($variable);
             }
-        }
-        else
+        } else
             $this->errores[] = "Los valores indicados en ambito y/o tipo no son válidos";
 
         return $ok;

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02">
+  <CstmrDrctDbtInitn>
+    <GrpHdr>
+      <MsgId>S1914/11/20140215</MsgId>
+      <CreDtTm>2014-04-02T19:25:32</CreDtTm>
+      <NbOfTxs>12</NbOfTxs>
+      <CtrlSum>1035.9</CtrlSum>
+      <InitgPty>
+        <Nm>INFORMATICA ALBATRONIC, SL</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>B18426684</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>S1914/11/20140215</PmtInfId>
+      <PmtMtd>DD</PmtMtd>
+      <NbOfTxs>12</NbOfTxs>
+      <CtrlSum>1035.9</CtrlSum>
+      <PmtTpInf><SvcLvl><Cd>SEPA</Cd></SvcLvl><LclInstrm><Cd>CORE</Cd></LclInstrm><SeqTp>RCUR</SeqTp></PmtTpInf>
+      <ReqdColltnDt>2014-04-02</ReqdColltnDt>
+      <Cdtr>
+        <Nm>INFORMATICA ALBATRONIC, SL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>AVDA. BLAS OTERO 10, LOCAL 1</AdrLine>
+          <AdrLine>18200 Maracena GRANADA</AdrLine>
+        </PstlAdr>
+      </Cdtr>
+      <CdtrAcct>
+        <Id><IBAN>ES1821002497190210004796</IBAN></Id>
+        <Ccy>EUR</Ccy>
+      </CdtrAcct>
+      <CdtrAgt>
+        <FinInstnId><BIC>CAIXESBBXXX</BIC></FinInstnId>
+      </CdtrAgt>
+      <ChrgBr>SLEV</ChrgBr>
+      <CdtrSchmeId>
+        <Id>
+          <PrvtId>
+            <Othr>
+              <Id>ES00B18426684</Id>
+              <SchmeNm>
+                <Prtry>SEPA</Prtry>
+              </SchmeNm>
+            </Othr>
+          </PrvtId>
+        </Id>
+      </CdtrSchmeId>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4301000541</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>AM DIBATSUR, S.L.</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>P.I. LA PAZ, C/ ANTONIO HUERTAS REMIGIO, 58</AdrLine>
+          <AdrLine>Maracena 18200 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES0221002548310210095163</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">217.80</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001750</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>CARLU TRADING, SL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>AVD. BLAS OTERO, 4</AdrLine>
+          <AdrLine>Maracena 18200 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES6800491710522410104444</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4301102045</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>CARROCERIAS GRANADA, SA</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>CTRA DE CORDOBA KM 429</AdrLine>
+          <AdrLine>Atarfe 18230 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES5800753278340600018492</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001883</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>COCA VERA, CARMEN G.</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>PALENCIA, 10 BAJO</AdrLine>
+          <AdrLine>Granada 18007 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES6004873189112000111330</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4301001228</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>COMERCIAL ADARVE, C.B.</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>MIRASIERRA, 14 BAJO, PLOG. JUNCARIL</AdrLine>
+          <AdrLine>Albolote 18220 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES7300493598642114090011</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001901</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>COMUNIDAD REGANTES VIRGEN DE LA SALUD</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>Avda. de Jete, 6</AdrLine>
+          <AdrLine>Itrabo 18612 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES7730230050140500014907</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">145.20</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4301102717</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>CREACIONES VILBER S.L.</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>POL. IND. ASEGRA PARCELA 14 C - FRENTE JOYA</AdrLine>
+          <AdrLine>Peligros 18210 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES9700491710562010093477</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4301000678</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>CRISTALERIA FELIPE CABALLERO, S.L.</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>AVDA. BLAS OTERO, 2</AdrLine>
+          <AdrLine>Maracena 18200 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES9000750222430600431496</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">181.50</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001529</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>INTERPRAL, SL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>MANUEL SANCHEZ MESA , 6</AdrLine>
+          <AdrLine>Maracena 18200 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES0320310090630116242402</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">72.60</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001887</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>MONEY CID66, SL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>AV. BLAS OTERO, 4</AdrLine>
+          <AdrLine>Maracena 18200 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES9021001343150200113367</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">48.40</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001508</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>NEVADA BIKE, SL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>CTRA. DE LA SIERRA, 92 BAJO</AdrLine>
+          <AdrLine>Cenes de la Vega 18190 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES3520310166590115876606</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+      <DrctDbtTxInf>
+        <PmtId>
+          <EndToEndId>Varias</EndToEndId>
+        </PmtId>
+        <InstdAmt Ccy="EUR">80.00</InstdAmt>
+        <DrctDbtTx>
+          <MndtRltdInf>
+            <MndtId>4302001153</MndtId>
+            <DtOfSgntr>2013-01-01</DtOfSgntr>
+            <AmdmntInd>false</AmdmntInd>
+          </MndtRltdInf>
+        </DrctDbtTx>
+        <DbtrAgt>
+          <FinInstnId>
+            <BIC>BBBBESPP</BIC>
+          </FinInstnId>
+        </DbtrAgt>
+        <Dbtr>
+        <Nm>PICHEL ROMERO, MANUEL</Nm>
+        <PstlAdr>
+          <Ctry>ES</Ctry>
+          <AdrLine>DOCTOR FERMIN GARRIDO, 6 BAJO</AdrLine>
+          <AdrLine>Granada 18014 GRANADA</AdrLine>
+        </PstlAdr>
+        </Dbtr>
+        <DbtrAcct>
+          <Id>
+            <IBAN>ES9400750222480700826664</IBAN>
+          </Id>
+        </DbtrAcct>
+        <Purp>
+          <Cd>TRAD</Cd>
+        </Purp>
+        <RmtInf>
+        <Ustrd>Varias Facturas</Ustrd>
+        </RmtInf>
+      </DrctDbtTxInf>
+    </PmtInf>
+  </CstmrDrctDbtInitn>
+</Document>

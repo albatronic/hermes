@@ -423,16 +423,16 @@ class Form {
 
         if ($this->getNode('columns')) {
             foreach ($this->getNode('columns') as $key => $value) {
-                if ($value['aditional_filter']) {
+                if (isset($value['aditional_filter'])) {
                     $index = (integer) trim((string) $value['aditional_filter']['order']) + $desplazamiento;
                     $type = strtolower(trim((string) $value['aditional_filter']['type']));
                     if (!$type)
                         $type = "input";
                     if (($type != 'input') and ($type != 'select') and ($type != 'check') and ($type != 'range'))
                         $type = 'input';
-                    $event = trim((string) $value['aditional_filter']['event']);
-                    $default = trim((string) $value['aditional_filter']['default']);
-                    $operator = trim((string) $value['aditional_filter']['operator']);
+                    $event = (isset($value['aditional_filter']['event'])) ? trim((string) $value['aditional_filter']['event']) : '';
+                    $default = (isset($value['aditional_filter']['default']))? trim((string) $value['aditional_filter']['default']) : '';
+                    $operator = (isset($value['aditional_filter']['operator'])) ? trim((string) $value['aditional_filter']['operator']) : '';
                     if ($operator == '')
                         $operator = '=';
 
@@ -564,7 +564,7 @@ class Form {
             // en base al array de correspondencia de atributos predeterminados
             foreach ($columnasConfig as $keyColumna => $valueColumna)
                 foreach (VariablesEnv::$varEnvMod as $keyVar => $keyColumnaConfig)
-                    $atributos[$keyColumna][$keyVar] = $valueColumna[$keyColumnaConfig];
+                    $atributos[$keyColumna][$keyVar] = (isset($valueColumna[$keyColumnaConfig])) ? $valueColumna[$keyColumnaConfig] : "";
         }
 
         unset($variables);

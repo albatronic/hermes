@@ -125,7 +125,7 @@ RecibosProveedores:
       aditional_filter:
         order: 0
         caption: Sucursal
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getSucursales
         type: select
         event: null

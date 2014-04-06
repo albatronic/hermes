@@ -147,7 +147,7 @@ Tpv:
       aditional_filter:
         order: 1
         caption: Sucursal
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getSucursales
         params:
         type: select
@@ -167,7 +167,7 @@ Tpv:
       aditional_filter:
         order: 2
         caption: Almacén
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getAlmacenes
         params: null
         type: select
@@ -200,7 +200,7 @@ Tpv:
       aditional_filter:
         order: 4
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params: 
         type: select
@@ -795,7 +795,7 @@ Tpv:
       aditional_filter:
         order: 29
         caption: Repartidor
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getRepartidores
         params: 
         type: select      

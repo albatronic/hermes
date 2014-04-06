@@ -106,7 +106,7 @@ MvtosAlmacen:
       aditional_filter:
         order: 4
         caption: Almacén
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getAlmacenes
         params: null
         type: select

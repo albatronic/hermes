@@ -138,12 +138,12 @@ class Controller {
 
         $this->values['atributos'] = $this->form->getAtributos($this->entity); //$this->values['permisos']['enCurso']['modulo']);
         // Poner la solapa activa del formulario
-        $this->values['solapaActiva'] = ($this->request['solapaActiva'] == '') ? '0' : $this->request['solapaActiva'];
+        $this->values['solapaActiva'] = (!isset($this->request['solapaActiva'])) ? '0' : $this->request['solapaActiva'];
         // Poner el acordeon activo de los campos comunes
-        $this->values['acordeonActivo'] = ($this->request['acordeonActivo'] == '') ? '0' : $this->request['acordeonActivo'];
+        $this->values['acordeonActivo'] = (!isset($this->request['acordeonActivo'])) ? '0' : $this->request['acordeonActivo'];
 
         // Registrar en el archivo log
-        if ($this->varEnvPro[log])
+        if (isset($this->varEnvPro['log']))
             Log::write($this->request);
     }
 

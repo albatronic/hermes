@@ -33,7 +33,7 @@ class Familias extends FamiliasEntity {
         }
 
         if ($default == TRUE) {
-            $rows[] = array('Id' => '', Value => ':: Indique un Valor');
+            $rows[] = array('Id' => '', 'Value' => ':: Indique un Valor');
             sort($rows);
         }
 

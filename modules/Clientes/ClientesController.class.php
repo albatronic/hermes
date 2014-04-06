@@ -29,6 +29,7 @@ class ClientesController extends Controller {
         $tabla = $cliente->getDataBaseName() . "." . $cliente->getTableName();
         $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
 
+        $filtro = "";
         if ($usuario->getEsComercial()) {
             $filtro = $tabla . ".IDComercial='" . $usuario->getIDAgente()->getId() . "'";
         }

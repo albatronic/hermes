@@ -116,7 +116,7 @@ PedidosCab:
       aditional_filter:
         order: 2
         caption: Sucursal
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getSucursales
         type: select
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
@@ -135,7 +135,7 @@ PedidosCab:
       aditional_filter:
         order: 3
         caption: Almacén
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getAlmacenes
         params: null
         type: select
@@ -155,7 +155,7 @@ PedidosCab:
       aditional_filter:
         order: 4
         caption: Usuario
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: fetchAll
         params: Nombre
         type: select

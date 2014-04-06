@@ -122,7 +122,7 @@ RecibosClientes:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 0, caption: Sucursal, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getSucursales, params: Descripcion, type: select, operator: '=', event: null }
+      aditional_filter: { order: 0, caption: Sucursal, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getSucursales, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDFactura:
       title: Factura
@@ -195,7 +195,7 @@ RecibosClientes:
       aditional_filter:
         order: 4
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params: RazonSocial
         type: select

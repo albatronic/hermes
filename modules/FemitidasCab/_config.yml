@@ -79,7 +79,7 @@ FemitidasCab:
       aditional_filter:
         order: 1
         caption: Sucursal
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getSucursales
         params: 
         type: select

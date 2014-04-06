@@ -76,7 +76,7 @@ ManufacCab:
       aditional_filter:
         order: 0
         caption: Almacén Origen
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getAlmacenes
         params: null
         type: select
@@ -105,7 +105,7 @@ ManufacCab:
       aditional_filter:
         order: 1
         caption: Almacén Destino
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getAlmacenes
         params: null
         type: select

@@ -414,7 +414,7 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select
@@ -505,7 +505,7 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select
@@ -722,7 +722,7 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select
@@ -920,11 +920,11 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select
-        default: '<?php echo $_SESSION['USER']['user']['Id'];?>'
+        default: '<?php echo $_SESSION['usuarioPortal']['Id'];?>'
       -
         field: DIA
         caption: Día
@@ -1434,7 +1434,7 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select
@@ -1468,7 +1468,7 @@ informes:
         caption: Cliente
         entity: Clientes
         method: fetchAll
-        params: '<?php echo $_SESSION['suc'],',',$_SESSION['USER']['user']['Id'];?>'
+        params: '<?php echo $_SESSION['suc'],',',$_SESSION['usuarioPortal']['Id'];?>'
         type: select
         default:
     columns:
@@ -1993,7 +1993,7 @@ informes:
       -
         field: COMERCIAL
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         params:
         type: select

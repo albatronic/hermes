@@ -54,7 +54,7 @@ $_SESSION['appPath'] = $app['path'];
 // ---------------------------------------------------------------
 // ACTIVAR EL AUTOLOADER DE CLASES Y FICHEROS A INCLUIR
 // ---------------------------------------------------------------
-define(APP_PATH, $_SERVER['DOCUMENT_ROOT'] . $app['path'] . "/");
+define("APP_PATH", $_SERVER['DOCUMENT_ROOT'] . $app['path'] . "/");
 include_once $app['framework'] . "Autoloader.class.php";
 Autoloader::setCacheFilePath(APP_PATH . 'tmp/class_path_cache.txt');
 Autoloader::excludeFolderNamesMatchingRegex('/^CVS|\..*$/');
@@ -136,7 +136,7 @@ if ($rq->isOldBrowser()) {
             $request = $rq->getParameters($app['path']);
             $request['METHOD'] = "GET";
             $controller = ucfirst($request[0]);
-            $action = $request[1];
+            $action = (isset($request[1])) ? $request[1] : "";
             break;
 
         case 'POST':

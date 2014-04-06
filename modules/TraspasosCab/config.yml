@@ -199,7 +199,7 @@ TraspasosCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 9, caption: Almacén Origen, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getAlmacenes, params: Descripcion, type: select, operator: '=', event: null }
+      aditional_filter: { order: 9, caption: Almacén Origen, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getAlmacenes, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAlmacenDestino:
       title: Almacén Destino
@@ -213,7 +213,7 @@ TraspasosCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 10, caption: Almacén Destino, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getAlmacenes, params: Descripcion, type: select, operator: '=', event: null }
+      aditional_filter: { order: 10, caption: Almacén Destino, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getAlmacenes, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAgencia:
       title: Agencia

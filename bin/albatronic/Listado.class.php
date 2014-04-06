@@ -16,6 +16,7 @@ class Listado {
      */
     public $filter = array();
     public $arrayQuery = array();
+    public $query;
 
     public function __construct(Form $form, $request) {
 
@@ -30,7 +31,7 @@ class Listado {
             case 'POST':
                 $this->filter['columnsSelected'] = $this->request['filter']['columnsSelected'];
                 $this->filter['valuesSelected'] = $this->request['filter']['valuesSelected'];
-                $this->filter['flags'] = $this->request['filter']['flags'];
+                $this->filter['flags'] = (isset($this->request['filter']['flags'])) ? $this->request['filter']['flags'] : '';
                 break;
             case 'GET':
                 $this->filter['columnsSelected'] = array();
@@ -70,8 +71,9 @@ class Listado {
         foreach ($this->filter['aditional'] as $key => $value) {
             if (($value['entity'] != '') and ($value['type'] == 'select')) {
                 $claseConId = explode(',', $value['entity']);
-                if (class_exists($claseConId[0]))
-                    $objeto = new $claseConId[0]($claseConId[1]);
+                if (class_exists($claseConId[0])) {
+                    $objeto = new $claseConId[0]((isset($claseConId[1])) ? $claseConId[1] : "");
+                }
                 $this->filter['aditional'][$key]['values'] = $objeto->{$value['method']}($value['params']);
                 //$this->filter['aditional'][$key]['values'][] = array('Id' => '', 'Value' => '** Todo **');
             }
@@ -122,7 +124,7 @@ class Listado {
     public function getArrayQuery() {
         return $this->arrayQuery;
     }
-    
+
     public function buildQuery() {
         $this->setQuery("
                 SELECT {$this->arrayQuery['SELECT']}
@@ -219,13 +221,15 @@ class Listado {
                     }
                 } else {
                     //El valor del filtro viene vacio pero puede ser check
-                    if ($this->filter['aditional'][$key]['type'] == "check") {
-                        $this->filter['valuesSelected'][$key] = '0';
-                        if ($filtro) {
-                            $filtro .=" AND ";
-                        }
+                    if (isset($this->filter['aditional'][$key])) {
+                        if ($this->filter['aditional'][$key]['type'] == "check") {
+                            $this->filter['valuesSelected'][$key] = '0';
+                            if ($filtro) {
+                                $filtro .=" AND ";
+                            }
 
-                        $filtro .= "(" . $this->form->getDataBaseName() . "." . $this->form->getTable() . "." . $value . " = '" . $this->filter['valuesSelected'][$key] . "')";
+                            $filtro .= "(" . $this->form->getDataBaseName() . "." . $this->form->getTable() . "." . $value . " = '" . $this->filter['valuesSelected'][$key] . "')";
+                        }
                     }
                 }
             }

@@ -73,7 +73,7 @@ class EntityManager {
                 $this->conecta();
             }
         } else {
-            if (count(self::$conection[$conection]) == 0) {
+            if (!isset(self::$conection[$conection])) {
                 if ($fileConfig == '') {
                     $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
                 }

@@ -59,7 +59,7 @@ RecibosClientes:
       aditional_filter:
         order: 0
         caption: Sucursal
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getSucursales
         type: select
         event: null
@@ -142,7 +142,7 @@ RecibosClientes:
       aditional_filter:
         order: 4
         caption: Comercial
-        entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>'
+        entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>'
         method: getComerciales
         type: select
         event: null

@@ -142,7 +142,7 @@ PstoCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 21, caption: Sucursal, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getSucursales, params: null, type: select, operator: '=', event: null }
+      aditional_filter: { order: 21, caption: Sucursal, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getSucursales, params: null, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAlmacen:
       title: Almacen
@@ -156,7 +156,7 @@ PstoCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 3, caption: Almacen, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
+      aditional_filter: { order: 3, caption: Almacen, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAgente:
       title: IDAgente
@@ -184,7 +184,7 @@ PstoCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 24, caption: Comercial, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getComerciales, params: 'none,none,1', type: select, operator: '=', event: null }
+      aditional_filter: { order: 24, caption: Comercial, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getComerciales, params: 'none,none,1', type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     Fecha:
       title: Fecha

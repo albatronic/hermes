@@ -102,7 +102,7 @@ ManufacCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 1, caption: Almacen Origen, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
+      aditional_filter: { order: 1, caption: Almacen Origen, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAlmacenDestino:
       title: Almacen Destino
@@ -116,7 +116,7 @@ ManufacCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 2, caption: Almacen Origen, entity: 'Agentes,<?php echo $_SESSION['USER']['user']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
+      aditional_filter: { order: 2, caption: Almacen Origen, entity: 'Agentes,<?php echo $_SESSION['usuarioPortal']['Id'];?>', method: getAlmacenes, params: null, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     FechaOrden:
       title: Fecha Orden

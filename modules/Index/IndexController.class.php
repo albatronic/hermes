@@ -192,12 +192,14 @@ class IndexController extends Controller {
                 $_SESSION['usuarioPortal']['alertaStock'] = $erp['alertaStock'];
 
                 // Establece los idiomas en base a la varible web del proyecto
+                /**
                 $langs = trim($_SESSION['VARIABLES']['WebPro']['globales']['lang']);
                 $_SESSION['idiomas']['disponibles'] = ($langs == '') ? array('0' => 'es') : explode(",", $langs);
 
                 if (!isset($_SESSION['idiomas']['actual'])) {
                     $_SESSION['idiomas']['actual'] = 0;
                 }
+                */
             } else {
                 $template = $this->entity . "/noLoged.html.twig";
             }

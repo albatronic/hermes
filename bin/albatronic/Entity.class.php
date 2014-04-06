@@ -675,7 +675,8 @@ class Entity {
         }
 
         //unset($this->_em);
-        return new $this($rows[0][$this->_primaryKeyName], $showDeleted);
+        $id = (isset($rows[0])) ? $rows[0][$this->_primaryKeyName] : '';
+        return new $this($id, $showDeleted);
     }
 
     /**
@@ -715,7 +716,7 @@ class Entity {
         }
 
         if ($default == TRUE) {
-            array_unshift($rows, array('Id' => '', Value => ':: Indique un Valor'));
+            array_unshift($rows, array('Id' => '', 'Value' => ':: Indique un Valor'));
         }
 
         return $rows;
