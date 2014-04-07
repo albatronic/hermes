@@ -36,6 +36,10 @@ class CpanVariablesEntity extends EntityComunes {
      */
     protected $Yml;
 
+    protected $Privacy = 2;
+    
+    protected $Publish = 1;
+    
     /**
      * Nombre de la conexion a la BD
      * @var string

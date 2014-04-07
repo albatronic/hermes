@@ -70,7 +70,8 @@
                     </td>
                     <td>
                         <input name="AlbaranesLineas[Descripcion]" id="AlbaranesLineas_Descripcion{{puntero}}" value="{{objeto.Descripcion}}" type="text" maxlength="255" style="width:200px;"  />
-                        <input name="AlbaranesLineas[Observations]" id="AlbaranesLineas_Observations{{puntero}}" value="{{objeto.Observations}}" type="hidden" />
+                        <textarea name="AlbaranesLineas[Observations]" id="AlbaranesLineas_Observations{{puntero}}" style="display:none;">{{objeto.Observations}}</textarea>                 
+                                      
                         <a href="#" alt="Descripción ampliada" title="Descripción ampliada" onclick="$('#dialogDescripAmpliada').dialog('open');$('#idArticulo').val($('#AlbaranesLineas_IDArticulo{{puntero}}').val());$('#idDestino').val('AlbaranesLineas_Observations{{puntero}}');$('#descripcionAmpliada').val('{{objeto.Observations}}');">
                             {% if objeto.Observations != ''%}+{% endif %}
                             <img src="{{app.path}}/images/botonreport.png" width="16px" height="16px">
