@@ -14,8 +14,8 @@ ErpAplicaciones:
   
 ErpModulos:
   # ADMON
-  - { Id: 1, CodigoApp: Admon, NombreModulo: Admon,       Nivel: 0, BelongsTo: 0,      Publish: 1, Titulo: Admon, Funcionalidades: AC }
-  - { Id: 2, CodigoApp: Admon, NombreModulo: PcaeEmpresas,  Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Empresa y Sucursales, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 1, CodigoApp: Admon, NombreModulo: Admon,       Nivel: 0, BelongsTo: 0,   Publish: 1, Titulo: Admon, Funcionalidades: AC }
+  - { Id: 2, CodigoApp: Admon, NombreModulo: PcaeEmpresas, Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Empresa y Sucursales, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 3, CodigoApp: Admon, NombreModulo: Perfiles,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Perfiles de usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 4, CodigoApp: Admon, NombreModulo: Agentes,     Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Usuarios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 5, CodigoApp: Admon, NombreModulo: TiposIva,    Nivel: 1, BelongsTo: 1,  Publish: 1, Titulo: Tipos de IVA, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -28,7 +28,7 @@ ErpModulos:
   - { Id: 12, CodigoApp: Admon, NombreModulo: Municipios,  Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Municipios, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { Id: 13, CodigoApp: Admon, NombreModulo: Monedas,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Monedas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { Id: 14, CodigoApp: Admon, NombreModulo: Idiomas,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Idiomas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { Id: 15, CodigoApp: Admon, NombreModulo: ZonasHorarias,     Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Zonas Horarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 15, CodigoApp: Admon, NombreModulo: ZonasHorarias, Nivel: 2, BelongsTo: 9,  Publish: 1, Titulo: Zonas Horarias, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # LOGÍSTICA
   - { Id: 20, CodigoApp: Logis, NombreModulo: Logis,            Nivel: 0, BelongsTo: 0,   Publish: 1, Titulo: Logística, Funcionalidades: AC }
@@ -70,6 +70,8 @@ ErpModulos:
   - { CodigoApp: Vtas, NombreModulo: Remesas,          Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Gestión de remesas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: RutasVentas,      Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Rutas de venta, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: RutasReparto,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Rutas de reparto, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 72, CodigoApp: Vtas, NombreModulo: Fidelizacion,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Fidelización, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Vtas, NombreModulo: Cupones,     Nivel: 2, BelongsTo: 72,  Publish: 1, Titulo: Cupones de descuento, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # ALMACEN
   - { Id: 80, CodigoApp: Almacen, NombreModulo: Almacen,              Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Almacén, Funcionalidades: AC }
@@ -192,6 +194,8 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Remesas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: RutasVentas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: RutasReparto, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 1, NombreModulo: Fidelizacion, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 1, NombreModulo: Cupones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
 
   - { IdPerfil: 1, NombreModulo: Almacen, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: Almacenes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  

@@ -61,7 +61,7 @@ class Articulos extends ArticulosEntity {
             $this->Etiqueta = substr($this->Descripcion, 0, 29);
 
         $id = parent::create();
-        if (($id) and ($this->Vigente == '1')) {
+        if (($id) and ( $this->Vigente == '1')) {
             $reglas = new CpanEsqueletoWeb();
             $reglas->aplicaReglasArticulo($id);
             unset($reglas);
@@ -346,7 +346,7 @@ class Articulos extends ArticulosEntity {
             $precios['Tarifa']['Descuento'] = 0;
         }
         $precios['Tarifa']['PrecioConImpuestos'] = $precios['Tarifa']['Precio'] * (1 + $this->getIDIva()->getIva() / 100);
-        
+
         // -------------------------------------------------------------------------
         //  Buscar promociones. En caso de haber promo para artículo y para familia,
         //  prevalecen los promos a nivel de artículo sobre
@@ -374,7 +374,7 @@ class Articulos extends ArticulosEntity {
         $hayPromo = false;
         if (count($promociones)) {
             // Recorro las promos-clientes a ver si hay alguna especifica para el cliente
-            while ((!$hayPromo) and (list(, $promocion) = each($promociones))) {
+            while ((!$hayPromo) and ( list(, $promocion) = each($promociones))) {
 
                 // El articulo está en promocion, ver si aplica al cliente
                 $promoCliente = new PromocionesClientes();
@@ -390,7 +390,7 @@ class Articulos extends ArticulosEntity {
             if (!$hayPromo) {
                 // Recorro los promos-clientes a ver si hay alguna para el grupo de clientes
                 reset($promociones);
-                while ((!$hayPromo) and (list(, $promocion) = each($promociones))) {
+                while ((!$hayPromo) and ( list(, $promocion) = each($promociones))) {
                     $promoCliente = new PromocionesClientes();
                     $filtro = "IDPromocion='{$promocion['IDPromocion']}' and (IDGrupo='{$objetoVenta->getIDCliente()->getIDGrupo()->getIDGrupo()}')";
                     $promoClientes = $promoCliente->cargaCondicion("Id,IdPromocion", $filtro);
@@ -468,7 +468,7 @@ class Articulos extends ArticulosEntity {
         // en el cambio de precio de venta o margen. Si no estuviera definido,
         // se respeta el PVP a costa del MARGEN
         $parametro = $_SESSION['usuarioPortal']['actuPrecios'];
-        if (($parametro != 'MARGEN') and ($parametro != 'PVP'))
+        if (($parametro != 'MARGEN') and ( $parametro != 'PVP'))
             $parametro = 'MARGEN';
 
         // Calculo el nuevo margen o el nuevo precio de venta (según el parámetro) sobre el PRECIO MEDIO DE COSTO
@@ -1014,5 +1014,3 @@ class Articulos extends ArticulosEntity {
     }
 
 }
-
-?>

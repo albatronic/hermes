@@ -218,15 +218,16 @@ class Controller {
                             if ($datos->valida($rules)) {
                                 $this->values['alertas'] = $datos->getAlertas();
                                 if ($datos->save()) {
-                                    if (count($metaDatos))
+                                    if (count($metaDatos)) {
                                         $this->saveMetaDatos($datos->getPrimaryKeyValue(), $metaDatos);
+                                    }
 
                                     if ($datos->getUrlTarget() == '') {
                                         $this->gestionUrlMeta($datos);
 
                                         // Salvar los campos Controller, action, template y parameters
                                         // del objeto CpanUrlAmigables asociado
-                                        if ($this->request['objetoUrlAmigable']) {
+                                        if ($this->request['objetoUrlAmigable']['Id'] != '') {
                                             $arrayUrlAmigable = $this->request['objetoUrlAmigable'];
                                             $objetoUrl = new CpanUrlAmigables($arrayUrlAmigable['Id']);
                                             $objetoUrl->setController($arrayUrlAmigable['Controller']);
@@ -241,9 +242,9 @@ class Controller {
                                         }
                                     }
 
-                                    // Si estoy en el idioma principal, tengo que
+                                    // Si estoy en el idioma principal y el módulo es traducible, tengo que
                                     // repercutir los cambios a los demás idiomas
-                                    if ($_SESSION['idiomas']['actual'] == '0')
+                                    if (($_SESSION['idiomas']['actual'] == '0') && ($this->varEnvMod['translatable'] == '1'))
                                         $this->ActualizaIdiomas($datos->getPrimaryKeyValue());
 
                                     // Si ex buscable, actualizar la tabla de búsquedas
@@ -722,8 +723,8 @@ class Controller {
                 case 'Yaml':
                     $this->values['export']['file'] = $this->listado->getYaml($this->request['formatoListado'], $aditionalFilter);
                     break;
-                case 'cvs':
-                    $this->values['export']['file'] = $this->listado->getCvs($this->request['formatoListado'], $aditionalFilter);
+                case 'csv':
+                    $this->values['export']['file'] = $this->listado->getCsv($this->request['formatoListado'], $aditionalFilter);
                     break;
             }
 

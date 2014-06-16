@@ -169,19 +169,22 @@ class RecibosClientesController extends Controller {
 
             $formaPago = new FormasPago($this->request['idFP']);
             $anotarEnCaja = ($formaPago->getAnotarEnCaja()->getIDTipo() == '1');
-
+            $estadoRecibo = $formaPago->getEstadoRecibo()->getIDTipo();
+            $cContable = $formaPago->getCContable();
+            
             $caja = new CajaArqueos();
 
             foreach ($this->request['RecibosClientes'] as $recibo) {
                 $objeto = new RecibosClientes($recibo['IDRecibo']);
                 $objeto->setVencimiento($this->request['fechaCobro']);
-                $objeto->setIDEstado($formaPago->getEstadoRecibo()->getIDTipo());
-                $objeto->setCContable($formaPago->getCContable());
+                $objeto->setIDEstado($estadoRecibo);
+                $objeto->setCContable($cContable);
                 if (($objeto->save()) and ($anotarEnCaja)) {
                     $caja->anotaEnCaja($objeto, $this->request['idFP']);
                 }
-                else
+                if (count($objeto->getErrores)>0) {
                     print_r($objeto->getErrores());
+                }
             }
             unset($objeto);
             unset($formaPago);

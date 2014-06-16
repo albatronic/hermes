@@ -96,7 +96,7 @@ class SepaXml19 {
         self::put("<Id>", 4);
         self::put("<OrgId>", 5);
         self::put("<Othr>", 6);
-        self::put("<Id>{$header['cif']}</Id>", 7);
+        self::put("<Id>{$header['identificadorPresentador']}</Id>", 7);
         self::put("</Othr>", 6);
         self::put("</OrgId>", 5);
         self::put("</Id>", 4);
@@ -140,7 +140,7 @@ class SepaXml19 {
         self::put("<Id>", 4);
         self::put("<PrvtId>", 5);
         self::put("<Othr>", 6);
-        self::put("<Id>ES00{$header['cif']}</Id>", 7);
+        self::put("<Id>{$header['identificadorPresentador']}</Id>", 7);
         self::put("<SchmeNm>", 7);
         self::put("<Prtry>SEPA</Prtry>", 8);
         self::put("</SchmeNm>", 7);

@@ -17,6 +17,23 @@ class Cuaderno19SepaXml extends Remesas {
         self::$parametros = $parametros;
     }
 
+    static function digitoControlPresentador($cif) {
+
+        $resultado = "";
+        for ($i = 0; $i < strlen($cif); $i++) {
+            $a = $cif[$i];
+            $b = (ord($a) > 64) ? ord($a) - 55 : $a;
+            $resultado .= $b;
+        }
+        
+        $digitoControl = 98 - bcmod($resultado, '97');
+        if (strlen($digitoControl) == 1) {
+            $digitoControl = '0' . $digitoControl;
+        }
+        
+        return $digitoControl;
+    }
+
     static function makeRemesa($parametros, $filtro) {
 
         self::$parametros = $parametros;
@@ -39,11 +56,13 @@ class Cuaderno19SepaXml extends Remesas {
                 'fecha' => date('Y-m-d') . "T" . date('H:i:s'),
                 'fechaCargo' => $fechaCargo,
                 'nRecibos' => $recibos['nRecibos'],
-                'total' => $recibos['importeTotal'],
+                'total' => number_format($recibos['importeTotal'],2),
                 'razonSocial' => $ordenante->getRazonSocial(),
                 'direccion1' => $ordenante->getDireccion(),
                 'direccion2' => $ordenante->getCodigoPostal() . " " . $ordenante->getIdMunicipio()->getMunicipio() . " " . $ordenante->getIdProvincia()->getProvincia(),
-                'cif' => $ordenante->getCif(),
+                'cif' => $ordenante->getCif(),              
+                'sufijo' => $ordenante->getSufijoRemesas(),
+                'identificadorPresentador' => "ES" . self::digitoControlPresentador($ordenante->getCif()."ES00") .$ordenante->getSufijoRemesas() . $ordenante->getCif(),
                 'iban' => $ordenante->getIban(),
                 'bic' => $ordenante->getBic(),
             ),
@@ -65,7 +84,7 @@ class Cuaderno19SepaXml extends Remesas {
         else
             $fp = fopen($archivo, "a");
 
-        $yml = sfYaml::dump($log,4);
+        $yml = sfYaml::dump($log, 4);
 
         fwrite($fp, $yml);
         fclose($fp);

@@ -17,7 +17,7 @@ class BolBoletinesController extends Controller {
         parent::__construct($request);
 
         $this->values['objetoController'] = $this;
-        
+
         switch ($this->request['METHOD']) {
             case 'GET':
                 $idBoletin = $this->request[2];
@@ -101,6 +101,7 @@ class BolBoletinesController extends Controller {
         unset($boletin);
         return $this->EditAction();
     }
+
 }
 
 ?>

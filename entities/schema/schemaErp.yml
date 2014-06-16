@@ -456,6 +456,16 @@ ErpContadores:
   index:
     Contador: { type: unique, columns: 'IDSucursal,IDTipo,Serie'}
 
+# Cupones de descuento
+ErpCupones:
+  comment: Cupones de descuento
+  columns:
+    Cupon:       { type: varchar(25), notnull: true, index: unique}    
+    NumeroUsos:  { type: int(4), notnull: true, default: 0 }
+    LimiteUsos:  { type: int(4), notnull: true, default: 0 }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+  relations:
+
 # Datafonos
 ErpDatafonos:
   comment: Datafonos

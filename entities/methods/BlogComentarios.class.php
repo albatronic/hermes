@@ -44,12 +44,36 @@ class BlogComentarios extends BlogComentariosEntity {
         return $rows;
     }
 
+    /**
+     * Devuelve el objeto asociado al comentario
+     * 
+     * @return \Entidad
+     */
     public function getObjetoAsociado() {
         if (class_exists($this->Entidad)) {
             return new $this->Entidad($this->IdEntidad);
         }
     }
 
+    /**
+     * Devuelve array de objetos \BlogComentarios
+     * de la entidad $entidad e $idEntidad
+     * 
+     * @param string $entidad
+     * @param integer $idEntidad
+     */
+    public function getComentatios($entidad,$idEntidad) {
+        
+        $array = array();
+        
+        $rows = $this->cargaCondicion("Id","Entidad='{$entidad}' AND IdEntidad='{$idEntidad}'","TiempoUnix DESC");
+        foreach($rows as $row) {
+            $array[] = new BlogComentarios($row['Id']);
+        }
+        
+        return $array;
+        
+    }
 }
 
 ?>

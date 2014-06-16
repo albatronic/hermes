@@ -78,6 +78,7 @@ class EntityManager {
                     $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
                 }
                 if (file_exists($fileConfig)) {
+                    //echo "busco config {$conection}<br/>";
                     $yaml = sfYaml::load($fileConfig);
                     // Si no se ha indicado el nombre de la conexión, se tomara la primera
                     //if ($conection == '')
@@ -92,8 +93,9 @@ class EntityManager {
             self::$user = self::$conection[$conection]['user'];
             self::$password = self::$conection[$conection]['password'];
             self::$dataBase = self::$conection[$conection]['database'];
-            if (is_null(self::$dbLinkInstance))
+            if (is_null(self::$dbLinkInstance)) {
                 $this->conecta();
+            }
         }
     }
 
@@ -107,6 +109,7 @@ class EntityManager {
 
         switch (self::$dbEngine) {
             case 'mysql':
+                //echo "me conecto ".self::$host."<br/>";
                 self::$dbLinkInstance = mysql_connect(self::$host, self::$user, self::$password);
                 if (is_resource(self::$dbLinkInstance)) {
                     mysql_select_db(self::$dataBase, self::$dbLinkInstance);
@@ -169,16 +172,18 @@ class EntityManager {
     public function query($query) {
         $this->result = null;
 
-        //$fp = fopen("log/queries.sql", "a");
-        //fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
-        //fclose($fp); 
-        
+        if ($_SESSION['VARIABLES']['EnvPro']['log'] == '1') {
+            $fp = fopen("log/queries.sql", "a");
+            fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
+            fclose($fp);
+        }
+
         switch (self::$dbEngine) {
             case 'mysql':
                 //mysql_select_db($this->getdataBase());
                 $this->result = mysql_query($query, self::$dbLinkInstance);
                 if (!$this->result)
-                    $this->setError("query");
+                    $this->setError("query", $query);
                 else
                     $this->affectedRows = mysql_affected_rows(self::$dbLinkInstance);
                 break;
@@ -188,7 +193,7 @@ class EntityManager {
                 $query = str_replace("`", "", $query);
                 $this->result = mssql_query($query, self::$dbLinkInstance);
                 if (!$this->result)
-                    $this->setError("query");
+                    $this->setError("query", $query);
                 else
                     $this->affectedRows = mysql_affected_rows(self::$dbLinkInstance);
                 break;
@@ -197,7 +202,7 @@ class EntityManager {
                 $query = str_replace("`", "", $query);
                 $this->result = ibase_query(self::$dbLinkInstance, $query);
                 if (!$this->result)
-                    $this->setError("query");
+                    $this->setError("query", $query);
                 else
                     $this->affectedRows = ibase_affected_rows(self::$dbLinkInstance);
                 break;
@@ -206,7 +211,7 @@ class EntityManager {
                 $query = str_replace("`", "", $query);
                 $this->result = pg_query(self::$dbLinkInstance, $query);
                 if (!$this->result)
-                    $this->setError("query");
+                    $this->setError("query", $query);
                 else
                     $this->affectedRows = pg_affected_rows(self::$dbLinkInstance);
                 break;
@@ -330,7 +335,7 @@ class EntityManager {
         switch (self::$dbEngine) {
             case 'mysql':
                 @mysql_data_seek($this->result, $rowNumber);
-                while (($row = mysql_fetch_array($this->result, MYSQL_ASSOC)) and ($nfilas < $limit)) {
+                while (($row = mysql_fetch_array($this->result, MYSQL_ASSOC)) and ( $nfilas < $limit)) {
                     $nfilas++;
                     $rows[] = $row;
                 }
@@ -346,6 +351,16 @@ class EntityManager {
                 //NO ESTA BIEN IMPLEMENTADO
                 while ($row = ibase_fetch_assoc($this->result))
                     $rows[] = $row;
+                break;
+
+            case 'pgsql':
+                $valores = explode(",", $limit);
+                if (count($valores) == 1) {
+                    $limit = "LIMIT {$valores[0]}";
+                } elseif (count($valores) == 2) {
+                    $limit = "LIMIT {$valores[1]} OFFSET {$valores[0]}";
+                }
+                $query = "{$select} WHERE {$filtro} ORDER BY {$orderBy} {$limit}";
                 break;
             default:
                 $this->setError("fetchResultLimit", "No se ha indicado el tipo de base de datos");
@@ -501,9 +516,9 @@ class EntityManager {
 
         $mensaje = "EntityManager [{$method}]: ";
 
-        if ($error != '')
+        if ($error != '') {
             $mensaje .= $error;
-        else {
+        } else {
             switch (self::$dbEngine) {
                 case 'mysql':
                     switch (mysql_errno()) {
@@ -522,6 +537,18 @@ class EntityManager {
             }
         }
 
+        // ESCRIBE EL ERROR EN EL LOG
+        $fp = fopen("log/error_query.log", "a");
+        if ($fp) {
+            fwrite($fp, $mensaje);
+            fclose($fp);
+        }
+
+        // ENVIA CORREO AL SUPER ADMINISTRADOR
+        $email = trim($_SESSION['VARIABLES']['EnvPro']['eMailSuperAdministrator']);
+        if ($email != '') {
+            mail($email, "Error query", $mensaje);
+        }
         $this->error[] = $mensaje;
     }
 
@@ -534,5 +561,3 @@ class EntityManager {
     }
 
 }
-
-?>

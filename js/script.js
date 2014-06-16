@@ -36,7 +36,30 @@ $(function(){
     });     
     $( "#tabs1" ).tabs(); 
     $( "#tabsMostrarEnMenu" ).tabs();
+    
+    /**
+     * Diálogo para el filtro avanzado
+     */
+    $( "#filtroAvanzado" ).dialog({
+        autoOpen: false,
+        width: 340,
+        //height: 420,
+        position: ['right','center'],
+        closeOnEscape: true,
+        show: 'slide',
+        resizable: false,
+        buttons: {
+            "Consultar" : function() {
+                $('#div_listado').html('<div class=ListadoAnimation><img src={{app.path}}/images/loadingAnimation.gif /></div>');
+                $('#formFiltroAvanzado').submit();
+                },
+            "Cancelar" : function(){
+                $(this).dialog('close');
+            }
 
+        }            
+    });
+        
     /**
      * Diálogo popup variables de entorno
      */

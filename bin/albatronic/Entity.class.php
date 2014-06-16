@@ -150,7 +150,7 @@ class Entity {
             // Compongo los valores iterando el objeto
             $values = '';
             foreach ($this as $key => $value) {
-                if ((substr($key, 0, 1) != '_') and ($key != $this->getPrimaryKeyName())) {
+                if ((substr($key, 0, 1) != '_') and ( $key != $this->getPrimaryKeyName())) {
                     if (is_null($value))
                         $values .= "`" . $key . "` = NULL,";
                     else
@@ -191,7 +191,7 @@ class Entity {
             foreach ($this as $key => $value) {
                 if (substr($key, 0, 1) != '_') {
                     $columns .= "`" . $key . "`,";
-                    if (( ($key == $this->getPrimaryKeyName()) and ($_SESSION['idiomas']['actual'] == 0)) or (is_null($value)))
+                    if (( ($key == $this->getPrimaryKeyName()) and ( $_SESSION['idiomas']['actual'] == 0)) or ( is_null($value)))
                         $values .= "NULL,";
                     else
                         $values .= "'" . mysql_real_escape_string($value, $this->_dbLink) . "',";
@@ -325,8 +325,8 @@ class Entity {
      * @param array $datos
      */
     public function bind(array $datos) {
-        foreach ($datos as $key => $value){
-            if (method_exists($this, "set{$key}")){
+        foreach ($datos as $key => $value) {
+            if (method_exists($this, "set{$key}")) {
                 $this->{"set$key"}($value);
             }
         }
@@ -463,7 +463,7 @@ class Entity {
 
         if ($this->getPrimaryKeyValue() != '') {
             // Estoy validando antes de actualizar
-            if (($this->IsSuper) and ($_SESSION['usuarioPortal']['IdPerfil'] != '1'))
+            if (($this->IsSuper) and ( $_SESSION['usuarioPortal']['IdPerfil'] != '1'))
                 $this->_errores[] = "No se puede modificar, es un valor reservado";
         }
 
@@ -504,12 +504,12 @@ class Entity {
 
         // No se puede borrar si el objeto es un valor predeterminado y el usuario
         // no es el super
-        if (($this->IsDefault) AND ($_SESSION['usuarioPortal']['IdPerfil'] != 1))
+        if (($this->IsDefault) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1))
             $this->_errores[] = "No se puede eliminar. Es un valor predeterminado";
 
         // No se puede borrar si el objeto es un valor SUPER y el usuario
         // no es el super
-        if (($this->IsSuper) AND ($_SESSION['usuarioPortal']['IdPerfil'] != 1))
+        if (($this->IsSuper) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1))
             $this->_errores[] = "No se puede eliminar. Es un valor reservado";
 
         // Validacion de integridad referencial respecto a entidades hijas
@@ -621,7 +621,7 @@ class Entity {
 
         return $filasAfectadas;
     }
-    
+
     /**
      * Ejecuta una sentencia SELECT sobre la entidad
      * 
@@ -629,12 +629,12 @@ class Entity {
      * @param string $condicion Condicion del where (sin el where)
      * @return int El número de filas afectadas
      */
-    public function querySelect($columnas, $condicion='1', $orden='') {
+    public function querySelect($columnas, $condicion = '1', $orden = '') {
 
         $rows = array();
 
-        $orden = ($orden == '') ? '': "ORDER BY {$orden}";
-        
+        $orden = ($orden == '') ? '' : "ORDER BY {$orden}";
+
         $this->conecta();
         if (is_resource($this->_dbLink)) {
 
@@ -1034,7 +1034,6 @@ class Entity {
         return $tiene;
     }
 
-
     /**
      * Devuelve un array de objetos relacionados
      * con la entidad/idEntidad en curso
@@ -1042,14 +1041,29 @@ class Entity {
      * @return array
      */
     public function getObjetosRelacionados() {
-        
+
         $relaciones = new CpanRelaciones();
         $objetos = $relaciones->getObjetosRelacionados($this->getClassName(), $this->getPrimaryKeyValue());
-        unset($relaciones); 
-        
+        unset($relaciones);
+
         return $objetos;
     }
-    
+
+    /**
+     * Devuelve array \BlogComentarios asociados
+     * a la entidad e idEntidad en curso
+     * 
+     * @return array Array de objetos comentarios
+     */
+    public function getComentarios() {
+
+        $comentarios = new BlogComentarios();
+        $array = $comentarios->getComentatios($this->getClassName(), $this->getPrimaryKeyValue());
+        unset($comentarios);
+
+        return $array;
+    }
+
     /**
      * Devuelve un array cuyo índice es el nombre de la propiedad
      * y el valor es el valor de dicha propiedad

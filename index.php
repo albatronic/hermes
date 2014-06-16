@@ -42,8 +42,6 @@ else
 $yaml = sfYaml::load('config/config.yml');
 $config = $yaml['config'];
 
-$_SESSION['export_types'] = $config['export_types'];
-
 $_SESSION['audit'] = $config['audit_mode'];
 
 $app = $config['app'];

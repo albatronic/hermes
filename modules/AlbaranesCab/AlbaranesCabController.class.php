@@ -97,20 +97,24 @@ class AlbaranesCabController extends Controller {
      *
      * @return array Template y values
      */
-    public function facturarAction() {
+    public function facturarAction($idAlbaran = '') {
         if ($this->values['permisos']['permisosModulo']['UP']) {
 
-            $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
+            if ($idAlbaran == '') {
+                $idAlbaran = $this->request['AlbaranesCab']['IDAlbaran'];
+            }
 
-            if (($datos->getIDEstado()->getIDTipo() == '2') and (!$datos->getIDFactura()->getIDFactura())) {
+            $datos = new AlbaranesCab($idAlbaran);
+
+            if (($datos->getIDEstado()->getIDTipo() == '2') and ( !$datos->getIDFactura()->getIDFactura())) {
                 $idSucursal = $datos->getIDSucursal()->getIDSucursal();
                 $contador = new Contadores();
                 $contador = $contador->dameContador($idSucursal, 2);
-                $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
+                $datos = new AlbaranesCab($idAlbaran);
                 $datos->facturar($contador);
                 $this->values['errores'] = $datos->getErrores();
                 $this->values['alertas'] = $datos->getAlertas();
-                $datos = new AlbaranesCab($this->request['AlbaranesCab']['IDAlbaran']);
+                $datos = new AlbaranesCab($idAlbaran);
                 unset($contador);
             } else
                 $this->values['errores'][] = "El albarán ya está facturado";
@@ -261,6 +265,74 @@ class AlbaranesCabController extends Controller {
         );
     }
 
-}
+    /**
+     * GENERA LOS ALBARANES Y FACTURAS DE MANTENIMIENTOS
+     * EN BASE A LOS INDICADO EN EL ARCHIVO CSV
+     * 
+     * @param string $fileCsv
+     */
+    public function mantenimientosAction($fileCsv = '') {
 
-?>
+        if ($fileCsv == '') {
+            $fileCsv = 'tmp/mantenimientos.csv';
+        }
+
+        $archivo = new Archivo($fileCsv);
+        $archivo->setColumnsDelimiter(";");
+        if ($archivo->open()) {
+            while (($linea = $archivo->readLine()) !== FALSE) {
+                $idSucursal = $linea[0];
+                $idAlmacen = $linea[1];
+                $idComercial = $linea[2];
+                $idCliente = $linea[3];
+                $codigoArticulo = $linea[4];
+                $unidades = $linea[5];
+                $precio = $linea[6];
+
+                $cliente = new Clientes($idCliente);
+                $direccionesEntrega = $cliente->getDireccionesEntrega();
+                $direcEntrega = $direccionesEntrega[0];
+
+                $albaran = new AlbaranesCab();
+                $albaran->setIDCliente($cliente->getIDCliente());
+                $albaran->setIDSucursal($idSucursal);
+                $albaran->setFecha(date("d-m-Y"));
+                $albaran->setIDDirec($direcEntrega->getIDDirec());
+                $albaran->setIDAlmacen($idAlmacen);
+                $albaran->setIDComercial($idComercial);
+                $albaran->setIDContador(2);
+                $albaran->setIDEstado(0);
+                $albaran->setIDFP($cliente->getIDFP()->getIDFP());
+                $idAlbaran = $albaran->create();
+                if ($idAlbaran) {
+                    $articulo = new Articulos();
+                    $articulo = $articulo->find("Codigo", $codigoArticulo);
+                    $lineas = new AlbaranesLineas();
+                    $lineas->setIDAlbaran($idAlbaran);
+                    $lineas->setIDArticulo($articulo->getIDArticulo());
+                    $lineas->setDescripcion($articulo->getDescripcion() . " Mes " . date("m Y"));
+                    $lineas->setUnidades($unidades);
+                    $lineas->setPrecio($precio);
+                    $lineas->setIva($articulo->getIDIva()->getIva());
+                    $lineas->setImporte($unidades * $precio);
+                    $ok = $lineas->create();
+                    if ($ok) {
+                        $albaran = new AlbaranesCab($idAlbaran);
+                        $albaran->confirma();
+                        if ($albaran->expide()) {
+                            $albaran = new AlbaranesCab($idAlbaran);
+                            $contador = new Contadores();
+                            $contador = $contador->dameContador($idSucursal, 2);
+                            $albaran->facturar($contador);
+                        }
+                    }
+                } else {
+                    $this->values['errores'][] = "No se ha podido crear el albarán para " . $cliente->getRazonSocial();
+                }
+            }
+        } else {
+            $this->values['errores'][] = "El fichero de importación " . $fileCsv . " no existe";
+        }
+    }
+
+}

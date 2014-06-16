@@ -33,7 +33,10 @@
         <li><a href="#caracteristicas">Características</a></li>
         <li><a href="#avisos">Avisos</a></li>          
         {% if datos.PrimaryKeyValue and datos.BelongsTo.PrimaryKeyValue == 0 %}
-        <li><a href="#divCombinaciones" id="combinaciones">Combinaciones</a></li>  
+            <li><a href="#divCombinaciones" id="combinaciones">Combinaciones</a></li>  
+            {% if values.varWebMod.especificas.permitirComentariosWeb == '1' %}
+                <li><a href="#divComentarios" id="comentarios">Comentarios</a></li>  
+            {% endif %}
         {% endif %}          
         {% if values.varEnvMod.showCommonFields == '1'  or user.IDPerfil.IDPerfil == '1' %}
         <li>
@@ -180,7 +183,12 @@
     </div>
         
     {% if datos.PrimaryKeyValue and datos.BelongsTo.PrimaryKeyValue == 0 %}
-        <div id="divCombinaciones"></div>  
+        <div id="divCombinaciones"></div>
+        {% if values.varWebMod.especificas.permitirComentariosWeb == '1' %}
+            <div id="divComentarios">
+                {% include '_global/comentariosBlog.html.twig' with {'comentarios': datos.getComentarios} %}
+            </div>
+        {% endif %}
     {% endif %} 
         
     {% include '_global/fieldsComunes.html.twig' %}
@@ -217,7 +225,7 @@ $( "#acordeonStock" ).accordion({
     header: "> div > h3",
     collapsible: true,
     autoHeight: false,
-    active: 0,
+    active: 0
 });
 
 $('#escandallo').click(function(){

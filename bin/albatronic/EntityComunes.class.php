@@ -601,7 +601,7 @@ class EntityComunes extends Entity {
 
     public function setPublishedAt($PublishedAt) {
         if ($PublishedAt != '0000-00-00 00:00:00') {
-            $date = new Fecha($PublishedAt,true);
+            $date = new Fecha($PublishedAt, true);
             $this->PublishedAt = $date->getFechaTime();
         } else {
             $this->PublishedAt = date('Y-m-d H:i:s');
@@ -620,13 +620,30 @@ class EntityComunes extends Entity {
         if ($ActiveFrom == '')
             $ActiveFrom = '0000-00-00 00:00:00';
 
-        $date = new Fecha($ActiveFrom,true);
+        $date = new Fecha($ActiveFrom, true);
         $this->ActiveFrom = $date->getFechaTime();
         unset($date);
     }
 
-    public function getActiveFrom() {
-        return ($this->ActiveFrom>0) ? date_format(date_create($this->ActiveFrom), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
+    public function getActiveFrom($formato = "ddmmaaaahhmmss") {
+
+        if ($this->ActiveFrom > 0) {
+            switch ($formato) {
+                case 'ddmmaaaahhmmss':
+                    $valor = date_format(date_create($this->ActiveFrom), 'd-m-Y H:i:s');
+                    break;
+                case 'aaaammdd':
+                    $valor = date_format(date_create($this->ActiveFrom), 'Y-m-d');
+            }
+        } else {
+            $valor = "00-00-0000 00:00:00";
+        }
+
+        return $valor;
+    }
+
+    public function getActiveFromXXX() {
+        return ($this->ActiveFrom > 0) ? date_format(date_create($this->ActiveFrom), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
     }
 
     public function setActiveTo($ActiveTo) {
@@ -636,13 +653,30 @@ class EntityComunes extends Entity {
         if ($ActiveTo == '')
             $ActiveTo = '0000-00-00 00:00:00';
 
-        $date = new Fecha($ActiveTo,true);
+        $date = new Fecha($ActiveTo, true);
         $this->ActiveTo = $date->getFechaTime();
         unset($date);
     }
 
-    public function getActiveTo() {
-        return ($this->ActiveTo>0) ? date_format(date_create($this->ActiveTo), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
+    public function getActiveTo($formato = "ddmmaaaahhmmss") {
+
+        if ($this->ActiveTo > 0) {
+            switch ($formato) {
+                case 'ddmmaaaahhmmss':
+                    $valor = date_format(date_create($this->ActiveTo), 'd-m-Y H:i:s');
+                    break;
+                case 'aaaammdd':
+                    $valor = date_format(date_create($this->ActiveTo), 'Y-m-d');
+            }
+        } else {
+            $valor = "00-00-0000 00:00:00";
+        }
+
+        return $valor;
+    }
+
+    public function getActiveToXXX() {
+        return ($this->ActiveTo > 0) ? date_format(date_create($this->ActiveTo), 'd-m-Y H:i:s') : '00-00-0000 00:00:00';
     }
 
     public function setUrlPrefix($UrlPrefix) {

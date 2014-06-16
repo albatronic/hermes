@@ -588,7 +588,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     }
                     unset($linFactura);
                 }
-            }
+            } else print_r($factura->getErrores ());
 
             if ($idFactura != 0) {
                 // Crear vencimientos

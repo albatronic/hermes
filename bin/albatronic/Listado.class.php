@@ -315,12 +315,15 @@ class Listado {
      * @return array Los componentes del listado
      */
     public function getAll($aditionalFilter = '') {
+        
+        $exportTypes = trim($_SESSION['VARIABLES']['EnvPro']['exportTypes']);
+        
         return array(
             'data' => $this->getData($aditionalFilter),
             'filter' => $this->getFilter(),
             'titles' => $this->getTitles(),
             'formatos' => $this->getFormatos(),
-            'export_types' => $_SESSION['export_types'],
+            'export_types' => (strlen($exportTypes) > 0) ? explode(",",$exportTypes) : array(),
         );
     }
 
@@ -480,7 +483,7 @@ class Listado {
             if (count($breakField)) {
                 // Instancio el objeto por el que se hace el break
                 $objetoBreak = $objeto->{"get$breakField[0]"}();
-                $valorActual = $objetoBreak->__toString();
+                $valorActual = (is_object($objetoBreak)) ? $objetoBreak->__toString() : $objetoBreak;
                 if ($valorAnterior != $valorActual) {
                     if ($valorAnterior != '') {
                         $this->pintaTotales($pdf, $parametros['columns'], $subTotales);
@@ -724,7 +727,7 @@ class Listado {
      * @param string $aditionalFilter
      * @return string $archivo El nombre completo (con la ruta) del archivo xml generado
      */
-    public function getCvs($idFormatoListado, $aditionalFilter = '') {
+    public function getCsv($idFormatoListado, $aditionalFilter = '') {
         set_time_limit(0);
 
         // Lee la configuracion del listado $idFormatoListado y
@@ -751,7 +754,7 @@ class Listado {
         // Primer Renglón con los títulos de las columnas
         $cvsString = "";
         foreach ($parametros['columns'] as $column)
-            $cvsString .= '"' . $column['title'] . '",';
+            $cvsString .= $column['title'] . ';';
         // Quito la última coma
         $cvsString = substr($cvsString, 0, -1);
         $cvsString .= "\n";
@@ -771,15 +774,16 @@ class Listado {
                 if ($formato)
                     $texto = sprintf($formato, $texto);
 
-                $cvsString .= '"' . $texto . '",';
+                $cvsString .= utf8_decode($texto) . ';';
             }
             // Quito la última coma
             $cvsString = substr($cvsString, 0, -1);
             $cvsString .= "\n";
         }
         unset($objeto);
+        
+        $archivo = "docs/docs" . $_SESSION['emp'] . "/cvs/" . md5(date('d-m-Y H:i:s')) . ".csv";
 
-        $archivo = "docs/docs" . $_SESSION['emp'] . "/cvs/" . md5(date('d-m-Y H:i:s')) . ".txt";
         $fp = @fopen($archivo, "w");
         if ($fp) {
             fwrite($fp, $cvsString);

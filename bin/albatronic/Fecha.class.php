@@ -55,8 +55,9 @@ class Fecha {
     public function __construct($fecha = '', $conTime = false) {
         $formatoCorrecto = 0;
 
-        if ($fecha == '')
+        if ($fecha == '') {
             $fecha = ($conTime) ? date('d-m-Y H:i:s') : date('d-m-Y');
+        }
    
         //Buscar en que formato viene la fecha. Lo indicará el valor del índice $i
         for ($i = 0; $i < count($this->plantilla); $i++) {

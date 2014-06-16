@@ -63,8 +63,8 @@ listados:
         formula: null
         format: null
       - 
-        title: Cta. Banco
-        field: CBanco
+        title: IBAN
+        field: IBAN
         length: 20
         align: L
         type: string
@@ -259,6 +259,80 @@ listados:
         title: Asto
         field: Asiento
         length: 4
+        align: R
+        type: integer
+        total: NO
+        formula: null
+        format: null
+  - 
+    title: Recibos X Remesa
+    order_by: ErpRecibosClientes.IDRemesa,Vencimiento ASC
+    break_field: IDRemesa
+    idPerfil: null
+    orientation: P
+    unit: mm
+    format: A4
+    margins: 10, 10, 15, 10
+    body_font: Courier, ,8
+    columns:
+      - 
+        title: Recibo
+        field: Recibo
+        length: 4
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: N.Factura
+        field: IDFactura
+        length: 10
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: Fecha
+        field: Fecha
+        length: 11
+        align: R
+        type: date
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: Fecha Vcto
+        field: Vencimiento
+        length: 11
+        align: R
+        type: date
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: Cliente
+        field: IDCliente
+        length: 32
+        align: L
+        type: string
+        total: NO
+        formula: null
+        format: null
+      - 
+        title: Importe
+        field: Importe
+        length: 10
+        align: R
+        type: decimal
+        total: YES
+        formula: null
+        format: null
+      - 
+        title: Remesa
+        field: IDRemesa
+        length: 20
         align: R
         type: integer
         total: NO

@@ -19,6 +19,7 @@
         <tr class='Titulos'>
             <td class='Item'>&nbsp;</td>            
             <td class='Item'>Contenido</td>
+            <td class='Item'>Título</td>
             <td class='Item'>Usuario</td> 
             <td class='Item'>Fecha</td>             
             <td class='Item'>Ip</td>   
@@ -36,8 +37,9 @@
                     <a>
                 </td>
                 <td class="item">{{objeto.Entidad}}</td>  
+                <td class="item">{{macro.recortaTexto(objeto.objetoAsociado,35)}}</td>  
                 <td class="item">{{objeto.Nombre}}</td> 
-                <td class="item">{{objeto.TiempoUnix|date('d-m-Y H:i:s')}}</td>                
+                <td class="item">{{objeto.TiempoUnix|date('d-m-Y H:i')}}</td>                
                 <td class="item">{{objeto.IpAddress}}</td>                                
                 <td class="item">{{ macro.actualizaColumna(values.controller,objeto.getPrimaryKeyValue,'Publish',objeto.Publish.IDTipo,'Publicar/Despublicar')}} </td>                                              
                 <td class="item">{{ macro.actualizaColumna(values.controller,objeto.getPrimaryKeyValue,'Checked',objeto.Checked.IDTipo,'Validar')}} </td>                                              
