@@ -1,19 +1,18 @@
 <?php
 
 /**
- * Define los tipos de promociones
+ * Define los tipos de cupones
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
  * @copyright Informática ALBATRONIC, SL
- * @since 19-nov-2011
+ * @since 17-Jun-2014
  *
  */
-class PromocionesTipos extends Tipos {
+class CuponesTipos extends Tipos {
 
     protected $tipos = array(
         array('Id' => '0', 'Value' => '% Dcto'),
-        array('Id' => '1', 'Value' => '% Margen'),
-        array('Id' => '2', 'Value' => 'Precio Neto'),
+        array('Id' => '1', 'Value' => 'Importe Neto'),
     );
 
 }

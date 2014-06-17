@@ -16,5 +16,3 @@ class TiposSeccionAlbumes extends Tipos {
     );
 
 }
-
-?>

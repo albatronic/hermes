@@ -460,9 +460,13 @@ ErpContadores:
 ErpCupones:
   comment: Cupones de descuento
   columns:
-    Cupon:       { type: varchar(25), notnull: true, index: unique}    
-    NumeroUsos:  { type: int(4), notnull: true, default: 0 }
-    LimiteUsos:  { type: int(4), notnull: true, default: 0 }
+    Cupon:          { type: varchar(25), notnull: true, index: unique}    
+    NumeroUsos:     { type: int(4), notnull: true, default: 0 }
+    LimiteUsos:     { type: int(4), notnull: true, default: 0 }
+    ImporteMinimo:  { type: decimal(2), notnull: true, default: 0 }
+    Tipo:           { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,CuponesTipos,IDTipo' }
+    Valor:          { type: decimal(2), notnull: true, default: 0 }
+    AplicaA:        { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,CuponesAplicaA,IDTipo' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
 

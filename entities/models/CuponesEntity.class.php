@@ -38,6 +38,30 @@ class CuponesEntity extends EntityComunes {
     protected $LimiteUsos = '0';
 
     /**
+     * @var integer
+     * @assert NotBlank(groups="ErpCupones")
+     */
+    protected $ImporteMinimo = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="ErpCupones")
+     */
+    protected $Tipo = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="ErpCupones")
+     */
+    protected $Valor = '0';
+
+    /**
+     * @var integer
+     * @assert NotBlank(groups="ErpCupones")
+     */
+    protected $AplicaA = '0';
+
+    /**
      * Nombre de la conexion a la BD
      * @var string
      */
@@ -117,7 +141,41 @@ class CuponesEntity extends EntityComunes {
         return $this->LimiteUsos;
     }
 
+    public function setImporteMinimo($ImporteMinimo) {
+        $this->ImporteMinimo = $ImporteMinimo;
+    }
+
+    public function getImporteMinimo() {
+        return $this->ImporteMinimo;
+    }
+
+    public function setValor($Valor) {
+        $this->Valor = $Valor;
+    }
+
+    public function getValor() {
+        return $this->Valor;
+    }
+
+    public function setTipo($Tipo) {
+        $this->Tipo = $Tipo;
+    }
+
+    public function getTipo() {
+        if (!($this->Tipo instanceof CuponesTipos))
+            $this->Tipo = new CuponesTipos($this->Tipo);
+        return $this->Tipo;
+    }
+
+    public function setAplicaA($AplicaA) {
+        $this->AplicaA = $AplicaA;
+    }
+
+    public function getAplicaA() {
+        if (!($this->AplicaA instanceof CuponesAplicaA))
+            $this->AplicaA = new CuponesAplicaA($this->AplicaA);
+        return $this->AplicaA;
+    }    
 }
 
 // END class ErpCupones
-?>

@@ -36,5 +36,3 @@ class TramosKilos extends Tipos {
     );
 
 }
-
-?>

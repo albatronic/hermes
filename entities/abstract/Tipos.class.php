@@ -14,6 +14,7 @@
  * @copyright Informatica ALBATRONIC, SL
  * @since 08.06.2011
  */
+
 class Tipos {
 
     private $IDTipo;
@@ -44,8 +45,9 @@ class Tipos {
      */
     public function fetchAll($default = true) {
 
-        if ($default)
+        if ($default) {
             $this->tipos[] = array('Id' => '', 'Value' => ':: Indique valor');
+        }
 
         return $this->tipos;
     }

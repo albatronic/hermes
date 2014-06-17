@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Define los Roles de Usuarios
  *
@@ -7,7 +8,6 @@
  * @since 19-nov-2011
  *
  */
-
 class Roles extends Tipos {
 
     protected $tipos = array(
@@ -17,5 +17,5 @@ class Roles extends Tipos {
         array('Id' => '3', 'Value' => 'Almacenero'),
         array('Id' => '9', 'Value' => 'Super'),
     );
+
 }
-?>

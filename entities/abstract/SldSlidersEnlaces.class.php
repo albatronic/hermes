@@ -14,5 +14,3 @@ class SldSlidersEnlaces extends Tipos {
         array('Id' => 'GconContenidos', 'Value' => 'Contenidos',),      
     );
 }
-
-?>
