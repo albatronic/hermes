@@ -1500,12 +1500,13 @@ ErpZonasTransporte:
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:    
   
-# ESQUELETO WEB TIENDAS ONLINES
-CpanEsqueletoWeb:
-  comment: Esqueleto de zonas de la web
+# ESCAPARATES WEB TIENDAS ONLINES
+ErpEscaparates:
+  comment: Escaparates de la web
   columns:
     Controller:   { type: string(50), notnull: true, index: index }
     Zona:         { type: integer(2), notnull: true, default: 0 }
+    IDLote:       { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,LotesWeb,Id' }
     IDEstado:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ArticulosEstados,Id' }
     IDFabricante: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Fabricantes,Id' }
     IDCategoria:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Familias,Id' }
@@ -1517,6 +1518,19 @@ CpanEsqueletoWeb:
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:   
 
+# LOTES DE ARTICULOS PARA LA WEB
+# LOS ARTÍCULOS ASOCIADOS AL LOTE SE GUARDAN EN FORMATO YML
+# EN LA COLUMNA OBSERVATIONS
+ErpLotesWeb:
+  comment: Lotes de articulos para la web
+  columns:
+    Id:        { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}  
+    Titulo:    { type: string(255), notnull: true }
+    Subtitulo: { type: string(255), notnull: false }
+    Resumen:   { type: string(500), notnull: false }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+  relations:  
+      
 ErpPerfiles:
   comment: Perfiles de usuarios
   columns:

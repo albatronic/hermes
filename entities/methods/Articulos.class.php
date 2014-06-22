@@ -62,7 +62,7 @@ class Articulos extends ArticulosEntity {
 
         $id = parent::create();
         if (($id) and ( $this->Vigente == '1')) {
-            $reglas = new CpanEsqueletoWeb();
+            $reglas = new Escaparates();
             $reglas->aplicaReglasArticulo($id);
             unset($reglas);
         }
@@ -76,7 +76,7 @@ class Articulos extends ArticulosEntity {
      */
     public function save() {
 
-        $reglas = new CpanEsqueletoWeb();
+        $reglas = new Escaparates();
         // reglas antes de guardar
         $reglasAntes = $reglas->getReglasArticulo($this->IDArticulo);
 
@@ -97,7 +97,7 @@ class Articulos extends ArticulosEntity {
                 unset($ordenes);
                 // Aplico las reglas de ordenes 
                 if ($this->Vigente == '1') {
-                    $reglas = new CpanEsqueletoWeb();
+                    $reglas = new Escaparates();
                     $reglas->aplicaReglasArticulo($this->IDArticulo);
                     unset($reglas);
                 }

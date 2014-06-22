@@ -94,10 +94,15 @@ class OrdenesArticulos extends OrdenesArticulosEntity {
 
         $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
+            
+            // Condición de vigencia
+            $ahora = date("Y-m-d H:i:s");
+            $filtro = "(a.Deleted='0') AND (a.Publish='1') AND (a.ActiveFrom<='{$ahora}') AND ( (a.ActiveTo>='{$ahora}') or (a.ActiveTo='0000-00-00 00:00:00') )";
+
             $query = "
-                SELECT a.Id as Id
+                SELECT a.IDArticulo as Id
                 FROM {$em->getDataBase()}.ErpOrdenesArticulos r, {$em->getDataBase()}.ErpArticulos a
-                WHERE r.IDRegla='{$idRegla}' AND r.IDArticulo=a.Id AND a.Publish='1' AND a.Vigente='1' AND a.Deleted='0'
+                WHERE r.IDRegla='{$idRegla}' AND r.IDArticulo=a.IDArticulo AND {$filtroAdicional} AND a.Vigente='1' AND {$filtro}
                 ORDER BY r.SortOrder ASC
                 LIMIT {$nItems}";
             $em->query($query);

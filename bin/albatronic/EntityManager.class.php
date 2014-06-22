@@ -172,7 +172,7 @@ class EntityManager {
     public function query($query) {
         $this->result = null;
 
-        if ($_SESSION['VARIABLES']['EnvPro']['log'] == '1') {
+        if ($_SESSION['VARIABLES']['EnvPro']['log'] === '1') {
             $fp = fopen("log/queries.sql", "a");
             fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
             fclose($fp);
@@ -540,7 +540,7 @@ class EntityManager {
         // ESCRIBE EL ERROR EN EL LOG
         $fp = fopen("log/error_query.log", "a");
         if ($fp) {
-            fwrite($fp, $mensaje);
+            fwrite($fp, $mensaje . "/n");
             fclose($fp);
         }
 

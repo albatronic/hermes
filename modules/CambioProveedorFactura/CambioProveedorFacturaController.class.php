@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Description of CambioClienteFacturaController
+ * Description of CambioProveedorFacturaController
  *
  * @author Sergio Pérez <sergio.perez@albatronic.com>
  * @copyright Informática ALBATRONIC, SL
- * @since 22-Noviembre-2012
+ * @since 29-Mayo-2014
  *
  */
-class CambioClienteFacturaController extends Controller {
+class CambioProveedorFacturaController extends Controller {
 
-    protected $entity = "CambioClienteFactura";
+    protected $entity = "CambioProveedorFactura";
     protected $parentEntity = "";
 
     public function __construct($request) {
@@ -56,7 +56,7 @@ class CambioClienteFacturaController extends Controller {
     }
 
     /**
-     * Busca un factura emitidad por número de factura
+     * Busca un factura recibida por número de factura
      * @return array
      */
     public function BuscarAction() {
@@ -64,12 +64,12 @@ class CambioClienteFacturaController extends Controller {
         switch ($this->request["METHOD"]) {
             case 'POST':
                 if ($this->values['permisos']['permisosModulo']['UP']) {
-                    $fEmitida = new FemitidasCab();
+                    $fEmitida = new FrecibidasCab();
                     $rows = $fEmitida->cargaCondicion('IDFactura,Asiento', "NumeroFactura='{$this->request['numeroFactura']}'");
                     unset($fEmitida);
 
                     if ($rows[0]['IDFactura']) {
-                        $this->values['factura'] = new FemitidasCab($rows[0]['IDFactura']);
+                        $this->values['factura'] = new FrecibidasCab($rows[0]['IDFactura']);
                     } else {
                         $this->values['errores'][] = "No existe esa factura";
                     }
@@ -93,14 +93,12 @@ class CambioClienteFacturaController extends Controller {
         switch ($this->request["METHOD"]) {
             case 'POST':
                 if ($this->values['permisos']['permisosModulo']['UP']) {
-                    if ($this->valida()) {
-                        $this->cambiarCliente();
-                    }
+                    if ($this->valida())
+                        $this->cambiarProveedor();
 
                     return $this->IndexAction();
-                } else {
+                } else
                     $template = "_global/forbiden.html.twig";
-                }
 
                 break;
 
@@ -113,55 +111,69 @@ class CambioClienteFacturaController extends Controller {
     }
 
     /**
-     * Realiza el cambio de cliente en la factura, albaranes y recibos
+     * Realiza el cambio de proveedor en la factura, pedidos y recibos
      */
-    private function cambiarCliente() {
+    private function cambiarProveedor() {
 
         $ok = false;
 
-        // Cambiar factura
-        $femitidas = new FemitidasCab();
-        $filtro = "NumeroFactura='{$this->request['numeroFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-        $okFactura = $femitidas->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
-        $this->values['errores'] = $femitidas->getErrores();
+        $em = new EntityManager($this->form->getConection());
+        if ($em->getDbLink()) {
 
-        if ($okFactura) {
+            // Cambiar factura
+            $filtro = "NumeroFactura='{$this->request['numeroFactura']}' AND IDProveedor='{$this->request['idProveedorAnterior']}'";
+            $query = "update femitidas_cab set IDProveedor='{$this->request['idProveedorNuevo']}' where {$filtro}";
+            $em->query($query);
+            $this->values['errores'] = $em->getError();
+            $okFactura = $em->getAffectedRows();
 
-            $this->values['mensaje'][] = "Se ha cambiado " . $okFactura . " factura.";
-            // Cambiar albaran/es
-            $albaranes = new AlbaranesCab();
-            $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-            $nAlbaranes = $albaranes->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
-            $this->values['errores'] = $albaranes->getErrores();
-            $this->values['mensaje'][] = "Se han cambiado " . $nAlbaranes . " albaranes.";
-
-            // Cambiar recibos
-            $recibos = new RecibosClientes();
-            $filtro = "IDFactura='{$this->request['idFactura']}' AND IDCliente='{$this->request['idClienteAnterior']}'";
-            $nRecibos = $recibos->queryUpdate(array("IDCliente" => $this->request['idClienteNuevo']), $filtro);
-            $this->values['errores'] = $recibos->getErrores();
-            $this->values['mensaje'][] = "Se han cambiado " . $nRecibos . " recibos.";
+            if ($okFactura) {
+                
+                $this->values['mensaje'][] = "Se ha cambiado " . $okFactura . " factura.";
+                // Cambiar pedido/s
+                $filtro = "IDFactura='{$this->request['idFactura']}' AND IDProveedor='{$this->request['idProveedorAnterior']}'";
+                $query = "update pedidos_cab set IDProveedor='{$this->request['idProveedorNuevo']}' where {$filtro}";
+                $em->query($query);
+                $this->values['errores'] = $em->getError();
+                $nPedidos = $em->getAffectedRows();
+                $this->values['mensaje'][] = "Se han cambiado " . $nPedidos . " albaranes.";
+                
+                // Cambiar recibos
+                $filtro = "IDFactura='{$this->request['idFactura']}' AND IDProveedor='{$this->request['idProveedorAnterior']}'";
+                $query = "update recibos_proveedors set IDProveedor='{$this->request['idProveedorNuevo']}' where {$filtro}";
+                $em->query($query);
+                $this->values['errores'] = $em->getError();
+                $nRecibos = $em->getAffectedRows();
+                $this->values['mensaje'][] = "Se han cambiado " . $nRecibos . " recibos.";
+                
+            }
         }
+
+        $em->desConecta();
+        unset($em);
     }
 
     /**
      * Realiza la validación previa antes del cambio.
      * 
-     * Concretamente que el cliente origen y el destino
+     * Concretamente que el proveedor origen y el destino
      * no sean el mismo
      * 
      * @return boolean
      */
     private function valida() {
 
-        if ($this->request['idClienteNuevo'] == '')
-            $this->values['errores'][] = "Debe indicar el cliente nuevo";
+        if ($this->request['idProveedorNuevo'] == '')
+            $this->values['errores'][] = "Debe indicar el proveedor nuevo";
         if ($this->request['numeroFactura'] == '')
             $this->values['errores'][] = "Debe indicar el número de factura";
-        if ($this->request['idClienteNuevo'] == $this->request['idClienteAnterior'])
-            $this->values['errores'][] = "El cliente origen y destino debe ser diferente";
+        if ($this->request['idProveedorNuevo'] == $this->request['idProveedorAnterior'])
+            $this->values['errores'][] = "El proveedor origen y destino debe ser diferente";
 
         return (count($this->values['errores']) == 0);
+
     }
 
 }
+
+?>

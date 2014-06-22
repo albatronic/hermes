@@ -1,16 +1,16 @@
 <?php
 
 /**
- * CONTROLLER FOR CpanEsqueletoWeb
+ * CONTROLLER FOR Escaparates
  * @author: Sergio Perez <sergio.perez@albatronic.com>
  * @copyright: INFORMATICA ALBATRONIC SL 
  * @date 07.02.2013 15:32:56
 
  * Extiende a la clase controller
  */
-class CpanEsqueletoWebController extends Controller {
+class EscaparatesController extends Controller {
 
-    protected $entity = "CpanEsqueletoWeb";
+    protected $entity = "Escaparates";
     protected $parentEntity = "";
 
     public function __construct($request) {
@@ -115,7 +115,7 @@ class CpanEsqueletoWebController extends Controller {
      */
     public function listAction($aditionalFilter = '') {
 
-        $item = new CpanEsqueletoWeb();
+        $item = new Escaparates();
 
         $items[] = $item;
 
@@ -123,7 +123,7 @@ class CpanEsqueletoWebController extends Controller {
         unset($item);
 
         foreach ($rows as $row)
-            $items[] = new CpanEsqueletoWeb($row['Id']);
+            $items[] = new Escaparates($row['Id']);
 
         $this->values['zonas'] = $items;
 
@@ -134,5 +134,3 @@ class CpanEsqueletoWebController extends Controller {
     }
 
 }
-
-?>

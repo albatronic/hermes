@@ -1,12 +1,12 @@
-# Module: CpanEsqueletoWeb
-# Document : modules/CpanEsqueletoWeb/config.yml
+# Module: Escaparates
+# Document : modules/Escaparates/config.yml
 #
 # @author: Sergio Pérez <sergio.perez@albatronic.com>
 # @copyright: Informática ALBATRONIC SL
 # @date 07.02.2013 15:32:56
 #
 ---
-CpanEsqueletoWeb:
+Escaparates:
   app: 'Cpan'
   isModuleRoot: 0
   linkModule:
@@ -35,7 +35,7 @@ CpanEsqueletoWeb:
   fieldGeneratorUrlFriendly: Controller
   metatagTitleManagement: true
   fieldGeneratorMetatagTitle: Controller
-  controller: CpanEsqueletoWeb
+  controller: Escaparates
   action: Index
   template: index.html.twig
   parametros: ''
@@ -46,13 +46,13 @@ CpanEsqueletoWeb:
   permission_control: YES
   favourite_control: NO
   help_file: help.html.twig
-  title: Esqueleto Web
-  id_video: cpanesqueletoweb
+  title: Escaparates Web
+  id_video: escaparetes
   url_video: null
   feature_list: YES
   conection: ''
-  entity: CpanEsqueletoWeb
-  table: CpanEsqueletoWeb
+  entity: Escaparates
+  table: Escaparates
   primarykey: Id
   linkBy: ''
   records_per_page: 15
@@ -107,8 +107,8 @@ CpanEsqueletoWeb:
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '2', min: null, max: null, message: 'Valor Requerido' }
-    IDEstado:
-      title: IDEstado
+    IDLote:
+      title: Lote
       filter: NO
       list: NO
       visible: true
@@ -117,7 +117,19 @@ CpanEsqueletoWeb:
       help: null
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
-      #aditional_filter: { order: 1, caption: IDEstado, entity: ErpArticulosEstados, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      #aditional_filter: { order: 1, caption: Lote, entity: LotesWeb, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }      
+    IDEstado:
+      title: Estado
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: '0'
+      help: null
+      permission: null
+      link: { route: null, param: null, title: null, target: null, link: null }
+      #aditional_filter: { order: 1, caption: IDEstado, entity: ArticulosEstados, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDFabricante:
       title: IDFabricante

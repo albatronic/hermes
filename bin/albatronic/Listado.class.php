@@ -287,7 +287,10 @@ class Listado {
             $this->filter['pages'] ++;
         $offset = ($this->filter['page'] - 1) * $this->filter['recordsPerPage'];
 
-        $rows = $em->fetchResultLimit($this->filter['recordsPerPage'], $offset);
+        $query = $this->query . " LIMIT {$offset},{$this->filter['recordsPerPage']}";
+        $em->query($query);
+        //$rows = $em->fetchResultLimit($this->filter['recordsPerPage'], $offset);
+        $rows = $em->fetchResult();
         $em->desConecta();
         unset($em);
 

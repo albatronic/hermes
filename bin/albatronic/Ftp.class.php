@@ -75,7 +75,7 @@ class Ftp {
             $ok = $this->chdir($targetFolder);
 
             if (!$ok) {
-                Archivo::creaCarpeta($_SERVER['DOCUMENT_ROOT'] . "/" . $targetFolder);
+                $this->creaCarpeta($targetFolder);
                 $ok = $this->chdir($targetFolder);
             }
 
@@ -92,6 +92,41 @@ class Ftp {
         return (count($this->errores) == 0);
     }
 
+    /**
+     * Crear de forma recursiva las carpetas indicadas en $path
+     * 
+     * @param string $path
+     */
+    public function creaCarpeta($path) {
+
+        $carpetas = explode("/", $path);
+        foreach ($carpetas as $key => $carpeta) {
+            if (!$this->chdir($carpeta)) {
+                $this->mkdir($carpeta);
+                //chmod($carpeta, 0775);
+            }
+        }
+    }
+    
+    /**
+     * Comprueba si el archivo $fileName existe
+     * en el servidor. El archivo se busca a partir
+     * de FtpFolder indicado en los datos de conexión ftp
+     * de la configuración del proyecto.
+     * 
+     * @param string $fileName
+     * @return boolean
+     */
+    public function fileExists($fileName) {
+        $ok = false;
+
+        if ($this->connectId) {
+            $ok = (ftp_size($this->connectId, $_SESSION['project']['ftp']['folder'] . "/" . $fileName) != -1);
+        }
+
+        return $ok;
+    }
+    
     /**
      * Descarga un archivo desde el servidor FTP y lo copia en
      * un archivo local

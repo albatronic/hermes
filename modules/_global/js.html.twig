@@ -2,7 +2,7 @@
 <script type="text/javascript" src="{{app.path}}/js/jquery-ui-1.10.2.custom.min.js"></script>
 <script type="text/javascript" src="{{app.path}}/js/script.min.js"></script>  
 <script type="text/javascript" src="{{app.path}}/js/thickbox.min.js"></script>
-<script type="text/javascript" src="{{app.path}}/js/tiny_mce/tiny_mce.min.js"></script>           
+<script type="text/javascript" src="{{app.path}}/js/tiny_mce/tiny_mce.js"></script>           
 
 <script type="text/javascript">
 tinyMCE.init({
@@ -25,7 +25,7 @@ tinyMCE.init({
         theme_advanced_resizing : true,
 
         // Example content CSS (should be your site CSS)
-        content_css : "css/content.css",
+        //content_css : "{{app.path}}/css/content.css",
 
         // Drop lists for link/image/media/template dialogs
         template_external_list_url : "lists/template_list.js",

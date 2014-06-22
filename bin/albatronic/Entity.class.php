@@ -1038,12 +1038,13 @@ class Entity {
      * Devuelve un array de objetos relacionados
      * con la entidad/idEntidad en curso
      * 
+     * @param string $entidadDestino EL nombre de la entidad destino. Por defecto todas.
      * @return array
      */
-    public function getObjetosRelacionados() {
+    public function getObjetosRelacionados($entidadDestino = "") {
 
         $relaciones = new CpanRelaciones();
-        $objetos = $relaciones->getObjetosRelacionados($this->getClassName(), $this->getPrimaryKeyValue());
+        $objetos = $relaciones->getObjetosRelacionados($this->getClassName(), $this->getPrimaryKeyValue(), $entidadDestino);
         unset($relaciones);
 
         return $objetos;
@@ -1299,5 +1300,3 @@ class Entity {
     }
 
 }
-
-?>

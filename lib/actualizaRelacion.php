@@ -73,4 +73,3 @@ unset($relacion);
 $tag = "";
 
 echo $tag;
-?>

@@ -26,15 +26,15 @@
         {% include '_global/alertas.html.twig' with {'alertas': values.alertas} %}
 
 
-        {% set hayListaValores = (values.datos.listaValores is iterable) %}
+        {% set hayListaValores = (values.d.listaValores is iterable) %}
 
-        {% for variable,valor in values.datos %}
+        {% for variable,valor in values.d %}
             {% if variable != 'listaValores' %}
 
             {% if ( (hayListaValores and (variable == 'default') ) or ( (variable == 'visible') or (variable == 'updatable') or (variable == 'translatable') or (variable == 'searchable') or (variable == 'editorTiny') or (variable == 'filter') or (variable == 'list') ) ) %}
 
                 {% if (variable == 'default') %}
-                    {% set listaValores = values.datos.listaValores %}
+                    {% set listaValores = values.d.listaValores %}
                     {% set tipoTag = 'select' %}
                 {% else %}
                     {% set listaValores = ValoresSN %}
@@ -45,8 +45,8 @@
                     {{ macro.select(
                     {'caption':variable,'visible':'1','updatable':'1','varEnv':'0'},
                     'Etiqueta',
-                    'datos['~variable~']',
-                    'datos_'~ variable,
+                    'd['~variable~']',
+                    'd_'~ variable,
                     none,
                     valor,
                     listaValores,
@@ -58,8 +58,8 @@
                     {'caption':variable,'visible':'1','updatable':'1','varEnv':'0'},
                     'Etiqueta',
                     'checkbox',
-                    'datos['~variable~']',
-                    'datos_'~ variable,
+                    'd['~variable~']',
+                    'd_'~ variable,
                     valor,
                     '255',
                     'CampoTextoCorto'
@@ -72,8 +72,8 @@
                     {'caption':variable,'visible':'1','updatable':'1','varEnv':'0'},
                     'Etiqueta',
                     'text',
-                    'datos['~variable~']',
-                    'datos_'~ variable,
+                    'd['~variable~']',
+                    'd_'~ variable,
                     valor,
                     '255',
                     'CampoTextoMedio'

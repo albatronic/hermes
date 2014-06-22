@@ -7,57 +7,63 @@
  */
 
 /**
- * @orm:Entity(CpanEsqueletoWeb)
+ * @orm:Entity(Escaparates)
  */
-class CpanEsqueletoWebEntity extends EntityComunes {
+class EscaparatesEntity extends EntityComunes {
 
     /**
      * @orm GeneratedValue
      * @orm Id
      * @var integer
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $Id;
 
     /**
      * @var string
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $Controller;
 
     /**
      * @var integer
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $Zona = '0';
 
     /**
+     * @var entities\ErpLotesWeb
+     * @assert NotBlank(groups="Escaparates")
+     */
+    protected $IDLote = '0';
+
+    /**
      * @var entities\ErpArticulosEstados
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $IDEstado = '0';
 
     /**
      * @var entities\ErpMarcas
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $IDFabricante = '0';
 
     /**
      * @var entities\ErpFamilias
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $IDCategoria = '0';
 
     /**
      * @var entities\ErpFamilias
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $IDFamilia = '0';
 
     /**
      * @var entities\ErpFamilias
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $IDSubfamilia = '0';
 
@@ -68,13 +74,13 @@ class CpanEsqueletoWebEntity extends EntityComunes {
 
     /**
      * @var integer
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $NItems = '0';
 
     /**
      * @var integer
-     * @assert NotBlank(groups="CpanEsqueletoWeb")
+     * @assert NotBlank(groups="Escaparates")
      */
     protected $ItemsPagina = '0';
 
@@ -88,7 +94,7 @@ class CpanEsqueletoWebEntity extends EntityComunes {
      * Nombre de la tabla física
      * @var string
      */
-    protected $_tableName = 'CpanEsqueletoWeb';
+    protected $_tableName = 'ErpEscaparates';
 
     /**
      * Nombre de la PrimaryKey
@@ -108,6 +114,7 @@ class CpanEsqueletoWebEntity extends EntityComunes {
      * @var string
      */
     protected $_childEntities = array(
+        'LotesWeb',
         'ArticulosEstados',
         'Fabricantes',
         'Familias',
@@ -146,6 +153,16 @@ class CpanEsqueletoWebEntity extends EntityComunes {
     public function getZona() {
         return $this->Zona;
     }
+
+    public function setIDLote($IDLote) {
+        $this->IDLote = $IDLote;
+    }
+
+    public function getIDLote() {
+        if (!($this->IDLote instanceof LotesWeb))
+            $this->IDLote = new LotesWeb($this->IDLote);
+        return $this->IDLote;
+    }    
 
     public function setIDEstado($IDEstado) {
         $this->IDEstado = $IDEstado;
@@ -223,5 +240,4 @@ class CpanEsqueletoWebEntity extends EntityComunes {
 
 }
 
-// END class CpanEsqueletoWeb
-?>
+// END class Escaparates

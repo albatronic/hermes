@@ -1,4 +1,4 @@
-{# Template index.html.twig for CambioClienteFactura   #}
+{# Template index.html.twig for CambioProveedorFactura #}
 {# ----------------------------------------------------#}
 {% extends layout %}
 
@@ -23,7 +23,7 @@
 
 	{% block filtro %}
         {% if values.permisos.permisosModulo['UP'] %}
-            {% include 'CambioClienteFactura/filtro.html.twig' with {'values':values} %}
+            {% include 'CambioProveedorFactura/filtro.html.twig' with {'values':values} %}
         {%endif%}
 	{% endblock %}
 

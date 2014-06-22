@@ -102,15 +102,15 @@ ErpModulos:
   
   # UTILIDADES
   - { Id: 140, CodigoApp: Utils, NombreModulo: Utilidades,           Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Utilidades, Funcionalidades: AC }
-  - { CodigoApp: Utils, NombreModulo: CambioComercial,      Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de comercial, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Utils, NombreModulo: CambioClienteFactura, Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de cliente en factura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Utils, NombreModulo: ImportarFemitidas,    Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas emitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { CodigoApp: Utils, NombreModulo: ImportarFrecibidas,   Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas recibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Utils, NombreModulo: EmailBox,             Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Email Box, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Utils, NombreModulo: CambioComercial,        Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de comercial, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Utils, NombreModulo: CambioClienteFactura,   Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de cliente en factura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Utils, NombreModulo: CambioProveedorFactura, Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de proveedor en factura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Utils, NombreModulo: ImportarFemitidas,      Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas emitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Utils, NombreModulo: ImportarFrecibidas,     Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas recibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Utils, NombreModulo: EmailBox,               Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Email Box, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # CMS
   - { Id: 160, CodigoApp: CMS, NombreModulo: CMS,              Nivel: 0, BelongsTo: 0,    Publish: 1, Titulo: CMS, Funcionalidades: AC }
-  - { Id: 161, CodigoApp: CMS, NombreModulo: CpanEsqueletoWeb, Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Esqueleto Web, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 162, CodigoApp: CMS, NombreModulo: CpanUrlAmigables, Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Urls amigables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 163, CodigoApp: CMS, NombreModulo: WebPerfiles,      Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Perfiles de Usuarios Web, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { Id: 164, CodigoApp: CMS, NombreModulo: Gcon,             Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Gestor de contenidos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
@@ -139,6 +139,9 @@ ErpModulos:
   - { Id: 187, CodigoApp: CMS, NombreModulo: CpanTextos,       Nivel: 2, BelongsTo: 186,  Publish: 1, Titulo: Textos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
   - { Id: 188, CodigoApp: CMS, NombreModulo: CpanPlantillas,   Nivel: 2, BelongsTo: 186,  Publish: 1, Titulo: Plantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>} 
   - { Id: 189, CodigoApp: CMS, NombreModulo: BlogComentarios,  Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Comentarios Blog, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}   
+  - { Id: 200, CodigoApp: CMS, NombreModulo: Escaparate,       Nivel: 1, BelongsTo: 160,  Publish: 1, Titulo: Escaparates, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 201, CodigoApp: CMS, NombreModulo: LotesWeb,         Nivel: 2, BelongsTo: 200,  Publish: 1, Titulo: Lotes de artículos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { Id: 202, CodigoApp: CMS, NombreModulo: Escaparates,      Nivel: 2, BelongsTo: 200,  Publish: 1, Titulo: Escaparates, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
 
 ErpPermisos:
   # PERMISOS PARA EL SUPERADMINSITRADOR
@@ -223,13 +226,13 @@ ErpPermisos:
   
   - { IdPerfil: 1, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: CambioComercial, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
-  - { IdPerfil: 1, NombreModulo: ConformarFacturas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: CambioClienteFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 1, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   
-  - { IdPerfil: 1, NombreModulo: CMS, Funcionalidades: 'AC,VW' }
-  - { IdPerfil: 1, NombreModulo: CpanEsqueletoWeb, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: CMS, Funcionalidades: 'AC,VW' }   
   - { IdPerfil: 1, NombreModulo: CpanUrlAmigables, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: WebPerfiles, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: Gcon, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
@@ -258,6 +261,9 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: MultiIdioma, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: CpanTextos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
   - { IdPerfil: 1, NombreModulo: CpanPlantillas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: Escaparate, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: LotesWeb, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
+  - { IdPerfil: 1, NombreModulo: Escaparates, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}    
 
   # PERMISOS PARA EL ADMINISTRADOR
   - { IdPerfil: 2, NombreModulo: Admon, Funcionalidades: 'AC,VW' }
@@ -336,7 +342,8 @@ ErpPermisos:
 
   - { IdPerfil: 2, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 2, NombreModulo: CambioComercial, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 2, NombreModulo: ConformarFacturas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: CambioClienteFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -418,7 +425,8 @@ ErpPermisos:
 
   - { IdPerfil: 3, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 3, NombreModulo: CambioComercial, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { IdPerfil: 3, NombreModulo: ConformarFacturas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: CambioClienteFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
