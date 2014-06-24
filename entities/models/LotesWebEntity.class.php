@@ -36,6 +36,23 @@ class LotesWebEntity extends EntityComunes {
     protected $Resumen;
 
     /**
+     * @var string
+     */
+    protected $Desarrollo;
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="ErpFamilias")
+     */
+    protected $MostrarEnPortada = '0';
+
+    /**
+     * @orm:Column(type="integer")
+     * @assert:NotBlank(groups="ErpFamilias")
+     */
+    protected $OrdenPortada = '0';
+
+    /**
      * Nombre de la conexion a la BD
      * @var string
      */
@@ -113,6 +130,32 @@ class LotesWebEntity extends EntityComunes {
 
     public function getResumen() {
         return $this->Resumen;
+    }
+
+    public function setDesarrollo($Desarrollo) {
+        $this->Desarrollo = trim($Desarrollo);
+    }
+
+    public function getDesarrollo() {
+        return $this->Desarrollo;
+    }
+
+    public function setMostrarEnPortada($MostrarEnPortada) {
+        $this->MostrarEnPortada = $MostrarEnPortada;
+    }
+
+    public function getMostrarEnPortada() {
+        if (!($this->MostrarEnPortada instanceof ValoresSN))
+            $this->MostrarEnPortada = new ValoresSN($this->MostrarEnPortada);
+        return $this->MostrarEnPortada;
+    }
+
+    public function setOrdenPortada($OrdenPortada) {
+        $this->OrdenPortada = $OrdenPortada;
+    }
+
+    public function getOrdenPortada() {
+        return $this->OrdenPortada;
     }
 
 }

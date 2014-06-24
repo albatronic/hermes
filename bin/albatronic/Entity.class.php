@@ -1059,7 +1059,7 @@ class Entity {
     public function getComentarios() {
 
         $comentarios = new BlogComentarios();
-        $array = $comentarios->getComentatios($this->getClassName(), $this->getPrimaryKeyValue());
+        $array = $comentarios->getComentarios($this->getClassName(), $this->getPrimaryKeyValue());
         unset($comentarios);
 
         return $array;

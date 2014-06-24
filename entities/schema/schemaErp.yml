@@ -1524,12 +1524,15 @@ ErpEscaparates:
 ErpLotesWeb:
   comment: Lotes de articulos para la web
   columns:
-    Id:        { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}  
-    Titulo:    { type: string(255), notnull: true }
-    Subtitulo: { type: string(255), notnull: false }
-    Resumen:   { type: string(500), notnull: false }
+    Id:               { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}  
+    Titulo:           { type: string(255), notnull: true }
+    Subtitulo:        { type: string(255), notnull: false }
+    Resumen:          { type: string(500), notnull: false }
+    Desarrollo:       { type: text, notnull: false }
+    MostrarEnPortada: { type: tinyint(1), notnull: true, default: 0, comment: 'Abstract,ValoresSN,IDTipo' }
+    OrdenPortada:     { type: int(4), notnull: true, default: 0}
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
-  relations:  
+  relations:
       
 ErpPerfiles:
   comment: Perfiles de usuarios

@@ -62,7 +62,7 @@ class BlogComentarios extends BlogComentariosEntity {
      * @param string $entidad
      * @param integer $idEntidad
      */
-    public function getComentatios($entidad,$idEntidad) {
+    public function getComentarios($entidad,$idEntidad) {
         
         $array = array();
         
@@ -75,5 +75,3 @@ class BlogComentarios extends BlogComentariosEntity {
         
     }
 }
-
-?>

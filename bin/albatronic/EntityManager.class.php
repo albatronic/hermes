@@ -540,7 +540,7 @@ class EntityManager {
         // ESCRIBE EL ERROR EN EL LOG
         $fp = fopen("log/error_query.log", "a");
         if ($fp) {
-            fwrite($fp, $mensaje . "/n");
+            fwrite($fp, date('Y-m-d H:i:s') . "\t" . $_SERVER['PHP_SELF'] . "\t" . $mensaje . "\n");
             fclose($fp);
         }
 

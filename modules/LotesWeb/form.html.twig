@@ -29,11 +29,11 @@
     </ul>
 
     <div id="general">
-        <div style="float: left; width: 51%;">  
-            {{ macro.input(atributos.Titulo,'Etiqueta','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}
-            {{ macro.input(atributos.Subtitulo,'Etiqueta','text',values.controller ~ '[Subtitulo]',values.controller ~ '_Subtitulo',datos.Subtitulo,'255','CampoTextoLargo','2') }}
-            {{ macro.input(atributos.Resumen,'Etiqueta','text',values.controller ~ '[Resumen]',values.controller ~ '_Resumen',datos.Resumen,'500','CampoTextoLargo','3') }}
-        </div>
+        {{ macro.input(atributos.MostrarEnPortada,'EtiquetaMedia','checkbox',values.controller ~ '[MostrarEnPortada]',values.controller ~ '_MostrarEnPortada',datos.MostrarEnPortada.IDTipo,'255','CampoTextoLargo') }}
+        {{ macro.input(atributos.Titulo,'EtiquetaMedia','text',values.controller ~ '[Titulo]',values.controller ~ '_Titulo',datos.Titulo,'255','CampoTextoLargo','1') }}
+        {{ macro.input(atributos.Subtitulo,'EtiquetaMedia','text',values.controller ~ '[Subtitulo]',values.controller ~ '_Subtitulo',datos.Subtitulo,'255','CampoTextoLargo','2') }}
+        {{ macro.input(atributos.Resumen,'EtiquetaMedia','text',values.controller ~ '[Resumen]',values.controller ~ '_Resumen',datos.Resumen,'500','CampoTextoLargo','3') }}
+        {{ macro.textarea(atributos.Desarrollo,'EtiquetaMedia',values.controller ~ '[Desarrollo]',values.controller ~ '_Desarrollo',datos.Desarrollo,none,none,'textarea','5')}}          
     </div>  
 
     {% if datos.PrimaryKeyValue %}
