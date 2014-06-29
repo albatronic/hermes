@@ -282,6 +282,3 @@ class PcaeProyectosAppsEntity extends EntityComunes {
     }
 
 }
-
-// END class PcaeProyectosApps
-?>

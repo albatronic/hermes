@@ -232,4 +232,3 @@ unset($loader);
 unset($twig);
 unset($config);
 unset($browser);
-?>

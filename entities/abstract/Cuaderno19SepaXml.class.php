@@ -56,7 +56,7 @@ class Cuaderno19SepaXml extends Remesas {
                 'fecha' => date('Y-m-d') . "T" . date('H:i:s'),
                 'fechaCargo' => $fechaCargo,
                 'nRecibos' => $recibos['nRecibos'],
-                'total' => number_format($recibos['importeTotal'],2),
+                'total' => number_format($recibos['importeTotal'],2,".",""),
                 'razonSocial' => $ordenante->getRazonSocial(),
                 'direccion1' => $ordenante->getDireccion(),
                 'direccion2' => $ordenante->getCodigoPostal() . " " . $ordenante->getIdMunicipio()->getMunicipio() . " " . $ordenante->getIdProvincia()->getProvincia(),
@@ -205,4 +205,3 @@ class Cuaderno19SepaXml extends Remesas {
 
 }
 
-?>

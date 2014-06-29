@@ -30,6 +30,8 @@ class EntityManager {
     public static $conection = array();
     private $result = null;
     private $affectedRows = null;
+    private $logErrorQueryFile;
+    private $logQueryFile;
 
     /**
      * Guardar el eventual error producido en la conexión
@@ -62,6 +64,9 @@ class EntityManager {
      */
     public function __construct($conection, $fileConfig = '') {
 
+        $this->logErrorQueryFile = str_replace("bin/albatronic","",__DIR__) . "log/error_query.log";
+        $this->logQueryFile = str_replace("bin/albatronic","",__DIR__) . "log/query.log";
+        
         //if (is_null(self::$dbLinkInstance)) {
         if (is_array($conection)) {
             self::$dbEngine = $conection['dbEngine'];
@@ -75,7 +80,8 @@ class EntityManager {
         } else {
             if (!isset(self::$conection[$conection])) {
                 if ($fileConfig == '') {
-                    $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
+                    //$fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/" . $this->file;
+                    $fileConfig = str_replace("bin/albatronic", "", __DIR__) . $this->file;
                 }
                 if (file_exists($fileConfig)) {
                     //echo "busco config {$conection}<br/>";
@@ -173,7 +179,7 @@ class EntityManager {
         $this->result = null;
 
         if ($_SESSION['VARIABLES']['EnvPro']['log'] === '1') {
-            $fp = fopen("log/queries.sql", "a");
+            $fp = fopen($this->logQueryFile, "a");
             fwrite($fp, date("Y-m-d H:i:s") . "\t" . $query . "\n");
             fclose($fp);
         }
@@ -538,7 +544,7 @@ class EntityManager {
         }
 
         // ESCRIBE EL ERROR EN EL LOG
-        $fp = fopen("log/error_query.log", "a");
+        $fp = fopen($this->logErrorQueryFile, "a");
         if ($fp) {
             fwrite($fp, date('Y-m-d H:i:s') . "\t" . $_SERVER['PHP_SELF'] . "\t" . $mensaje . "\n");
             fclose($fp);
