@@ -221,3 +221,17 @@ FormasPago:
       link: { route: null, param: null, title: null, target: null, link: null }
       aditional_filter: { order: 2, caption: Disponible en, entity: UsoWeb, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '15', min: null, max: null, message: 'Valor Requerido' }      
+    Accion:
+      title: Acción a realizar
+      filter: NO
+      list: true
+      visible: true
+      updatable: true
+      default: '0'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      aditional_filter: { order: 2, caption: Acción a realizar, entity: AccionesFormasPago, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: tinyint, length: '15', min: null, max: null, message: 'Valor Requerido' }      

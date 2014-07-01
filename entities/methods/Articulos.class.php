@@ -298,6 +298,23 @@ class Articulos extends ArticulosEntity {
     }
 
     /**
+     * Devuelve el PVP para la web con o sin iva incluido
+     * según la variable de entorno de proyecto shop.ivaIncluido
+     * 
+     * @param string La Unidad de Medida.Por defecto la de venta
+     * @param integer El número de decimales
+     * @return decimal El PVP.
+     */
+    public function getPrecioWeb($um = 'UMV', $decimales = 2) {
+        
+        $pvp = ($_SESSION['varEnv']['Pro']['shop']['ivaIncluido'] === '1') ?
+            $this->getPrecioVentaConImpuestos($um, $decimales) :
+            $this->getPrecioVenta($um, $decimales);
+
+        return $pvp;
+    }
+    
+    /**
      * Devuelve el Pmc sin impuestos correspondiente a la unidad de medida indicada.
      * Por defecto la Unidad de Compra.
      *
