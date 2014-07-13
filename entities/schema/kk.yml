@@ -1,15 +1,25 @@
-# LOTES DE ARTICULOS PARA LA WEB
-# LOS ARTÍCULOS ASOCIADOS AL LOTE SE GUARDAN EN FORMATO YML
-# EN LA COLUMNA OBSERVATIONS
-ErpLotesWeb:
-  comment: Lotes de articulos para la web
+# Afiliados
+ErpAfiliados:
+  comment: Afiliados
   columns:
-    Id:               { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}  
-    Titulo:           { type: string(255), notnull: true }
-    Subtitulo:        { type: string(255), notnull: false }
-    Resumen:          { type: string(500), notnull: false }
-    Desarrollo:       { type: text, notnull: false }
-    MostrarEnPortada: { type: tinyint(1), notnull: true, default: 0, comment: 'Abstract,ValoresSN,IDTipo' }
-    OrdenPortada:     { type: int(4), notnull: true, default: 0}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
-  relations: 
+    IDAfiliado:          { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
+    RazonSocial:         { type: varchar(100), notnull: true, index: index }
+    NombreComercial:     { type: varchar(100), notnull: false, index: index }
+    Cif:                 { type: varchar(15), notnull: true, index: index }
+    Direccion:           { type: varchar(100), notnull: true }
+    IDPais:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Paises,IDPais' }
+    IDProvincia:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Provincias,IDProvincia' }
+    IDPoblacion:         { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Municipios,IDMunicipio' }
+    CodigoPostal:        { type: varchar(10), notnull: true, default: '' }
+    Telefono:            { type: varchar(30), notnull: false }
+    Fax:                 { type: varchar(30), notnull: false }    
+    Movil:               { type: varchar(30), notnull: false }    
+    EMail:               { type: varchar(50), notnull: false }    
+    Web:                 { type: varchar(50), notnull: false } 
+    Comision:            { type: decimal, notnull: true, default: '0.00' }
+    Iban:                { type: varchar(34), notnull: false, default: null }
+    Bic:                 { type: varchar(11), notnull: false, default: null }
+    Mandato:             { type: varchar(35), notnull: false, default: null }
+    FechaMandato:        { type: date, notnull: true, default: '0000-00-00' }     
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>        
+  relations:

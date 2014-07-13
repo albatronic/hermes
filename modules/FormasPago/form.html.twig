@@ -14,4 +14,5 @@
 {{ macro.input(values.atributos.RecargoFinanciero,'EtiquetaMedia','text','FormasPago[RecargoFinanciero]','FormasPago_RecargoFinanciero',datos.RecargoFinanciero,'5','CampoUnidades') }}
 {{ macro.input(values.atributos.DescuentoFinanciero,'EtiquetaMedia','text','FormasPago[DescuentoFinanciero]','FormasPago_DescuentoFinanciero',datos.DescuentoFinanciero,'5','CampoUnidades') }}
 {{ macro.select(values.atributos.Uso,'EtiquetaMedia','FormasPago[Uso]','FormasPago_Uso',150,datos.Uso.IDTipo,datos.Uso.fetchAll('',false),'Select') }}
-{{ macro.select(values.atributos.Accion,'EtiquetaMedia','FormasPago[Accion]','FormasPago_Accion',150,datos.Accion.IDTipo,datos.Accion.fetchAll('',false),'Select') }}
+{{ macro.select(values.atributos.Accion,'EtiquetaMedia','FormasPago[Accion]','FormasPago_Accion',150,datos.Accion.IDTipo,datos.Accion.fetchAll('Descripcion',false),'Select') }}
+{{ macro.select(values.atributos.TipoTpv,'EtiquetaMedia','FormasPago[TipoTpv]','FormasPago_TipoTpv',150,datos.TipoTpv.IDTipo,datos.TipoTpv.fetchAll('Descripcion',true),'Select') }}

@@ -89,8 +89,9 @@ class OrdenesArticulos extends OrdenesArticulosEntity {
 
         $array = array();
 
-        if ($nItems <= 0)
+        if ($nItems <= 0) {
             $nItems = 999999;
+        }
 
         $em = new EntityManager($this->getConectionName());
         if ($em->getDbLink()) {
@@ -102,7 +103,7 @@ class OrdenesArticulos extends OrdenesArticulosEntity {
             $query = "
                 SELECT a.IDArticulo as Id
                 FROM {$em->getDataBase()}.ErpOrdenesArticulos r, {$em->getDataBase()}.ErpArticulos a
-                WHERE r.IDRegla='{$idRegla}' AND r.IDArticulo=a.IDArticulo AND {$filtroAdicional} AND a.Vigente='1' AND {$filtro}
+                WHERE r.IDRegla='{$idRegla}' AND r.IDArticulo=a.IDArticulo AND a.Vigente='1' AND {$filtro}
                 ORDER BY r.SortOrder ASC
                 LIMIT {$nItems}";
             $em->query($query);
@@ -111,13 +112,13 @@ class OrdenesArticulos extends OrdenesArticulosEntity {
         }
         unset($em);
 
-        if (is_array($rows))
-            foreach ($rows as $row)
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
                 $array[$row['Id']] = new Articulos($row['Id']);
+            }
+        }
 
         return $array;
     }
 
 }
-
-?>

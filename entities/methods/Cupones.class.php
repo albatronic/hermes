@@ -32,5 +32,3 @@ class Cupones extends CuponesEntity {
     }
 
 }
-
-?>

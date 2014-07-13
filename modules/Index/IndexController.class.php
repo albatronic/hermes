@@ -67,7 +67,7 @@ class IndexController extends Controller {
     public function IndexAction() {
 
         $this->values['sucursal'] = new Sucursales($_SESSION['suc']);
-
+        //print_r($_SESSION['usuarioPortal']);
         if ($_SESSION['tpv']) {
             $this->values['dashBoard'] = $this->getDashBoard();
         }
@@ -133,6 +133,7 @@ class IndexController extends Controller {
             // Carga la cadena de conexion a la base de datos del proyecto
             $proyectoApp = new PcaeProyectosApps();
             $proyectoApp = $proyectoApp->find('PrimaryKeyMD5', $this->request[1]);
+            //print_r($proyectoApp);
             $_SESSION['project']['Id'] = $proyectoApp->getId();
             $_SESSION['project']['IdEmpresa'] = $proyectoApp->getIdProyecto()->getIdEmpresa()->getId();
             $_SESSION['project']['empresa'] = $proyectoApp->getIdProyecto()->getIdEmpresa()->getRazonSocial();
@@ -159,7 +160,7 @@ class IndexController extends Controller {
 
             // Establece el perfil del usuario para el proyecto y carga
             // el menú en base a su perfil
-            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);//print_r($usuario);
             if ($usuario->getStatus()) {
                 $idPerfil = $usuario->getIDPerfil()->getPrimaryKeyValue();
                 $_SESSION['usuarioPortal']['IdPerfil'] = $idPerfil;
@@ -203,7 +204,7 @@ class IndexController extends Controller {
             } else {
                 $template = $this->entity . "/noLoged.html.twig";
             }
-
+            //print_r($_SESSION);
             unset($usuario);
         }
     }

@@ -235,3 +235,17 @@ FormasPago:
       link: { route: null, param: null, title: null, target: null, link: null }
       aditional_filter: { order: 2, caption: Acción a realizar, entity: AccionesFormasPago, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '15', min: null, max: null, message: 'Valor Requerido' }      
+    TipoTpv:
+      title: Tipo de TPV
+      filter: NO
+      list: false
+      visible: true
+      updatable: true
+      default: '0'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }
+      #aditional_filter: { order: 2, caption: Tipo de TPV, entity: TiposTpv, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: tinyint, length: '15', min: null, max: null, message: 'Valor Requerido' }      

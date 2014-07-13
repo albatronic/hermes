@@ -35,12 +35,34 @@
     </div>
     
     <div id="tabs-shop" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-        {{ macro.input({'caption':'[shop][url] Url de la tienda online con http://','visible':'1','varEnv':'0'},'EtiquetaLarga','text','d[shop][url]','d_shop_url',values.d.shop.url,'50','CampoTextoMedio','1') }}
-        {{ macro.input({'caption':'[shop][carruselPortada] Carrusel en portada','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][carruselPortada]','d_shop_carruselPortada',values.d.shop.carruselPortada,'50','CampoTextoMedio','1') }}        
-        {{ macro.input({'caption':'[shop][ivaIncluido] Iva incluido en los precios','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][ivaIncluido]','d_shop_ivaIncluido',values.d.shop.ivaIncluido,'50','CampoTextoMedio','1') }}        
-        {{ macro.input({'caption':'[shop][ivaIncluidoCarrito] Iva incluido en el carrito','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][ivaIncluidoCarrito]','d_shop_ivaIncluidoCarrito',values.d.shop.ivaIncluidoCarrito,'50','CampoTextoMedio','1') }}        
-        {{ macro.input({'caption':'[shop][cupones] Gestión de cupones','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][cupones]','d_shop_cupones',values.d.shop.cupones,'50','CampoTextoMedio','1') }}        
-        {{ macro.input({'caption':'[shop][boletines] Suscripción a boletines','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][boletines]','d_shop_boletines',values.d.shop.boletines,'50','CampoTextoMedio','1') }}        
+        <div id="acordeonColumnas" style="margin-top:10px;">
+            <h3>General</h3>
+            <div>
+                {{ macro.input({'caption':'[shop][url] Url de la tienda online con http://','visible':'1','varEnv':'0'},'EtiquetaLarga','text','d[shop][url]','d_shop_url',values.d.shop.url,'50','CampoTextoMedio','1') }}
+                {{ macro.input({'caption':'[shop][carruselPortada] Carrusel en portada','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][carruselPortada]','d_shop_carruselPortada',values.d.shop.carruselPortada,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][ivaIncluido] Iva incluido en los precios','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][ivaIncluido]','d_shop_ivaIncluido',values.d.shop.ivaIncluido,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][ivaIncluidoCarrito] Iva incluido en el carrito','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][ivaIncluidoCarrito]','d_shop_ivaIncluidoCarrito',values.d.shop.ivaIncluidoCarrito,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][cupones] Gestión de cupones','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][cupones]','d_shop_cupones',values.d.shop.cupones,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][boletines] Suscripción a boletines','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][boletines]','d_shop_boletines',values.d.shop.boletines,'50','CampoTextoMedio','1') }}        
+            </div>
+            <h3>Tpv Paypal</h3>
+            <div>
+                {{ macro.input({'caption':'[shop][paypal][modo] Modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][paypal][modo]','d_shop_paypal_modo',values.d.shop.paypal.modo,'50','CampoTextoMedio','1') }}                
+                {{ macro.input({'caption':'[shop][paypal][business] Email (business)','visible':'1','varEnv':'0'},'EtiquetaLarga','text','d[shop][paypal][business]','d_shop_paypal_business',values.d.shop.paypal.business,'50','CampoTextoMedio','1') }}
+                {{ macro.input({'caption':'[shop][paypal][currency_code] Código moneda (EUR)','visible':'1','varEnv':'0'},'EtiquetaLarga','text','d[shop][paypal][currency_code]','d_shop_paypal_currency_code',values.d.shop.paypal.currency_code,'50','CampoTextoMedio','1') }}               
+            </div>
+            <h3>Tpv Redsys/Sermepa</h3>
+            <div>
+                {{ macro.input({'caption':'[shop][redsys][modo] Modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][redsys][modo]','d_shop_redsys_modo',values.d.shop.redsys.modo,'50','CampoTextoMedio','1') }}
+                {{ macro.input({'caption':'[shop][redsys][claveTest] Clave modo test','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][claveTest]','d_shop_redsys_claveTest',values.d.shop.redsys.claveTest,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][claveReal] Clave modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][claveReal]','d_shop_redsys_claveReal',values.d.shop.redsys.claveReal,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][nombre] Nombre Comercio','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][nombre]','d_shop_redsys_nombre',values.d.shop.redsys.nombre,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][codigo] Codigo Comercio','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][codigo]','d_shop_redsys_codigo',values.d.shop.redsys.codigo,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][terminal] Terminal (1)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][terminal]','d_shop_redsys_terminal',values.d.shop.redsys.terminal,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][moneda] Código Moneda (978)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][moneda]','d_shop_redsys_moneda',values.d.shop.redsys.moneda,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][redsys][tipoTransaccion] Tipo de transacción (0)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][tipoTransaccion]','d_shop_redsys_tipoTransaccion',values.d.shop.redsys.tipoTransaccion,'50','CampoTextoMedio','1') }}        
+            </div>            
+        </div>
     </div>
         
     <div id="tabs-visitas" class="ui-tabs-panel ui-widget-content ui-corner-bottom">

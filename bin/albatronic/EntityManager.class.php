@@ -64,17 +64,16 @@ class EntityManager {
      */
     public function __construct($conection, $fileConfig = '') {
 
-        $this->logErrorQueryFile = str_replace("bin/albatronic","",__DIR__) . "log/error_query.log";
-        $this->logQueryFile = str_replace("bin/albatronic","",__DIR__) . "log/query.log";
-        
-        //if (is_null(self::$dbLinkInstance)) {
+        $this->logErrorQueryFile = str_replace("bin/albatronic", "", __DIR__) . "log/error_query.log";
+        $this->logQueryFile = str_replace("bin/albatronic", "", __DIR__) . "log/query.log";
+
         if (is_array($conection)) {
-            self::$dbEngine = $conection['dbEngine'];
-            self::$host = $conection['host'];
-            self::$user = $conection['user'];
-            self::$password = $conection['password'];
-            self::$dataBase = $conection['database'];
-            if (is_null(self::$dbLinkInstance)) {
+            if (is_null(self::$dbLinkInstance) || (self::$host !== $conection['host']) || (self::$dataBase !== $conection['database'])) {
+                self::$dbEngine = $conection['dbEngine'];
+                self::$host = $conection['host'];
+                self::$user = $conection['user'];
+                self::$password = $conection['password'];
+                self::$dataBase = $conection['database'];
                 $this->conecta();
             }
         } else {
