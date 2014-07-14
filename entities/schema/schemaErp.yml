@@ -171,7 +171,7 @@ ErpPedidosWebCab:
     CuotaRecargoFinanciero: { type: decimal, notnull: true, default: 0 }    
     Total:                  { type: decimal, notnull: true, default: 0 }    
     IDEstado:               { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,EstadosPedidosWeb,IDTipo' }    
-    IDAlbaran:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,AlbarnaesCab,IDAlbaran'}  
+    IDAlbaran:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,AlbaranesCab,IDAlbaran'}  
     Observaciones:          { type: text, notnull: false }
     NotasInternas:          { type: text, notnull: false }    
     Peso:                   { type: decimal, notnull: true, default: 0 }

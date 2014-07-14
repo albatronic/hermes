@@ -191,7 +191,7 @@ class Clientes extends ClientesEntity {
         $pteCobro = $recibos['Importe'];
         $riesgo = $this->getLimiteRiesgo();
 
-        return (($riesgo > 0) and ($pteCobro >= $riesgo));
+        return (($riesgo > 0) and ( $pteCobro >= $riesgo));
     }
 
     /**
@@ -492,6 +492,30 @@ class Clientes extends ClientesEntity {
         unset($albaranes);
 
         return $rows;
+    }
+
+    /**
+     * Devuelve un array con objetos de PedidosWebCab del cliente en curso
+     * 
+     * @param type $idEstado Por defecto >=2 (a partir de Confirmado)
+     * @return \PedidosWebCab Array de objetos PedidosWebCab
+     */
+    public function getPedidosWeb($idEstado = '2') {
+
+        $filtro = "IDCliente='{$this->IDCliente}'";
+        if ($idEstado != '')
+            $filtro .= " AND IDEstado>='{$idEstado}'";
+
+        $array = array();
+
+        $pedido = new PedidosWebCab();
+        $rows = $pedido->querySelect("IDPedido", $filtro, "Fecha DESC");
+        unset($pedido);
+        foreach ($rows as $row) {
+            $array[] = new PedidosWebCab($row['IDPedido']);
+        }
+
+        return $array;
     }
 
     /**

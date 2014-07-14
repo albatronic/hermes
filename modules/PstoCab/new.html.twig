@@ -13,7 +13,6 @@
         <input name="action" value="new" type="hidden" />
         <input name="{{values.controller}}[IDPsto]" value="{{ values.datos.getPrimaryKeyValue }}" type="hidden" />
         {% include '_global/comandosCreate.html.twig' %}
-
         <div class="Cuerpo">
         {% include "_global/alertas.html.twig" with {'alertas': values.alertas,'errores': values.errores} %}
 	{% include values.controller ~ "/form.html.twig" with {'datos': values.datos} %}

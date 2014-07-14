@@ -54,7 +54,7 @@ PedidosWebCab:
   permission_control: YES
   favourite_control: NO
   help_file: help.html.twig
-  title: Pedidos Web
+  title: PedidosWebCab
   id_video: pedidoswebcab
   url_video: null
   feature_list: YES
@@ -66,17 +66,11 @@ PedidosWebCab:
   records_per_page: 15
   order_by:
     -
-      title: 'Número z-a'
-      criteria: 'IDPedido DESC'      
-    -
-      title: 'Número a-z'
+      title: 'IDPedido a-z'
       criteria: 'IDPedido ASC'
     -
-      title: Fecha a-z
-      criteria: Fecha ASC       
-    -
-      title: Fecha z-a 
-      criteria: Fecha DESC        
+      title: 'IDPedido z-a'
+      criteria: 'IDPedido DESC'
   search_default: IDPedido
   referenced_entities:
     - Sucursales
@@ -99,11 +93,11 @@ PedidosWebCab:
     - CpanAplicaciones
   columns:
     IDPedido:
-      title: Número
+      title: IDPedido
       visible: false
       updatable: false
       filter: NO
-      list: YES
+      list: NO
       default: null
       help: null
       permission: null
@@ -166,7 +160,7 @@ PedidosWebCab:
       #aditional_filter: { order: 3, caption: IDAgente, entity: Agentes, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDAfiliado:
-      title: Afiliado
+      title: IDAfiliado
       filter: NO
       list: NO
       visible: true
@@ -182,7 +176,7 @@ PedidosWebCab:
     Fecha:
       title: Fecha
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0000-00-00'
@@ -191,10 +185,10 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 5, caption: Fecha, type: range, operator: '>=' }
+      '#aditional_filter': { order: 5, caption: Fecha, type: range, operator: '>=' }
       validator: { nullable: NO, type: date, length: 10, min: null, max: null, message: 'Valor Requerido' }
     FechaEntrega:
-      title: Fecha Entrega
+      title: FechaEntrega
       filter: NO
       list: NO
       visible: true
@@ -210,7 +204,7 @@ PedidosWebCab:
     IDCliente:
       title: Cliente
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0'
@@ -219,8 +213,8 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 9, caption: Cliente, entity: Clientes, method: fetchAll, params: RazonSocial, type: input, operator: '=', event: null }
-      validator: { nullable: NO, type: integer, length: '30', min: null, max: null, message: 'Valor Requerido' }
+      aditional_filter: { order: 9, caption: Cliente, entity: Clientes, method: fetchAll, params: RazonSocial, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDDirec:
       title: IDDirec
       filter: NO
@@ -457,7 +451,7 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '10', min: null, max: null, message: 'Valor Requerido' }
     TotalBases:
-      title: Total Bases
+      title: TotalBases
       filter: YES
       list: NO
       visible: true
@@ -470,7 +464,7 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '10', min: null, max: null, message: 'Valor Requerido' }
     TotalIva:
-      title: Total Iva
+      title: TotalIva
       filter: YES
       list: NO
       visible: true
@@ -524,7 +518,7 @@ PedidosWebCab:
     Total:
       title: Total
       filter: YES
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0.00'
@@ -535,9 +529,9 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '10', min: null, max: null, message: 'Valor Requerido' }
     IDEstado:
-      title: Estado
+      title: IDEstado
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0'
@@ -546,10 +540,10 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 11, caption: Estado, entity: EstadosPedidosWeb, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
-      validator: { nullable: NO, type: tinyint, length: '15', min: null, max: null, message: 'Valor Requerido' }
+      '#aditional_filter': { order: 11, caption: IDEstado, entity: EstadosPedidosWeb, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     IDAlbaran:
-      title: Albaran
+      title: IDAlbaran
       filter: NO
       list: NO
       visible: true
@@ -641,9 +635,9 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '50', min: null, max: null, message: 'Valor Requerido' }
     IDAgencia:
-      title: Forma Envío
+      title: IDAgencia
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0'
@@ -652,7 +646,7 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 13, caption: Forma Envío, entity: Agencias, method: fetchAll, params: Agencia, type: select, operator: '=', event: null }
+      '#aditional_filter': { order: 13, caption: IDAgencia, entity: Agencias, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     FlagFacturar:
       title: FlagFacturar
@@ -669,7 +663,7 @@ PedidosWebCab:
       '#aditional_filter': { order: 14, caption: FlagFacturar, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     IDFP:
-      title: Forma Pago
+      title: IDFP
       filter: NO
       list: NO
       visible: true
@@ -680,10 +674,10 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 15, caption: Forma Pago, entity: FormasPago, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      '#aditional_filter': { order: 15, caption: IDFP, entity: FormasPago, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     IDZonaEnvio:
-      title: Zona Envio
+      title: IDZonaEnvio
       filter: NO
       list: NO
       visible: true
@@ -694,12 +688,12 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 16, caption: Zona Envío, entity: ZonasTransporte, method: fetchAll, params: Zona, type: select, operator: '=', event: null }
+      '#aditional_filter': { order: 16, caption: IDZonaEnvio, entity: ZonasTransporte, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     GastosEnvio:
-      title: Gastos Envío
+      title: GastosEnvio
       filter: YES
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0.00'
@@ -710,9 +704,9 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: NO, type: integer, length: '10', min: null, max: null, message: 'Valor Requerido' }
     PlazoEntrega:
-      title: Plazo Entrega
+      title: PlazoEntrega
       filter: YES
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: null
@@ -725,7 +719,7 @@ PedidosWebCab:
     Envolver:
       title: Envolver
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0'
@@ -734,8 +728,8 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 17, caption: Envolver, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
-      validator: { nullable: NO, type: tinyint, length: '2', min: null, max: null, message: 'Valor Requerido' }
+      '#aditional_filter': { order: 17, caption: Envolver, entity: ValoresSN, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      validator: { nullable: NO, type: tinyint, length: '1', min: null, max: null, message: 'Valor Requerido' }
     TextoEnvolver:
       title: TextoEnvolver
       filter: YES
@@ -750,9 +744,9 @@ PedidosWebCab:
       link: { route: null, param: null, title: null, target: null, link: null }
       validator: { nullable: YES, type: string, length: '250', min: null, max: null, message: 'Valor Requerido' }
     IDCupon:
-      title: Cupón
+      title: IDCupon
       filter: NO
-      list: YES
+      list: NO
       visible: true
       updatable: true
       default: '0'
@@ -761,7 +755,7 @@ PedidosWebCab:
       translatable: false
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
-      aditional_filter: { order: 18, caption: Cupón, entity: Cupones, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
+      '#aditional_filter': { order: 18, caption: IDCupon, entity: Cupones, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
     Key1Pasarela:
       title: Key1Pasarela

@@ -61,6 +61,7 @@ ErpModulos:
   - { Id: 60, CodigoApp: Vtas, NombreModulo: Vtas,             Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Ventas, Funcionalidades: AC }
   - { CodigoApp: Vtas, NombreModulo: Promociones,      Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Promociones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Vtas, NombreModulo: PstoCab,          Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Presupuestos, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { CodigoApp: Vtas, NombreModulo: PedidosWebCab,    Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Pedidos Web, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Vtas, NombreModulo: AlbaranesCab,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Albaranes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Vtas, NombreModulo: Tpv,              Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Tpv, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Vtas, NombreModulo: FemitidasCab,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Facturas emitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
@@ -70,9 +71,9 @@ ErpModulos:
   - { CodigoApp: Vtas, NombreModulo: Remesas,          Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Gestión de remesas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: RutasVentas,      Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Rutas de venta, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: RutasReparto,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Rutas de reparto, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { Id: 72, CodigoApp: Vtas, NombreModulo: Fidelizacion,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Fidelización, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Vtas, NombreModulo: Cupones,     Nivel: 2, BelongsTo: 72,  Publish: 1, Titulo: Cupones de descuento, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
-  - { CodigoApp: Vtas, NombreModulo: Afiliados,   Nivel: 2, BelongsTo: 72,  Publish: 1, Titulo: Afiliados, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { Id: 73, CodigoApp: Vtas, NombreModulo: Fidelizacion,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Fidelización, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Vtas, NombreModulo: Cupones,     Nivel: 2, BelongsTo: 73,  Publish: 1, Titulo: Cupones de descuento, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Vtas, NombreModulo: Afiliados,   Nivel: 2, BelongsTo: 73,  Publish: 1, Titulo: Afiliados, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # ALMACEN
   - { Id: 80, CodigoApp: Almacen, NombreModulo: Almacen,              Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Almacén, Funcionalidades: AC }
@@ -189,6 +190,7 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Vtas, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: Promociones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 1, NombreModulo: PstoCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 1, NombreModulo: PedidosWebCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: AlbaranesCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: Tpv, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: FemitidasCab, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}

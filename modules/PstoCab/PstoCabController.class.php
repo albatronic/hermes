@@ -223,5 +223,3 @@ class PstoCabController extends Controller {
     }
 
 }
-
-?>

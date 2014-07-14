@@ -340,5 +340,3 @@ class IndexController extends Controller {
         return $rows;
     }
 }
-
-?>
