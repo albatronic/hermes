@@ -2079,7 +2079,7 @@ informes:
     comment: >
       Informe de inventario valorado
     idPerfil: '4,5,6,8'
-    break_fields: Familia
+    break_fields: Almacen,Familia
     break_page: NO
     orientation: P
     unit: mm
@@ -2089,6 +2089,7 @@ informes:
     print_interline:
     query: >
       SELECT 
+        al.Nombre as Almacen,      
         f.familia as Familia,
         a.Codigo,
         a.Descripcion,
@@ -2101,14 +2102,18 @@ informes:
         DBNAME.ErpFamilias as f, 
         DBNAME.ErpArticulos as a, 
         DBNAME.ErpExistencias as e,
-        DBNAME.ErpUnidadesMedida as u
+        DBNAME.ErpUnidadesMedida as u,
+        DBNAME.ErpAlmacenes as al
       WHERE 
         e.IDArticulo=a.IDArticulo and 
         a.IDFamilia=f.IDFamilia and
         a.IDFamilia LIKE '%FAMILIA%' and
-        a.UMA = u.Id
-      GROUP BY f.familia, a.Codigo
+        al.IDAlmacen LIKE '%ALMACEN%' and        
+        a.UMA = u.Id and
+        e.IDAlmacen=al.IDAlmacen
+      GROUP BY al.nombre,f.familia, a.Codigo
       HAVING sum(e.Reales) <> 0
+      ORDER BY al.IDAlmacen,f.familia,a.Descripcion       
     filters:
       -
         field: ALMACEN
