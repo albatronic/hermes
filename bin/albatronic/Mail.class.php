@@ -96,6 +96,7 @@ class Mail {
      * @param email_adress $de La dirección del remitente
      * @param string $deNombre El nombre del remitente
      * @param string $conCopia Destinatarios con copia
+     * @param string $conCopiaOculta Destinatarios con copia oculta
      * @param string $asunto El texto del asunto
      * @param string $mensaje El texto de mensaje
      * @param array $adjuntos Array con los nombres de los ficheros adjuntos
@@ -163,8 +164,9 @@ class Mail {
 
         $this->compruebaEmail($email);
 
-        if (trim($contenido) == "")
+        if (trim($contenido) == "") {
             $this->mensaje[] = "No ha indicado ningun contenido.";
+        }
 
         return (count($this->mensaje) == 0);
     }
@@ -178,32 +180,10 @@ class Mail {
      */
     public function compruebaEmail($email) {
 
-        $ok = false;
-
-        /**
-          //compruebo unas cosas primeras
-          if ((strlen($email) >= 6) && (substr_count($email, "@") == 1) && (substr($email, 0, 1) != "@") && (substr($email, strlen($email) - 1, 1) != "@")) {
-          if ((!strstr($email, "'")) && (!strstr($email, "\"")) && (!strstr($email, "\\")) && (!strstr($email, "\$")) && (!strstr($email, " "))) {
-          //miro si tiene caracter .
-          if (substr_count($email, ".") >= 1) {
-          //obtengo la terminacion del dominio
-          $term_dom = substr(strrchr($email, '.'), 1);
-          //compruebo que la terminación del dominio sea correcta
-          if (strlen($term_dom) > 1 && strlen($term_dom) < 5 && (!strstr($term_dom, "@"))) {
-          //compruebo que lo de antes del dominio sea correcto
-          $antes_dom = substr($email, 0, strlen($email) - strlen($term_dom) - 1);
-          $caracter_ult = substr($antes_dom, strlen($antes_dom) - 1, 1);
-          if ($caracter_ult != "@" && $caracter_ult != ".") {
-          $ok = true;
-          }
-          }
-          }
-          }
-          }
-         */
         $ok = Swift_Validate::email($email);
-        if (!$ok)
+        if (!$ok) {
             $this->mensaje[] = "La direccion email indicada no es valida";
+        }
 
         return (count($this->mensaje) == 0);
     }
