@@ -56,5 +56,3 @@ class CpanTextos extends CpanTextosEntity {
     }
 
 }
-
-?>

@@ -33,10 +33,10 @@ config:
     - Yaml
   app:
     name: 'Hermes Erp'
-    url: 'http://localhost/Hermes'
+    url: 'http://albatronic.local'
     path: /Hermes
     framework: bin/albatronic/
-    urlParent: 'http://localhost/Pcae'
+    urlParent: 'http://albatronic.local/Pcae'
   conections:
     pcae:
       title: 'Portal Cloud Albatronic'

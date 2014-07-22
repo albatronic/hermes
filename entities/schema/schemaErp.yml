@@ -133,6 +133,16 @@ ErpAlbaranesLineas:
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
+# Avisador de stock
+ErpAvisadorStock:
+  comment: Avisador de stock
+  columns:
+    IDCliente:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Clientes,IDCliente' }
+    Email:      { type: string(50), notnul: true }
+    IDArticulo: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }
+    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>  
+    relations:
+        
 # PedidosWebCab
 ErpPedidosWebCab:
   comment: Cabeceras de pedidos WEb

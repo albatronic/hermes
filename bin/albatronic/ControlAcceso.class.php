@@ -67,9 +67,14 @@ class ControlAcceso {
         $permiso = new Permisos();
         $filtro = "IdPerfil='{$this->idPerfil}' AND NombreModulo='VARWEBPRO'";
         $rows = $permiso->cargaCondicion("Funcionalidades", $filtro);
-        $aux = explode(",", $rows[0]['Funcionalidades']);
-        foreach ($aux as $value)
+        if (isset($rows[0]['Funcionalidades'])) {
+            $aux = explode(",", $rows[0]['Funcionalidades']);
+        } else {
+            $aux = array();
+        }
+        foreach ($aux as $value) {
             $this->permisos['permisosProyecto'][$value] = TRUE;
+        }
 
         $filtro = "IdPerfil='{$this->idPerfil}' AND NombreModulo='{$this->controller}'";
         $rows = $permiso->cargaCondicion("Funcionalidades", $filtro);

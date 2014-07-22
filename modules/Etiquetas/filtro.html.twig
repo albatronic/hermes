@@ -45,7 +45,7 @@
                 <input style="margin-left: 5px;" type="submit" value="Cargar" onclick="$('#action').val('cargar');" />
                 {% if (values.etiquetas | length) > 1%}
                     <input style="margin-left: 5px;" type="submit" value="Borrar" onclick="if (!confirm('Desea eliminar las etiquetas?')) {return false;} else {$('#action').val('borrar');}" />
-                    <a href="#" onclick="$('#dialogoImprimir').dialog('open');"><img width="24px" height="24px" alt="Imprimir" src="/Erp/images/print_cmd.png"></img></a>                                
+                    <a href="#" onclick="$('#dialogoImprimir').dialog('open');"><img width="24px" height="24px" alt="Imprimir" src="{{app.path}}/images/print_cmd.png"></img></a>                                
                 {% endif %}
             </div>           
         </div>   

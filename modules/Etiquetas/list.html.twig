@@ -22,7 +22,7 @@
                 <input name="action" id="action{{key}}" value="edit" type="hidden" />
                 <input name="Etiquetas[Id]" value="{{ objeto.Id }}" type="hidden" />
                 <input name="Etiquetas[IDAgente]" value="{{ objeto.IDAgente.IDAgente }}" type="hidden" />
-                <input name="accion" id="accion{{key}}" value="" type="hidden" />
+                <input name="accion" id="accion{{key}}" value="G" type="hidden" />
                 <tr class="ItemListado">
                     <td>
                         <input name="Etiquetas[IDArticulo]" value="{{objeto.IDArticulo.IDArticulo}}" id="Etiquetas_IDArticulo{{key}}" type="hidden" />
@@ -37,7 +37,7 @@
                         <input type="image" src="{{app.path}}/images/botonsave.png" onclick="$('#accion{{key}}').val('G'); $('#linea{{key}}').submit();" alt="Guardar" title="Guardar Linea" />
                         <input type="image" src="{{app.path}}/images/papelera.gif" onclick="if (!confirm('Desea eliminar la línea?')) {return false;} else {$('#accion{{key}}').val('B'); $('#linea{{key}}').submit();}" alt="Borrar" title="Borrar Linea" />
                         {% else %}
-                        <input type="image" src="{{app.path}}/images/nuevo.png" onclick="$('#accion{{key}}').val('G'); $('#linea{{key}}').submit();" alt="Nuevo" title="Crear Linea" />
+                        <input id="botonNuevaLinea" type="image" src="{{app.path}}/images/nuevo.png"  alt="Nuevo" title="Crear Linea" />
                         {% endif %}
                     </td>
                 </tr>
@@ -104,8 +104,14 @@
     </form>
 </div>    
 
-<script language='JavaScript' type='text/javascript'>
+<script language='JavaScript' type='text/javascript'>  
     $(function() {
+        
+        $('#botonNuevaLinea').blur(function(){$(this).click();});
+        $('#botonNuevaLinea').click(function(){
+            $('#accion').val('G');
+        });
+        
         $( "#dialogoImprimir" ).dialog({
             autoOpen: false,
             width: 330,

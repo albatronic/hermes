@@ -74,6 +74,7 @@ ErpModulos:
   - { Id: 73, CodigoApp: Vtas, NombreModulo: Fidelizacion,     Nivel: 1, BelongsTo: 60,  Publish: 1, Titulo: Fidelización, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: Cupones,     Nivel: 2, BelongsTo: 73,  Publish: 1, Titulo: Cupones de descuento, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Vtas, NombreModulo: Afiliados,   Nivel: 2, BelongsTo: 73,  Publish: 1, Titulo: Afiliados, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Vtas, NombreModulo: AvisadorStock,   Nivel: 2, BelongsTo: 73,  Publish: 1, Titulo: Avisador de Stock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # ALMACEN
   - { Id: 80, CodigoApp: Almacen, NombreModulo: Almacen,              Nivel: 0, BelongsTo: 0,     Publish: 1, Titulo: Almacén, Funcionalidades: AC }
@@ -203,6 +204,7 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: Fidelizacion, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 1, NombreModulo: Cupones, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 1, NombreModulo: Afiliados, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 1, NombreModulo: AvisadorStock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
 
   - { IdPerfil: 1, NombreModulo: Almacen, Funcionalidades: 'AC,VW' }
   - { IdPerfil: 1, NombreModulo: Almacenes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  

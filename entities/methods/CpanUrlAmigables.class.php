@@ -55,6 +55,23 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
     }
 
     /**
+     * Devuelve array con tripletas únicas de controladores que se han definido
+     * en las urls amigables.
+     * 
+     * El array tiene tres elementos: Controller, Action, Template
+     * 
+     * @return array
+     */
+    static function getArrayControllers() {
+        
+        $urls = new CpanUrlAmigables();
+        $rows = $urls->cargaCondicion("distinct Controller,Action,Template", "1", "Controller ASC");
+        unset($urls); 
+        
+        return $rows;
+    }
+    
+    /**
      * Incrementa en 1 el número de visitas
      * de la url amigable y de su entidad asociada
      */
@@ -239,7 +256,7 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
             $partes = explode("/", $url);
             $primerTrozo = $partes[1];
             $filtro = "UrlFriendly LIKE '/{$primerTrozo}%'";
-            echo $url, " ", $filtro;
+            //echo $url, " ", $filtro;
             $rows = $this->cargaCondicion("Id,Idioma,UrlFriendly,Controller,Action,Parameters,Entity,IdEntity", $filtro, "UrlFriendly ASC");
 
             foreach ($rows as $row) {
@@ -254,5 +271,3 @@ class CpanUrlAmigables extends CpanUrlAmigablesEntity {
     }
 
 }
-
-?>
