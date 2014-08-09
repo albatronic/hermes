@@ -103,7 +103,7 @@ class cargaDatosDemo {
             $fam->setNivelJerarquico(1);
             $idfam = $fam->create();
             if ($idfam) {
-                self::actualizaUrlAmigable('Familias','Familias', $idfam, $familia);
+                self::actualizaUrlAmigable('Familias', 'Familias', $idfam, $familia);
                 foreach ($value as $subfamilia => $value) {
                     $sub = new Familias();
                     $sub->setFamilia($subfamilia);
@@ -112,8 +112,9 @@ class cargaDatosDemo {
                     $sub->setPublish(1);
                     $sub->setNivelJerarquico(2);
                     $idsub = $sub->create();
-                    if ($idsub)
-                        self::actualizaUrlAmigable('Familias','Familias', $idsub, $subfamilia);
+                    if ($idsub) {
+                        self::actualizaUrlAmigable('Familias', 'Familias', $idsub, $subfamilia);
+                    }
                 }
                 unset($sub);
             }
@@ -141,8 +142,9 @@ class cargaDatosDemo {
             $fab->setPublish(1);
             $fab->setMostrarPortada(1);
             $id = $fab->create();
-            if ($id)
-                self::actualizaUrlAmigable('Fabricantes','Fabricantes', $id, $fabricante);
+            if ($id) {
+                self::actualizaUrlAmigable('Fabricantes', 'Fabricantes', $id, $fabricante);
+            }
             unset($fab);
         }
 
@@ -191,12 +193,12 @@ class cargaDatosDemo {
         $imagenname = "catalogo/" . $referencia . ".jpg";
         $imagendescargada = file_get_contents($imagen);
 
-        if ($imagendescargada):
+        if ($imagendescargada) {
             $copiado = file_put_contents($imagenname, $imagendescargada);
-            if (!$copiado):
+            if (!$copiado) {
                 echo "<tr><td>$referencia</td><td>$categoria</td><td>$nombre</td><td>$pvd</td><td>$pvp</td><td><a href='$imagen' target='_blank'>$imagen</a></td><td>$imagenname</td></tr>";
-            endif;
-        endif;
+            }
+        }
 
         return ($copiado);
     }
@@ -216,11 +218,13 @@ class cargaDatosDemo {
         foreach (self::$xml->producto as $item) {
             $referencia = str_replace("/", "_", trim($item->referencia));
             $familia = self::Limpia($item->categoria1);
-            if ($familia == '')
+            if ($familia == '') {
                 $familia = 'varios';
+            }
             $subfamilia = self::Limpia($item->categoria2);
-            if ($subfamilia == '')
+            if ($subfamilia == '') {
                 $subfamilia = 'varios';
+            }
             $tmp = $item->nombre;
             $nombre = self::Limpia($tmp);
             $tmp = $item->descripcion;
@@ -260,22 +264,23 @@ class cargaDatosDemo {
             $arti->setPublish(1);
             $arti->setFechaUltimoPrecio($item->fechaultimarevision);
             $idarti = $arti->create();
-            
+
             if (!$idarti) {
                 $fallos++;
                 echo "<tr><td>", $referencia, "</td><td>", $nombre, "</td><td>", $familia, "</td><td>", $subfamilia, "</td></tr>";
                 echo "<tr><td colspan=4>", serialize($arti->getErrores()), "</td></tr>";
             } else {
-                if ($idarti)
-                    $slug = self::actualizaUrlAmigable('Producto','Articulos', $idarti, $nombre);
+                if ($idarti) {
+                    $slug = self::actualizaUrlAmigable('Producto', 'Articulos', $idarti, $nombre);
+                }
                 //COPIAR IMAGEN EN LOCALHOST SI NO EXISTE PREVIAMENTE.
                 if ($imagen != '') {
                     self::copiaImagen();
-                    
+
                     //if(!file_exists("catalogo/".$referencia.".jpg")) DescargaImagen($referencia,$imagen);
                 }
             }
-            
+
             $i += 1;
             //if ($i>1000) break;
         }
@@ -286,17 +291,17 @@ class cargaDatosDemo {
     static function copiaImagen() {
         
     }
-    
-    static function actualizaUrlAmigable($controller,$entidad,$idEntidad,$slug) {
-        
+
+    static function actualizaUrlAmigable($controller, $entidad, $idEntidad, $slug) {
+
         $slug = Textos::limpia($slug);
-        
+
         $objeto = new $entidad($idEntidad);
         $objeto->setSlug($slug);
         $objeto->setUrlFriendly("/" . $slug);
         $objeto->setUrlHeritable(0);
         $objeto->save();
-        
+
         $url = new CpanUrlAmigables();
         $url->setIdioma(0);
         $url->setUrlFriendly("/" . $slug);
@@ -306,23 +311,26 @@ class cargaDatosDemo {
         $url->setAction('Index');
         $url->setTemplate('Index');
         $url->create();
-        
+
         return $slug;
     }
-    
+
     /**
      * Vacia las tablas de familias,fabricantes y articulos
      */
     static function VaciarTablas() {
 
         $tabla = new CpanUrlAmigables();
-        $tabla->queryDelete("Controller='Familias' or Controller='Articulos'  or Controller='Producto' or Controller='Fabricantes'");
+        $tabla->queryDelete("Controller='Familias' or Controller='Articulos' or Controller='Producto' or Controller='Fabricantes'");
         $tabla = new Familias();
         $tabla->queryDelete("1");
         $tabla = new Fabricantes();
         $tabla->queryDelete("1");
         $tabla = new Articulos();
         $tabla->queryDelete("1");
+        $tabla = new CpanRelaciones();
+        $tabla->queryDelete("EntidadOrigen='Familias' or EntidadOrigen='Fabricantes' or EntidadOrigen='Articulos'");
+        $tabla->queryDelete("EntidadDestino='Familias' or EntidadDestino='Fabricantes' or EntidadDestino='Articulos'");
         unset($tabla);
     }
 
@@ -355,8 +363,9 @@ class cargaDatosDemo {
         $upload = ftp_put($conn_id, $destination_file, $source_file, FTP_IMAGE);
 
         // check upload status
-        if (!$upload)
+        if (!$upload) {
             $resultado = "FTP upload has failed!";
+        }
 
         // close the FTP stream
         ftp_close($conn_id);
@@ -364,5 +373,3 @@ class cargaDatosDemo {
     }
 
 }
-
-?>

@@ -72,6 +72,17 @@
                 {{ macro.input({'caption':'[shop][redsys][moneda] Código Moneda (978)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][moneda]','d_shop_redsys_moneda',values.d.shop.redsys.moneda,'50','CampoTextoMedio','1') }}        
                 {{ macro.input({'caption':'[shop][redsys][tipoTransaccion] Tipo de transacción (0)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][redsys][tipoTransaccion]','d_shop_redsys_tipoTransaccion',values.d.shop.redsys.tipoTransaccion,'50','CampoTextoMedio','1') }}        
             </div>            
+            <h3>Tpv Pagantis</h3>
+            <div>
+                {{ macro.input({'caption':'[shop][pagantis][modo] Modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][pagantis][modo]','d_shop_pagantis_modo',values.d.shop.pagantis.modo,'50','CampoTextoMedio','1') }}
+                {{ macro.input({'caption':'[shop][pagantis][claveTest] Clave modo test','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][claveTest]','d_shop_pagantis_claveTest',values.d.shop.pagantis.claveTest,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][pagantis][claveReal] Clave modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][claveReal]','d_shop_pagantis_claveReal',values.d.shop.pagantis.claveReal,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][pagantis][nombre] Nombre Comercio','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][nombre]','d_shop_pagantis_nombre',values.d.shop.pagantis.nombre,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][pagantis][codigo] Codigo Comercio','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][codigo]','d_shop_pagantis_codigo',values.d.shop.pagantis.codigo,'50','CampoTextoMedio','1') }}        
+                {# macro.input({'caption':'[shop][pagantis][terminal] Terminal (1)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][terminal]','d_shop_pagantis_terminal',values.d.shop.pagantis.terminal,'50','CampoTextoMedio','1') #}        
+                {{ macro.input({'caption':'[shop][pagantis][moneda] Código Moneda (EUR,USD,GBP)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][moneda]','d_shop_pagantis_moneda',values.d.shop.pagantis.moneda,'50','CampoTextoMedio','1') }}              
+                {{ macro.input({'caption':'[shop][pagantis][idoma] Idioma (opcional) (ca,en,es,eu,fr,gl,it,pl,ru)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][idioma]','d_shop_pagantis_idioma',values.d.shop.pagantis.idioma,'50','CampoTextoMedio','1') }}              
+            </div>            
         </div>
     </div>
         

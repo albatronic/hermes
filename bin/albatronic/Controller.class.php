@@ -1180,7 +1180,7 @@ class Controller {
 
     protected function calculaMetatagTitle($datos) {
 
-        // Obtener el metatagtitle
+        $metatag = array();
 
         $bloqueoMetatagTitle = ($datos->getLockMetatagTitle()->getIDTipo() == '1');
         $datos->setLockMetatagTitle($bloqueoMetatagTitle);
@@ -1188,17 +1188,19 @@ class Controller {
         if ($bloqueoMetatagTitle) {
             $columnaMetatagTitle = $this->varEnvMod['fieldGeneratorMetatagTitle'];
             $columnaMetatagDescription = $this->varEnvMod['fieldGeneratorMetatagDescription'];
-            $columnaMetatagKeywords = $this->varEnvMod['fieldGeneratorMetatagKeywords'];
+            //$columnaMetatagKeywords = $this->varEnvMod['fieldGeneratorMetatagKeywords'];
             if ($columnaMetatagTitle != '') {
                 $metatag['title'] = $datos->{"get$columnaMetatagTitle"}();
             }
             if ($columnaMetatagDescription != '') {
                 $metatag['description'] = $datos->{"get$columnaMetatagDescription"}();
             }
-            if ($columnaMetatagKeywords != '') {
-                $metatag['keywords'] = $datos->{"get$columnaMetatagKeywords"}();
-            }
+            //if ($columnaMetatagKeywords != '') {
+            //    $metatag['keywords'] = $datos->{"get$columnaMetatagKeywords"}();
+            //}
         }
+        
+        $metatag['keywords'] = $datos->getMetatagKeywords();
 
         return $metatag;
     }

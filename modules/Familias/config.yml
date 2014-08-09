@@ -72,7 +72,13 @@ Familias:
       criteria: 'SortOrder ASC'    
     -
       title: 'Orden Portada a-z'
-      criteria: 'OrdenPortada ASC'       
+      criteria: 'OrdenPortada ASC' 
+    -
+      title: 'Visitas a-z'
+      criteria: 'NumberVisits ASC'
+    -
+      title: 'Visitas z-a'
+      criteria: 'NumberVisits DESC'      
   ordenes_web:
     MostrarPortada:
       columnaMostrar: Familia

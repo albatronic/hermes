@@ -32,6 +32,7 @@ GconContenidos:
   fieldGeneratorUrlFriendly: Titulo
   metatagTitleManagement: true
   fieldGeneratorMetatagTitle: Titulo
+  fieldGeneratorMetatagDescription: Subtitulo  
   controller: Contenidos
   action: Index
   template: null
@@ -60,6 +61,12 @@ GconContenidos:
     -
       title: 'Título z-a'
       criteria: 'IdSeccion DESC,Titulo DESC'
+    -
+      title: 'Visitas a-z'
+      criteria: 'NumberVisits ASC'
+    -
+      title: 'Visitas z-a'
+      criteria: 'NumberVisits DESC'      
   search_default: Id
   ordenes_web:
     BlogMostrarEnPortada:

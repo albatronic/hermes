@@ -285,20 +285,17 @@
     {% if atributos.caption %}
         {{ _self.label(atributos, classLabel, name, id) }}
     {% endif %}
-    {% if ((atributos.visible == 1) or (user.getIDPerfil.IDPerfil == '1')) and atributos.editorTiny == '1' and (atributos.translatable or idiomas.actual == 0) %}
-        <script>
-            tinyMCE.execCommand("mceAddControl", false, "{{ id|default(name)}}");
-        </script>
-    {% endif %}     
+    <div style="float: left;margin-bottom: 5px;">
     <textarea  name="{{ name }}"
                id="{{ id|default(name)}}"
-               class="{{ class |default('TextArea') }}"
+               class="TextArea{% if ((atributos.visible == 1) or (user.getIDPerfil.IDPerfil == '1')) and atributos.editorTiny == '1' and (atributos.translatable or idiomas.actual == 0) %}tiny{% endif %}" title="{{ atributos.help }}"
                rows="{{ rows|default(5) }}"
                cols="{{ cols|default(75) }}"
                tabindex="{{ tabindex }}"
                onchange="{{ _self.alertSave }}"
                {% if atributos.updatable == '0' %} disabled {% endif %}
-               >{{value}}</textarea>   
+               >{{value}}</textarea>  
+    </div>
 </div>
 {% endmacro %}
 

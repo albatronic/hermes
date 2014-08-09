@@ -345,6 +345,16 @@
     margin-right: 3px;
     height: 50px;
 }
+.FormManto .Cuerpo .Item .TextAreatiny{
+    color:#000000;
+    font-size: 11px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-align:left;
+    width: 350px;
+    margin-top: 1px;
+    margin-right: 3px;
+    height: 50px;
+}
 
 .FormManto .Cuerpo .Item .TextAreaMeta{
     color:#000000;

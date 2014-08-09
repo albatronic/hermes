@@ -75,7 +75,13 @@ Articulos:
       criteria: Descripcion ASC
     -
       title: Descripción z-a
-      criteria: Descripcion DESC      
+      criteria: Descripcion DESC  
+    -
+      title: 'Visitas a-z'
+      criteria: 'NumberVisits ASC'
+    -
+      title: 'Visitas z-a'
+      criteria: 'NumberVisits DESC'      
   search_default: Descripción
   referenced_entities:
     - Familias
