@@ -42,9 +42,9 @@
     MetatagDescription:   {type: string(255), default: NULL}
     MetatagTitleSimple:   {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     MetatagTitlePosition: {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresDchaIzq,IDTipo'}
-    ShowOnSitemap:        {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
-    ImportanceSitemap:    {type: string(5), notnul: true, default: '0.5'}
-    ChangeFreqSitemap:    {type: string(25), notnul: true, default: 'monthly', index: index, comment: 'Abstract,ValoresChangeFreq,IDTipo'}
+    ShowOnSitemap:        {type: tinyint, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
+    ImportanceSitemap:    {type: string(5), notnul: true, default: '0,5'}
+    ChangeFreqSitemap:    {type: string(25), notnul: true, default: 'daily', index: index, comment: 'Abstract,ValoresChangeFreq,IDTipo'}
 
     ShowGalery:           {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}
     ShowDocuments:        {type: tinyint, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo'}

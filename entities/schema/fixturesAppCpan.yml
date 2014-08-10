@@ -44,7 +44,9 @@ CpanUrlAmigables:
   - { UrlFriendly: '/politica-de-privacidad',    Controller: PoliticaPrivacidad,   Action: Index,  Template: Index, Entity: GconSecciones, IdEntity: 10, Publish: 1 }      
   - { UrlFriendly: '/noticias',   Controller: Noticias,   Action: Index,  Template: Index, Entity: GconSecciones, IdEntity: 11, Publish: 1 }      
   - { UrlFriendly: '/eventos',    Controller: Eventos,    Action: Index,  Template: Index, Entity: GconSecciones, IdEntity: 12, Publish: 1 }      
-  - { UrlFriendly: '/acs',Controller: Proyectos, Action: Index, Template: Index, Entity: PcaeEmpresas, IdEntity: 1, Publish: 1}
+  - { UrlFriendly: '/rss',Controller: Rss, Action: Index, Template: index.html.twig, Entity: GconSecciones, IdEntity: 13, Publish: 1}
+  - { UrlFriendly: '/sitemap',Controller: Sitemap, Action: Index, Template: index.html.twig, Entity: GconSecciones, IdEntity: 14, Publish: 1}   
+  - { UrlFriendly: '/acs',Controller: Proyectos, Action: Index, Template: Index, Entity: PcaeEmpresas, IdEntity: 1, Publish: 1} 
   
 GconSecciones:
   - { Id: 1, Titulo: Inicio, Publish: 1, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: '', LockSlug: 1, UrlFriendly: '/' }
@@ -59,7 +61,8 @@ GconSecciones:
   - { Id: 10, Titulo: Politica de privacidad, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: 'politica-de-privacidad', LockSlug: 1, UrlFriendly: '/politica-de-privacidad' }  
   - { Id: 11, Titulo: Noticias, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: 'noticias', LockSlug: 1, UrlFriendly: '/noticias' }  
   - { Id: 12, Titulo: Eventos, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: 'eventos', LockSlug: 1, UrlFriendly: '/eventos' }  
-
+  - { Id: 13, Titulo: Rss, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: 'rss', LockSlug: 1, UrlFriendly: '/rss' }  
+  - { Id: 14, Titulo: SiteMap, NivelJerarquico: 1, IsDefault: 1, UrlPrefix: '/', LockUrlPrefix: 1, Slug: 'sitemap', LockSlug: 1, UrlFriendly: '/sitemap', ShowOnSitemap: 0 }  
   
 # Crear la zona de álbumes predeterminada
 AlbmSecciones:
