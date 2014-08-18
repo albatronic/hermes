@@ -13,8 +13,8 @@ class TiposTpv extends Tipos {
         array('Id' => '1', 'Value' => 'Paypal',),
         array('Id' => '2', 'Value' => 'Redsys/Sermepa',),
         array('Id' => '3', 'Value' => 'Pagantis',),
+        array('Id' => '4', 'Value' => 'CECA',),
     );
-    
     static $urlTpv = array(
         //Paypal
         '1' => array(
@@ -31,6 +31,11 @@ class TiposTpv extends Tipos {
         '3' => array(
             'test' => 'https://psp.pagantis.com/2/charges',
             'real' => 'https://psp.pagantis.com/2/charges',
+        ),
+        //CECA
+        '4' => array(
+            'test' => 'http://tpv.ceca.es:8000/cgi-bin/tpv',
+            'real' => 'https://pgw.ceca.es/cgi-bin/tpv',
         ),
     );
 
@@ -63,6 +68,10 @@ class TiposTpv extends Tipos {
 
             case '3': // Pagantis
                 $parametros = self::getParamsPagantis($idPedido, $total);
+                break;
+
+            case '4': // CECA
+                $parametros = self::getParamsCeca($idPedido, $total);
                 break;
 
             default:
@@ -153,12 +162,60 @@ class TiposTpv extends Tipos {
     }
 
     /**
+     * Devuelve array con los parámetros para Ceca
+     * 
+     * @param int $idPedido
+     * @param decimal $total
+     * @return array
+     */
+    static private function getParamsCeca($idPedido, $total) {
+
+        $modo = ($_SESSION['varEnv']['Pro']['shop']['ceca']['modo'] == '1') ? 'real' : 'test';
+        $urlWeb = $_SESSION['varEnv']['Pro']['shop']['url'];
+        $clave = ($modo === 'real') ?
+                $_SESSION['varEnv']['Pro']['shop']['ceca']['claveReal'] :
+                $_SESSION['varEnv']['Pro']['shop']['ceca']['claveTest'];
+
+        $total = number_format($total, 2, '', '');
+        if ($total[0] == '0') {
+            // si es menor de 1 hay q quitar el cero inicial (ej: 0.25 => 025 => 25)
+            $total = substr($total, 1);
+        }
+        $string = "lib/calculo {$clave} " .
+                "{$_SESSION['varEnv']['Pro']['shop']['ceca']['MerchantID']} " .
+                "{$_SESSION['varEnv']['Pro']['shop']['ceca']['AcquirerBIN']} " .
+                "{$_SESSION['varEnv']['Pro']['shop']['ceca']['TerminalID']} " .
+                "{$idPedido} " .
+                "{$total} " .
+                "{$_SESSION['varEnv']['Pro']['shop']['ceca']['TipoModena']} " .
+                "{$_SESSION['varEnv']['Pro']['shop']['ceca']['Exponente']} \"\" ";
+        $firma = exec($string);
+
+        $parametros = array(
+            'url_tpv' => self::$urlTpv[4][$modo],
+            'Num_operacon' => $idPedido,
+            'Importe' => $total,
+            'MerchantID' => $_SESSION['varEnv']['Pro']['shop']['ceca']['MerchantID'],
+            'AcquirerBIN' => $_SESSION['varEnv']['Pro']['shop']['ceca']['AcquirerBIN'],
+            'Firma' => $firma,
+            'TerminalID' => $_SESSION['varEnv']['Pro']['shop']['ceca']['TerminalID'],
+            'TipoModena' => $_SESSION['varEnv']['Pro']['shop']['ceca']['TipoModena'],
+            'Exponente' => $_SESSION['varEnv']['Pro']['shop']['ceca']['Exponente'],
+            'Pago_soportado' => $_SESSION['varEnv']['Pro']['shop']['ceca']['Pago_soportado'],
+            'URL_OK' => $urlWeb . '/carrito/notificacion/ceca/ok',
+            'URL_NOK' => $urlWeb . '/carrito/notificacion/ceca/ko',
+        );
+
+        return $parametros;
+    }
+
+    /**
      * Devuelve array con los parámetros para Pagantis
      * 
      * @param int $idPedido
      * @param decimal $total
      * @return array
-     */    
+     */
     static private function getParamsPagantis($idPedido, $total) {
 
         $modo = ($_SESSION['varEnv']['Pro']['shop']['pagantis']['modo'] == '1') ? 'real' : 'test';
