@@ -146,9 +146,11 @@
         <div style="margin-top: 10px;"></div>
         {{ macro.fecha('Desde fecha Vcto','Etiqueta','remesa[desdeFecha]','remesa_desdeFecha',values.listado.filter.valuesSelected[8],'10','CampoFecha','readonly') }}
         {{ macro.fecha('Hasta fecha Vcto','Etiqueta','remesa[hastaFecha]','remesa_hastaFecha',values.listado.filter.valuesSelected[9],'10','CampoFecha','readonly') }}
+        {{ macro.select('Cliente','Etiqueta','remesa[idCliente]','remesa_idCliente',200,none,values.clientes.fetchAll(true),'Select') }}   
+        {{ macro.select('Estado Recibo','Etiqueta','remesa[idEstado]','remesa_idEstado',200,none,values.estadosRecibos.fetchAll(true),'Select') }}   
         <div style="margin-top: 10px;"></div>        
-        {{ macro.input('Agrupar recibos por cliente','EtiquetaMedia','checkbox','remesa[agrupar]','remesa_agrupar',1,'1','CampoTextoMedio','20')}}         
-        {{ macro.select('Pasar los recibos al estado de','EtiquetaMedia','remesa[idEstado]','remesa_idEstado',200,none,values.estadosRecibos.fetchAll(false),'Select') }}        
+        {{ macro.input('Agrupar recibos por cliente','EtiquetaMedia','checkbox','remesa[agrupar]','remesa_agrupar',1,'1','CampoTextoMedio','20')}}              
+        {{ macro.select('Pasar los recibos al estado de','EtiquetaMedia','remesa[idEstadoFin]','remesa_idEstadoFin',200,none,values.estadosRecibos.fetchAll(false),'Select') }}        
         <div id="divBotonRemesar" style="clear:both;text-align: center;">
         <input type="submit" id="botonSubmitRemesar" value="Remesar" class="Comando" style="margin-top: 20px;" alt="Remesar" title="Generar Remesa"/>
         </div>
@@ -201,7 +203,7 @@
         $( "#dialogRemesar" ).dialog({
             autoOpen: false,
             width: 500,
-            height: 350,
+            height: 390,
             position: ['center'],
             closeOnEscape: true,
             resizable: false,

@@ -18,6 +18,7 @@ class RecibosClientesController extends Controller {
         $formasPago = new FormasPago();
         $this->values['formasPago'] = $formasPago;
         $this->values['estadosRecibos'] = new EstadosRecibos();
+        $this->values['clientes'] = new Clientes();
 
         $acceso = new ControlAcceso('CajaArqueos');
         $permisos = $acceso->getPermisos();
@@ -171,7 +172,7 @@ class RecibosClientesController extends Controller {
             $anotarEnCaja = ($formaPago->getAnotarEnCaja()->getIDTipo() == '1');
             $estadoRecibo = $formaPago->getEstadoRecibo()->getIDTipo();
             $cContable = $formaPago->getCContable();
-            
+
             $caja = new CajaArqueos();
 
             foreach ($this->request['RecibosClientes'] as $recibo) {
@@ -179,10 +180,10 @@ class RecibosClientesController extends Controller {
                 $objeto->setVencimiento($this->request['fechaCobro']);
                 $objeto->setIDEstado($estadoRecibo);
                 $objeto->setCContable($cContable);
-                if (($objeto->save()) and ($anotarEnCaja)) {
+                if (($objeto->save()) and ( $anotarEnCaja)) {
                     $caja->anotaEnCaja($objeto, $this->request['idFP']);
                 }
-                if (count($objeto->getErrores)>0) {
+                if (count($objeto->getErrores) > 0) {
                     print_r($objeto->getErrores());
                 }
             }
@@ -208,8 +209,16 @@ class RecibosClientesController extends Controller {
         unset($fecha);
         $filtro = "(r.Vencimiento>='{$desde}') and (r.Vencimiento<='{$hasta}')";
 
+        if ($remesa['idCliente'] != '') {
+            $filtro .= " and (r.IDCliente='{$remesa['idCliente']}')";
+        }
+        
+        if ($remesa['idEstado'] != '') {
+            $filtro .= " and (r.IDEstado='{$remesa['idEstado']}')";
+        }
+
         foreach ($this->request['filter']['valuesSelected'] as $key => $value)
-            if (($value != '') and (!in_array($key, array('6', '7', '8', '9')))) {
+            if (($value != '') and ( !in_array($key, array('6', '7', '8', '9')))) {
                 if ($key == '3')
                     $filtro .= " and c.RazonSocial like '{$value}'";
                 else if ($key == '4')
@@ -218,17 +227,17 @@ class RecibosClientesController extends Controller {
                     $filtro .= " and (r.{$this->request['filter']['columnsSelected'][$key]}='{$value}')";
             }
 
+        //echo $filtro;exit;
         //$ficheroRemesa = Cuaderno19::makeRemesa($remesa, $filtro);
         $ficheroRemesa = Cuaderno19SepaXml::makeRemesa($remesa, $filtro);
-        
-        if ($ficheroRemesa)
+
+        if ($ficheroRemesa) {
             $this->values['alertas'][] = "Se ha generado la remesa {$ficheroRemesa}";
-        else
+        } else {
             $this->values['alertas'][] = "No se ha generado la remesa";
-        
+        }
+
         return $this->IndexAction();
     }
 
 }
-
-?>
