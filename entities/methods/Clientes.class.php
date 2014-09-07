@@ -395,8 +395,12 @@ class Clientes extends ClientesEntity {
      * @param date $fecha La fecha
      * @return array Array con objetos promociones
      */
-    public function getPromosVigentes($fecha) {
+    public function getPromosVigentes($fecha = '') {
 
+        if ($fecha == '') {
+            $fecha = date('Y-m-d');
+        }
+        
         $promos = array();
 
         $promociones = new Promociones();

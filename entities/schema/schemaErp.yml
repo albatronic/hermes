@@ -1763,6 +1763,8 @@ ErpCarrito:
     Iva:             { type: decimal(2), notnull: true, default: '0.00' }
     Recargo:         { type: decimal(2), notnull: true, default: '0.00' }
     Estado:          { type: tinyint(1), notnull: true, detaul: 0 }
+    IDPromocion:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Promociones,IDPromocion' }
+    IvaIncluido:     { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
   index:

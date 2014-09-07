@@ -10,6 +10,9 @@
  */
 class PromocionesClientes extends PromocionesClientesEntity {
 
+    Protected $Publish = 1;
+    Protected $Privacy = 2;
+
     public function __toString() {
         return $this->getID();
     }
@@ -18,15 +21,15 @@ class PromocionesClientes extends PromocionesClientesEntity {
      * Validacion lógica
      */
     protected function validaLogico() {
-        
-        parent::validaLogico();        
+
+        parent::validaLogico();
 
         if ($this->IDGrupo != '')
             $this->IDCliente = NULL;
         else
             $this->IDGrupo = NULL;
 
-        if ((!$this->IDGrupo) and (!$this->IDCliente))
+        if ((!$this->IDGrupo) and ( !$this->IDCliente))
             $this->_errores[] = 'Debe indicar un grupo de clientes o un cliente concreto';
 
         // Comprobar que no existe duplicidad de IDPromocion-IDGrupo
@@ -38,5 +41,3 @@ class PromocionesClientes extends PromocionesClientesEntity {
     }
 
 }
-
-?>
