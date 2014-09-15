@@ -17,7 +17,8 @@ class ClientesDentrega extends ClientesDentregaEntity {
     }
 
     /**
-     * Devuelve un array con todas las direcciones de entrega de un cliente
+     * Devuelve un array con todas las direcciones de entrega
+     * VIGENTES de un cliente
      *
      * Si se omite el segundo parametro, como valor a mostar se genera un string
      * concatenando la dirección, el codigo postal y la poblacion
@@ -41,7 +42,7 @@ class ClientesDentrega extends ClientesDentregaEntity {
                             {$this->_dataBaseName}.{$this->_tableName} as d,
                             {$poblacion->getDataBaseName()}.{$poblacion->getTableName()} as p
                         WHERE
-                        (d.IDCliente='{$idCliente}') AND (d.IDPoblacion=p.IDMunicipio)
+                        (d.IDCliente='{$idCliente}') AND (d.Vigente='1') AND (d.IDPoblacion=p.IDMunicipio)
                         ORDER BY {$column} ASC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
@@ -56,5 +57,3 @@ class ClientesDentrega extends ClientesDentregaEntity {
     }
 
 }
-
-?>

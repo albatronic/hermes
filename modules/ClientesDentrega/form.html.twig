@@ -16,7 +16,7 @@
 {{ macro.input(atributos.HorarioLlamadas,'Etiqueta','text','ClientesDentrega[HorarioLlamadas]','ClientesDentrega_HorarioLlamadas',datos.HorarioLlamadas,'50','CampoTextoMedio') }}
 {{ macro.input(atributos.Horario,'Etiqueta','text','ClientesDentrega[Horario]','ClientesDentrega_Horario',datos.Horario,'50','CampoTextoMedio') }}
 {{ macro.select(atributos.IDZona,'Etiqueta','ClientesDentrega[IDZona]','ClientesDentrega_IDZona',200,datos.IDZona.IDZona,datos.IDZona.fetchAll('','Zona',false),'Select')}}
-
+{{ macro.input(atributos.Vigente,'Etiqueta','checkbox','ClientesDentrega[Vigente]','ClientesDentrega_Vigente',datos.Vigente.IDTipo,'255','CampoTextoLargo','20')}}   
 <script type="text/javascript">
 function limpia(idOrigen,idInput) {
 

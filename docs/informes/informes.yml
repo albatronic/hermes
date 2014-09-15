@@ -1808,7 +1808,7 @@ informes:
     print_total_records: true
     print_interline:
     query: >
-      SELECT f.Familia, a.Codigo, a.Descripcion, a.StockMinimo, sum(e.Reales) as Reales, (a.StockMinimo-sum(e.Reales)) as Pedido
+      SELECT f.Familia, a.Codigo, a.Descripcion, a.StockMinimo, sum(e.Reales) as Reales, (a.StockMinimo-sum(e.Reales)) as Pedido,e.Entrando,e.Reservadas as Reservas,(a.StockMinimo-sum(e.Reales)+e.Reservadas) as PedidoOptimo
       FROM 
         DBNAME.ErpExistencias e, 
         DBNAME.ErpArticulos a, 
@@ -1835,7 +1835,7 @@ informes:
       -
         title: Código
         field: Codigo
-        length: 20
+        length: 10
         align: L
         type: string
         total: NO
@@ -1844,7 +1844,7 @@ informes:
       -
         title: Descripción
         field: Descripcion
-        length: 45
+        length: 30
         align: L
         type: string
         total: NO
@@ -1869,9 +1869,27 @@ informes:
         formula: null
         format: %01.2f
       -
-        title: Pedido Mínimo
+        title: Ped Mínimo
         field: Pedido
-        length: 14
+        length: 11
+        align: R
+        type: decimal
+        total: NO
+        formula: null
+        format: %01.2f
+      -
+        title: Reservas
+        field: Reservas
+        length: 11
+        align: R
+        type: decimal
+        total: NO
+        formula: null
+        format: %01.2f
+      -
+        title: Ped Optimo
+        field: PedidoOptimo
+        length: 11
         align: R
         type: decimal
         total: NO

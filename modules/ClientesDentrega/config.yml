@@ -307,3 +307,15 @@ ClientesDentrega:
       link: { route: null, param: null, title: null, target: null, link: null }
       #aditional_filter: { order: 6, caption: IDZona, entity: ErpZonas, method: fetchAll, params: Descripcion, type: select, operator: '=', event: null }
       validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
+    Vigente:
+      title: Vigente
+      filter: NO
+      list: NO
+      visible: true
+      updatable: true
+      default: '1'
+      help: null
+      permission: null
+      translatable: false
+      searchable: false
+      link: { route: null, param: null, title: null, target: null, link: null }

@@ -550,6 +550,7 @@ ErpClientesDentrega:
     HorarioLlamadas: { type: varchar(50), notnull: false }    
     IDComercial:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }
     IDZona:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Zonas,IDZona' }
+    Vigente:         { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }    
     <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:   
     
