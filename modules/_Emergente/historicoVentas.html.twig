@@ -25,7 +25,7 @@
             <input name="idArticulo" id="idArticulo" value="{{values.datos.articulo.IDArticulo}}" type="hidden" />
             <input value="{{values.datos.articulo.Descripcion}}" id="Descripcion" type="text" maxlength="50" class="CampoTextoLargo"
                    onkeyup="autoCompletar('Descripcion','idArticulo','Descripcion','articulos','','');"
-                   onblur="if (this.value == '') {$('#idArticulo').val('');} $('#formConsulta').submit();"/>
+                   onblur="if (this.value === '') {$('#idArticulo').val('');} $('#formConsulta').submit();"/>
             Dejar en blanco para ver todos los artículos vendidos
         </div>
         <div style="clear: both;"></div>
