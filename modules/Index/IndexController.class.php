@@ -71,7 +71,7 @@ class IndexController extends Controller {
         if ($_SESSION['tpv']) {
             $this->values['dashBoard'] = $this->getDashBoard();
         }
-
+        
         return array('template' => 'Index/index.html.twig', 'values' => $this->values);
     }
 

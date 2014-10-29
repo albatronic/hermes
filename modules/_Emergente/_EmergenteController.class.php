@@ -162,16 +162,24 @@ class _EmergenteController {
         switch ($this->request["METHOD"]) {
             case 'GET':
                 $idArticulo = $this->request['2'];
-                if ($idArticulo == '0')
+                if ($idArticulo == '0') {
                     $idArticulo = '';
-                $idProveedor = $this->request['3'];
+                }
+                $IDProveedor = $this->request['3'];
+                if ($IDProveedor == '0') {
+                    $IDProveedor = '';
+                }                
                 $periodo = $this->request['4'];
                 break;
             case 'POST':
                 $idArticulo = $this->request['idArticulo'];
-                if ($idArticulo == '0')
+                if ($idArticulo == '0') {
                     $idArticulo = '';
+                }
                 $idProveedor = $this->request['idProveedor'];
+                if ($idProveedor == '0') {
+                    $idProveedor = '';
+                }
                 $periodo = $this->request['periodo'];
                 break;
         }
@@ -211,17 +219,19 @@ class _EmergenteController {
 
         // Calcular el total de unidades compradas y el precio medio de compra
         // Solo calcula los pedidos que están recepcionados o facturados
-        if ($idArticulo != '') {
+        if ($idArticulo != '' or $idProveedor != '') {
 
             $em = new EntityManager($articulo->getConectionName());
             if ($em->getDbLink()) {
                 $query = "SELECT SUM(t1.Unidades) as Unidades, SUM(t1.Importe) as Importe
                 FROM {$lineasTabla} as t1, {$pedidosTabla} as t2
-                WHERE t1.IDPedido=t2.IDPedido
-                AND t2.IDProveedor='{$idProveedor}'
-                AND t1.IDArticulo='{$idArticulo}'
-                AND t2.IDEstado>='2'
-                AND t2.FechaEntrada>='{$desdeFecha}'";
+                WHERE t1.IDPedido=t2.IDPedido AND t2.IDEstado>='2' AND t2.FechaEntrada>='{$desdeFecha}'";
+                if ($idProveedor !== '') {
+                    $query .= " AND  t2.IDProveedor='{$idProveedor}'";
+                }
+                if ($idArticulo !== '') {
+                    $query .= " AND t1.IDArticulo='{$idArticulo}'";
+                }                
                 $em->query($query);
                 $rows = $em->fetchResult();
                 $em->desConecta();
@@ -246,18 +256,26 @@ class _EmergenteController {
         $em = new EntityManager($articulo->getConectionName());
         if ($em->getDbLink()) {
             $query = "SELECT t2.IDLinea,t1.IDPedido,t1.PrimaryKeyMD5,DATE_FORMAT(t1.FechaEntrada,'%d-%m-%Y') as FechaEntrada,t4.Descripcion,t2.Unidades,t2.Precio,t2.Descuento,t2.Importe
-                FROM {$pedidosTabla} as t1, {$lineasTabla} as t2, {$proveedorTabla} as t3, {$articuloTabla} as t4
-                WHERE t1.IDPedido=t2.IDPedido
-                AND t1.IDProveedor=t3.IDProveedor
-                AND t1.IDProveedor='{$idProveedor}'
-                AND t2.IDArticulo=t4.IDArticulo ";
-            if ($idArticulo != '')
-                $query .= "AND t2.IDArticulo='{$idArticulo}'";
+                FROM {$pedidosTabla} as t1, {$lineasTabla} as t2";
+            if ($idProveedor !== '') {
+                $query .= ", {$proveedorTabla} as t3";
+            }
+            if ($idArticulo !== '') {
+                $query .= ", {$articuloTabla} as t4";
+            }
+            $query .= " WHERE t1.IDPedido=t2.IDPedido";
+            if ($idProveedor !== '') {
+                $query .= " AND t1.IDProveedor=t3.IDProveedor AND t1.IDProveedor='{$idProveedor}' ";
+            }
+
+            if ($idArticulo !== '') {
+                $query .= " AND t2.IDArticulo=t4.IDArticulo AND t2.IDArticulo='{$idArticulo}'";
+            }                
             $query .= "
                 AND t1.IDEstado>='2'
                 AND t1.FechaEntrada>='{$desdeFecha}'
                 ORDER BY t1.FechaEntrada, t1.IDPedido DESC";
-
+            //echo $query;
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
@@ -450,5 +468,3 @@ class _EmergenteController {
     }
 
 }
-
-?>

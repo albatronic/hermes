@@ -44,12 +44,12 @@ class PstoLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
      */
-    protected $Precio = '';
+    protected $Precio = '0.0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
      */
-    protected $Descuento = '';
+    protected $Descuento = '0.0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
@@ -70,12 +70,12 @@ class PstoLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
      */
-    protected $Iva = '';
+    protected $Iva = '0.0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
      */
-    protected $Recargo = '';
+    protected $Recargo = '0.0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")

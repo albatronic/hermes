@@ -69,9 +69,8 @@ class Ftp {
      * @return boolean TRUE si el archivo se subió con éxito
      */
     public function upLoad($targetFolder, $sourceFile, $targetFile, $transferMode = FTP_BINARY) {
-
+        
         if ($this->connectId) {
-
             $ok = $this->chdir($targetFolder);
 
             if (!$ok) {
@@ -80,12 +79,35 @@ class Ftp {
             }
 
             if ($ok) {
-                $ok = ftp_put($this->connectId, $targetFile, $sourceFile, $transferMode);
+                $ok = @ftp_put($this->connectId, $targetFile, $sourceFile, $transferMode);
 
-                if (!$ok)
+                if (!$ok) {
                     $this->errores[] = "FTP: La carga ha fallado!";
+                }
             } else {
                 $this->errores[] = "FTP: No existe el directorio '{$targetFolder}'";
+            }
+        }
+
+        return (count($this->errores) == 0);
+    }
+
+    /**
+     * Descarga un archivo desde el servidor FTP y lo copia en
+     * un archivo local
+     *
+     * @param string $serverFile El archivo a descargar desde el servidor
+     * @param string $localFile El nombre del archivo local que se generará
+     * @param integer $transferMode Tipo de transferencia (FTP_ASCII, FTP_BINARY), por defecto FTP_BINARY
+     * @return boolean TRUE si la descarga se hizo con éxito
+     */
+    public function downLoad($serverFile, $localFile, $transferMode = FTP_BINARY) {
+
+        if ($this->connectId) {
+            $ok = @ftp_get($this->connectId, $localFile, $serverFile, $transferMode);
+
+            if (!$ok) {
+                $this->errores[] = "FTP: No se ha podido descargar el archivo '{$serverFile} a '{$localFile}'";
             }
         }
 
@@ -99,6 +121,8 @@ class Ftp {
      */
     public function creaCarpeta($path) {
 
+        $rutaActual = $this->pwd();
+        
         $carpetas = explode("/", $path);
         foreach ($carpetas as $key => $carpeta) {
             if (!$this->chdir($carpeta)) {
@@ -106,6 +130,8 @@ class Ftp {
                 //chmod($carpeta, 0775);
             }
         }
+        
+        $this->chdir($rutaActual);
     }
     
     /**
@@ -128,27 +154,6 @@ class Ftp {
     }
     
     /**
-     * Descarga un archivo desde el servidor FTP y lo copia en
-     * un archivo local
-     *
-     * @param string $serverFile El archivo a descargar desde el servidor
-     * @param string $localFile El nombre del archivo local que se generará
-     * @param integer $transferMode Tipo de transferencia (FTP_ASCII, FTP_BINARY), por defecto FTP_BINARY
-     * @return boolean TRUE si la descarga se hizo con éxito
-     */
-    public function downLoad($serverFile, $localFile, $transferMode = FTP_BINARY) {
-
-        if ($this->connectId) {
-            $ok = @ftp_get($this->connectId, $localFile, $serverFile, $transferMode);
-
-            if (!$ok)
-                $this->errores[] = "FTP: No se ha podido descargar el archivo '{$serverFile} a '{$localFile}'";
-        }
-
-        return (count($this->errores) == 0);
-    }
-
-    /**
      * Borrar un archivo del servidor vía FTP
      *
      * @param string $folder Carpeta donde está el fichero a borrar
@@ -161,8 +166,9 @@ class Ftp {
             ftp_chdir($this->connectId, $folder);
             $ok = @ftp_delete($this->connectId, $file);
 
-            if (!$ok)
+            if (!$ok) {
                 $this->errores[] = "FTP: El borrado ha fallado!";
+            }
         }
 
         return (count($this->errores) == 0);
@@ -182,8 +188,9 @@ class Ftp {
             ftp_chdir($this->connectId, $folder);
             $ok = @ftp_rename($this->connectId, $oldName, $newName);
 
-            if (!$ok)
+            if (!$ok) {
                 $this->errores[] = "FTP: El cambio de nombre ha fallado!";
+            }
         }
 
         return (count($this->errores) == 0);
@@ -200,8 +207,9 @@ class Ftp {
         if ($this->connectId) {
             $ok = ftp_mkdir($this->connectId, $directory);
 
-            if (!$ok)
+            if (!$ok) {
                 $this->errores[] = "FTP: No se ha podido crear la carpeta '{$directory}'";
+            }
         }
 
         return (count($this->errores) == 0);
@@ -220,8 +228,9 @@ class Ftp {
         if ($this->connectId) {
             $ok = @ftp_rmdir($this->connectId, $directory);
 
-            if (!$ok)
+            if (!$ok) {
                 $this->errores[] = "FTP: No se ha podido borrar la carpeta '{$directory}'";
+            }
         }
 
         return (count($this->errores) == 0);
@@ -250,8 +259,9 @@ class Ftp {
         if ($this->connectId) {
             $ok = @ftp_chdir($this->connectId, $directory);
 
-            if (!$ok)
+            if (!$ok) {
                 $this->alertas[] = "FTP: No se ha podido cambiar al directorio '{$directory}'";
+            }
         }
 
         return (count($this->alertas) == 0);
@@ -269,8 +279,9 @@ class Ftp {
         if ($this->connectId) {
             $array = @ftp_rawlist($this->connectId, $directory, $recursive);
 
-            if (!is_array($array))
+            if (!is_array($array)) {
                 $this->errores[] = "FTP: Ha fallado el listado de la carpeta '{$directory}'";
+            }
         }
 
         return $array;
@@ -300,8 +311,9 @@ class Ftp {
         $info = curl_getinfo($ch);
         curl_close($ch);
 
-        if ($result['info']['http_code'] != 200)
+        if ($result['info']['http_code'] != 200) {
             $this->errores[] = "Error " . $result['info']['http_code'] . ". Se produjo un error al leer el archivo " . $urlFile;
+        }
 
         return array(
             'result' => $result,
@@ -319,8 +331,9 @@ class Ftp {
         $this->connectId = ftp_connect($this->server,$this->port, $this->timeout);
         $ok = ftp_login($this->connectId, $this->user, $this->password);
 
-        if (!$ok)
+        if (!$ok) {
             $this->errores[] = "FTP: La conexión ha fallado!";
+        }
         
         return $ok;
     }
@@ -340,4 +353,3 @@ class Ftp {
 
 }
 
-?>

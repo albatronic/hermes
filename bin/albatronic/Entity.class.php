@@ -140,7 +140,7 @@ class Entity {
      */
     public function save() {
 
-        $this->conecta();
+        $this->conecta(); 
 
         if (is_resource($this->_dbLink)) {
             // Auditoria
@@ -160,7 +160,6 @@ class Entity {
             // Quito la coma final
             $values = substr($values, 0, -1);
             $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET {$values} WHERE `{$this->getPrimaryKeyName()}` = '{$this->getPrimaryKeyValue()}'";
-            //echo $query,"<br/>";
             if (!$this->_em->query($query))
                 $this->_errores = $this->_em->getError();
             //$this->_em->desConecta();
@@ -176,7 +175,8 @@ class Entity {
      * @return int El valor del último ID insertado
      */
     public function create() {
-        $this->conecta();
+        
+        $this->conecta();      
 
         $lastId = NULL;
 
@@ -202,13 +202,12 @@ class Entity {
             $values = substr($values, 0, -1);
 
             $query = "INSERT INTO `{$this->_dataBaseName}`.`{$this->_tableName}` ({$columns}) VALUES ({$values})";
-
+            //echo $query,"<br/>";
             if (!$this->_em->query($query)) {
                 $this->_errores = $this->_em->getError();
             } else {
                 $lastId = (!$this->getPrimaryKeyValue()) ? $this->_em->getInsertId() : $this->getPrimaryKeyValue();
                 // ***** Comentar para importar
-
                 $this->setPrimaryKeyValue($lastId);
                 // Calcular la clave md5
                 $this->setPrimaryKeyMD5(md5($lastId));
@@ -590,7 +589,7 @@ class Entity {
             $valores = substr($valores, 0, -1);
 
             $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET {$valores} WHERE ({$condicion})";
-            $this->_em->query($query);
+            $this->_em->query($query);//echo $query;
             $filasAfectadas = $this->_em->getAffectedRows();
             //$this->_em->desConecta();
         }

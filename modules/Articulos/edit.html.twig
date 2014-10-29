@@ -8,17 +8,21 @@
 <div class="FormManto">
     <form name="manto_{{values.controller}}" id="manto_{{values.controller}}" action="" enctype="multipart/form-data" method="POST">
         <input name="controller" value="Articulos" type="hidden" />
-        <input name="action" id="action_{{values.controller}}" value="edit" type="hidden" />
+        <input name="action" id="action_{{values.controller}}" value="edit" type="hidden" />   
+        <input name="accion" id="accion_{{values.controller}}" value="" type="hidden" />          
         <div class='Comandos'>
             <div class="Titulo">
 
-            <div style="float: left;">
+            <div style="float: left;">              
                 {% include "_global/comandosSave.html.twig" %}
                 {% include "_global/comandosDelete.html.twig" %}
 
                 {% if values.permisos.permisosModulo['CO'] %}
                 <a href="javascript:;" onClick="window.open('{{app.path}}/_Emergente/HistoricoVentas/{{values.datos.IDArticulo}}/0','HistoricoVentas','width=850,height=500,resizable=yes,scrollbars=yes');">
-                    <img src="{{app.path}}/images/historico.png" width="24px" height="24px" alt="Historico" title="Historico de Ventas...">
+                    <img src="{{app.path}}/images/historico.png" width="24px" height="24px" alt="Historico Ventas" title="Historico de Ventas...">
+                </a>
+                <a href="javascript:;" onClick="window.open('{{app.path}}/_Emergente/HistoricoCompras/{{values.datos.IDArticulo}}/0','HistoricoCompras','width=850,height=500,resizable=yes,scrollbars=yes');">
+                    <img src="{{app.path}}/images/historico.png" width="24px" height="24px" alt="Historico Compras" title="Historico de Compras...">
                 </a>
                 {% endif %}
             </div>

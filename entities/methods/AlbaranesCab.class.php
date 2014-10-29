@@ -103,8 +103,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                 $query = "DELETE FROM {$lineas->getDataBaseName()}.{$lineas->getTableName()} where `IDAlbaran`='{$this->IDAlbaran}'";
                 if (!$this->_em->query($query))
                     $this->_errores = $this->_em->getError();
-            }
-            else
+            } else
                 $this->_errores = $this->_em->getError();
             $this->_em->desConecta();
         }
@@ -175,7 +174,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $query = "select sum(Importe) as Bruto,sum(ImporteCosto) as Costo from {$tableLineas} where (IDAlbaran='" . $this->getIDAlbaran() . "')";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
-            $bruto = $rows[0]['Bruto'];
+            $bruto = ($rows[0]['Bruto']) ? $rows[0]['Bruto'] : 0;
 
             $query = "select Iva,Recargo, sum(Importe) as Importe from {$tableLineas} where (IDAlbaran='" . $this->getIDAlbaran() . "') group by Iva,Recargo order by Iva";
             $this->_em->query($query);
@@ -183,7 +182,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $totbases = 0;
             $totiva = 0;
             $totrec = 0;
-            $bases = array();
+            $bases[0] = $bases[1] = $bases[2] = array('b' => 0, 'i' => 0, 'ci' => 0, 'r' => 0, 'cr' => 0);
 
             foreach ($rows as $key => $row) {
                 $importe = $row['Importe'] * (1 - $pordcto / 100);
@@ -215,7 +214,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             //Calcular el peso, volumen y n. de bultos de los productos inventariables
             switch ($_SESSION['ver']) {
                 case '1': //Cristal
-                    $columna = "MtsAl";                
+                    $columna = "MtsAl";
                 case '0': //Estandar
                 default:
                     $columna = "Unidades";
@@ -231,6 +230,11 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $em->query($query);
             $rows = $em->fetchResult();
             $em->desConecta();
+
+            $row = $rows[0];
+            $peso = $row['Peso'] ? $row['Peso'] : 0;
+            $volumen = $row['Volumen'] ? $row['Volumen'] : 0;
+            $bultos = $row['Bultos'] ? $row['Bultos'] : 0;
 
             $this->setImporte($bruto);
             $this->setBaseImponible1($bases[0]['b']);
@@ -255,11 +259,11 @@ class AlbaranesCab extends AlbaranesCabEntity {
             $this->setCuotaRecargoFinanciero($cuotaRecFinanciero);
             $this->setTotal($total);
             if ($this->Peso == 0)
-                $this->setPeso($rows[0]['Peso']);
+                $this->setPeso($peso);
             if ($this->Volumen == 0)
-                $this->setVolumen($rows[0]['Volumen']);
+                $this->setVolumen($volumen);
             if ($this->Bultos == 0)
-                $this->setBultos($rows[0]['Bultos']);
+                $this->setBultos($bultos);
         }
     }
 
@@ -305,7 +309,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
             // Comprobar el riesgo
             $cliente = new Clientes($this->IDCliente);
             $riesgo = $cliente->getRiesgo();
-            $superadoRiesgo = ( ($riesgo['RI'] > 0) and ($riesgo['RE']['Importe'] >= $riesgo['RI']));
+            $superadoRiesgo = ( ($riesgo['RI'] > 0) and ( $riesgo['RE']['Importe'] >= $riesgo['RI']));
             unset($cliente);
             if (!$superadoRiesgo) {
 
@@ -492,7 +496,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
 
         $idFactura = 0;
 
-        if (($this->getIDEstado()->getIDTipo() == 2) and ($this->getIDFactura()->getIDFactura() == 0)) {
+        if (($this->getIDEstado()->getIDTipo() == 2) and ( $this->getIDFactura()->getIDFactura() == 0)) {
             // Buscar la cuenta contable de ventas para la sucursal
             $sucursal = new Sucursales($this->IDSucursal);
             $ctaVentas = $sucursal->getCtaContableVentas();
@@ -587,7 +591,8 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     }
                     unset($linFactura);
                 }
-            } else print_r($factura->getErrores ());
+            } else
+                print_r($factura->getErrores());
 
             if ($idFactura != 0) {
                 // Crear vencimientos
@@ -600,8 +605,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                 $this->setIDFactura($idFactura);
                 $this->save();
                 $this->queryUpdate(array("IDEstado" => '3'), "IDAlbaran='{$this->IDAlbaran}'");
-            }
-            else
+            } else
                 $this->_errores[] = "Se ha producido un error al generar la factura, posiblemente estén mal los contadores";
             unset($factura);
         }

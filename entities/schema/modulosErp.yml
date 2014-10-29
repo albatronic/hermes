@@ -110,6 +110,7 @@ ErpModulos:
   - { CodigoApp: Utils, NombreModulo: CambioProveedorFactura, Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Cambio de proveedor en factura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Utils, NombreModulo: ImportarFemitidas,      Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas emitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { CodigoApp: Utils, NombreModulo: ImportarFrecibidas,     Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Importar facturas recibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { CodigoApp: Utils, NombreModulo: RecalculaStock,         Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Recalcular Stock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { CodigoApp: Utils, NombreModulo: EmailBox,               Nivel: 1, BelongsTo: 140,  Publish: 1, Titulo: Email Box, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   # CMS
@@ -236,6 +237,7 @@ ErpPermisos:
   - { IdPerfil: 1, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 1, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
+  - { IdPerfil: 1, NombreModulo: RecalculaStock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   - { IdPerfil: 1, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}  
   
   - { IdPerfil: 1, NombreModulo: CMS, Funcionalidades: 'AC,VW' }   
@@ -355,6 +357,7 @@ ErpPermisos:
   - { IdPerfil: 2, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 2, NombreModulo: RecalculaStock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 2, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # PERMISOS PARA ADMON
@@ -438,6 +441,7 @@ ErpPermisos:
   - { IdPerfil: 3, NombreModulo: CambioProveedorFactura, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: ImportarFemitidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: ImportarFrecibidas, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
+  - { IdPerfil: 3, NombreModulo: RecalculaStock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 3, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   # PERMISOS PARA COMERCIAL
@@ -477,6 +481,7 @@ ErpPermisos:
   - { IdPerfil: 6, NombreModulo: Lotes, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
 
   - { IdPerfil: 6, NombreModulo: Utilidades, Funcionalidades: 'AC,VW' }
+  - { IdPerfil: 6, NombreModulo: RecalculaStock, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   - { IdPerfil: 6, NombreModulo: EmailBox, Funcionalidades: <?php include '../Hermes/entities/schema/defaultFunctionality.yml';?>}
   
   

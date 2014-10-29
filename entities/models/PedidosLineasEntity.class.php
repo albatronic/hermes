@@ -49,7 +49,7 @@ class PedidosLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
      */
-    protected $Precio = '';
+    protected $Precio = '0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
@@ -64,12 +64,12 @@ class PedidosLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
      */
-    protected $Iva = '';
+    protected $Iva = '0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
      */
-    protected $Recargo = '';
+    protected $Recargo = '0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
@@ -85,7 +85,7 @@ class PedidosLineasEntity extends EntityComunes {
      * @assert:NotBlank(groups="PedidosLineas")
      * @var entities\Abstract\EstadosLineasPedidos
      */
-    protected $IDEstado = '';
+    protected $IDEstado = '0';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")

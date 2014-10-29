@@ -92,16 +92,17 @@ PstoCab:
       - $this->Cell(20, 5, 'Importe', 1, 1, 'C')
       - $this->SetFont('Arial','', 8)
     body:
-      #- $this->Cell(25, 4, $this->detail->getIDArticulo()->getCodigo(), 0, 0, 'L')
+      - $this->Cell(25, 4, $this->detail->getIDArticulo()->getCodigo(), 0, 0, 'L')
       - $y0 = $this->GetY()
-      - $this->MultiCell(108, 4, $this->detail->getDescripcion(), 0, 'L')
+      - $this->MultiCell(85, 4, utf8_encode($this->detail->getDescripcion()), 0, 'J')
+      - if ($this->detail->getObservations()!='') {$this->SetX(40);$this->MultiCell(155,4,utf8_encode($this->detail->getObservations()),0,'L',1);$this->Ln(3);}      
       - $y1 = $this->GetY()
-      - $this->SetXY(126, $y0)
-      - $this->Cell(12, 4, number_format($this->detail->getUnidades(),2), 0, 0, 'R')
+      - $this->SetXY(125, $y0)
+      - $this->Cell(12, 4, $this->detail->getUnidades(), 0, 0, 'R')
       - $this->Cell(13, 4, $this->detail->getIDArticulo()->getUMV()->getUnidadMedida(), 0, 0, 'L')
-      - $this->Cell(15, 4, number_format($this->detail->getPrecio(),3), 0, 0, 'R')
+      - $this->Cell(15, 4, $this->detail->getPrecio(), 0, 0, 'R')
       - $this->Cell(10, 4, $this->detail->getDescuento(), 0, 0, 'R')
-      - $this->Cell(20, 4, number_format($this->detail->getImporte(),2), 0, 1, 'R')
+      - $this->Cell(20, 4, $this->detail->getImporte(), 0, 1, 'R')
       - $this->SetY($y1)
     footer:
       - $this->SetX(230)

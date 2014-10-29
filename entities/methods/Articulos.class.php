@@ -742,6 +742,8 @@ class Articulos extends ArticulosEntity {
      * Cada elemento del array es otro array con los elementos:
      * array (
      *   'IDAlbaran' =>
+     *   'PrimaryKeyMD5' =>
+     *   'NumeroAlbaran' =>
      *   'Fecha' =>
      *   'IDCliente' =>
      *   'RazonSocial =>
@@ -763,6 +765,8 @@ class Articulos extends ArticulosEntity {
             //$query = "Call ReservasArticuloAlmacen('{$this->IDArticulo}','{$idAlmacen}');";
             $query = "select
                         cab.IDAlbaran,
+                        cab.PrimaryKeyMD5,
+                        cab.NumeroAlbaran,                       
                         cab.Fecha,
                         cab.IDCliente,
                         cli.RazonSocial,
@@ -779,7 +783,7 @@ class Articulos extends ArticulosEntity {
                         lin.IDAlmacen  = '{$idAlmacen}'
                       group by IDAlbaran
                       order by Fecha ASC";
-            $em->query($query);
+            $em->query($query);//echo $query,"<br/>";
             $reservas = $em->fetchResult();
             $em->desConecta();
         }
@@ -788,6 +792,65 @@ class Articulos extends ArticulosEntity {
         unset($tablaAlbaranes);
         unset($tablaAlbaranesLineas);
         unset($tablaClientes);
+
+        return $reservas;
+    }
+    
+    /**
+     * Devuelve un array con las entradas en curso del articulo y almacen indicado
+     *
+     * Cada elemento del array es otro array con los elementos:
+     * array (
+     *   'IDPedido' =>
+     *   'PrimaryKeyMD5' =>
+     *   'Fecha' =>
+     *   'FechaEntraga' =>
+     *   'IDProveedor' =>
+     *   'RazonSocial =>
+     *   'Entrando' =>
+     * )
+     *
+     * @param integer $idAlmacen El id de almacen
+     * @return array Array con las unidades entrando
+     */
+    public function getEntrando($idAlmacen) {
+        $reservas = array();
+
+        $tablaPedidos = new PedidosCab();
+        $tablaPedidosLineas = new PedidosLineas();
+        $tablaProveedores = new Proveedores();
+
+        $em = new EntityManager($this->getConectionName());
+        if ($em->getDbLink()) {
+            $query = "select
+                        cab.IDPedido,
+                        cab.PrimaryKeyMD5,                     
+                        cab.Fecha,
+                        cab.FechaEntrega,
+                        cab.IDProveedor,
+                        prv.RazonSocial,
+                        sum(lin.Unidades) as Entrando
+                      from
+                        {$tablaPedidos->getDataBaseName()}.{$tablaPedidos->getTableName()} as cab,
+                        {$tablaPedidosLineas->getDataBaseName()}.{$tablaPedidosLineas->getTableName()} as lin,
+                        {$tablaProveedores->getDataBaseName()}.{$tablaProveedores->getTableName()} as prv
+                      where
+                        cab.IDPedido  = lin.IDPedido and
+                        cab.IDProveedor  = prv.IDProveedor and
+                        lin.IDEstado   = '1' and
+                        lin.IDArticulo = '{$this->IDArticulo}' and
+                        lin.IDAlmacen  = '{$idAlmacen}'
+                      group by IDPedido
+                      order by Fecha ASC";
+            $em->query($query);//echo $query,"<br/>";
+            $reservas = $em->fetchResult();
+            $em->desConecta();
+        }
+        unset($em);
+
+        unset($tablaPedidos);
+        unset($tablaPedidosLineas);
+        unset($tablaProveedores);
 
         return $reservas;
     }
