@@ -108,7 +108,7 @@ ServServicios:
       permission: null
       link: { route: null, param: null, title: null, target: null, link: null }
       #aditional_filter: { order: 1, caption: IdFamilia, entity: ServFamilias, method: fetchAll, params: Titulo, type: select, operator: '=', event: null }
-      validator: { nullable: NO, type: integer, length: '11', min: null, max: null, message: 'Valor Requerido' }
+      validator: { nullable: NO, type: integer, length: '40', min: null, max: null, message: 'Valor Requerido' }
     Titulo:
       title: Título
       filter: YES

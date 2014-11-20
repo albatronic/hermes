@@ -155,7 +155,7 @@ class PstoCab extends PstoCabEntity {
             $totbases = 0;
             $totiva = 0;
             $totrec = 0;
-            $bases = array();
+            $bases[0] = $bases[1] = $bases[2] = array('b' => 0, 'i' => 0, 'ci' => 0, 'r' => 0, 'cr' => 0);            
 
             foreach ($rows as $key => $row) {
                 $importe = $row['Importe'] * (1 - $pordcto / 100);

@@ -581,6 +581,7 @@ class AlbaranesCab extends AlbaranesCabEntity {
                     $linFactura->setAltoFa($row['AltoFa']);
                     $linFactura->setAnchoFa($row['AnchoFa']);
                     $linFactura->setMtsFa($row['MtsFa']);
+                    $linFactura->setObservations($row['Observations']);
 
                     if ($linFactura->create()) {
                         // Pongo el estado de la línea de albarán a "Facturado"
