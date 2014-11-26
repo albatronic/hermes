@@ -27,12 +27,9 @@ class Lotes extends LotesEntity {
         $this->conecta();
 
         if (is_resource($this->_dbLink)) {
-            if ($idArticulo != '')
-                $filtro = "(IDArticulo='" . $idArticulo . "')";
-            else
-                $filtro = "(1)";
+            $filtro = ($idArticulo != '') ? "(IDArticulo='{$idArticulo}')" : $filtro = "(1)";
             $filtro .= " AND Lote LIKE '{$filtroDescripcion}' AND Vigente='1'";
-            $query = "SELECT IDLote as Id, $column as Value FROM lotes WHERE $filtro ORDER BY FechaCaducidad ASC;";
+            $query = "SELECT IDLote as Id, {$column} as Value FROM {$this->_tableName} WHERE {$filtro} ORDER BY FechaCaducidad ASC;";
             $this->_em->query($query);
             $rows = $this->_em->fetchResult();
             $this->_em->desConecta();
@@ -44,8 +41,9 @@ class Lotes extends LotesEntity {
     public function valida(array $rules) {
         $validacion = parent::valida($rules);
         if ($validacion) {
-            if ($this->FechaFabricacion == "0000-00-00")
+            if ($this->FechaFabricacion == "0000-00-00") {
                 $this->FechaFabricacion = date('Y-m-d');
+            }
             if ($this->FechaCaducidad <= $this->FechaFabricacion) {
                 //Calcular la fecha de caducidad en base a la de fabricacion
                 //y el número de días de caducidad del artículo
@@ -72,6 +70,7 @@ class Lotes extends LotesEntity {
 
         $mapas = new AlmacenesMapas();
         $mapasDataBase = $mapas->getDataBaseName();
+        $mapasTableName = $mapas->getTableName();
         unset($mapas);
 
         $this->conecta();
@@ -80,8 +79,8 @@ class Lotes extends LotesEntity {
             //$query = "Call UbicacionesLote('{$idAlmacen}','{$this->IDLote}','{$filtroUbicacion}');";
             $query = "SELECT DISTINCT e.IDUbicacion AS Id, m.Ubicacion AS Value
                         FROM
-                            {$this->_dataBaseName}.existencias e,
-                            {$mapasDataBase}.almacenes_mapas m
+                            {$this->_dataBaseName}.ErpExistencias e,
+                            {$mapasDataBase}.{$mapasTableName} m
                         WHERE
                             e.IDUbicacion = m.IDUbicacion AND
                             e.IDAlmacen= '{$idAlmacen}' AND
@@ -119,6 +118,7 @@ class Lotes extends LotesEntity {
 
         $mapas = new AlmacenesMapas();
         $mapasDataBase = $mapas->getDataBaseName();
+        $mapasTableName = $mapas->getTableName();        
         unset($mapas);
 
         $this->conecta();
@@ -127,8 +127,8 @@ class Lotes extends LotesEntity {
             //$query = "Call UbicacionesLote('{$idAlmacen}','{$this->IDLote}','{$filtroUbicacion}');";
             $query = "SELECT e.IDUbicacion AS Id, m.Ubicacion AS Value, e.Reales AS Reales 
                         FROM
-                            {$this->_dataBaseName}.existencias e,
-                            {$mapasDataBase}.almacenes_mapas as m
+                            {$this->_dataBaseName}.ErpExistencias e,
+                            {$mapasDataBase}.{$mapasTableName} as m
                         WHERE
                             e.IDAlmacen= '{$idAlmacen}' AND
                             e.IDLote= '{$this->IDLote}' AND
@@ -160,4 +160,3 @@ class Lotes extends LotesEntity {
 
 }
 
-?>

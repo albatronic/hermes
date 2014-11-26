@@ -716,7 +716,7 @@ class Entity {
         }
 
         if ($default == TRUE) {
-            array_unshift($rows, array('Id' => '', 'Value' => ':: Indique un Valor'));
+            array_unshift($rows, array('Id' => '0', 'Value' => ':: Indique un Valor'));
         }
 
         return $rows;

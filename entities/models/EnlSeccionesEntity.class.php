@@ -111,6 +111,3 @@ class EnlSeccionesEntity extends EntityComunes {
     }
 
 }
-
-// END class EnlSecciones
-?>
