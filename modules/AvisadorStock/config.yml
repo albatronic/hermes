@@ -135,7 +135,7 @@ AvisadorStock:
       searchable: false
       link: { route: null, param: null, title: null, target: null, link: null }
       aditional_filter: { order: 2, caption: Articulo, entity: Articulos, method: fetchAll, params: Descripcion, type: input, operator: '=', event: null }
-      validator: { nullable: NO, type: integer, length: '35', min: null, max: null, message: 'Valor Requerido' }
+      validator: { nullable: NO, type: integer, length: '45', min: null, max: null, message: 'Valor Requerido' }
     CreatedAt:
       title: Fecha Petición
       filter: NO
