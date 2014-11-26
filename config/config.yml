@@ -33,19 +33,19 @@ config:
     - Yaml
   app:
     name: 'Hermes Erp'
-    url: 'http://albatronic.local'
+    url: 'http://www.albatronic.com/Hermes'
     path: /Hermes
     framework: bin/albatronic/
-    urlParent: 'http://albatronic.local/Pcae'
+    urlParent: 'http://www.albatronic.com'
   conections:
     pcae:
       title: 'Portal Cloud Albatronic'
       description: null
-      folder: /Pcae
+      folder: null
       dbEngine: mysql
-      host: localhost
-      user: root
-      password: 
+      host: www.albatronic.com
+      user: albatro
+      password: p17s26a26
       database: albatro_pacs
   mailer:
     plugin_dir: bin/Swift-5.0.0/lib/
