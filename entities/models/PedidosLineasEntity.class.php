@@ -64,7 +64,7 @@ class PedidosLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")
      */
-    protected $Iva = '0';
+    protected $Iva = '';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PedidosLineas")

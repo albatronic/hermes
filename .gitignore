@@ -22,5 +22,5 @@
 /phpdoc/
 /nbproject/
 error_log
-lib/error_log
+/lib/error_log
 

@@ -57,7 +57,7 @@ class AlbaranesLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="albaranes_lineas")
      */
-    protected $Precio = '0';
+    protected $Precio = '';
 
     /**
      * @orm:Column(type="integer")
@@ -69,7 +69,7 @@ class AlbaranesLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="albaranes_lineas")
      */
-    protected $Descuento = '0';
+    protected $Descuento = '';
 
     /**
      * @orm:Column(type="integer")

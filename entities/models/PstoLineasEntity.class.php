@@ -70,7 +70,7 @@ class PstoLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
      */
-    protected $Iva = '0.0';
+    protected $Iva = '';
     /**
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="PstoLineas")
