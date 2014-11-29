@@ -94,7 +94,7 @@ class AlbaranesLineasEntity extends EntityComunes {
      * @orm:Column(type="integer")
      * @assert:NotBlank(groups="albaranes_lineas")
      */
-    protected $Iva = '0';
+    protected $Iva = '';
 
     /**
      * @orm:Column(type="integer")
