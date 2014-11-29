@@ -372,3 +372,58 @@ Temporales docs6
 Temporales docs7
 Temporales docs11
  
+Borrado de archivos temporales Sat Nov 22 00:00:01 CET 2014
+------------------------------------------------------------
+Temporales docs1
+Temporales docs2
+Temporales docs3
+Temporales docs4
+Temporales docs5
+Temporales docs6
+Temporales docs7
+Temporales docs11
+ 
+Borrado de archivos temporales Sun Nov 23 00:00:02 CET 2014
+------------------------------------------------------------
+Temporales docs1
+Temporales docs2
+Temporales docs3
+Temporales docs4
+Temporales docs5
+Temporales docs6
+Temporales docs7
+Temporales docs11
+ 
+Borrado de archivos temporales Mon Nov 24 00:00:24 CET 2014
+------------------------------------------------------------
+Temporales docs1
+Temporales docs2
+Temporales docs3
+Temporales docs4
+Temporales docs5
+Temporales docs6
+Temporales docs7
+Temporales docs11
+ 
+Borrado de archivos temporales Tue Nov 25 00:02:36 CET 2014
+------------------------------------------------------------
+Temporales docs1
+Temporales docs2
+Temporales docs3
+Temporales docs4
+Temporales docs5
+Temporales docs6
+Temporales docs7
+Temporales docs11
+ 
+Borrado de archivos temporales Wed Nov 26 00:00:04 CET 2014
+------------------------------------------------------------
+Temporales docs1
+Temporales docs2
+Temporales docs3
+Temporales docs4
+Temporales docs5
+Temporales docs6
+Temporales docs7
+Temporales docs11
+ 
