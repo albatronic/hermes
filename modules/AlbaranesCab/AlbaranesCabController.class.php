@@ -313,6 +313,7 @@ class AlbaranesCabController extends Controller {
                     $lineas->setDescripcion($articulo->getDescripcion() . " Mes " . date("m Y"));
                     $lineas->setUnidades($unidades);
                     $lineas->setPrecio($precio);
+                    $lineas->setDescuento(0);
                     $lineas->setIva($articulo->getIDIva()->getIva());
                     $lineas->setImporte($unidades * $precio);
                     $ok = $lineas->create();
@@ -325,6 +326,8 @@ class AlbaranesCabController extends Controller {
                             $contador = $contador->dameContador($idSucursal, 2);
                             $albaran->facturar($contador);
                         }
+                    } else {
+                        print_r($lineas->getErrores());exit;
                     }
                 } else {
                     $this->values['errores'][] = "No se ha podido crear el albarán para " . $cliente->getRazonSocial();
