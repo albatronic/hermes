@@ -140,7 +140,7 @@ class Entity {
      */
     public function save() {
 
-        $this->conecta(); 
+        $this->conecta();
 
         if (is_resource($this->_dbLink)) {
             // Auditoria
@@ -176,8 +176,8 @@ class Entity {
      * @return int El valor del último ID insertado
      */
     public function create() {
-        
-        $this->conecta();      
+
+        $this->conecta();
 
         $lastId = NULL;
 
@@ -192,10 +192,11 @@ class Entity {
             foreach ($this as $key => $value) {
                 if (substr($key, 0, 1) != '_') {
                     $columns .= "`" . $key . "`,";
-                    if (( ($key == $this->getPrimaryKeyName()) and ( $_SESSION['idiomas']['actual'] == 0)) or ( is_null($value)))
+                    if (( ($key == $this->getPrimaryKeyName()) and ( $_SESSION['idiomas']['actual'] == 0)) or ( is_null($value))) {
                         $values .= "NULL,";
-                    else
+                    } else {
                         $values .= "'" . mysql_real_escape_string($value, $this->_dbLink) . "',";
+                    }
                 }
             }
             // Quito las comas finales
@@ -213,8 +214,9 @@ class Entity {
                 // Calcular la clave md5
                 $this->setPrimaryKeyMD5(md5($lastId));
                 // Poner el orden
-                if ($this->getSortOrder() == '0')
+                if ($this->getSortOrder() == '0') {
                     $this->setSortOrder($lastId);
+                }
                 // Pongo el perfil del usuario actual
                 if ($this->BelongsTo != 0) {
                     $objetoPadre = new $this($this->BelongsTo);
@@ -253,9 +255,9 @@ class Entity {
                 // Auditoria
                 $fecha = date('Y-m-d H:i:s');
                 $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET `Deleted` = '1', `DeletedAt` = '{$fecha}', `DeletedBy` = '{$_SESSION['usuarioPortal']['Id']}' WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
-                if (!$this->_em->query($query))
+                if (!$this->_em->query($query)) {
                     $this->_errores = $this->_em->getError();
-                else {
+                } else {
                     // Borrar la eventual url amigable
                     $url = new CpanUrlAmigables();
                     $url->borraUrl($_SESSION['idiomas']['actual'], $this->getClassName(), $this->getPrimaryKeyValue());
@@ -291,9 +293,9 @@ class Entity {
 
             if (is_resource($this->_dbLink)) {
                 $query = "DELETE FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE `{$this->_primaryKeyName}` = '{$this->getPrimaryKeyValue()}'";
-                if (!$this->_em->query($query))
+                if (!$this->_em->query($query)) {
                     $this->_errores = $this->_em->getError();
-                else {
+                } else {
                     // Borrar la eventual url amigable
                     $url = new CpanUrlAmigables();
                     $url->borraUrl($_SESSION['idiomas']['actual'], $this->getClassName(), $this->getPrimaryKeyValue());
@@ -304,8 +306,9 @@ class Entity {
                     unset($doc);
                 }
                 //$this->_em->desConecta();
-            } else
+            } else {
                 $this->_errores = $this->_em->getError();
+            }
             //unset($this->_em);
             $validacion = (count($this->_errores) == 0);
         }
@@ -463,8 +466,9 @@ class Entity {
 
         if ($this->getPrimaryKeyValue() != '') {
             // Estoy validando antes de actualizar
-            if (($this->IsSuper) and ( $_SESSION['usuarioPortal']['IdPerfil'] != '1'))
+            if (($this->IsSuper) and ( $_SESSION['usuarioPortal']['IdPerfil'] != '1')) {
                 $this->_errores[] = "No se puede modificar, es un valor reservado";
+            }
         }
 
         if (trim($this->UrlTarget) != '') {
@@ -504,13 +508,15 @@ class Entity {
 
         // No se puede borrar si el objeto es un valor predeterminado y el usuario
         // no es el super
-        if (($this->IsDefault) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1))
+        if (($this->IsDefault) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1)) {
             $this->_errores[] = "No se puede eliminar. Es un valor predeterminado";
+        }
 
         // No se puede borrar si el objeto es un valor SUPER y el usuario
         // no es el super
-        if (($this->IsSuper) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1))
+        if (($this->IsSuper) AND ( $_SESSION['usuarioPortal']['IdPerfil'] != 1)) {
             $this->_errores[] = "No se puede eliminar. Es un valor reservado";
+        }
 
         // Validacion de integridad referencial respecto a entidades hijas
         if (count($this->_errores) == 0) {
@@ -528,8 +534,9 @@ class Entity {
                     $condicion = $entity['ParentColumn'] . "='" . $this->$entity['SourceColumn'] . "'";
                     $rows = $entidad->cargaCondicion($entity['ParentColumn'], $condicion);
                     $n = count($rows);
-                    if ($n > 0)
+                    if ($n > 0) {
                         $this->_errores[] = "Imposible eliminar. Hay {$n} relaciones con {$entity['ParentEntity']}";
+                    }
                 }
             }
         }
@@ -551,11 +558,13 @@ class Entity {
 
         if (is_resource($this->_dbLink)) {
 
-            if ($orderBy != '')
+            if ($orderBy != '') {
                 $orderBy = 'ORDER BY ' . $orderBy;
+            }
 
-            if ($showDeleted == FALSE)
+            if ($showDeleted == FALSE) {
                 $condicion = "(Deleted = '0') AND " . $condicion;
+            }
 
             $query = "SELECT {$columnas} FROM `{$this->_dataBaseName}`.`{$this->_tableName}` WHERE {$condicion} {$orderBy}";
             $this->_em->query($query); //echo $query,"</br>";
@@ -583,14 +592,15 @@ class Entity {
         $this->conecta();
         if (is_resource($this->_dbLink)) {
 
-            foreach ($array as $key => $value)
+            foreach ($array as $key => $value) {
                 $valores .= "{$key}='{$value}',";
+            }
 
             // Quito la coma final
             $valores = substr($valores, 0, -1);
 
             $query = "UPDATE `{$this->_dataBaseName}`.`{$this->_tableName}` SET {$valores} WHERE ({$condicion})";
-            $this->_em->query($query);//echo $query;
+            $this->_em->query($query); //echo $query;
             $filasAfectadas = $this->_em->getAffectedRows();
             //$this->_em->desConecta();
         }
@@ -660,8 +670,9 @@ class Entity {
 
         $condicion = "({$columna} = '{$valor}')";
 
-        if ($showDeleted == FALSE)
+        if ($showDeleted == FALSE) {
             $condicion .= " AND (Deleted = '0')";
+        }
 
         $this->conecta();
 
@@ -701,8 +712,9 @@ class Entity {
      * @return array Array de valores Id, Value
      */
     public function fetchAll($column = '', $default = true) {
-        if ($column == '')
+        if ($column == '') {
             $column = $this->getPrimaryKeyName();
+        }
 
         $this->conecta();
 
