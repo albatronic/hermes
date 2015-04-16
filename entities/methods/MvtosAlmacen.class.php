@@ -175,15 +175,25 @@ class MvtosAlmacen extends MvtosAlmacenEntity {
 
             switch ($signo) {
                 case 'S':
-                    $okBloqueoStock = ($stock['RE'] >= ($this->UnidadesE + $this->UnidadesS) );
+                    $unidades = $this->UnidadesE + $this->UnidadesS;
+                    if ($unidades < 0) {
+                        $okBloqueoStock = true;
+                    } else {
+                        $okBloqueoStock = ($stock['RE'] >= ($unidades) );
+                    }
                     break;
                 case 'E':
                     $unidades = $this->UnidadesE + $this->UnidadesS;
-                    $okBloqueoStock = ( (abs($unidades) >= 0) or ($stock['RE'] >= abs($unidades)) );
+                    if ($unidades < 0) {
+                        $okBloqueoStock = ( ($unidades + $stock['RE']) >= 0);
+                    } else {
+                        $okBloqueoStock = true;
+                    }
                     break;
             }
-        } else
+        } else {
             $okBloqueoStock = true;
+        }
 
         $okTrazabilidad = ( (!$hayTrazabilidad) or ($this->IDLote != 0) );
         $okUbicacion = ( (!$hayControlUbicaciones) or ($this->IDUbicacion != 0) );

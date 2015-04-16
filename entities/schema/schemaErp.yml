@@ -23,7 +23,7 @@ ErpAfiliados:
     Bic:                 { type: varchar(11), notnull: false, default: null }
     Mandato:             { type: varchar(35), notnull: false, default: null }
     FechaMandato:        { type: date, notnull: true, default: '0000-00-00' }     
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>        
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>        
   relations:
       
 # Agencias de transporte
@@ -39,7 +39,7 @@ ErpAgencias:
     CosteEstandar: { type: decimal, notnull: true, default: '0.00' }
     UrlTracking:   { type: varchar(100), notnul: false, default: NULL }
     Uso:           { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
 # AlbaranesCab
@@ -95,7 +95,7 @@ ErpAlbaranesCab:
     IDRutaReparto:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,RutasReparto,IDRuta' }
     DiaReparto:             { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,DiasSemana,IDTipo' }
     IDRepartidor:           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }   
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Líneas de albaranes
@@ -130,7 +130,7 @@ ErpAlbaranesLineas:
     AltoFa:           { type: decimal(3), notnull: true, default: '0.000' }
     AnchoFa:          { type: decimal(3), notnull: true, default: '0.000' }
     MtsFa:            { type: decimal(3), notnull: true, default: '0.000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
 # Avisador de stock
@@ -140,7 +140,7 @@ ErpAvisadorStock:
     IDCliente:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Clientes,IDCliente' }
     Email:      { type: string(50), notnul: true }
     IDArticulo: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>  
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>  
     relations:
         
 # PedidosWebCab
@@ -199,7 +199,7 @@ ErpPedidosWebCab:
     IDCupon:                { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Cupones,Id' }
     Key1Pasarela:           { type: varchar(100), notnull: false } 
     Key2Pasarela:           { type: varchar(100), notnull: false } 
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Líneas de pedidos Web
@@ -234,7 +234,7 @@ ErpPedidosWebLineas:
     AltoFa:           { type: decimal(3), notnull: true, default: '0.000' }
     AnchoFa:          { type: decimal(3), notnull: true, default: '0.000' }
     MtsFa:            { type: decimal(3), notnull: true, default: '0.000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
    
 # Log de Pedidos Web
@@ -248,7 +248,7 @@ ErpPedidosWebLog:
     IDEstado:          { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,EstadosPedidosWeb,IDTipo' }  
     Pasarela:          { type: string(50), notnull: true }
     ResultadoPasarela: { type: text, notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>         
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>         
   relations:
       
 # Almacenes
@@ -267,7 +267,7 @@ ErpAlmacenes:
     EMail:              { type: string(50), notnull: false }
     Tipo:               { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,AlmacenesTipos,IDTipo' }
     ControlUbicaciones: { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,ValoresSN,IDTipo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
     
 # Mapas de almacenes
@@ -283,7 +283,7 @@ ErpAlmacenesMapas:
     Alto:        { type: decimal(), notnull: true, default: 0 }
     Ancho:       { type: decimal(), notnull: true, default: 0 }
     Fondo:       { type: decimal(), notnull: true, default: 0 }   
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>         
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>         
   relations:
 
 # Aplicaciones del Erp
@@ -295,7 +295,7 @@ ErpAplicaciones:
     CodigoApp:   {type: string(15), notnull: true, index: unique}
     NombreApp:   {type: string(100), notnull: true}
     Descripcion: {type: string(100), notnul: true}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     
 # Articulos
@@ -358,7 +358,7 @@ ErpArticulos:
     AvisosPedidos:     { type: text, notnull: false }    
     AvisosPresupuestos: { type: text, notnull: false }    
     AvisosAlbaranes:   { type: text, notnull: false }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
 # Escandallos de artículos
@@ -372,7 +372,7 @@ ErpArticulosEscandallos:
     ImporteVenta:      { type: decimal(), notnull: true, default: 0 }
     Peso:              { type: decimal(), notnull: true, default: 0 }
     Volumen:           { type: decimal(), notnull: true, default: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
 
 # Estados de los artículos
@@ -381,7 +381,7 @@ ErpArticulosEstados:
   columns:
     IDEstado: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Estado:   { type: string(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
 
 # Propiedades de los artículos
@@ -391,7 +391,7 @@ ErpArticulosPropiedades:
     IDArticulo:  { type: bigint(11), notnull: true, index: index, comment: 'db,Articulos,Id'}  
     IDPropiedad: { type: bigint(11), notnull: true, index: index, comment: 'db,Propiedades,Id'} 
     IDValor:     { type: bigint(11), notnull: true, index: index, comment: 'db,PropiedadesValores,Id'}   
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
     
 # Entidades bancarias
@@ -401,7 +401,7 @@ ErpBancos:
     IDBanco: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}
     CodigoBanco: { type: string(4), notnull: true }
     Banco: { type: string(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
    
 # Oficinas Bancarias
@@ -420,7 +420,7 @@ ErpBancosOficinas:
     Telefono:     { type: varchar(30), notnull: false }
     Fax:          { type: varchar(30), notnull: false }        
     EMail:        { type: varchar(50), notnull: false }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:    
 
 # Comentarios del Blog
@@ -435,7 +435,7 @@ BlogComentarios:
     Email:      { type: string(100), notnull: true }
     TiempoUnix: { type: bigint(20), notnull: true, default: 0 }
     Comentario: { type: text, notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>  
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>  
     
 # Arqueos de caja
 ErpCajaArqueos:
@@ -450,7 +450,7 @@ ErpCajaArqueos:
     SumaMvtos:     { type: decimal(2), notnull: true, default: 0 }  
     SaldoCierre:   { type: decimal(2), notnull: true, default: 0 }
     Observaciones: { type: text }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
 # Apuntes de caja
@@ -471,7 +471,7 @@ ErpCajaLineas:
     Asiento:    { type: int(6), notnull: true, default: 0 }
     IDDatafono: { type: bigint(11), notnull: true, index: index, default: 0, comment: 'db,Datafonos,IDDatafono' }
     IDAgente:   { type: bigint(11), notnull: true, index: index, default: 0, comment: 'db,Agentes,IDAgente' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
 
 # Clientes
@@ -525,7 +525,7 @@ ErpClientes:
     Mandato:             { type: varchar(35), notnull: false, default: null }
     FechaMandato:        { type: date, notnull: true, default: '0000-00-00' } 
     IDPerfilWeb:         { type: bigint(11), notnull: true, default: 1, index: index, comment: 'db,WebPerfiles,Id' }     
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:     
   
 # Clientes Contactos
@@ -540,7 +540,7 @@ ErpClientesContactos:
     Fax:        { type: varchar(30), notnull: false }    
     Movil:      { type: varchar(30), notnull: false }    
     EMail:      { type: varchar(50), notnull: false }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:    
     
 # Direcciones de entrega de clientes
@@ -565,7 +565,7 @@ ErpClientesDentrega:
     IDComercial:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }
     IDZona:          { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Zonas,IDZona' }
     Vigente:         { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:   
     
 # Grupos de clientes
@@ -574,7 +574,7 @@ ErpClientesGrupos:
   columns:
     IDGrupo: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Grupo:   { type: varchar(30), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
     
 # Tipos de clientes
@@ -583,7 +583,7 @@ ErpClientesTipos:
   columns:
     IDTipo: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Tipo:   { type: varchar(30), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
 # Contadores
@@ -596,7 +596,7 @@ ErpContadores:
     Serie:       { type: char(2), notnull: true }
     Contador:    { type: int(8), notnull: true, default: 0 }
     Predefinido: { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
   index:
     Contador: { type: unique, columns: 'IDSucursal,IDTipo,Serie'}
@@ -612,7 +612,7 @@ ErpCupones:
     Tipo:           { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,CuponesTipos,IDTipo' }
     Valor:          { type: decimal(2), notnull: true, default: 0 }
     AplicaA:        { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,CuponesAplicaA,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
 
 # Datafonos
@@ -622,7 +622,7 @@ ErpDatafonos:
     IDDatafono: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Datafono:   { type: string(50), notnull: true }
     Comision:   { type: decimal(2), notnull: true, default: '0.00'}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
 
 # Etiquetas
@@ -634,7 +634,7 @@ ErpEtiquetas:
     Descripcion: { type: string(30), notnull: true }
     Unidades:    { type: int(4), notnull: true, default: 0 }
     Precio:      { type: decimal(2), notnull: true, default: '0.00' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
   index:
     Etiqueta: { type: unique, columns: 'IDAgente,IDArticulo'}    
@@ -655,7 +655,7 @@ ErpExistencias:
     Maximo:      { type: decimal(), notnull: true, defautl: 0 }  
     Minimo:      { type: decimal(), notnull: true, defautl: 0 }    
     EnDeposito:  { type: tinyint(1), notnull: true, defautl: 0, index: index, comment: 'abstract,ValoresSN,IDTipo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>          
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>          
   relations: 
   index:
     Unico: { type: unique, columns: 'IDAlmacen,IDArticulo,IDLote,IDUbicacion,EnDeposito'}    
@@ -684,7 +684,7 @@ ErpExpediciones:
     FlagTrazabilidad: { type: tinyint(1), notnull: true, default: '0' } 
     FlagUbicacion:    { type: tinyint(1), notnull: true, default: '0' }  
     FlagSinStock:     { type: tinyint(1), notnull: true, default: '0' } 
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
 # Marcas comerciales / fabricantes
@@ -700,7 +700,7 @@ ErpFabricantes:
     Email:          { type: string(100), notnull: false, default: NULL }
     MostrarPortada: { type: tinyint(1), notnull: true, default: 0, comment: 'Abstract,ValoresSN,IDTipo' }
     OrdenPortada:   { type: int(4), notnull: true, default: 0}    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
     
 # Jerarquía de Categorías, Familias, Subfamilias, etc
@@ -725,7 +725,7 @@ ErpFamilias:
     MargenMinimo:     { type: decimal(), notnull: true, default: 0 }
     MargenWeb:        { type: decimal(), notnull: true, default: 0 }    
     Caducidad:        { type: integer(4), notnull: true, default: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     
 # Propiedades de las familias
@@ -735,7 +735,7 @@ ErpFamiliasPropiedades:
     IDFamilia:   { type: bigint(11), notnull: true, index: index, comment: 'db,Familias,Id'}  
     IDPropiedad: { type: bigint(11), notnull: true, index: index, comment: 'db,Propiedades,Id'} 
     Filtrable:   { type: tinyint(1), notnull: true, default: 1, comment: 'Abstract,ValoresSN,IDTipo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
 # Accesos directos de opciones favoritas
@@ -745,7 +745,7 @@ ErpFavoritos:
     IDUsuario:  { type: bigint(11), notnull: true, index: index }
     Controller: { type: varchar(50), notnull: true }
     Titulo:     { type: varchar(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
       
 # Artículos favoritos para cada TPV
@@ -755,7 +755,7 @@ ErpFavoritosTpv:
     IDTpv:       { type: bigint(11), notnull: true, index: index }
     IDArticulo:  { type: bigint(11), notnull: true }
     Descripcion: { type: varchar(255), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
           
 # Articulos favoritos para cada usuario de la Web
@@ -764,7 +764,7 @@ ErpFavoritosWeb:
   columns:
     IDUsuario:   { type: bigint(11), notnull: true, index: index }
     IDArticulo:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Articulos,IDArticulo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:  
       
 # Cabecera de Facturas emitidas
@@ -811,7 +811,7 @@ ErpFemitidasCab:
     Expedicion:             { type: varchar(50), notnull: false }    
     IDAgencia:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agencias,IDAgencia' }    
     IDFP:                   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
 # Líneas de facturas emitidas
@@ -844,7 +844,7 @@ ErpFemitidasLineas:
     AltoFa:           { type: decimal(3), notnull: true, default: '0.000' }
     AnchoFa:          { type: decimal(3), notnull: true, default: '0.000' }
     MtsFa:            { type: decimal(3), notnull: true, default: '0.000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
 # Formas de pago
@@ -864,7 +864,7 @@ ErpFormasPago:
     Uso:                 { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' } 
     Accion:              { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,AccionesFormasPago,IDTipo' } 
     TipoTpv:             { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,TiposTpv,IDTipo' } 
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Cabecera de Facturas recibidas
@@ -906,7 +906,7 @@ ErpFrecibidasCab:
     Asiento:                { type: int(6), notnull: true, default: 0 }
     Observaciones:          { type: text, notnull: false }    
     IDFP:                   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
    
 # Líneas de facturas recibidas
@@ -924,7 +924,7 @@ ErpFrecibidasLineas:
     Iva:              { type: decimal(2), notnull: true, default: '0.00' }        
     IDPedido:        { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,PediosCab,IDPedido' }
     IDLineaPedido:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,PedidosLineas,IDLinea' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Cabeceras de inventarios
@@ -936,7 +936,7 @@ ErpInventariosCab:
     Fecha:        { type: date, notnull: true, default: '0000-00-00', index: index }
     Cerrado:      { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     Comentarios:  { type: text }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
    
 ErpInventariosLineas:
@@ -951,7 +951,7 @@ ErpInventariosLineas:
     Stock:            { type: decimal(2), notnull: true, default: '0.00' }
     Cajas:            { type: decimal(2), notnull: true, default: '0.00' }
     Pales:            { type: decimal(2), notnull: true, default: '0.00' }     
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
   
 # Lotes
@@ -964,7 +964,7 @@ ErpLotes:
     FechaFabricacion: { type: date, notnull: true, default: '0000-00-00' }
     FechaCaducidad:   { type: date, notnull: true, default: '0000-00-00' }
     Vigente:          { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
   index:
     Lote: { type: unique, columns: 'IDArticulo,Lote'}
@@ -991,7 +991,7 @@ ErpManufacCab:
     TotalCoste:       { type: decimal(2), notnull: true, default: '0.00' }
     Observaciones:    { type: text }
     Incidencias:      { type: text }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
 
 # Lineas de elaboraciones
@@ -1010,7 +1010,7 @@ ErpManufacLineas:
     BaseAplicacion: { type: tinyint(1), notnull: true, default: 0 }
     Importe:        { type: decimal(2), notnull: true, default: '0.00' }    
     IDEstado:       { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosManufac,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
 
 # Módulos del ERP
@@ -1023,7 +1023,7 @@ ErpModulos:
     Titulo:          { type: string(100), notnull: true }
     Descripcion:     { type: string(100), notnull: false, default: NULL }
     Funcionalidades: { type: string(255), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     CodigoApp : { ForeignEntity: ErpAplicaciones, ForeignId: CodigoApp } 
     
@@ -1037,7 +1037,7 @@ ErpMunicipios:
     Codigo:        { type: string(5), notnull: true }
     DigitoControl: { type: string(2), notnull: true }
     Municipio:     { type: string(255), notnull: true, index: INDEX }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
     
 # Movimientos de Almacen
@@ -1061,7 +1061,7 @@ ErpMvtosAlmacen:
     PalesS:        { type: decimal(3), notnull: true, default: '0.000' }    
     CajasS:        { type: decimal(3), notnull: true, default: '0.000' }  
     Observaciones: { type: text }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
   index:
     Tiempo: { type: index, columns: 'Fecha,Hora'}
@@ -1072,7 +1072,7 @@ ErpOrdenesArticulos:
   columns:
     IDRegla:   { type: bigint(11), notnull: true, default: 0, index: index }
     IDArticulo: { type: bigint(11), notnull: true, default: 0, index: index }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     
 # Cabeceras de Pedidos de compra
@@ -1120,7 +1120,7 @@ ErpPedidosCab:
     IDAgencia:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agencias,IDAgencia' }
     Deposito:               { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     FlagFacturar:           { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
     
 # Líneas de pedidos de compra
@@ -1143,7 +1143,7 @@ ErpPedidosLineas:
     IDEstado:             { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosLineasPedidos,IDTipo' }    
     IDAgente:             { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agentes,IDAgente' }    
     IDAlmacen:            { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Almacenes,IDAlmacen' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
     
 # Promociones
@@ -1159,7 +1159,7 @@ ErpPromociones:
     TipoPromocion:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,PromocionesTipos,IDTipo' }
     Valor:          { type: decimal(3), notnull: true, default: '0.000' }
     IDFP:           { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations: 
   index:
     Articulo: { type: unique, columns: 'IDArticulo,FinPromocion,CantidadMinima' }
@@ -1172,7 +1172,7 @@ ErpPromocionesClientes:
     IDPromocion: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Promociones,IDPromocion' }
     IDGrupo: { type: bigint(11), notnull: false, default: NULL, index: index, comment: 'db,ClientesGrupos,IDGrupo' }
     IDCliente: { type: bigint(11), notnull: false, default: NULL, index: index, comment: 'db,Clientes,IDCliente' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:   
   index:
     Promocion : { type: Unique, columns: 'IDPromocion,IDGrupo,IDCliente' }
@@ -1183,7 +1183,7 @@ ErpPropiedades:
   columns:
     Titulo: { type: string(30), notnull: true, index: index }
     IDTipo: { type: int(4), notnull: true, index: index, default: 1, comment: 'Abstract,TiposPropiedades,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
 
 # Valores estandar de las propiedades
@@ -1193,7 +1193,7 @@ ErpPropiedadesValores:
     IDPropiedad:  { type: bigint(11), notnull: true, index: index, comment: 'db,Propiedades,Id'}
     Valor:        { type: string(50), notnull: true }
     Color:        { type: string(50), notnull: false }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
 # Proveedores
@@ -1226,7 +1226,7 @@ ErpProveedores:
     Bic:             { type: varchar(11), notnull: false, default: null }
     Mandato:         { type: varchar(35), notnull: false, default: null }
     FechaMandato:    { type: date, notnull: true, default: '0000-00-00' }     
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
 
 # Provincias
@@ -1238,7 +1238,7 @@ ErpProvincias:
     Codigo:      { type: varchar(5), notnull: false }
     Provincia:   { type: string(255), notnull: true, index: INDEX }
     IDZona:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ZonasTransporte,IDZona' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>    
   relations:
     
 # Cabeceras de presupuestos
@@ -1288,7 +1288,7 @@ ErpPstoCab:
     Expedicion:             { type: varchar(50), notnull: false }    
     IDAgencia:              { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agencias,Id' }    
     IDFP:                   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,FormasPago,IDFP' } 
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Líneas de presupuestos
@@ -1321,7 +1321,7 @@ ErpPstoLineas:
     AltoFa:           { type: decimal(3), notnull: true, default: '0.000' }
     AnchoFa:          { type: decimal(3), notnull: true, default: '0.000' }
     MtsFa:            { type: decimal(3), notnull: true, default: '0.000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
 # Recepciones
@@ -1347,7 +1347,7 @@ ErpRecepciones:
     IDUbicacion:      { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,AlmacenesMapas,IDUbicacion' }    
     Temperatura:      { type: decimal(2), notnull: true, default: '-20.00' }
     Recepcionada:     { type: tinyint(1), notnull: true, default: '0' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:
 
 # Recibos de Clientes
@@ -1373,7 +1373,7 @@ ErpRecibosClientes:
     IDRemesa:     { type: varchar(14), notnull: false, default: NULL, index: index }
     Remesar:      { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     CContable:    { type: string(10), notnull: true, default: '0000000000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
 
 # Recibos de Proveedores
@@ -1398,7 +1398,7 @@ ErpRecibosProveedores:
     IDRemesa:     { type: varchar(14), notnull: false, default: NULL, index: index }
     Remesar:      { type: tinyint(1), notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     CContable:    { type: string(10), notnull: true, default: '0000000000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
 
 # Rutas de reparto
@@ -1408,7 +1408,7 @@ ErpRutasReparto:
     IDRuta: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}   
     IDSucursal:  { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
     Descripcion:    { type: varchar(50), notnull: true, default: ''}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
     
 # Detalle de las rutas de reparto
@@ -1422,7 +1422,7 @@ ErpRutasRepartoDetalle:
     IDZona: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Zonas,IDZona' }
     OrdenDirec: { type: int(4), notnull: true, default: 0 }
     IDDirec: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,ClientesDentrega,IDDirec' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:     
   index:
     Repartidor: { type: unique, columns: 'IDRepartidor,Dia,IDDirec'}
@@ -1437,7 +1437,7 @@ ErpRutasVentas:
     IDZona: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Zonas,IDZona' }
     OrdenCliente: { type: int(4), notnull: true, default: 0 }
     IDCliente: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Clientes,IDCliente' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:     
   index:
     Comercial: { type: unique, columns: 'IDComercial,Dia,IDCliente'}
@@ -1460,7 +1460,7 @@ ErpSucursales:
     CtaContableClientes: { type: string(10), notnull: true, default: '430'}
     CtaContableVentas:   { type: string(10), notnull: true, default: '7000000001'}
     CtaContableCompras:  { type: string(10), notnull: true, default: '6000000001'}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
     
 # Tabla de portes
@@ -1471,7 +1471,7 @@ ErpTablaPortes:
     IDAgencia: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Agencias,IDAgencia' }    
     Kilos:     { type: int(4), notnull: true, default: 0 }
     Importe:   { type: decimal(2), notnull: true, default: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
   index:
     Unico: { type: unique, columns: 'IDZona,IDAgencia,Kilos'}
@@ -1484,7 +1484,7 @@ ErpTarifas:
     Descripcion : { type: string(50), notnull: true }
     Tipo:         { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,TarifasTipos,IDTipo' }
     Valor:        { type: decimal(3), notnull: true, default: '0.000' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
 
 # Tipos de Iva
@@ -1496,7 +1496,7 @@ ErpTiposIva:
     Iva:       { type: decimal(2), notnull: true, default: '0.00' }
     Recargo:   { type: decimal(2), notnull: true, default: '0.00' }
     Retencion: { type: decimal(2), notnull: true, default: '0.00' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
     
 # Tipos de pales
@@ -1509,7 +1509,7 @@ ErpTiposPales:
     Alto:        { type: decimal(2), notnull: true, default: '0.00' }  
     Cubicaje:    { type: decimal(3), notnull: true, default: '0.000' } 
     Tara:        { type: decimal(2), notnull: true, default: '0.00' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
     
 # Tipos de movimientos de almacen
@@ -1520,7 +1520,7 @@ ErpTiposMvtosAlmacen:
     Signo:         { type: char(1), notnull: true, default: 'E', index: index, comment: 'Abstract,SignosMvtosAlmacen,IDTipo' }
     Uso:           { type: char(1), notnull: true, default: 'A', index: index, comment: 'Abstract,UsosMvtosAlmacen,IDTipo' }
     TipoDocumento: { type: string(25), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>       
   relations:
     
 # Tipos de venta
@@ -1529,7 +1529,7 @@ ErpTiposVenta:
   columns:
     IDVenta:   { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     TipoVenta: { type: string(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:  
            
 # TPVS
@@ -1546,7 +1546,7 @@ ErpTpvs:
     IDDataFono2:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Datafonos,Id' }
     IDDataFono3:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Datafonos,Id' }
     IDDataFono4:   { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Datafonos,Id' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations: 
 
 # Cabeceras de traspasos entre almacenes
@@ -1575,7 +1575,7 @@ ErpTraspasosCab:
     IDEstado:         { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosTraspasos,IDEstado' }
     Observaciones:    { type: text } 
     Incidencias:      { type: text }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
 
 # Lineas de traspasos
@@ -1593,7 +1593,7 @@ ErpTraspasosLineas:
     Precio:        { type: decimal(3), notnull: true, default: '0.000' }  
     Importe:       { type: decimal(2), notnull: true, default: '0.00' } 
     IDEstado:      { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'Abstract,EstadosTraspasos,IDEstado' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>     
   relations:
     
 # Unidades de medida de los articulos
@@ -1601,7 +1601,7 @@ ErpUnidadesMedida:
   comment: Unidades de medida de los articulos
   columns:
     UnidadMedida: { type: string(10), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
   relations:    
 
 # Usuarios
@@ -1615,7 +1615,7 @@ ErpUsuarios:
     IDSucursal: { type: bigint(11), notnull: true, default: 1, index: index, comment: 'db,Sucursales,IDSucursal' }    
     IDAlmacen:  { type: bigint(11), notnull: true, default: 1, index: index, comment: 'db,Almacenes,IDAlmacen' }    
     Activo:     { type: boolean, notnull: true, default: 1, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
   relations: 
     
 # Perfiles de usuarios
@@ -1624,7 +1624,7 @@ ErpPerfiles:
   columns:
     IDPerfil: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}  
     Perfil: { type: varchar(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>   
   relations: 
     
 # Zonas Comerciales y/o reparto por sucursal
@@ -1634,7 +1634,7 @@ ErpZonas:
     IDZona:     { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}
     IDSucursal: { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Sucursales,IDSucursal' }
     Zona:       { type: string(50), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:  
     
 # Zonas de transporte
@@ -1644,7 +1644,7 @@ ErpZonasTransporte:
     IDZona: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}    
     Zona:   { type: string(50), notnull: true }
     Uso:    { type: tinyint(1), notnul: true, defatul: 0, index: index, comment: 'abstract,UsosWeb,IDTipo' }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>      
   relations:    
   
 # ESCAPARATES WEB TIENDAS ONLINES
@@ -1662,7 +1662,7 @@ ErpEscaparates:
     Filtro:       { type: string(255), notnull: false }
     NItems:       { type: integer(2), notnull: true, default: 0 }
     ItemsPagina:  { type: integer(2), notnull: true, default: 0 }    
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:   
 
 # LOTES DE ARTICULOS PARA LA WEB
@@ -1678,7 +1678,7 @@ ErpLotesWeb:
     Desarrollo:       { type: text, notnull: false }
     MostrarEnPortada: { type: tinyint(1), notnull: true, default: 0, comment: 'Abstract,ValoresSN,IDTipo' }
     OrdenPortada:     { type: int(4), notnull: true, default: 0}
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
       
 ErpPerfiles:
@@ -1686,14 +1686,14 @@ ErpPerfiles:
   columns:
     IDPerfil: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}        
     Perfil:   { type: string(50), notnul: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
 
 ErpPermisos:
   columns:
     IdPerfil:        { type: integer, notnull: true, index: index, comment: 'db,ErpPerfiles,Id' }
     NombreModulo:    { type: string(255), notnull: true, index: index, comment: 'db,ErpModulos,NombreModulo' }
     Funcionalidades: { type: string(255), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     IdPerfil:     { ForeignEntity: ErpPerfiles, ForeignId: Id }
     NombreModulo: { ForeignEntity: ErpModulos, ForeignId: NombreModulo }
@@ -1704,7 +1704,7 @@ ErpFuncionalidades:
     Titulo:      { type: string(100), notnull: true}
     Descripcion: { type: string(100), notnull: false}
     EsEstandar : { type: boolean, notnull: true, default: 0, index: index, comment: 'abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     EsEstandar:  { ForeignEntity: ValoresSN, ForeignId: IDTipo }
     
@@ -1713,7 +1713,7 @@ ErpZonasHorarias:
   columns:
     IDZona: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}        
     Zona: { type: string(255), notnul: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
 
 ErpMonedas:
   comment: Monedas mundiales
@@ -1722,7 +1722,7 @@ ErpMonedas:
     Codigo:   { type: string(3), notnull: true }
     Moneda:   { type: string(255), notnull: true }
     Simbolo:  { type: string(255), notnull: false }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
 
 ErpIdiomas:
   comment: Idiomas mundiales
@@ -1730,7 +1730,7 @@ ErpIdiomas:
     IDIdioma: { type: bigint(11), notnull: true, index: PRIMARY, autoIncrement: true}        
     Codigo:   { type: string(2), notnull: true }
     Idioma:   { type: string(255), notnull: true }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
 
 ErpPaises:
   comment: Paises del mundo
@@ -1742,7 +1742,7 @@ ErpPaises:
     IDZonaHoraria: { type: bigint(11), notnull: false, default: 0, index: index, comment: 'db,ZonasHorarias,IDZona' }
     Latitud:       { type: float, notnull: true, default: 0 }
     Longitud:      { type: float, notnull: true, default: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
     IDMoneda:      { ForeignEntity: Monedas, ForeignId: IDMoneda }
     IDZonaHoraria: { ForeignEntity: ZonasHorarias, ForeignId: IDZona }
@@ -1760,7 +1760,7 @@ ErpEmailBox:
     Adjuntos:  { type: text, notnull: true, default: '' }
     Ok:        { type: boolean, notnull: true, default: 0}
     Smtp:      { type: text, notnull: false }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   
 ErpCarrito:
   comment: Carrito de la compra
@@ -1780,7 +1780,7 @@ ErpCarrito:
     Estado:          { type: tinyint(1), notnull: true, detaul: 0 }
     IDPromocion:     { type: bigint(11), notnull: true, default: 0, index: index, comment: 'db,Promociones,IDPromocion' }
     IvaIncluido:     { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
   index:
 
@@ -1797,7 +1797,7 @@ ErpZonasPagoEnvio:
     HastaGramos:         { type: decimal(2), notnull: true, default: 0}
     Gastos:              { type: decimal(2), notnull: true, default: 0}
     Uso:                 { type: tinyint(1), notnull: true, default: 0, index: index, comment: 'abstract,UsoWeb,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
   index:
       
@@ -1813,7 +1813,7 @@ ErpEjerciciosContables:
     FechaFin:    { type: date, notnul: true, default: '0000-00-00' }
     Activo:      { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
     Cerrado:     { type: boolean, notnull: true, default: 0, index: index, comment: 'Abstract,ValoresSN,IDTipo' }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
     
 ErpPlanContable:
   comment: Cuentas y subcuentas contables
@@ -1824,7 +1824,7 @@ ErpPlanContable:
     Debe:        { type: decimal, notnul: true, default: 0 }
     Haber:       { type: decimal, notnul: true, default: 0 }
     Saldo:       { type: decimal, notnul: true, default: 0 }
-    <?php include '../Hermes/entities/schema/schemaColumnsCommon.yml'; echoln('');?>
+    <?php include '../../entities/schema/schemaColumnsCommon.yml'; echoln('');?>
   relations:
   index:
     EjercicioCuenta: { type: Unique, columns: 'IDEjercicio,Cuenta' }

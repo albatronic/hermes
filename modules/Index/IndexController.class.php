@@ -52,7 +52,7 @@ class IndexController extends Controller {
 
         // Si se ha indicado una entidad en el config.yml del controlador
         // pero no se ha definido la conexion, se muestra un error
-        if (($this->form->getEntity()) and (!$this->form->getConection())) {
+        if (($this->form->getEntity()) and ( !$this->form->getConection())) {
             echo "No se ha definido la conexión para la entidad: " . $this->entity;
         }
 
@@ -71,8 +71,56 @@ class IndexController extends Controller {
         if ($_SESSION['tpv']) {
             $this->values['dashBoard'] = $this->getDashBoard();
         }
-        
+
         return array('template' => 'Index/index.html.twig', 'values' => $this->values);
+    }
+
+    public function LoginAction() {
+
+        switch ($this->request['METHOD']) {
+            case 'GET':
+                $template = $this->entity . '/login.html.twig';
+                break;
+            case 'POST':
+                $user = new PcaeUsuarios();
+                $usuario = $user->find("EMail", $this->request['email']);
+                unset($user);
+
+                if ($usuario->getEMail() != '') {
+
+                    if ($usuario->getPassword() == md5($this->request['password'] . $this->getSemilla())) {
+
+                        $_SESSION['usuarioPortal'] = array(
+                            'Id' => $usuario->getId(),
+                            'IdPerfil' => '1',
+                            'Nombre' => $usuario->getNombre(),
+                        );
+
+                        //Actualizar el registro de entradas
+                        $usuario->setNLogin($usuario->getNLogin() + 1);
+                        $usuario->setUltimoLogin(date('Y-m-d H:i:s'));
+                        $usuario->save();
+
+                        // Crear la variable de sesion con el array de
+                        // las empresas, proyectos y apps accesibles.
+                        $_SESSION['usuarioPortal']['accesosPortal'] = $usuario->getArrayAccesos();
+
+                        $this->values['accesosPortal'] = $_SESSION['usuarioWeb']['accesosPortal'];
+                        //print_r($this->values['accesosPortal']);
+                        $template = $this->entity . "/proyectos.html.twig";
+                    } else {
+                        $this->values['email'] = $this->request['email'];
+                        $this->values['errorPassword'] = true;
+                        return $this->IndexAction();
+                    }
+                } else {
+                    $this->values['errorUsuario'] = true;
+                    return $this->IndexAction();
+                }
+                break;
+        }
+
+        return array('template' => $template, 'values' => $this->values);
     }
 
     /**
@@ -160,7 +208,7 @@ class IndexController extends Controller {
 
             // Establece el perfil del usuario para el proyecto y carga
             // el menú en base a su perfil
-            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']);//print_r($usuario);
+            $usuario = new Agentes($_SESSION['usuarioPortal']['Id']); //print_r($usuario);
             if ($usuario->getStatus()) {
                 $idPerfil = $usuario->getIDPerfil()->getPrimaryKeyValue();
                 $_SESSION['usuarioPortal']['IdPerfil'] = $idPerfil;
@@ -194,15 +242,13 @@ class IndexController extends Controller {
 
                 // Establece los idiomas en base a la varible web del proyecto
                 /**
-                $langs = trim($_SESSION['VARIABLES']['WebPro']['globales']['lang']);
-                $_SESSION['idiomas']['disponibles'] = ($langs == '') ? array('0' => 'es') : explode(",", $langs);
+                  $langs = trim($_SESSION['VARIABLES']['WebPro']['globales']['lang']);
+                  $_SESSION['idiomas']['disponibles'] = ($langs == '') ? array('0' => 'es') : explode(",", $langs);
 
-                if (!isset($_SESSION['idiomas']['actual'])) {
-                    $_SESSION['idiomas']['actual'] = 0;
-                }
-                */
-            } else {
-                $template = $this->entity . "/noLoged.html.twig";
+                  if (!isset($_SESSION['idiomas']['actual'])) {
+                  $_SESSION['idiomas']['actual'] = 0;
+                  }
+                 */
             }
             //print_r($_SESSION);
             unset($usuario);
@@ -284,7 +330,7 @@ class IndexController extends Controller {
         $fileConfig = 'config/config.yml';
         $array = sfYaml::load($fileConfig);
         $array['config']['twig']['debug_mode'] = ($this->request[2] == 'true') ? true : false;
-        $yml = sfYaml::dump($array,4);
+        $yml = sfYaml::dump($array, 4);
         $archivo = new Archivo($fileConfig);
         $archivo->write($yml);
         $archivo->close();
@@ -339,4 +385,5 @@ class IndexController extends Controller {
 
         return $rows;
     }
+
 }

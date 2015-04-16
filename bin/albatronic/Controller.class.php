@@ -1401,6 +1401,25 @@ class Controller {
         return $rows;
     }
 
+    /**
+     * Devuelve el texto utilizado para calcular la password
+     * 
+     * El texto está en el nodo <config><semillaMD5> del archivo config/config.yml
+     * 
+     * @return string La semilla
+     */
+    protected function getSemilla() {
+
+        $semilla = "";
+
+        $fileConfig = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['appPath'] . "/config/config.yml";
+
+        if (file_exists($fileConfig)) {
+            $yaml = sfYaml::load($fileConfig);
+            $semilla = $yaml['config']['semillaMD5'];
+        }
+
+        return $semilla;
+    }
 }
 
-?>

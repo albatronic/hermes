@@ -119,9 +119,14 @@ class Expediciones extends ExpedicionesEntity {
                 // Marcar la linea de expedición como expedida
                 $expedicion = new Expediciones($row['IDLinea']);
                 $expedicion->setExpedida(1);
-                $expedicion->save();
-            } else
-                break;
+                $expedicion->save();                
+            } else {
+                $expedicion = new Expediciones($row['IDLinea']);
+                $expedicion->setExpedida(0);
+                $expedicion->setUnidades(0); 
+                $expedicion->save();                
+                $unidadesExpedidas = 0; 
+            }
         }
         unset($mvtoAlmacen);
         unset($expedicion);
@@ -208,5 +213,3 @@ class Expediciones extends ExpedicionesEntity {
     }
 
 }
-
-?>

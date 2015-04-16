@@ -86,8 +86,17 @@ class Recepciones extends RecepcionesEntity {
                 $recepcion = new Recepciones($row['IDLinea']);
                 $recepcion->setRecepcionada(1);
                 $recepcion->save();
-            } else
-                break;
+            } else {
+                // Ha fallado la creación/validación del movimiento. No se
+                // marca la recepción como recepcionada
+                $recepcion = new Recepciones($row['IDLinea']);
+                $recepcion->setRecepcionada(0);
+                $recepcion->setUnidadesBrutas(0);
+                $recepcion->setUnidadesNetas(0); 
+                $recepcion->save();                
+                $unidadesRecepcionadas = 0;                
+            }
+            
         }
         unset($mvtoAlmacen);
         unset($recepcion);
@@ -145,5 +154,3 @@ class Recepciones extends RecepcionesEntity {
         return $this->getIDArticulo()->{"get$this->UnidadMedida"}();
     }
 }
-
-?>

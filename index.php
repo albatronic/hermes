@@ -145,11 +145,11 @@ if ($rq->isOldBrowser()) {
             break;
     }
 
-    if (!isset($_SESSION['usuarioPortal'])) {
+    if (! $_SESSION['usuarioPortal']['Id']) {
 
         // No está logeado
         $controller = "Index";
-        $action = "NoLoged";
+        $action = "Login";
     }
 }
 

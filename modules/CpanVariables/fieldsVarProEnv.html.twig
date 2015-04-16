@@ -94,6 +94,14 @@
                 {# macro.input({'caption':'[shop][pagantis][terminal] Terminal (1)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][terminal]','d_shop_pagantis_terminal',values.d.shop.pagantis.terminal,'50','CampoTextoMedio','1') #}        
                 {{ macro.input({'caption':'[shop][pagantis][moneda] Código Moneda (EUR,USD,GBP)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][moneda]','d_shop_pagantis_moneda',values.d.shop.pagantis.moneda,'50','CampoTextoMedio','1') }}              
                 {{ macro.input({'caption':'[shop][pagantis][idoma] Idioma (opcional) (ca,en,es,eu,fr,gl,it,pl,ru)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][pagantis][idioma]','d_shop_pagantis_idioma',values.d.shop.pagantis.idioma,'50','CampoTextoMedio','1') }}              
+            </div>    
+            <h3>Tpv Banwire</h3>
+            <div>
+                {{ macro.input({'caption':'[shop][banwire][modo] Modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','checkbox','d[shop][banwire][modo]','d_shop_banwire_modo',values.d.shop.banwire.modo,'50','CampoTextoMedio','1') }}
+                {{ macro.input({'caption':'[shop][banwire][userTest] Usuario modo test','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][banwire][userTest]','d_shop_banwire_userTest',values.d.shop.banwire.userTest,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][banwire][userReal] Usuario modo real','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][banwire][userReal]','d_shop_banwire_userReal',values.d.shop.banwire.userReal,'50','CampoTextoMedio','1') }}        
+                {{ macro.input({'caption':'[shop][banwire][pais] Código Iso3 País (MEX, USA)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][banwire][pais]','d_shop_banwire_pais',values.d.shop.banwire.pais,'50','CampoTextoMedio','1') }}                    
+                {{ macro.input({'caption':'[shop][banwire][moneda] Código Moneda (EUR,USD,MXN)','visible':'1','varEnv':'0'},'EtiquetaLarga','input','d[shop][banwire][moneda]','d_shop_banwire_moneda',values.d.shop.banwire.moneda,'50','CampoTextoMedio','1') }}                         
             </div>            
         </div>
     </div>
